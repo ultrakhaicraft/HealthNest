@@ -13,6 +13,6 @@ This is a personal project suggested by one of my friend.
 - Manage Student Medical Prescription sent by Parent
 
 ## Technology
-.NET API for Backend
-ReactJS for Frontend
-MySQL for Database
+- .NET API for Backend
+- ReactJS for Frontend
+- MySQL for Database
