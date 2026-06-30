@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.SignalR;
 using SchoolMedical_BusinessLogic.Interface;
+using SchoolMedical_BusinessLogic.SignalRHubs;
 using SchoolMedical_DataAccess.DTOModels;
 using SchoolMedical_DataAccess.Entities;
 using SchoolMedical_DataAccess.Enums;
@@ -13,10 +15,13 @@ namespace SchoolMedical_BusinessLogic.Core;
 public class IncidentRecordService : IIncidentRecordService
 {
 	private readonly IUnitOfWork _unitOfWork;
+	private readonly IHubContext<IncidentRecordHub> _hubContext;
 
-	public IncidentRecordService(IUnitOfWork unitOfWork)
+
+	public IncidentRecordService(IUnitOfWork unitOfWork, IHubContext<IncidentRecordHub> hubContext)
 	{
 		_unitOfWork = unitOfWork;
+		_hubContext = hubContext;
 	}
 
 	public async Task<IEnumerable<IncidentRecordViewModel>> GetAllIncidentRecordsAsync()
@@ -74,7 +79,11 @@ public class IncidentRecordService : IIncidentRecordService
 		await repository.InsertAsync(newIncident);
 		await _unitOfWork.SaveAsync();
 
-		return await GetIncidentRecordDetailByIdAsync(newIncident.Id);
+		// Notify all connected clients about the new incident record
+		var incidentRecord = await GetIncidentRecordDetailByIdAsync(newIncident.Id);
+		await _hubContext.Clients.All.SendAsync("IncidentRecordAdded", incidentRecord);
+
+		return incidentRecord;
 	}
 
 	public async Task<IncidentRecordDetailModel> UpdateIncidentRecordAsync(IncidentRecordUpdateRequest request, string incidentId)

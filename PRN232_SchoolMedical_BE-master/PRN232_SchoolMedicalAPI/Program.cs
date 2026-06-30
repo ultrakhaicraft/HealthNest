@@ -5,6 +5,7 @@ using SchoolMedical_BusinessLogic;
 using SchoolMedical_DataAccess.Entities;
 using System.Text.Json.Serialization;
 using SchoolMedical_DataAccess.Data;
+using SchoolMedical_BusinessLogic.SignalRHubs;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +29,11 @@ builder.Services.AddControllers(op =>
 
 // Set the minimum level to Debug
 builder.Logging.SetMinimumLevel(LogLevel.Debug);
+
+
+
+builder.Services.AddSignalR();
+
 
 var app = builder.Build();
 
@@ -59,5 +65,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Map the SignalR hub 
+app.MapHub<IncidentRecordHub>("/incidentrecordHub");
 
 app.Run();
