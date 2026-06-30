@@ -1,0 +1,257 @@
+/* General Body and Font Styles */
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #f8fafc;
+    color: #334155;
+}
+
+.page-container {
+    max-width: 56rem;
+    /* 896px */
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+/* Header Styles (Consistent with previous designs) */
+.app-header {
+    background-color: white;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.header-container {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 4rem;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo-icon {
+    color: #2563eb;
+}
+
+.logo-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.main-nav {
+    display: none;
+}
+
+/* Hidden on mobile for simplicity */
+.main-nav a {
+    color: #4b5563;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.main-nav a:hover {
+    color: #2563eb;
+}
+
+.main-nav a.active {
+    color: #2563eb;
+    font-weight: 600;
+    border-bottom: 2px solid #2563eb;
+    padding-bottom: 0.25rem;
+}
+
+.profile-avatar {
+    height: 2.25rem;
+    width: 2.25rem;
+    border-radius: 9999px;
+    object-fit: cover;
+}
+
+/* Breadcrumb Navigation */
+.breadcrumb {
+    margin-bottom: 2rem;
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.breadcrumb a {
+    color: #4f46e5;
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb span {
+    margin: 0 0.5rem;
+}
+
+/* Blog Layout */
+.blog-post-container {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    /* To contain the rounded corners of the image */
+}
+
+.blog-image {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+}
+
+.blog-header {
+    padding: 2rem;
+    text-align: center;
+}
+
+.blog-header h1 {
+    font-size: 2.25rem;
+    /* 36px */
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0 0 0.5rem 0;
+}
+
+.blog-header p {
+    font-size: 1.125rem;
+    color: #64748b;
+    max-width: 42rem;
+    margin: 0 auto;
+}
+
+.blog-content {
+    padding: 0 2rem 2rem 2rem;
+    font-size: 1rem;
+    line-height: 1.75;
+    color: #475569;
+}
+
+.blog-content p {
+    margin-bottom: 1.5rem;
+}
+
+.highlight-box {
+    background-color: #fefce8;
+    border-left: 4px solid #facc15;
+    padding: 1rem;
+    margin: 2rem 0;
+    border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.highlight-box strong {
+    color: #ca8a04;
+}
+
+.blog-meta {
+    padding-top: 1.5rem;
+    margin-top: 2rem;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.author-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 9999px;
+    object-fit: cover;
+}
+
+.author-info {
+    font-size: 0.875rem;
+}
+
+.author-name {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.publish-date {
+    color: #94a3b8;
+}
+
+/* Related Articles */
+.related-articles-section {
+    margin-top: 3rem;
+    background-color: white;
+    border-radius: 0.75rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+.related-articles-section h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+
+.related-articles-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+.related-article-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+}
+
+.related-article-image {
+    width: 100px;
+    height: 75px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    flex-shrink: 0;
+}
+
+.related-article-title {
+    font-weight: 600;
+    color: #334155;
+    margin: 0;
+}
+
+.related-article-card:hover .related-article-title {
+    color: #4f46e5;
+}
+
+/* Footer */
+.app-footer {
+    padding: 2.5rem 1rem;
+}
+
+.footer-content {
+    text-align: center;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+    .main-nav {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .related-articles-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}

@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PRN232_SchoolMedicalAPI", "PRN232_SchoolMedicalAPI\PRN232_SchoolMedicalAPI.csproj", "{63EB8F05-8FF4-4D34-B7BD-31FF0863B453}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchoolMedical_DataAccess", "SchoolMedical_DataAccess\SchoolMedical_DataAccess.csproj", "{A0FB6FB9-E4D5-468D-8D26-D07A112BF8A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchoolMedical_BusinessLogic", "SchoolMedical_BusinessLogic\SchoolMedical_BusinessLogic.csproj", "{EADAA41E-6B62-4BA5-B88B-9A03ED94260F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{63EB8F05-8FF4-4D34-B7BD-31FF0863B453}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63EB8F05-8FF4-4D34-B7BD-31FF0863B453}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63EB8F05-8FF4-4D34-B7BD-31FF0863B453}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63EB8F05-8FF4-4D34-B7BD-31FF0863B453}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0FB6FB9-E4D5-468D-8D26-D07A112BF8A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0FB6FB9-E4D5-468D-8D26-D07A112BF8A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0FB6FB9-E4D5-468D-8D26-D07A112BF8A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0FB6FB9-E4D5-468D-8D26-D07A112BF8A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EADAA41E-6B62-4BA5-B88B-9A03ED94260F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EADAA41E-6B62-4BA5-B88B-9A03ED94260F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EADAA41E-6B62-4BA5-B88B-9A03ED94260F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EADAA41E-6B62-4BA5-B88B-9A03ED94260F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

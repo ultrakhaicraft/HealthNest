@@ -1,0 +1,6 @@
+@PRN232_SchoolMedicalAPI_HostAddress = http://localhost:5177
+
+GET {{PRN232_SchoolMedicalAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

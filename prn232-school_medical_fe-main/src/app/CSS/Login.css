@@ -1,0 +1,88 @@
+
+
+
+
+
+.left-side {
+    flex: 0.4; /* Takes up 50% of the space (or its share if more flex items) */
+    background-color: #3c70b9; /* Example background color */
+    display: flex; /* For centering its content */
+    flex-direction: column; /* Stack logo and tagline vertically */
+    justify-content: center; /* Vertical centering */
+    align-items: center;     /* Horizontal centering */
+    padding: 20px; /* Add some padding */
+    text-align: center; /* Ensure text within logo/tagline is centered */
+}
+
+.left-side .logo {
+    color: #ffffff; /* Logo color */
+    font-size: 2.5em; /* Example size */
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.left-side .tagline {
+    color: #ffffff;
+    font-size: 1.2em; /* Example size */
+}
+
+.right-side {
+    flex: 1; /* Takes up 50% of the space */
+    background-color: #ffffff;
+    display: flex; /* For centering its content */
+    justify-content: center; /* Vertical centering */
+    align-items: center;     /* Horizontal centering */
+    padding: 20px; /* Add some padding */
+}
+
+.login-form {
+    background-color: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px; /* Max width for the form itself */
+}
+
+.login-form h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+.login-form .error-message{
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+
+/* Responsive adjustments (Optional, but good practice) */
+@media (max-width: 768px) {
+    .login-page {
+        flex-direction: column; /* Stack them on smaller screens */
+    }
+
+    .left-side, .right-side {
+        flex: none; /* Reset flex grow */
+        width: 100%;
+        min-height: 50vh; /* Give each section some height */
+    }
+
+    .left-side {
+        min-height: 30vh; /* Or adjust as needed */
+    }
+    
+    .right-side {
+        min-height: 70vh; /* Or adjust as needed */
+    }
+
+    .login-form {
+        max-width: 90%; /* Allow form to be wider on smaller screens */
+        margin: 0 auto; /* Center form if it's narrower than right-side */
+    }
+}

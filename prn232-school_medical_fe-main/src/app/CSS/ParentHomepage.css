@@ -1,0 +1,421 @@
+
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: #f8f9fa; /* Light gray background for the whole page */
+  color: #333;
+  line-height: 1.6;
+}
+
+.main-content {
+  flex-grow: 1;
+  width: 100%;
+  max-width: 1200px; /* Max width for content area */
+  margin: 0 auto; /* Center content */
+  padding: 20px;
+}
+
+/* Common button style (can be overridden) */
+.button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.button-primary {
+  background-color: #4f46e5; /* A nice blue */
+  color: white;
+}
+.button-primary:hover {
+  background-color: #4338ca;
+}
+
+.button-secondary {
+  background-color: #e0e7ff; /* Light blue/purple */
+  color: #4f46e5;
+}
+.button-secondary:hover {
+  background-color: #c7d2fe;
+}
+
+/* Utility for icon placeholders if not using img/svg */
+.icon-placeholder {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+  font-size: 1.2em; /* Adjust as needed */
+}
+
+.site-header {
+  background-color: #ffffff;
+  padding: 15px 0;
+  border-bottom: 1px solid #e5e7eb; /* Light gray border */
+  width: 100%;
+}
+
+.header-content {
+  width: 100%;
+  max-width: 1200px; /* Match main content width */
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo-icon {
+  font-size: 1.8rem; /* Adjust if using text/emoji */
+  color: #4f46e5; /* Primary blue */
+  margin-right: 8px;
+  /* If using img:
+  width: 30px;
+  height: 30px;
+  */
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #4f46e5; /* Primary blue */
+}
+
+.navigation ul {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+}
+
+.navigation a {
+  text-decoration: none;
+  color: #4b5563; /* Gray text */
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.navigation a:hover,
+.navigation a.active {
+  color: #4f46e5; /* Primary blue for hover/active */
+}
+
+.user-profile .user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.welcome-card {
+  background-color: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 80%; /* Responsive width */
+  margin: 40px auto; /* Center the card */
+}
+
+.welcome-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.box-warning{
+  background-color: #fef2f2; /* Light red */
+  border: 1px solid #fee2e2; /* Lighter red border */
+  color: #b91c1c; /* Dark red text */
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.welcome-text {
+  flex-grow: 1;
+}
+
+.welcome-greeting {
+  font-size: 1rem;
+  color: #6b7280; /* Lighter gray */
+}
+
+.welcome-name {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #4f46e5; /* Primary blue */
+  margin: 4px 0;
+}
+
+.welcome-info {
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+.parent-icon {
+  /* If using img:
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  margin-right: 5px;
+  */
+  color: #4f46e5; /* Primary blue */
+  font-size: 1.2em;
+  margin-right: 4px;
+  vertical-align: text-bottom;
+}
+
+.child-name {
+  color: #4f46e5; /* Primary blue */
+  font-weight: 500;
+}
+
+.health-status-card {
+  background-color: #f0fdf4; /* Very light green */
+  border-radius: 12px;
+  padding: 25px;
+  display: flex;
+  gap: 25px;
+  align-items: flex-start; /* Align items to the top */
+  height: fit-content;
+  width: 80%;
+  margin: 40px auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.health-status-icon-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 120px; /* Give it some space */
+}
+
+.status-icon-wrapper {
+  background-color: #10b981; /* Green background for icon */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.status-icon {
+  font-size: 2.5rem; /* Adjust for emoji/SVG size */
+  color: #ffffff; /* White heart, shield is green from wrapper */
+  /* If using img:
+  width: 30px;
+  height: 30px;
+  */
+}
+
+.status-text {
+  font-size: 0.9rem;
+  color: #059669; /* Darker green */
+  font-weight: 500;
+}
+
+.health-status-details {
+  flex-grow: 1;
+}
+
+.health-status-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #047857; /* Dark green */
+  margin-bottom: 8px;
+}
+
+.health-checkup-info {
+  font-size: 0.95rem;
+  color: #374151; /* Dark gray */
+  margin-bottom: 8px;
+}
+
+.checkup-date {
+  font-weight: bold;
+}
+
+.health-description {
+  font-size: 0.95rem;
+  color: #4b5563; /* Medium gray */
+  line-height: 1.5;
+}
+
+.health-status-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 180px; /* Ensure buttons don't wrap too early */
+}
+
+.button-view-report {
+  background-color: #4f46e5; /* Primary blue */
+  color: white;
+}
+.button-view-report:hover {
+  background-color: #4338ca;
+}
+
+.button-message-nurse {
+  background-color: #d1fae5; /* Lighter green matching card accent */
+  color: #047857; /* Dark green text */
+  border: 1px solid #a7f3d0;
+}
+.button-message-nurse:hover {
+  background-color: #a7f3d0;
+}
+
+.button-view-report .icon-placeholder,
+.button-message-nurse .icon-placeholder {
+  font-size: 1em; /* Adjust for emoji/SVG in button */
+}
+
+/* If using img for button icons:
+.button-icon {
+  width: 16px;
+  height: 16px;
+}
+*/
+
+.health-announcements-section {
+  margin: 40px auto;
+  width: 80%; /* Responsive width */
+}
+
+.announcements-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.announcements-icon {
+  font-size: 1.8rem; /* Adjust for emoji/SVG */
+  color: #f97316; /* Orange */
+  /* If using img:
+  width: 30px;
+  height: 30px;
+  */
+}
+
+.announcements-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #1f2937; /* Dark gray */
+}
+
+.announcements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+  gap: 20px;
+}
+
+.announcement-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.card-icon-wrapper {
+  /* This is just for the emoji, adjust if using actual SVGs */
+  font-size: 1.5rem;
+}
+/* If using img for icon:
+.card-icon-svg {
+  width: 24px;
+  height: 24px;
+}
+*/
+
+.card-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #111827; /* Very dark gray */
+  flex-grow: 1; /* Pushes tag to the right */
+}
+
+.card-tag {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+}
+
+.card-tag-upcoming {
+  background-color: #e0e7ff; /* Light blue/purple */
+  color: #4f46e5; /* Primary blue */
+}
+
+.card-tag-attention {
+  background-color: #fef3c7; /* Light yellow */
+  color: #d97706; /* Amber/Orange */
+}
+
+.card-body {
+  margin-bottom: 15px;
+  flex-grow: 1; /* Allows card to grow if description is long */
+}
+
+.card-event-date {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.card-description {
+  font-size: 0.9rem;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-top: 1px solid #f3f4f6; /* Very light separator */
+  padding-top: 10px;
+  margin-top: auto; /* Pushes footer to bottom of card */
+}
+
+.posted-icon {
+  font-size: 0.9rem; /* Adjust for emoji/SVG */
+  color: #9ca3af; /* Medium-light gray */
+  /* If using img:
+  width: 14px;
+  height: 14px;
+  */
+}
+
+.card-posted-date {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+

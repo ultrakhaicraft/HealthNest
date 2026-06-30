@@ -1,0 +1,427 @@
+ /* General Body and Font Styles */
+        body {
+          margin: 0;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+            'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+            sans-serif;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+        .app-container {
+          background-color: #f8fafc;
+          min-height: 100vh;
+          color: #1f2937;
+        }
+
+        .main-content {
+          padding: 2rem 1rem;
+
+        }
+
+      .screen-header {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 1rem 0;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+        .adjust-for-empty-record{
+          height: 80vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .form-wrapper {
+          max-width: 56rem; /* 896px */
+          margin: 0 auto;
+        }
+
+        .empty-display-wrapper {
+          max-width: 56rem; /* 896px */
+          margin: 0 auto;
+          display: flex;
+          justify-content: center;
+        }
+
+        /* Header Styles */
+        .app-header {
+          background-color: white;
+          box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .container {
+          max-width: 80rem; /* 1280px */
+          margin: 0 auto;
+          padding: 0 1rem;
+        }
+
+        .header-content {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          height: 4rem; /* 64px */
+        }
+
+        .logo-container {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem; /* 12px */
+        }
+
+        .logo-icon {
+          color: #2563eb;
+        }
+
+        .logo-title {
+          font-size: 1.25rem; /* 20px */
+          font-weight: bold;
+        }
+
+        .main-nav {
+          display: none; /* Hidden on small screens */
+          align-items: center;
+          gap: 1.5rem; /* 24px */
+        }
+
+        .main-nav a {
+          color: #4b5563;
+          text-decoration: none;
+          transition: color 0.2s;
+        }
+
+        .main-nav a:hover {
+          color: #2563eb;
+        }
+
+        .main-nav a.active {
+          color: #2563eb;
+          font-weight: 600;
+          border-bottom: 2px solid #2563eb;
+          padding-bottom: 0.25rem;
+        }
+
+        .profile-avatar {
+          height: 2.25rem; /* 36px */
+          width: 2.25rem; /* 36px */
+          border-radius: 9999px;
+          object-fit: cover;
+        }
+
+        /* Medical Record Form Styles */
+        .medical-record-form {
+          background-color: white;
+          padding: 2rem;
+          border-radius: 1rem; /* 16px */
+          box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+
+        .form-title-container {
+          display: flex;
+          align-items: flex-start;
+          gap: 1rem;
+          margin-bottom: 1rem;
+        }
+
+        .form-title-icon-wrapper {
+          background-color: #dbeafe;
+          color: #2563eb;
+          padding: 0.75rem;
+          border-radius: 0.5rem;
+        }
+
+        .form-title {
+          font-size: 1.25rem;
+          font-weight: bold;
+          color: #111827;
+        }
+
+        .form-subtitle {
+          font-size: 0.875rem;
+          color: #6b7280;
+          margin-top: 0.25rem;
+        }
+
+        .info-banner {
+          background-color: #eff6ff;
+          border-left: 4px solid #60a5fa;
+          color: #1d4ed8;
+          padding: 1rem;
+          border-radius: 0 0.5rem 0.5rem 0;
+          margin-bottom: 1.5rem;
+        }
+
+        .info-banner-content {
+          display: flex;
+          align-items: center;
+        }
+
+        .info-banner p {
+          font-size: 0.75rem; /* 12px */
+        }
+
+        .info-icon {
+          margin-right: 0.75rem;
+        }
+
+        /* Form Fields & Layout */
+        .form-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
+
+        .input-group {
+          margin-top: 1rem;
+        }
+
+        .input-label {
+          display: block;
+          font-size: 0.875rem;
+          font-weight: 500;
+          color: #374151;
+          margin-bottom: 0.25rem;
+        }
+
+        .input-field,
+        .textarea-field {
+          width: 100%;
+          padding: 0.5rem 0.75rem;
+          border: 1px solid #d1d5db;
+          border-radius: 0.5rem;
+          box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+          transition: all 0.2s;
+          box-sizing: border-box; /* Important for width calculation */
+        }
+
+        .input-field:focus,
+        .textarea-field:focus {
+          outline: none;
+          border-color: transparent;
+          box-shadow: 0 0 0 2px #3b82f6;
+        }
+
+        .input-with-unit {
+          position: relative;
+        }
+
+        .input-with-unit .input-field {
+          padding-right: 3rem; /* Space for unit */
+        }
+
+        .input-unit {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          display: flex;
+          align-items: center;
+          padding-right: 0.75rem;
+          font-size: 0.875rem;
+          color: #6b7280;
+        }
+
+        /* Form Section */
+        .form-section {
+          margin-top: 1.5rem;
+        }
+
+        .error-message{
+          color: #dc3545;
+          background-color: #f8d7da;
+          border: 1px solid #f5c6cb;
+          padding: 10px;
+          border-radius: 4px;
+          margin-bottom: 15px;
+          text-align: center;
+        }
+
+        .form-section-header {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          margin-bottom: 0.75rem;
+        }
+
+        .form-section-title {
+          font-size: 1rem;
+          font-weight: 600;
+          color: #374151;
+        }
+
+        /* Form Actions (Buttons) */
+        .form-actions {
+          margin-top: 2rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          gap: 0.75rem;
+        }
+
+        .button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          padding: 0.75rem 1.5rem;
+          border-radius: 0.5rem;
+          font-size: 0.875rem;
+          font-weight: 600;
+          border: 1px solid transparent;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+
+        .button:focus {
+          outline: none;
+          box-shadow: 0 0 0 2px white, 0 0 0 4px #3b82f6;
+        }
+
+        .button-primary {
+          background-color: #2563eb;
+          color: white;
+          box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+        }
+        .button-primary:hover {
+          background-color: #1d4ed8;
+        }
+
+        .button-secondary {
+          background-color: white;
+          color: #374151;
+          border-color: #d1d5db;
+        }
+        .button-secondary:hover {
+          background-color: #f9fafb;
+        }
+
+        .button .icon-small {
+          margin-right: 0.5rem;
+        }
+
+        /* Footer Styles */
+        .app-footer {
+          padding: 1.5rem 0;
+        }
+
+        .footer-content {
+          text-align: center;
+          font-size: 0.875rem;
+          color: #6b7280;
+        }
+
+        .footer-copyright {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 0.5rem;
+        }
+
+        .footer-copyright .icon-small {
+          color: #3b82f6;
+          margin-right: 0.25rem;
+        }
+
+        .social-links {
+          display: flex;
+          justify-content: center;
+          gap: 1rem;
+        }
+
+        .social-links a {
+          color: #6b7280;
+        }
+
+        .social-links a:hover {
+          color: #374151;
+        }
+
+        /* Icon Styles */
+        .icon-large { width: 1.75rem; height: 1.75rem; }
+        .icon-medium { width: 1.5rem; height: 1.5rem; }
+        .icon-small { width: 1.25rem; height: 1.25rem; }
+
+        .icon-heart { color: #ef4444; }
+        .icon-activity { color: #f97316; }
+        .icon-eye { color: #22c55e; }
+        .icon-info { color: #8b5cf6; }
+
+        /* Responsive Styles */
+        @media (min-width: 768px) {
+          .main-nav {
+            display: flex;
+          }
+          .form-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+          .form-actions {
+            flex-direction: row;
+          }
+          .button {
+            width: auto;
+          }
+        }
+
+        @media (min-width: 640px) {
+          .container {
+            padding: 0 1.5rem;
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .container {
+            padding: 0 2rem;
+          }
+        }
+
+
+.empty-record-container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center;   /* Center vertically */
+    min-height: 80vh;      /* Take up most of the viewport height */
+    padding: 20px;
+}
+
+/* This is the main content box with your text and button */
+.medical-record-view-group {
+    text-align: center; /* Ensures content inside is centered */
+    max-width: 500px;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.medical-record-view-group h1 {
+    color: #4f46e5; /* A modern, accessible blue */
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 0.5em; /* Adds space below the heading */
+}
+
+.medical-record-view-group p {
+    color: #4b5563; /* A nice dark gray */
+    font-size: 1em;
+    margin-bottom: 1.5em; /* Adds space between text and button */
+    line-height: 1.5;
+}
+
+.create-record-button {
+    display: inline-block; /* Important for applying padding correctly to <a> tags */
+    background-color: #4f46e5;
+    color: white;
+    font-size: 1em;
+    font-weight: 500;
+    padding: 12px 28px;
+    border-radius: 6px;
+    text-decoration: none; /* Remove the default underline from the link */
+    transition: background-color 0.2s ease-in-out;
+}
+
+.create-record-button:hover {
+    background-color: #4338ca;
+}
