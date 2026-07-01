@@ -32,6 +32,8 @@ export const useAuth = () => {
             const userData = response.data.data;
             const tokenData = userData.token;
 
+            console.log('Received user data:', userData);
+
             // Store the token
             if (tokenData && tokenData.tokenString) {
                 localStorage.setItem('authToken', tokenData.tokenString);
@@ -44,6 +46,10 @@ export const useAuth = () => {
 
             if (userData.id) {
                 localStorage.setItem('userId', userData.id);
+            }
+
+            if(userData.fullName){
+                localStorage.setItem('userName', userData.fullName);
             }
 
             
@@ -76,5 +82,13 @@ export const useAuth = () => {
         }
     };
 
-    return { login, isLoading, error, setError };
+    const logout = () =>{
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userRole');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userName');
+        navigate('/login'); // Redirect to login page after logout
+    }
+
+    return { logout, login, isLoading, error, setError };
 };

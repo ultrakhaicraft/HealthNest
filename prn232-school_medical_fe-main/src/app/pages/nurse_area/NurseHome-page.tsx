@@ -9,11 +9,18 @@ import MedicineRequestCRUDPage from './MedicineRequestCRUD-page';
 export default function NurseHomePage() {
     const [activeItem, setActiveItem] = useState('Home');
 
+    // Function to get user full name from localStorage
+    const getUserFullName = () => {
+        const userName = localStorage.getItem('userName');
+        console.log('Retrieved userName from localStorage:', userName);
+        return userName || 'Nurse';
+    };
+
     let mainContent;
     if (activeItem === 'Home') {
         mainContent = (
             <div>
-                <h1 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '2rem' }}>Welcome, Nurse!</h1>
+                <h1 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '2rem' }}>Welcome, {getUserFullName()}!</h1>
                 <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
                     <div
                         className="crud-container"

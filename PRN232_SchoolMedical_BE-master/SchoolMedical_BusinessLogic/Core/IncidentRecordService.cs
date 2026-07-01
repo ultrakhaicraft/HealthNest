@@ -5,6 +5,7 @@ using SchoolMedical_DataAccess.DTOModels;
 using SchoolMedical_DataAccess.Entities;
 using SchoolMedical_DataAccess.Enums;
 using SchoolMedical_DataAccess.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +16,10 @@ namespace SchoolMedical_BusinessLogic.Core;
 public class IncidentRecordService : IIncidentRecordService
 {
 	private readonly IUnitOfWork _unitOfWork;
-	private readonly IHubContext<IncidentRecordHub> _hubContext;
+	private readonly IHubContext<MyHub> _hubContext;
 
 
-	public IncidentRecordService(IUnitOfWork unitOfWork, IHubContext<IncidentRecordHub> hubContext)
+	public IncidentRecordService(IUnitOfWork unitOfWork, IHubContext<MyHub> hubContext)
 	{
 		_unitOfWork = unitOfWork;
 		_hubContext = hubContext;
@@ -43,7 +44,10 @@ public class IncidentRecordService : IIncidentRecordService
 	public async Task<IncidentRecordDetailModel> GetIncidentRecordDetailByIdAsync(string incidentId)
 	{
 		var repository = _unitOfWork.GetRepository<Incidentrecord>();
-		var incident = await repository.GetByIdAsync(incidentId);
+		var incident = await repository
+			.GetAll()
+			.Include(i => i.HandleByNavigation)
+			.FirstOrDefaultAsync(i => i.Id == incidentId);
 
 		if (incident == null)
 			return null;
@@ -104,7 +108,12 @@ public class IncidentRecordService : IIncidentRecordService
 		await repository.UpdateAsync(existingIncident);
 		await _unitOfWork.SaveAsync();
 
-		return await GetIncidentRecordDetailByIdAsync(incidentId);
+		//Notify all connected clients about the updated incident record
+		var incidentRecord = await GetIncidentRecordDetailByIdAsync(existingIncident.Id);
+		await _hubContext.Clients.All.SendAsync("IncidentRecordUpdated", incidentRecord);
+
+
+		return incidentRecord;
 	}
 
 	public async Task<bool> SoftDeleteIncidentRecordAsync(string incidentId)
@@ -120,6 +129,10 @@ public class IncidentRecordService : IIncidentRecordService
 			incident.Status = RecordStatus.Inactive.ToString();
 			await repository.UpdateAsync(incident);
 			await _unitOfWork.SaveAsync();
+
+			//Notify all connected clients about the deleted incident record
+			await _hubContext.Clients.All.SendAsync("IncidentRecordDeleted");
+
 
 			return true;
 		}

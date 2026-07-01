@@ -44,7 +44,9 @@ export interface StudentHealthRecordCreationData{
 }
 
 
-export interface StudentHealthRecordUpdate extends StudentHealthRecordCreationData {}
+export interface StudentHealthRecordUpdate extends StudentHealthRecordCreationData {
+    status: string | null;
+}
 
 
 
@@ -98,6 +100,13 @@ export const StudentHealthRecordService = {
           'Content-Type': 'application/json',
         },
       });
+    return response.data.data;
+  },
+
+  updateStatus: async (studentHealthRecordId: string, newStatus: string): Promise<string> => {
+    const response = await apiClient.patch<RawApiResponse<string>>(`/student-health-record/${studentHealthRecordId}/status`,
+      { status: newStatus }
+    );
     return response.data.data;
   },
 

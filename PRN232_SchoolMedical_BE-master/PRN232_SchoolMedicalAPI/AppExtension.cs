@@ -26,10 +26,13 @@ public static class AppExtension
 	}
 	public static void ConfigCors(this IServiceCollection services)
 	{
-		services.AddCors(options => options.AddPolicy("AllowAllOrigins", builder =>
-				builder.AllowAnyHeader()
+		services.AddCors(options => options.AddPolicy("AllowFrontEndOrigins", builder =>
+				builder.WithOrigins("http://localhost:5173")
+					   .AllowAnyHeader()
 					   .AllowAnyMethod()
-					   .AllowAnyOrigin())
+					   .AllowCredentials()
+					   )
+		
 		);
 	}
 

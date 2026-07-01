@@ -1,3 +1,4 @@
+import { useAuth } from "../feature/API/LoginService";
 import { IconHealthCheckup, IconHome, IconIncidentReport, IconMedical, IconMedicine, IconStudentRecord, IconVaccine } from "./IconList";
 
 interface SideNavProps {
@@ -15,6 +16,8 @@ const SideNav = ({ activeItem, onSelect }: SideNavProps) => {
     { icon: <IconVaccine className="icon-small" />, label: 'Vaccine' },
     { icon: <IconHealthCheckup className="icon-small" />, label: 'Health Checkup' },
   ];
+
+ const { logout } = useAuth();
 
   return (
     <aside className="side-nav">
@@ -39,6 +42,17 @@ const SideNav = ({ activeItem, onSelect }: SideNavProps) => {
               </button>
             </li>
           ))}
+          <li>
+            <button
+              type="button"
+              className="nav-item"
+              onClick={logout}
+              style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', padding: 0 }}
+            >
+              <IconHome className="icon-small" />
+              <span>Logout</span>
+            </button>
+          </li>
         </ul>
       </nav>
     </aside>

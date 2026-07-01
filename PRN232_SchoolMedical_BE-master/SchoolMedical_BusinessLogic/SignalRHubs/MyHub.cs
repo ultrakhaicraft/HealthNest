@@ -6,10 +6,10 @@ using SchoolMedical_DataAccess.DTOModels;
 namespace SchoolMedical_BusinessLogic.SignalRHubs
 {
 	// This class represents a SignalR hub for handling incident records.
-	public class IncidentRecordHub : Hub 
+	public class MyHub : Hub 
 	{
 
-		public IncidentRecordHub() { }
+		public MyHub() { }
 
 		// Notify all connected clients about a new incident record, which updates the 
 		// incident record list in real-time.

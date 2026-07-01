@@ -281,8 +281,31 @@ namespace SchoolMedical_BusinessLogic.Core
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine("Error creating student health record: " + e.Message);
-				throw new Exception("An error occurred while creating the student health record.", e);
+				Console.WriteLine("Error updating student health record: " + e.Message);
+				throw new Exception("An error occurred while updating the student health record.", e);
+			}
+		}
+
+		public async Task UpdateRecordStatusAsync(string recordId, string status)
+		{
+
+			try
+			{
+				var existingRecord = await _unitOfWork.GetRepository<Studenthealthrecord>().GetByIdAsync(recordId);
+
+				
+				existingRecord.Status = status;
+
+
+
+				await _unitOfWork.GetRepository<Studenthealthrecord>().UpdateAsync(existingRecord);
+				await _unitOfWork.SaveAsync();
+				return;
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine("Error updating student health record: " + e.Message);
+				throw new Exception("An error occurred while updating the student health record.", e);
 			}
 		}
 	}

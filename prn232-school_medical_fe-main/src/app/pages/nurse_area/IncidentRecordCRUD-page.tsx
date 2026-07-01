@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import "../../CSS/IncidentRecordCRUD.css"
 import { IconDelete, IconEdit, IconPlus, IconView } from '../../../components/IconList';
@@ -8,6 +8,7 @@ import { ConfirmationModal } from '../../../components/ConfirmationModal';
 import CreateIncidentRecordModal from '../../../components/IncidentRecord/CreateIncidentRecordModal';
 import { Toast } from '../../../components/Notification/Toast';
 import UpdateIncidentRecordModal from '../../../components/IncidentRecord/UpdateIncidentRecordModal';
+import { useSignalREvent } from '../../../components/SignalR/SignalrHook';
 
 // Main App Component
 export default function IncidentRecordCRUDPage() {
@@ -36,6 +37,16 @@ export default function IncidentRecordCRUDPage() {
   useEffect(() => {
     loadIncidents();
   }, []);
+
+    const handleIncidentAdded = useCallback((newIncident: IncidentRecordView) => {
+    setIncidentData(prev => [newIncident, ...prev]);
+    
+    //Refresh the table to show the new incident record
+    loadIncidents();
+    }, []);
+
+  useSignalREvent<IncidentRecordView>("IncidentRecordAdded", handleIncidentAdded);
+
 
   const handleViewIncident = async (id: string) => {
     setLoading(true);
@@ -263,3 +274,7 @@ const StatusBadge = ({ status }: StatusBadgeProps) => {
   
   return <span className={`status-badge ${getStatusClass(status)}`}>{status}</span>;
 };
+
+
+
+

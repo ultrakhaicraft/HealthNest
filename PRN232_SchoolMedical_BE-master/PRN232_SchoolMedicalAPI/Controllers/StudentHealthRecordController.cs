@@ -94,6 +94,20 @@ public class StudentHealthRecordController : ControllerBase
 		return Ok();
 	}
 
+	[HttpPut("{id}/status")]
+	public async Task<IActionResult> UpdateStudentHealthRecordStatus(string id, [FromQuery] String status)
+	{
+		if (!ModelState.IsValid)
+		{
+			return BadRequest(ModelState);
+		}
+
+
+		await _studentHealthRecordService.UpdateRecordStatusAsync(id, status);
+		HttpContext.Items["CustomMessage"] = "Record status updated successfully";
+		return Ok();
+	}
+
 	/// <summary>
 	/// Delete student health record
 	/// </summary>

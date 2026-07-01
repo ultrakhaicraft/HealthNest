@@ -54,7 +54,10 @@ if (app.Environment.IsDevelopment())
     await SeedData.SeedAsync(context);
     */
 }
-app.UseCors("AllowAllOrigins");
+
+
+
+app.UseCors("AllowFrontEndOrigins");
 
 app.UseMiddleware<ErrorHandlerMiddleware>();
 
@@ -67,6 +70,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Map the SignalR hub 
-app.MapHub<IncidentRecordHub>("/incidentrecordHub");
+app.MapHub<MyHub>("/myHub");
 
 app.Run();

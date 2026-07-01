@@ -20,7 +20,7 @@ public static class BusinessLogicDI
 	public static void AddApplication(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddRepository();
-		services.AddAutoMapper();
+		services.AddAutoMapper(cfg => cfg.AddMaps(typeof(MapperProfile).Assembly)); 
 		services.AddServices(configuration);
 	}
 
@@ -32,10 +32,7 @@ public static class BusinessLogicDI
 
 	}
 
-	private static void AddAutoMapper(this IServiceCollection services)
-	{
-		services.AddAutoMapper(typeof(MapperProfile));
-	}
+	
 
 	public static void AddServices(this IServiceCollection services, IConfiguration configuration)
 	{

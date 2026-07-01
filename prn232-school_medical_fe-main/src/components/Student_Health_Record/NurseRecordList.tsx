@@ -1,17 +1,29 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { StudentHealthRecordDetail, getAllStudentRecords, updateRecordStatus } from "../../feature/API/StudentHealthRecordService";
+import { GetAllStudentHealthRecordsParams, StudentHealthRecordService, StudentHealthRecordView } from "../../feature/API/StudentHealthRecordService";
 
 const NurseRecordList = () => {
-  const [records, setRecords] = useState<StudentHealthRecordDetail[]>([]);
+  const [records, setRecords] = useState<StudentHealthRecordView[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getAllStudentRecords().then(setRecords).finally(() => setLoading(false));
+    //Set empty parameters for fetching all records
+    const params:GetAllStudentHealthRecordsParams = {
+      PageNumber: 1,
+      PageSize: 10,
+      Status: '',
+      StudentName: ''
+    }
+    StudentHealthRecordService.getAll(params)
+      .then(res=>setRecords(res.data))
+      .catch(err => console.error("Error fetching student health records:", err))
+      .finally(() => setLoading(false));
   }, []);
 
-  const handleStatusChange = (id: number, newStatus: string) => {
-    updateRecordStatus(id, newStatus).then(() =>
+  const handleStatusChange = (id: string, newStatus: string) => {
+      
+
+      StudentHealthRecordService.updateStatus(id, newStatus).then(() =>
       setRecords(prev => prev.map(r => (r.id === id ? { ...r, status: newStatus } : r)))
     );
   };
@@ -26,7 +38,6 @@ const NurseRecordList = () => {
         <thead>
           <tr>
             <th>Student</th>
-            <th>Parent</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -35,7 +46,6 @@ const NurseRecordList = () => {
           {records.map(record => (
             <tr key={record.id}>
               <td>{record.studentName}</td>
-              <td>{record.parentName}</td>
               <td>{record.status}</td>
               <td>
                 <Link to={`/nurse/records/${record.id}`}>View</Link>
