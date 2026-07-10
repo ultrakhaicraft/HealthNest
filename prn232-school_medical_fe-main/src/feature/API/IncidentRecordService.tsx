@@ -31,12 +31,12 @@ export interface IncidentRecordUpdate {
 }
 
 export interface IncidentRecordQueryParams {
-  IncidentType?: string;
-  Status?: string;
-  StudentId?: string;
+  //IncidentType?: string;
+  //Status?: string;
+  //StudentId?: string;
   PageIndex?: number;
   PageSize?: number;
-  IsDescending?: boolean;
+  //IsDescending?: boolean;
 }
 
 export interface PaginatedResponse<T> {
@@ -56,8 +56,8 @@ interface RawApiResponse<T> {
 }
 
 export const IncidentRecordService = {
-  getAll: async (params: IncidentRecordQueryParams = {}): Promise<IncidentRecordView[]> => {
-    const response = await apiClient.get<RawApiResponse<IncidentRecordView[]>>('/incident-record', { params });
+  getAll: async (params: IncidentRecordQueryParams): Promise<PaginatedResponse<IncidentRecordView>> => {
+    const response = await apiClient.get<RawApiResponse<PaginatedResponse<IncidentRecordView>>>('/incident-record', { params });
     return response.data.data;
   },
 

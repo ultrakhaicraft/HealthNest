@@ -20,36 +20,11 @@ export default function NurseHomePage() {
     if (activeItem === 'Home') {
         mainContent = (
             <div>
-                <h1 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '2rem' }}>Welcome, {getUserFullName()}!</h1>
-                <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
-                    <div
-                        className="crud-container"
-                        style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-                        onClick={() => setActiveItem('Medicine')}
-                    >
-                        <IconMedicine className="icon-large" />
-                        <h2 style={{ margin: '1rem 0 0.5rem 0' }}>Manage Medicines</h2>
-                        <p style={{ color: '#6b7280', textAlign: 'center' }}>View, add, edit, and remove medicines in the school inventory.</p>
-                    </div>
-                    <div
-                        className="crud-container"
-                        style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-                        onClick={() => setActiveItem('Medicine Request')}
-                    >
-                        <IconMedical className="icon-large" />
-                        <h2 style={{ margin: '1rem 0 0.5rem 0' }}>Medicine Requests</h2>
-                        <p style={{ color: '#6b7280', textAlign: 'center' }}>Review and manage medicine requests from parents.</p>
-                    </div>
-                    <div
-                        className="crud-container"
-                        style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-                        onClick={() => setActiveItem('Incident Report')}
-                    >
-                        <IconIncidentReport className="icon-large" />
-                        <h2 style={{ margin: '1rem 0 0.5rem 0' }}>Manage Incident Records</h2>
-                        <p style={{ color: '#6b7280', textAlign: 'center' }}>Log and review student incident records and reports.</p>
-                    </div>
-                </div>
+                <h2>Welcome, {getUserFullName()}!</h2>
+                <p>This is your personal dashboard.</p>
+                <p>TODO: Active Incident Reports</p>
+                <p>TODO: Active Medicine Requests</p>
+                <p>TODO: Upcoming Vaccine Appointments</p>
             </div>
         );
     } else if (activeItem === 'Medicine') {

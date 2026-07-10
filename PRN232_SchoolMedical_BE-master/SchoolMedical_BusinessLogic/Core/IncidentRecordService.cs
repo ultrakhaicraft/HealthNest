@@ -1,14 +1,18 @@
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
+using Org.BouncyCastle.Asn1.Ocsp;
 using SchoolMedical_BusinessLogic.Interface;
 using SchoolMedical_BusinessLogic.SignalRHubs;
+using SchoolMedical_BusinessLogic.Utility;
 using SchoolMedical_DataAccess.DTOModels;
 using SchoolMedical_DataAccess.Entities;
 using SchoolMedical_DataAccess.Enums;
 using SchoolMedical_DataAccess.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace SchoolMedical_BusinessLogic.Core;
@@ -16,21 +20,35 @@ namespace SchoolMedical_BusinessLogic.Core;
 public class IncidentRecordService : IIncidentRecordService
 {
 	private readonly IUnitOfWork _unitOfWork;
+	private readonly IDistributedCache _cache;
 	private readonly IHubContext<MyHub> _hubContext;
+	private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(10);
 
 
-	public IncidentRecordService(IUnitOfWork unitOfWork, IHubContext<MyHub> hubContext)
+	public IncidentRecordService(IUnitOfWork unitOfWork, IHubContext<MyHub> hubContext, IDistributedCache cache)
 	{
 		_unitOfWork = unitOfWork;
 		_hubContext = hubContext;
+		_cache = cache;
 	}
 
-	public async Task<IEnumerable<IncidentRecordViewModel>> GetAllIncidentRecordsAsync()
+	public async Task<PagingModel<IncidentRecordViewModel>> GetAllIncidentRecordsAsync(IncidentRecordQuery request)
 	{
-		var repository = _unitOfWork.GetRepository<Incidentrecord>();
-		var incidents = await repository.GetAllAsync();
+		//Get the data from cache if available, otherwise fetch from the database and cache it for future requests
+		const string cacheKey = "all_incident_record";
 
-		return incidents.Select(i => new IncidentRecordViewModel
+		var cachedData = await _cache.GetStringAsync(cacheKey);
+		if (cachedData != null)
+		{
+			var cachedIncidents = JsonSerializer.Deserialize<List<IncidentRecordViewModel>>(cachedData)!;
+			var pagedData = await PagingExtension.ToPagingModel(cachedIncidents, request.PageIndex, request.PageSize);
+		}
+
+
+		var repository = _unitOfWork.GetRepository<Incidentrecord>();
+		IQueryable<Incidentrecord> incidents = await repository.GetAllAsync();
+
+		List<IncidentRecordViewModel> incidentViewModels = incidents.Select(i => new IncidentRecordViewModel
 		{
 			Id = i.Id,
 			StudentId = i.StudentId,
@@ -38,7 +56,17 @@ public class IncidentRecordService : IIncidentRecordService
 			IncidentType = i.IncidentType,
 			DateOccurred = i.DateOccurred,
 			Status = i.Status
+		}).ToList();
+
+		// Cache the data for future requests
+		await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(incidentViewModels), new DistributedCacheEntryOptions
+		{
+			AbsoluteExpirationRelativeToNow = CacheDuration
 		});
+
+		var pagedResult = await PagingExtension.ToPagingModel(incidentViewModels, request.PageIndex, request.PageSize);
+
+		return pagedResult;
 	}
 
 	public async Task<IncidentRecordDetailModel> GetIncidentRecordDetailByIdAsync(string incidentId)

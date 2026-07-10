@@ -33,6 +33,7 @@ builder.Logging.SetMinimumLevel(LogLevel.Debug);
 
 
 builder.Services.AddSignalR();
+builder.Services.AddDistributedMemoryCache();
 
 
 var app = builder.Build();

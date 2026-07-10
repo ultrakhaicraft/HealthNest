@@ -25,9 +25,9 @@ public class IncidentRecordController : ControllerBase
     /// </summary>
     [HttpGet]
     //[Authorize(Roles = "SchoolNurse, Admin, Manager")]
-    public async Task<IActionResult> GetIncidentRecords()
+    public async Task<IActionResult> GetIncidentRecords([FromQuery] IncidentRecordQuery filter)
     {
-        var result = await _incidentRecordService.GetAllIncidentRecordsAsync();
+		var result = await _incidentRecordService.GetAllIncidentRecordsAsync(filter);
         HttpContext.Items["CustomMessage"] = "Retrieving All Incident Records Successful";
         return Ok(result);
     }

@@ -64,7 +64,15 @@ namespace SchoolMedical_DataAccess.DTOModels;
 	    public string? IncidentType { get; set; } //Search Incident Type
 	    public DateTime DateOccurred { get; set; } //Sort theo ascending date
 	    public string? Status { get; set; }
-}
+    }
 
-       
+    public class IncidentRecordQuery
+    {
+	
+		public int PageIndex { get; set; } = 1; // Default to first page
+		public int PageSize { get; set; } = 10; // Default to 10 items per page
+	}
+
+
+
 

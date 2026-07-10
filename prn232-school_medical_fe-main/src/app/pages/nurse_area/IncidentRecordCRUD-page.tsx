@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 
 import "../../CSS/IncidentRecordCRUD.css"
 import { IconDelete, IconEdit, IconPlus, IconView } from '../../../components/IconList';
-import { IncidentRecordService, IncidentRecordView } from '../../../feature/API/IncidentRecordService';
+import { IncidentRecordQueryParams, IncidentRecordService, IncidentRecordView } from '../../../feature/API/IncidentRecordService';
 import { IncidentRecordViewDetail } from '../../../components/IncidentRecord/IncidentRecordView';
 import { ConfirmationModal } from '../../../components/ConfirmationModal';
 import CreateIncidentRecordModal from '../../../components/IncidentRecord/CreateIncidentRecordModal';
@@ -24,19 +24,34 @@ export default function IncidentRecordCRUDPage() {
   const [incidentToUpdate, setIncidentToUpdate] = useState<IncidentRecordView | null>(null);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error'; isVisible: boolean }>({ message: '', type: 'success', isVisible: false });
 
+  const [PageIndex, setPageIndex] = useState(0);
+  const [PageSize] = useState(10);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+
   
 
-  const loadIncidents = () => {
-    IncidentRecordService.getAll()
-      .then((res: IncidentRecordView[]) => {
-        setIncidentData(res);
+    // Function to load incidents with pagination, will run again based on PageIndex and PageSize changes
+    const loadIncidents = useCallback((PageIndexArg: number = 0, PageSizeArg: number = 10) => {
+      const params: IncidentRecordQueryParams = {
+        PageIndex: PageIndexArg,
+        PageSize: PageSizeArg
+      }
+
+      IncidentRecordService.getAll(params)
+      .then((res) => {
+        setIncidentData(res.data ?? []);
+        setTotalPages(res.totalPages);
+        setPageIndex(res.pageIndex);
+        setTotalCount(res.totalCount);
       })
       .catch(console.error);
-  };
+    }, [PageIndex, PageSize]);
 
-  useEffect(() => {
-    loadIncidents();
-  }, []);
+    useEffect(() => {
+      loadIncidents(PageIndex, PageSize);
+      
+    }, [PageIndex, PageSize]);
 
     const handleIncidentAdded = useCallback((newIncident: IncidentRecordView) => {
     setIncidentData(prev => [newIncident, ...prev]);
@@ -154,6 +169,11 @@ export default function IncidentRecordCRUDPage() {
         loading={loading}
         onCreateIncident={handleCreateIncident}
         onEditIncident={handleEditIncident}
+        PageIndex={PageIndex}
+        setPageIndex={setPageIndex}
+        totalPages={totalPages}
+        setTotalPages={setTotalPages}
+        totalCount={totalCount}
       />
       {showModal && selectedIncident && (
         <IncidentRecordViewDetail 
@@ -198,7 +218,8 @@ export default function IncidentRecordCRUDPage() {
 
 // All Sub component of the page
 // Main CRUD component for incident records
-const IncidentRecordCRUD = ({ incidentData = [], onViewIncident, onDeleteIncident, loading, onCreateIncident, onEditIncident }: { incidentData: IncidentRecordView[], onViewIncident: (id: string) => void, onDeleteIncident: (incident: IncidentRecordView) => void, loading: boolean, onCreateIncident: () => void, onEditIncident: (incident: IncidentRecordView) => void }) => {
+const IncidentRecordCRUD = ({ incidentData = [], onViewIncident, 
+  onDeleteIncident, loading, onCreateIncident, onEditIncident, PageIndex, setPageIndex, totalPages, setTotalPages, totalCount }: IncidentRecordCRUDProps) => {
   return (
     <div className="crud-container">
       <div className="crud-header">
@@ -247,12 +268,31 @@ const IncidentRecordCRUD = ({ incidentData = [], onViewIncident, onDeleteInciden
           </tbody>
         </table>
       </div>
+      <div className="pagination-controls">
+        <button disabled={PageIndex<=0} onClick={()=>setPageIndex(p=>p-1)}>Previous</button>
+        <span>Page {PageIndex} of {totalPages} ({totalCount} total)</span>
+        <button disabled={PageIndex>=totalPages} onClick={()=>setPageIndex(p=>p+1)}>Next</button>
+      </div>
     </div>
   );
 }
 
 interface StatusBadgeProps {
   status: string;
+}
+
+interface IncidentRecordCRUDProps {
+  incidentData: IncidentRecordView[];
+  onViewIncident: (id: string) => void;
+  onDeleteIncident: (incident: IncidentRecordView) => void;
+  loading: boolean;
+  onCreateIncident: () => void;
+  onEditIncident: (incident: IncidentRecordView) => void;
+  PageIndex: number;
+  setPageIndex: React.Dispatch<React.SetStateAction<number>>;
+  totalPages: number;
+  setTotalPages: React.Dispatch<React.SetStateAction<number>>;
+  totalCount: number;
 }
 
 // Status Badge Component
