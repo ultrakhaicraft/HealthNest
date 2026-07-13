@@ -16,6 +16,7 @@
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.0",
     "react-toastify": "^11.0.5",
+    "recharts": "^3.9.2",
     "vite-react": "file:"
   },
   "devDependencies": {

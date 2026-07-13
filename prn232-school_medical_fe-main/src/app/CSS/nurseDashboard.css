@@ -1,0 +1,162 @@
+.dashboard-container{
+    
+    min-height: 100vh;
+}
+
+.dashboard-header h1{
+    font-size: 2em;
+    
+}
+
+.dashboard-number-cards{
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    margin: 1.5rem 0;
+
+}
+
+.dashboard-card{
+    background-color: #ffffff;
+    border: 1px solid #9ab9df;
+    border-radius: 8px;
+    border-left: 4px solid #9ab9df;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+
+}
+
+.dashboard-card:hover {
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+  transform: translateY(-2px);
+}
+
+.card-label {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 500;
+  margin: 0 0 0.35rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.card-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin: 0;
+}
+
+.dashboard-graph {
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem 1.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.chart-title{
+  margin: 0 0 1.25rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color:#1e3a8a
+}
+
+.chart-tooltip{
+  background-color: #ffffff;
+  border: 1px solid #dbeafe;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+}
+
+.chart-tooltip-label {
+  margin: 0 0 0.15rem 0;
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.chart-tooltip-value {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #2563eb;
+  font-weight: 700;
+}
+
+
+/* Dashboard Tables */
+
+.dashboard-table-container {
+  display: flex;
+  gap: 1.5rem;
+  width: 100%;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.dashboard-table-wrapper {
+  flex: 1 1 400px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.dashboard-table-wrapper > p {
+  margin: 0 0 1.1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e3a8a;
+}
+
+.dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dashboard-table thead th {
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid #eef2f9;
+}
+
+.dashboard-table tbody td {
+  font-size: 0.88rem;
+  color: #1e293b;
+  padding: 0.85rem 0.75rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.dashboard-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.dashboard-table tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.dashboard-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.dashboard-table td:first-child {
+  font-weight: 500;
+}
+
+/* Status badge, reused pattern from status-badge elsewhere in the app */
+.table-status-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
