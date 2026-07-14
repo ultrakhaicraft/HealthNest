@@ -1,6 +1,18 @@
+import { ViewHealthCheckupEventDTO } from "../../feature/API/HealthCheckupEventService";
+import { ViewVaccineEventDTO } from "../../feature/API/VaccineCheckupEventService";
+
+interface DashboardTablesProps {
+    healthCheckupEvents: ViewHealthCheckupEventDTO[];
+    vaccineCheckupEvents: ViewVaccineEventDTO[];
+}
+
+const formatDate = (date: string | null | undefined) => {
+  if (!date) return '—';
+  return new Date(date).toLocaleDateString();
+};
 
 
-export const DashboardTables = () => {
+export const DashboardTables = ({ healthCheckupEvents, vaccineCheckupEvents }: DashboardTablesProps) => {
 
     return(
         <section className="dashboard-table-container">
@@ -16,18 +28,21 @@ export const DashboardTables = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Q3 Health Checkup 2026</td>
-                                <td>15/08/2026</td>
-                                <td>12/07/2026</td>
-                                <td>Upcoming</td>
-                            </tr>
-                            <tr>
-                                <td>Q4 Health Checkup 2026</td>
-                                <td>15/12/2026</td>
-                                <td>20/11/2026</td>
-                                <td>Upcoming</td>
-                            </tr>
+                            {healthCheckupEvents.length === 0 ? (
+                                <tr>
+                                    <td colSpan={4} className="table-empty-state">No upcoming health checkups</td>
+                                </tr>
+                            ):
+                            (healthCheckupEvents.map((event)=>(
+                                <tr key={event.id}>
+                                <td>{event.title}</td>
+                                <td>{formatDate(event.dateOccurred)}</td>
+                                <td>{formatDate(event.dateSignupStart)}</td>
+                                <td><span className="table-status-badge">{event.status ?? '—'}</span></td>
+                                </tr>
+                                ))
+                            
+                            )}
                         </tbody>
                     </table>
                 </div>
@@ -43,18 +58,21 @@ export const DashboardTables = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                               <td>Rabies Vaccine Checkup 2026</td>
-                                <td>14/07/2026</td>
-                                <td>08/07/2026</td>
-                                <td>Upcoming</td>
-                            </tr>
-                            <tr>
-                                <td>Q4 Vaccine Checkup 2027</td>
-                                <td>15/12/2027</td>
-                                <td>20/11/2027</td>
-                                <td>Upcoming</td>
-                            </tr>
+                            {vaccineCheckupEvents.length === 0 ? (
+                                <tr>
+                                    <td colSpan={4} className="table-empty-state">No upcoming health vaccines</td>
+                                </tr>
+                            ):(
+                                vaccineCheckupEvents.map((event) => (
+                                    <tr key={event.id}>
+                                        <td>{event.title}</td>
+                                        <td>{formatDate(event.dateOccurred)}</td>
+                                        <td>{formatDate(event.dateSignupStart)}</td>
+                                        <td><span className="table-status-badge">{event.status ?? '—'}</span></td>
+                                    </tr>
+                                ))
+                            )}
+                                
                         </tbody>
                     </table>
                 </div>

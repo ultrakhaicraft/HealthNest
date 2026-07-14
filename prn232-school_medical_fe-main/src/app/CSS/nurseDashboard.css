@@ -111,10 +111,12 @@
   color: #1e3a8a;
 }
 
+
 .dashboard-table {
   width: 100%;
   border-collapse: collapse;
 }
+
 
 .dashboard-table thead th {
   text-align: left;
@@ -124,14 +126,14 @@
   letter-spacing: 0.04em;
   color: #64748b;
   padding: 0.6rem 0.75rem;
-  border-bottom: 1px solid #eef2f9;
+  border-bottom: 1px solid #686d75;
 }
 
 .dashboard-table tbody td {
   font-size: 0.88rem;
   color: #1e293b;
   padding: 0.85rem 0.75rem;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #d0d6db;
 }
 
 .dashboard-table tbody tr:last-child td {
@@ -160,3 +162,4 @@
   background-color: #dbeafe;
   color: #1d4ed8;
 }
+
