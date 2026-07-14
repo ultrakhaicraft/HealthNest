@@ -6,11 +6,12 @@ This is a personal project suggested by one of my friend.
 
 ## Function
 
-- Role-based Authorization for Staff and Parent
-- Manage list of student emergency
-- Manage medical equipment
+- Role-based Authorization
+- Manage list of student emergency through incident record
+- Manage student health record
+- Manage medical equipment inventory
 - Parent can send medical medical prescription to staff
-- Manage Student Medical Prescription sent by Parent
+- Manage health related event like checkup or vaccine
 
 ## Technology
 - .NET API for Backend
