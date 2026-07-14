@@ -36,11 +36,11 @@ public class AuthService : IAuthService
 			var account = _unitOfWork.GetRepository<Account>().Find(user => user.Email == request.Email);
 			if (account == null)
 			{
-				throw new AppException(ErrorMessage.EmailNotFound);
+				throw new NotFoundException(ErrorMessage.EmailNotFound);
 			}
 			if (!BCrypt.Net.BCrypt.Verify(request.Password, account.Password))
 			{
-				throw new AppException(ErrorMessage.PasswordIncorrect);
+				throw new UnauthorizedException(ErrorMessage.PasswordIncorrect);
 			}
 
 			var authClaims = new List<Claim>
@@ -77,14 +77,13 @@ public class AuthService : IAuthService
 		{
 			var existingAccount = _unitOfWork.GetRepository<Account>().Find(user => user.Email == request.Email);
 			if (existingAccount != null)
-				throw new AppException(ErrorMessage.EmailExist);
+				throw new BadRequestException(ErrorMessage.EmailExist);
 
 			if (!IsValid(request.Password))
-				throw new AppException(ErrorMessage.ValidatePassword);
+				throw new BadRequestException(ErrorMessage.ValidatePassword);
 
 			if(request.Password!= request.ConfirmPassword)
-				throw new AppException(ErrorMessage.ConfirmPasswordNotMatch);
-
+				throw new BadRequestException(ErrorMessage.ConfirmPasswordNotMatch);
 
 			var account = new Account
 			{

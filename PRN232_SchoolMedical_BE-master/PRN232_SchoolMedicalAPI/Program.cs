@@ -6,6 +6,7 @@ using SchoolMedical_DataAccess.Entities;
 using System.Text.Json.Serialization;
 using SchoolMedical_DataAccess.Data;
 using SchoolMedical_BusinessLogic.SignalRHubs;
+using Microsoft.EntityFrameworkCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,12 +20,12 @@ builder.Services.AddApplication(builder.Configuration);
 
 builder.Services.AddControllers(op =>
 {
-	op.Filters.Add(new ResultManipulator());
+	
 })
-	.AddJsonOptions(opt =>
-	{
-		opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-	});
+.AddJsonOptions(opt =>
+{
+	opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 
 // Set the minimum level to Debug
@@ -38,8 +39,8 @@ builder.Services.AddDistributedMemoryCache();
 
 var app = builder.Build();
 
-app.UseMiddleware<ErrorHandlerMiddleware>();
-app.UseMiddleware<ResponseHandlerMiddleware>();
+app.UseMiddleware<GlobalErrorExceptionHandlerMiddleware>();
+
 
 
 // Configure the HTTP request pipeline.
@@ -60,7 +61,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowFrontEndOrigins");
 
-app.UseMiddleware<ErrorHandlerMiddleware>();
+app.UseMiddleware<GlobalErrorExceptionHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 

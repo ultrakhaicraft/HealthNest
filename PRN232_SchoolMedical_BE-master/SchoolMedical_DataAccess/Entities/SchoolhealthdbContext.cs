@@ -27,10 +27,6 @@ public partial class SchoolhealthdbContext : DbContext
 
     public virtual DbSet<Medicinerequest> Medicinerequests { get; set; }
 
-    public virtual DbSet<StudentHealthcheckup> StudentHealthcheckups { get; set; }
-
-    public virtual DbSet<StudentVaccinecheckup> StudentVaccinecheckups { get; set; }
-
     public virtual DbSet<Studenthealthrecord> Studenthealthrecords { get; set; }
 
     public virtual DbSet<Treatmentrecord> Treatmentrecords { get; set; }
@@ -79,8 +75,6 @@ public partial class SchoolhealthdbContext : DbContext
 
             entity.HasIndex(e => e.CreatedBy, "IDX_HealthCheckupEvent_CreatedBy");
 
-            entity.HasIndex(e => e.StudentId, "IDX_HealthCheckupEvent_StudentId");
-
             entity.Property(e => e.Id).HasMaxLength(50);
             entity.Property(e => e.Content).HasColumnType("text");
             entity.Property(e => e.CreatedBy).HasMaxLength(50);
@@ -89,19 +83,14 @@ public partial class SchoolhealthdbContext : DbContext
             entity.Property(e => e.DateSignupStart).HasColumnType("datetime");
             entity.Property(e => e.ShortDescription).HasMaxLength(255);
             entity.Property(e => e.Status).HasMaxLength(20);
-            entity.Property(e => e.StudentId).HasMaxLength(50);
             entity.Property(e => e.Title).HasMaxLength(100);
 
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.HealthcheckupeventCreatedByNavigations)
                 .HasForeignKey(d => d.CreatedBy)
                 .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("FK_HealthCheckupEvent_CreatedBy");
-
-            entity.HasOne(d => d.Student).WithMany(p => p.HealthcheckupeventStudents)
-                .HasForeignKey(d => d.StudentId)
-                .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("FK_HealthCheckupEvent_Student");
-        });
+                .HasConstraintName("FK_HealthCheckupEvent_CreatedBy");		
+           
+		});
 
         modelBuilder.Entity<Incidentrecord>(entity =>
         {
@@ -201,61 +190,61 @@ public partial class SchoolhealthdbContext : DbContext
                 .HasConstraintName("FK_MedicineRequest_RequestBy");
         });
 
-        modelBuilder.Entity<StudentHealthcheckup>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
+		// Many-to-many join: Healthcheckupevent <-> Account
 
-            entity.ToTable("student_healthcheckup");
+		modelBuilder.Entity<HealthcheckupeventStudent>(entity =>
+		{
+			entity.ToTable("healthcheckupevent_student");
 
-            entity.HasIndex(e => e.EventId, "EventId");
+			entity.HasKey(e => new { e.HealthcheckupeventId, e.StudentId });
 
-            entity.HasIndex(e => e.StudentId, "StudentId");
+			entity.Property(e => e.HealthcheckupeventId).HasMaxLength(50);
+			entity.Property(e => e.StudentId).HasMaxLength(50);
+			entity.Property(e => e.SignupDate).HasColumnType("datetime");
+			entity.Property(e => e.ResultSummary).HasColumnType("text");
+			entity.Property(e => e.Status).HasMaxLength(50);
 
-            entity.Property(e => e.Id).HasMaxLength(50);
-            entity.Property(e => e.EventId).HasMaxLength(50);
-            entity.Property(e => e.ResultSummary).HasColumnType("text");
-            entity.Property(e => e.Status).HasMaxLength(50);
-            entity.Property(e => e.StudentId).HasMaxLength(50);
+			entity.HasOne(e => e.Healthcheckupevent)
+				  .WithMany(h => h.HealthcheckupeventStudents)
+				  .HasForeignKey(e => e.HealthcheckupeventId)
+				  .OnDelete(DeleteBehavior.Cascade)
+				  .HasConstraintName("FK_HealthcheckupeventStudent_Event");
 
-            entity.HasOne(d => d.Event).WithMany(p => p.StudentHealthcheckups)
-                .HasForeignKey(d => d.EventId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("student_healthcheckup_ibfk_1");
+			entity.HasOne(e => e.Student)
+				  .WithMany(a => a.HealthcheckupeventStudents)
+				  .HasForeignKey(e => e.StudentId)
+				  .OnDelete(DeleteBehavior.Cascade)
+				  .HasConstraintName("FK_HealthcheckupeventStudent_Student");
+		});
 
-            entity.HasOne(d => d.Student).WithMany(p => p.StudentHealthcheckups)
-                .HasForeignKey(d => d.StudentId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("student_healthcheckup_ibfk_2");
-        });
+		// Many-to-many join: Vaccineevent <-> Account
+		modelBuilder.Entity<VaccineeventStudent>(entity =>
+		{
+			entity.ToTable("vaccineevent_student");
 
-        modelBuilder.Entity<StudentVaccinecheckup>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
+			entity.HasKey(e => new { e.VaccineeventId, e.StudentId });
 
-            entity.ToTable("student_vaccinecheckup");
+			entity.Property(e => e.VaccineeventId).HasMaxLength(50);
+			entity.Property(e => e.StudentId).HasMaxLength(50);
+			entity.Property(e => e.SignupDate).HasColumnType("datetime");
+			entity.Property(e => e.ResultSummary).HasColumnType("text");
+			entity.Property(e => e.Status).HasMaxLength(50);
 
-            entity.HasIndex(e => e.EventId, "EventId");
+			entity.HasOne(e => e.Vaccineevent)
+				  .WithMany(v => v.VaccineeventStudents)
+				  .HasForeignKey(e => e.VaccineeventId)
+				  .OnDelete(DeleteBehavior.Cascade)
+				  .HasConstraintName("FK_VaccineeventStudent_Event");
 
-            entity.HasIndex(e => e.StudentId, "StudentId");
+			entity.HasOne(e => e.Student)
+				  .WithMany(a => a.VaccineeventStudents)
+				  .HasForeignKey(e => e.StudentId)
+				  .OnDelete(DeleteBehavior.Cascade)
+				  .HasConstraintName("FK_VaccineeventStudent_Student");
+		});
 
-            entity.Property(e => e.Id).HasMaxLength(50);
-            entity.Property(e => e.EventId).HasMaxLength(50);
-            entity.Property(e => e.ResultSummary).HasColumnType("text");
-            entity.Property(e => e.Status).HasMaxLength(50);
-            entity.Property(e => e.StudentId).HasMaxLength(50);
 
-            entity.HasOne(d => d.Event).WithMany(p => p.StudentVaccinecheckups)
-                .HasForeignKey(d => d.EventId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("student_vaccinecheckup_ibfk_1");
-
-            entity.HasOne(d => d.Student).WithMany(p => p.StudentVaccinecheckups)
-                .HasForeignKey(d => d.StudentId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("student_vaccinecheckup_ibfk_2");
-        });
-
-        modelBuilder.Entity<Studenthealthrecord>(entity =>
+		modelBuilder.Entity<Studenthealthrecord>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
@@ -263,7 +252,8 @@ public partial class SchoolhealthdbContext : DbContext
 
             entity.HasIndex(e => e.CreatedBy, "IDX_StudentHealthRecord_CreatedBy");
 
-            entity.HasIndex(e => e.StudentId, "IDX_StudentHealthRecord_StudentId");
+            entity.HasIndex(e => e.StudentId, "IDX_StudentHealthRecord_StudentId")
+                  .IsUnique();
 
             entity.Property(e => e.Id).HasMaxLength(50);
             entity.Property(e => e.Allergies).HasColumnType("text");
@@ -274,15 +264,17 @@ public partial class SchoolhealthdbContext : DbContext
             entity.Property(e => e.StudentId).HasMaxLength(50);
             entity.Property(e => e.Vision).HasColumnType("text");
 
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.StudenthealthrecordCreatedByNavigations)
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.StudenthealthrecordCreatedByNavigations) //Nurse handle the creation
                 .HasForeignKey(d => d.CreatedBy)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_StudentHealthRecord_CreatedBy");
 
-            entity.HasOne(d => d.Student).WithMany(p => p.StudenthealthrecordStudents)
-                .HasForeignKey(d => d.StudentId)
-                .HasConstraintName("FK_StudentHealthRecord_Student");
-        });
+            entity.HasOne(s => s.Student)
+		        .WithOne(a => a.StudentHealthRecord)
+		        .HasForeignKey<Studenthealthrecord>(s => s.StudentId);
+
+
+		});
 
         modelBuilder.Entity<Treatmentrecord>(entity =>
         {
@@ -292,23 +284,19 @@ public partial class SchoolhealthdbContext : DbContext
 
             entity.HasIndex(e => e.StudentHealthRecordId, "IDX_TreatmentRecord_StudentHealthRecordId");
 
-            entity.HasIndex(e => e.StudentId, "IDX_TreatmentRecord_StudentId");
 
             entity.Property(e => e.Id).HasMaxLength(50);
             entity.Property(e => e.Description).HasColumnType("text");
             entity.Property(e => e.RecordDate).HasColumnType("datetime");
             entity.Property(e => e.Status).HasMaxLength(20);
             entity.Property(e => e.StudentHealthRecordId).HasMaxLength(50);
-            entity.Property(e => e.StudentId).HasMaxLength(50);
             entity.Property(e => e.Treatment).HasMaxLength(50);
 
             entity.HasOne(d => d.StudentHealthRecord).WithMany(p => p.Treatmentrecords)
                 .HasForeignKey(d => d.StudentHealthRecordId)
                 .HasConstraintName("FK_TreatmentRecord_StudentHealthRecord");
 
-            entity.HasOne(d => d.Student).WithMany(p => p.Treatmentrecords)
-                .HasForeignKey(d => d.StudentId)
-                .HasConstraintName("FK_TreatmentRecord_Student");
+          
         });
 
         modelBuilder.Entity<Vaccineevent>(entity =>
@@ -319,8 +307,6 @@ public partial class SchoolhealthdbContext : DbContext
 
             entity.HasIndex(e => e.CreatedBy, "IDX_VaccineEvent_CreatedBy");
 
-            entity.HasIndex(e => e.StudentId, "IDX_VaccineEvent_StudentId");
-
             entity.Property(e => e.Id).HasMaxLength(50);
             entity.Property(e => e.Content).HasColumnType("text");
             entity.Property(e => e.CreatedBy).HasMaxLength(50);
@@ -329,7 +315,6 @@ public partial class SchoolhealthdbContext : DbContext
             entity.Property(e => e.DateSignupStart).HasColumnType("datetime");
             entity.Property(e => e.ShortDescription).HasMaxLength(255);
             entity.Property(e => e.Status).HasMaxLength(20);
-            entity.Property(e => e.StudentId).HasMaxLength(50);
             entity.Property(e => e.Title).HasMaxLength(100);
 
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.VaccineeventCreatedByNavigations)
@@ -337,11 +322,11 @@ public partial class SchoolhealthdbContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_VaccineEvent_CreatedBy");
 
-            entity.HasOne(d => d.Student).WithMany(p => p.VaccineeventStudents)
-                .HasForeignKey(d => d.StudentId)
-                .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("FK_VaccineEvent_Student");
-        });
+
+		
+
+
+		});
 
         modelBuilder.Entity<Vaccinerecord>(entity =>
         {
@@ -351,26 +336,56 @@ public partial class SchoolhealthdbContext : DbContext
 
             entity.HasIndex(e => e.StudentHealthRecordId, "IDX_VaccineRecord_StudentHealthRecordId");
 
-            entity.HasIndex(e => e.StudentId, "IDX_VaccineRecord_StudentId");
 
             entity.Property(e => e.Id).HasMaxLength(50);
             entity.Property(e => e.Description).HasColumnType("text");
             entity.Property(e => e.RecordDate).HasColumnType("datetime");
             entity.Property(e => e.Status).HasMaxLength(20);
             entity.Property(e => e.StudentHealthRecordId).HasMaxLength(50);
-            entity.Property(e => e.StudentId).HasMaxLength(50);
             entity.Property(e => e.Vaccine).HasMaxLength(50);
 
             entity.HasOne(d => d.StudentHealthRecord).WithMany(p => p.Vaccinerecords)
                 .HasForeignKey(d => d.StudentHealthRecordId)
                 .HasConstraintName("FK_VaccineRecord_StudentHealthRecord");
 
-            entity.HasOne(d => d.Student).WithMany(p => p.Vaccinerecords)
-                .HasForeignKey(d => d.StudentId)
-                .HasConstraintName("FK_VaccineRecord_Student");
+           
         });
 
-        OnModelCreatingPartial(modelBuilder);
+		modelBuilder.Entity<Meeting>(entity =>
+		{
+			entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+			entity.ToTable("meeting");
+
+			entity.HasIndex(e => e.StudentId, "IDX_Meeting_StudentId");
+			entity.HasIndex(e => e.HandleBy, "IDX_Meeting_HandleBy");
+
+			entity.Property(e => e.Id).HasMaxLength(50);
+			entity.Property(e => e.StudentId).HasMaxLength(50);
+			entity.Property(e => e.HandleBy).HasMaxLength(50);
+			entity.Property(e => e.Title).HasMaxLength(100);
+			entity.Property(e => e.Content).HasColumnType("text");
+			entity.Property(e => e.ScheduledDate).HasColumnType("datetime");
+			entity.Property(e => e.Status).HasMaxLength(20);
+			entity.Property(e => e.ParentAttended).IsRequired().HasDefaultValue(false);
+
+			entity.HasOne(m => m.Student)
+				  .WithMany(a => a.MeetingStudents)
+				  .HasForeignKey(m => m.StudentId)
+				  .OnDelete(DeleteBehavior.Restrict)
+				  .HasConstraintName("FK_Meeting_Student");
+
+			entity.HasOne(m => m.HandleByNavigation)
+				  .WithMany(a => a.MeetingHandleByNavigations)
+				  .HasForeignKey(m => m.HandleBy)
+				  .OnDelete(DeleteBehavior.Restrict)
+				  .HasConstraintName("FK_Meeting_HandleBy");
+		});
+
+
+
+
+		OnModelCreatingPartial(modelBuilder);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

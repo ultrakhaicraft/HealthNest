@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SchoolMedical_DataAccess.DTOModels
 {
-	public class ViewHealthCheckupEventDTO
+	public class ViewVaccineEventDTO
 	{
 		public string Id { get; set; } = null!;
 		public string Title { get; set; } = null!;
@@ -14,12 +14,10 @@ namespace SchoolMedical_DataAccess.DTOModels
 		public DateTime? DateSignupStart { get; set; }
 		public DateTime? DateSignupEnd { get; set; }
 		public string? Status { get; set; }
-
 	}
 
-	public class HealthCheckupEventDetailDTO
+	public class ViewVaccineEventDetailDTO
 	{
-
 		public string Id { get; set; } = null!;
 		public string CreatedBy { get; set; } = null!;
 		public string Title { get; set; } = null!;
@@ -29,7 +27,5 @@ namespace SchoolMedical_DataAccess.DTOModels
 		public DateTime? DateSignupStart { get; set; }
 		public DateTime? DateSignupEnd { get; set; }
 		public string? Status { get; set; }
-
 	}
-
 }

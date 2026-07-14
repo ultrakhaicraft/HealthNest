@@ -7,8 +7,6 @@ public partial class Vaccineevent
 {
     public string Id { get; set; } = null!;
 
-    public string? StudentId { get; set; }
-
     public string CreatedBy { get; set; } = null!;
 
     public string Title { get; set; } = null!;
@@ -25,9 +23,6 @@ public partial class Vaccineevent
 
     public string? Status { get; set; }
 
-    public virtual Account CreatedByNavigation { get; set; } = null!;
-
-    public virtual Account? Student { get; set; }
-
-    public virtual ICollection<StudentVaccinecheckup> StudentVaccinecheckups { get; set; } = new List<StudentVaccinecheckup>();
+	public virtual Account CreatedByNavigation { get; set; } = null!;
+	public virtual ICollection<VaccineeventStudent> VaccineeventStudents { get; set; } = new List<VaccineeventStudent>();
 }

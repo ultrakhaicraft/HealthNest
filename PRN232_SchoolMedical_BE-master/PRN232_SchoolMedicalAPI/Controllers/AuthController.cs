@@ -44,7 +44,7 @@ public class AuthController : ControllerBase
 		}
 		var response = await _authService.RegisteAsync(request, IsParent);
 		HttpContext.Items["CustomMessage"] = "User registered successfully!"; 
-		return Ok(response);
+		return StatusCode(StatusCodes.Status201Created, response);
 
 	}
 }
