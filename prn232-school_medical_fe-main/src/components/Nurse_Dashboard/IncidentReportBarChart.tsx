@@ -1,4 +1,5 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { IncidentRecordCountPerYear } from '../../feature/API/DashboardService';
 
 interface MonthlyIncidentData {
   month: string;
@@ -7,7 +8,7 @@ interface MonthlyIncidentData {
 
 
 interface IncidentReportsChartProps {
-  data: MonthlyIncidentData[];
+  data: { month: string; count: number }[];
 }
 
 

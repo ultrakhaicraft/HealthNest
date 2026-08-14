@@ -6,10 +6,6 @@ import CreateMedicineRequest from './pages/parent_area/ParentCreateMedRequest-pa
 import { ProtectedRoute } from './ProtectedRoute';
 
 
-
-
-
-
 // Lazy load all the pages/routes
 const Homepage = React.lazy(() => import('../app/pages/guest_area/GuestHome-page'));
 const Login = React.lazy(() => import('../app/pages/guest_area/Login-page'));
@@ -27,10 +23,17 @@ const ParentUserProfile = React.lazy(() => import('../app/pages/ParentUserProfil
 const LinkStudentPage = React.lazy(() => import('../app/pages/LinkingStudent-Page'));
 const DisplayBlogsPage = React.lazy(() => import('../app/pages/guest_area/DisplayBlogList-page'));
 const BogDetailPage = React.lazy(() => import('../app/pages/guest_area/BlogDetail-page'));
-const NurseRecordList = React.lazy(() => import('../components/Student_Health_Record/NurseRecordList'));
-const NurseRecordDetail = React.lazy(() => import('../components/Student_Health_Record/NurseRecordDetail'));
+const StudentHealthRecordList = React.lazy(() => import('../components/Student_Health_Record/StudentHealthRecordList'));
+const StudentHealthRecordDetailDisplay = React.lazy(() => import('../components/Student_Health_Record/StudentHealthRecordDetailDisplay'));
 const MedicalRecordView = React.lazy(() => import('../components/Student_Health_Record/MedicalRecordView'));
+const UnauthorizedPage = React.lazy(() => import('../app/pages/Unauthorized-Page'));
 
+enum UserRole {
+  Parent = 'Parent',
+  Student = 'Student',
+  Nurse = 'SchoolNurse',
+  Admin = 'Admin',
+}
 
 
 // A simple component to center the spinner
@@ -47,6 +50,9 @@ const FullPageSpinner = () => (
 );
 
 export const AppRouter = () => {
+  
+  
+
   return (
     <Suspense fallback={<FullPageSpinner />}>
       <Routes>
@@ -56,6 +62,7 @@ export const AppRouter = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/blogs" element={<DisplayBlogsPage />} />
         <Route path="/blog/:id" element={<BogDetailPage />} />
+        <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
         
 
@@ -63,13 +70,13 @@ export const AppRouter = () => {
 
         {/* Protected Routes */}
         <Route path="/parentHomepage" element={
-          <ProtectedRoute><ParentHomepage /></ProtectedRoute>
+          <ProtectedRoute allowedRoles={[UserRole.Parent]}><ParentHomepage /></ProtectedRoute>
         } />
         <Route path="/studentHomepage" element={
-          <ProtectedRoute><StudentHomepage /></ProtectedRoute>
+          <ProtectedRoute allowedRoles={[UserRole.Student]}><StudentHomepage /></ProtectedRoute>
         } />
         <Route path="/nurseHomepage" element={
-          <ProtectedRoute><NurseHomepage /></ProtectedRoute>
+          <ProtectedRoute allowedRoles={[UserRole.Nurse]}><NurseHomepage /></ProtectedRoute>
         } />
         <Route path="/createStudentHealthRecord" element={
           <ProtectedRoute><CreateStudentHealthRecordForm /></ProtectedRoute>
@@ -81,28 +88,28 @@ export const AppRouter = () => {
           <ProtectedRoute><UpdateStudentHealthRecordPage /></ProtectedRoute>
         } />
         <Route path="/nurse/medicines" element={
-          <ProtectedRoute><MedicineCRUDPage /></ProtectedRoute>
+          <ProtectedRoute allowedRoles={[UserRole.Nurse]}><MedicineCRUDPage /></ProtectedRoute>
         } />
         <Route path="/nurse/incidents" element={
-          <ProtectedRoute><IncidentRecordCRUDPage /></ProtectedRoute>
+          <ProtectedRoute allowedRoles={[UserRole.Nurse]}><IncidentRecordCRUDPage /></ProtectedRoute>
         } />
         <Route path="/parentUserProfile" element={
-          <ProtectedRoute><ParentUserProfile /></ProtectedRoute>
+          <ProtectedRoute allowedRoles={[UserRole.Parent]}><ParentUserProfile /></ProtectedRoute>
         } />
         <Route path="/createMedicineRequest" element={
-          <ProtectedRoute><CreateMedicineRequest /></ProtectedRoute>
+          <ProtectedRoute allowedRoles={[UserRole.Parent]}><CreateMedicineRequest /></ProtectedRoute>
         } />
         <Route path="/requestMedicine" element={
-          <ProtectedRoute><ParentMedicineRequest /></ProtectedRoute>
+          <ProtectedRoute allowedRoles={[UserRole.Parent]}><ParentMedicineRequest /></ProtectedRoute>
         } />
         <Route path="/assignStudentToParent" element={
           <ProtectedRoute><LinkStudentPage /></ProtectedRoute>
         } />
         <Route path="/nurse/records" element={
-          <ProtectedRoute><NurseRecordList /></ProtectedRoute>
+          <ProtectedRoute><StudentHealthRecordList /></ProtectedRoute>
         } />
         <Route path="/nurse/records/:id" element={
-          <ProtectedRoute><NurseRecordDetail /></ProtectedRoute>
+          <ProtectedRoute><StudentHealthRecordDetailDisplay /></ProtectedRoute>
         } />
         <Route path="/parent/medical-record" element={
           <ProtectedRoute><MedicalRecordView /></ProtectedRoute>

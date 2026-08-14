@@ -48,11 +48,5 @@ public class TokenResponse
 	public string? RefreshToken { get; set; }
 }
 
-public class ResultApi
-{
-	public string StatusCode { get; set; } = string.Empty;
-	public string Message { get; set; } = string.Empty;
-	public object? Data { get; set; }
 
-}
 

@@ -1,4 +1,5 @@
 ﻿using SchoolMedical_BusinessLogic.Utility;
+using SchoolMedical_DataAccess.DTOModels;
 
 namespace PRN232_SchoolMedicalAPI.Helpers
 {
@@ -43,7 +44,7 @@ namespace PRN232_SchoolMedicalAPI.Helpers
 			context.Response.ContentType = "application/json";
 			context.Response.StatusCode = statusCode;
 
-			var response = new
+			var response = new ErrorApiResponseWrapper
 			{
 				StatusCode = statusCode,
 				Message = message,

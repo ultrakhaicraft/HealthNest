@@ -28,7 +28,7 @@ export const DashboardTables = ({ healthCheckupEvents, vaccineCheckupEvents }: D
                             </tr>
                         </thead>
                         <tbody>
-                            {healthCheckupEvents.length === 0 ? (
+                            {(!healthCheckupEvents || healthCheckupEvents.length === 0) ? (
                                 <tr>
                                     <td colSpan={4} className="table-empty-state">No upcoming health checkups</td>
                                 </tr>

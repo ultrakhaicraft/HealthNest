@@ -37,12 +37,15 @@ public static class BusinessLogicDI
 	public static void AddServices(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddLogging();
-		services.AddScoped<IAuthService, AuthService>();
 		services.AddScoped<IJwtUtils, JwtUtils>();
 		services.AddScoped<IAccountService, AccountService>();
-		services.AddScoped<IMedicineService, MedicineService>();
+		services.AddScoped<IAuthService, AuthService>();
+		services.AddScoped<IHealthCheckupEventService, HealthCheckupEventService>();
+		services.AddScoped<IIncidentRecordService, IncidentRecordService>();
+		services.AddScoped<IMedicalSupplyService, MedicalSupplyService>();
 		services.AddScoped<IMedicineRequestService, MedicineRequestService>();
-        services.AddScoped<IIncidentRecordService, IncidentRecordService>();
+		services.AddScoped<IMedicineService, MedicineService>();
 		services.AddScoped<IStudentHealthRecordService, StudentHealthRecordService>();
+		services.AddScoped<IVaccineEventService, VaccineEventService>();
     }
 }

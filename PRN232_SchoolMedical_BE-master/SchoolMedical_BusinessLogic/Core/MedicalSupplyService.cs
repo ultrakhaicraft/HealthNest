@@ -51,7 +51,7 @@ namespace SchoolMedical_BusinessLogic.Core
             int pageIndex = 1; 
             int pageSize = 10; 
 
-            var allData = await medicalSupply.GetAllAsync();
+            var allData = await medicalSupply.GetQueryableAsync();
 
             int totalCount = allData.Count();
             int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
@@ -82,7 +82,7 @@ namespace SchoolMedical_BusinessLogic.Core
             };
             
 
-            var allData = await _unitOfWork.GetRepository<Medicalsupply>().GetAllAsync();
+            var allData = await _unitOfWork.GetRepository<Medicalsupply>().GetQueryableAsync();
             allData = allData.Where(x => !x.IsDeleted);
 
             var viewData = allData.Select(x => new MedicalSupplyViewModel
@@ -115,7 +115,7 @@ namespace SchoolMedical_BusinessLogic.Core
 
 			//If not in cache, fetch from database
 
-            IQueryable<Medicalsupply> supplies = await medicalSupply.GetAllAsync();
+            IQueryable<Medicalsupply> supplies = await medicalSupply.GetQueryableAsync();
 			supplies = supplies.Where(x => !x.IsDeleted);
 
 			//Proceed with filtering and paging

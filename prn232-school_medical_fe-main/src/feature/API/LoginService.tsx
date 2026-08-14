@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { ErrorResponse, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { ApiErrorResponse } from '../ApiClient';
 
 // It's a good practice to use environment variables for API URLs
 const API_URL = import.meta.env.VITE_API_URL || 'https://localhost:7085/api';
@@ -17,7 +18,7 @@ export const useAuth = () => {
         console.log('Login attempt with credentials:', credentials);
 
         if (!credentials.email || !credentials.password) {
-            setError('Please fill in all fields');
+            setError('Please fill in your email and password.');
             setIsLoading(false);
             return;
         }
@@ -28,8 +29,10 @@ export const useAuth = () => {
                 timeout: 8000
             });
 
-           // Access the nested data object
-            const userData = response.data.data;
+            console.log('Hitting Login response:', response);
+
+            // Access the nested data object
+            const userData = response.data;
             const tokenData = userData.token;
 
             console.log('Received user data:', userData);
@@ -68,9 +71,16 @@ export const useAuth = () => {
 
             
 
-        } catch (err: any) {
+        } catch (err: ApiErrorResponse | any) {
+
+            //Use the interface ApiErrorResponse to type the error response from the API
+
+            //Check if the api actually return an error response, if not, it might be a network error or some other issue
             if (err.response) {
-                const errorMessage = err.response.data?.message || err.response.data?.error || `Error: ${err.response.status}`;
+                const errorMessage = err.response.data?.message; 
+                const errorDetail = err.response.data?.detail;
+                console.log('Login Error message:', errorMessage);
+                console.log('Login Error detail:', errorDetail);
                 setError(errorMessage);
             } else if (err.request) {
                 setError('Network error. Please check your connection.');

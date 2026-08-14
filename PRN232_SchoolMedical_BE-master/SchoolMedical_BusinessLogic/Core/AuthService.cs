@@ -68,7 +68,7 @@ public class AuthService : IAuthService
 		{
 
 			Console.WriteLine(e.Message);
-			return null;
+			throw new AppException(e.Message);
 		}
 	}
 	public async Task<string> RegisteAsync(RegisterRequest request, bool IsParent)

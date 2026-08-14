@@ -23,13 +23,15 @@ public class GenericRepository <T> : IGenericRepository<T> where T : class
 	}
 
 	public IQueryable<T> Entities => _context.Set<T>();
-	public IQueryable<T> GetAll()
+
+	public IQueryable<T> GetQueryable()
 	{
 		return _dbSet.AsQueryable();
 	}
-	public async Task<IQueryable<T>> GetAllAsync()
+	public async Task<IQueryable<T>> GetQueryableAsync()
 	{
-		return  _dbSet.AsQueryable();
+		await Task.Delay(100);
+		return _dbSet.AsQueryable();
 	}
 
 	public async Task<T?> GetByIdAsync(object id)

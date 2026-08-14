@@ -342,5 +342,15 @@ namespace SchoolMedical_BusinessLogic.Core
 				? query.OrderByDescending(keySelector)
 				: query.OrderBy(keySelector);
 		}
+
+		public async Task<int> CountPendingMedicineRequest()
+		{
+			var repository = _unitOfWork.GetRepository<Medicinerequest>();
+
+			return await repository.GetQueryable()
+				.Where(x => x.Status == RequestStatus.Pending.ToString())
+				.CountAsync();
+
+		}
 	}
 }

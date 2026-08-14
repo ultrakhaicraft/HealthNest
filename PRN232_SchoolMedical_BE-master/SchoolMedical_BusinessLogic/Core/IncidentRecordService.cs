@@ -42,11 +42,12 @@ public class IncidentRecordService : IIncidentRecordService
 		{
 			var cachedIncidents = JsonSerializer.Deserialize<List<IncidentRecordViewModel>>(cachedData)!;
 			var pagedData = await PagingExtension.ToPagingModel(cachedIncidents, request.PageIndex, request.PageSize);
+			return pagedData;
 		}
 
 
 		var repository = _unitOfWork.GetRepository<Incidentrecord>();
-		IQueryable<Incidentrecord> incidents = await repository.GetAllAsync();
+		IQueryable<Incidentrecord> incidents = await repository.GetQueryableAsync();
 
 		List<IncidentRecordViewModel> incidentViewModels = incidents.Select(i => new IncidentRecordViewModel
 		{
@@ -73,7 +74,7 @@ public class IncidentRecordService : IIncidentRecordService
 	{
 		var repository = _unitOfWork.GetRepository<Incidentrecord>();
 		var incident = await repository
-			.GetAll()
+			.GetQueryable()
 			.Include(i => i.HandleByNavigation)
 			.FirstOrDefaultAsync(i => i.Id == incidentId);
 
@@ -124,7 +125,7 @@ public class IncidentRecordService : IIncidentRecordService
 		var existingIncident = await repository.GetByIdAsync(incidentId);
 
 		if (existingIncident == null)
-			return null;
+			throw new NotFoundException("Incident Record", incidentId);
 
 		existingIncident.StudentId = request.StudentId;
 		existingIncident.HandleBy = request.HandleBy;
@@ -196,5 +197,46 @@ public class IncidentRecordService : IIncidentRecordService
 			Console.WriteLine(e.StackTrace);
 			return false;
 		}
+	}
+
+	public async Task<int> CountActiveIncidentRecord()
+	{
+		var repository = _unitOfWork.GetRepository<Incidentrecord>();
+
+		return await repository.GetQueryable()
+			.Where(x => x.Status == IncidentStatus.Active.ToString())
+			.CountAsync();
+
+	}
+
+	public async Task<IncidentRecordCountPerYear> CountAllIncidentRecordPerYear(int year)
+	{
+		var repository = _unitOfWork.GetRepository<Incidentrecord>();
+
+		var monthlyCounts = await repository.GetQueryable()
+			.Where(x => x.DateOccurred.Year == year)
+			.GroupBy(x => x.DateOccurred.Month)
+			.Select(g => new { Month = g.Key, Count = g.Count() })
+			.ToListAsync();
+
+		// Convert to a dictionary for easy lookup (Month number -> Count)
+		var countsByMonth = monthlyCounts.ToDictionary(x => x.Month, x => x.Count);
+
+		return new IncidentRecordCountPerYear
+		{
+			Year = year,
+			Janunary = countsByMonth.GetValueOrDefault(1),
+			Feburary = countsByMonth.GetValueOrDefault(2),
+			March = countsByMonth.GetValueOrDefault(3),
+			April = countsByMonth.GetValueOrDefault(4),
+			May = countsByMonth.GetValueOrDefault(5),
+			June = countsByMonth.GetValueOrDefault(6),
+			July = countsByMonth.GetValueOrDefault(7),
+			August = countsByMonth.GetValueOrDefault(8),
+			September = countsByMonth.GetValueOrDefault(9),
+			October = countsByMonth.GetValueOrDefault(10),
+			November = countsByMonth.GetValueOrDefault(11),
+			December = countsByMonth.GetValueOrDefault(12)
+		};
 	}
 }

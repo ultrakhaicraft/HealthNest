@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { GetAllStudentHealthRecordsParams, StudentHealthRecordService, StudentHealthRecordView } from "../../feature/API/StudentHealthRecordService";
 
-const NurseRecordList = () => {
+const StudentHealthRecordList = () => {
   const [records, setRecords] = useState<StudentHealthRecordView[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -60,4 +60,4 @@ const NurseRecordList = () => {
   );
 };
 
-export default NurseRecordList;
+export default StudentHealthRecordList;

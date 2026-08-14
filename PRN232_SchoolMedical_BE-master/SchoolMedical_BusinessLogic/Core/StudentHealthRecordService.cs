@@ -89,7 +89,7 @@ namespace SchoolMedical_BusinessLogic.Core
 			try
 			{
 				await Task.Delay(100);
-				var records = _unitOfWork.GetRepository<Studenthealthrecord>().GetAll();
+				var records = _unitOfWork.GetRepository<Studenthealthrecord>().GetQueryable();
 				
 
 				//Search by student name by accessing Student Object

@@ -13,10 +13,16 @@ export interface PaginatedResponse<T> {
   data: T[];
 }
 
-export interface RawApiResponse<T> {
+export interface ApiResponseWrapper<T> {
   statusCode: string;
   message: string;
   data: T;
+}
+
+export interface ApiErrorResponse{
+  statusCode: string;
+  message: string;
+  detail: string;
 }
 
 // Get the API URL from environment variables for security and flexibility

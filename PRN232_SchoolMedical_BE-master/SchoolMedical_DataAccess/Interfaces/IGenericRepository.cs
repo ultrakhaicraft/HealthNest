@@ -9,8 +9,8 @@ namespace SchoolMedical_DataAccess.Interfaces;
 
 public interface IGenericRepository<T> where T : class
 {
-	IQueryable<T> GetAll();
-	Task<IQueryable<T>> GetAllAsync();
+	IQueryable<T> GetQueryable();
+	Task<IQueryable<T>> GetQueryableAsync();
 	T? GetById(object id);
 	Task<T?> GetByIdAsync(object id);
 	void Insert(T obj);

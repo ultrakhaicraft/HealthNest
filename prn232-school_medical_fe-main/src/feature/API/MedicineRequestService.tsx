@@ -1,4 +1,4 @@
-import apiClient, { PaginatedResponse, RawApiResponse } from "../ApiClient";
+import apiClient, { PaginatedResponse, ApiResponseWrapper } from "../ApiClient";
 
 
 
@@ -41,36 +41,36 @@ export interface MedicineRequestResponseDto {
 
 export const MedicineRequestService = {
     getAll: async (params: MedicineRequestQueryParams): Promise<PaginatedResponse<MedicineRequestResponseDto>> => {
-        const response = await apiClient.get<RawApiResponse<PaginatedResponse<MedicineRequestResponseDto>>>
+        const response = await apiClient.get<ApiResponseWrapper<PaginatedResponse<MedicineRequestResponseDto>>>
             ('/medical-request', { params });
         return response.data.data;
     },
 
     getById: async (id: string): Promise<MedicineRequestResponseDto> => {
-        const response = await apiClient.get<RawApiResponse<MedicineRequestResponseDto>>
+        const response = await apiClient.get<ApiResponseWrapper<MedicineRequestResponseDto>>
             (`/medical-request/${id}`);
         return response.data.data;
     },
 
     getByRequesterId: async (requesterId: string): Promise<PaginatedResponse<MedicineRequestResponseDto>> => {
-        const response = await apiClient.get<RawApiResponse<PaginatedResponse<MedicineRequestResponseDto>>>
+        const response = await apiClient.get<ApiResponseWrapper<PaginatedResponse<MedicineRequestResponseDto>>>
             (`/medical-request/requester/${requesterId}`);
         return response.data.data;
     },
 
     create: async (data: MedicineRequestCreation): Promise<MedicineRequestResponseDto> => {
-        const response = await apiClient.post<RawApiResponse<MedicineRequestResponseDto>>
+        const response = await apiClient.post<ApiResponseWrapper<MedicineRequestResponseDto>>
             ('/medical-request', data);
         return response.data.data;
     },
 
     delete: async (id: string): Promise<boolean> => {
-        const response = await apiClient.delete<RawApiResponse<boolean>>(`/medical-request/${id}`);
+        const response = await apiClient.delete<ApiResponseWrapper<boolean>>(`/medical-request/${id}`);
         return response.data.data;
     },
     
     update: async (id: string, data: MedicineUpdateCreation): Promise<MedicineRequestResponseDto> => {
-        const response = await apiClient.put<RawApiResponse<MedicineRequestResponseDto>>
+        const response = await apiClient.put<ApiResponseWrapper<MedicineRequestResponseDto>>
             (`/medical-request/${id}`, data);
         return response.data.data;
     }

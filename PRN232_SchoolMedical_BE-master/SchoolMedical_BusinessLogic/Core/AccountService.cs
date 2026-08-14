@@ -134,7 +134,7 @@ public class AccountService : IAccountService
 	{
 		try
 		{
-			var query = await _unitOfWork.GetRepository<Account>().GetAllAsync();
+			var query = await _unitOfWork.GetRepository<Account>().GetQueryableAsync();
 			
 			// Filter Based on Status (using string-to-enum conversion)
 			if (!string.IsNullOrEmpty(request.Status.ToString()))
@@ -293,7 +293,7 @@ public class AccountService : IAccountService
 
 	public async Task<List<AccountViewModel>> GetAllStudentAccounts()
 	{
-		var accounts = await _unitOfWork.GetRepository<Account>().GetAllAsync();
+		var accounts = await _unitOfWork.GetRepository<Account>().GetQueryableAsync();
 		var students = accounts
 			.Where(a => a.Role == AccountRole.Student.ToString() && a.Status != AccountStatus.Inactive.ToString())
 			.Select(a => new AccountViewModel

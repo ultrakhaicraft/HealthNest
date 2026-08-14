@@ -16,6 +16,18 @@
 
 }
 
+.dashboard-error{
+    color: #dc2626;
+    font-size: 1rem;
+    font-weight: 500;
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+    padding-left: 1rem;
+}
+
 .dashboard-card{
     background-color: #ffffff;
     border: 1px solid #9ab9df;

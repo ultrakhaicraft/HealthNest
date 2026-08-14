@@ -1,5 +1,5 @@
 //The goal is to call CRUD operations on the user API
-import apiClient, { PaginatedResponse, RawApiResponse } from '../ApiClient';
+import apiClient, { PaginatedResponse, ApiResponseWrapper } from '../ApiClient';
 
 // --- Type Definitions for an Account ---
 // This defines the data structure for an account, providing type safety.
@@ -69,7 +69,7 @@ export const accountService = {
 
   getAll: async (params: GetAllAccountsParams): Promise<PaginatedResponse<AccountView>> => {
 
-    const response = await apiClient.get<RawApiResponse<PaginatedResponse<AccountView>>>('/account', {
+    const response = await apiClient.get<ApiResponseWrapper<PaginatedResponse<AccountView>>>('/account', {
       params: params,
     });
 
@@ -84,13 +84,13 @@ export const accountService = {
    * No Pagination
    */
   getDetailById: async (userId: string): Promise<AccountDetail> => {
-    const response = await apiClient.get<RawApiResponse<AccountDetail>>(`/account/${userId}`);
+    const response = await apiClient.get<ApiResponseWrapper<AccountDetail>>(`/account/${userId}`);
     return response.data.data;
   },
 
 
   getStudentFromParentId: async (parentId: string): Promise<AccountDetail> => {
-    const response = await apiClient.get<RawApiResponse<AccountDetail>>(`/account/${parentId}/student`);
+    const response = await apiClient.get<ApiResponseWrapper<AccountDetail>>(`/account/${parentId}/student`);
     return response.data.data;
   },
 
@@ -100,7 +100,7 @@ export const accountService = {
    * @returns {Promise<AccountView[]>} A promise that resolves to the list of student accounts.
    */
   getAllStudents: async (): Promise<AccountView[]> => {
-    const response = await apiClient.get<RawApiResponse<PaginatedResponse<AccountView>>>('/account', {
+    const response = await apiClient.get<ApiResponseWrapper<PaginatedResponse<AccountView>>>('/account', {
       params: {
         Role: 'Student',
         PageNumber: 1,
@@ -115,7 +115,7 @@ export const accountService = {
    * @returns {Promise<AccountView[]>} A promise that resolves to the list of parent accounts.
    */
   getAllParents: async (): Promise<AccountView[]> => {
-    const response = await apiClient.get<RawApiResponse<PaginatedResponse<AccountView>>>('/account', {
+    const response = await apiClient.get<ApiResponseWrapper<PaginatedResponse<AccountView>>>('/account', {
       params: {
         Role: 'Parent',
         PageNumber: 1,
@@ -132,7 +132,7 @@ export const accountService = {
    * @returns {Promise<string>} A promise that resolves to the newly created account data.
    */
   create: async (accountData: AccountCreationData): Promise<string> => {
-    const response = await apiClient.post<RawApiResponse<string>>('/account', accountData);
+    const response = await apiClient.post<ApiResponseWrapper<string>>('/account', accountData);
     return response.data.data;
   },
 
@@ -143,7 +143,7 @@ export const accountService = {
    * @returns {Promise<string>} A promise that resolves to the updated account data.
    */
   update: async (id: string, updateData: AccountUpdateData): Promise<string> => {
-    const response = await apiClient.put<RawApiResponse<string>>(`/account/${id}`, updateData, {
+    const response = await apiClient.put<ApiResponseWrapper<string>>(`/account/${id}`, updateData, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -157,7 +157,7 @@ export const accountService = {
    * @returns {Promise<string>} A promise that resolves when the deletion is successful.
    */
   remove: async (userId: string): Promise<string> => {
-    const response = await apiClient.delete<RawApiResponse<string>>('/account', {
+    const response = await apiClient.delete<ApiResponseWrapper<string>>('/account', {
       params: { userId },
     });
 
@@ -166,7 +166,7 @@ export const accountService = {
 
   link: async (parentId: string, studentId: string): Promise<string> => {
     console.log(`Calling API`);
-    const response = await apiClient.patch<RawApiResponse<string>>(
+    const response = await apiClient.patch<ApiResponseWrapper<string>>(
       `/account/assign-student?studentId=${studentId}&parentId=${parentId}`
     );
     return response.data.data;

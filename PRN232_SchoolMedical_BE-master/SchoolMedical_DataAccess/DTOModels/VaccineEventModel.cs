@@ -28,4 +28,12 @@ namespace SchoolMedical_DataAccess.DTOModels
 		public DateTime? DateSignupEnd { get; set; }
 		public string? Status { get; set; }
 	}
+
+	public class VaccineEventQuery
+	{
+		public int PageIndex { get; set; } = 1; // Default to first page
+		public int PageSize { get; set; } = 10; // Default to 10 items per page
+		public bool SortByLatestDateOccurred { get; set; } = true; // Default to sort by latest date occurred
+		public string? Status { get; set; } // Optional filter by status
+	}
 }

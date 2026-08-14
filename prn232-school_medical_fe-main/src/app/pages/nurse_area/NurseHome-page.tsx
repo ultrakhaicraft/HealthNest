@@ -4,7 +4,7 @@ import MedicineCRUDPage from './MedicineCRUD-page';
 import '../../CSS/MedicineCRUD.css';
 import IncidentRecordCRUDPage from './IncidentRecordCRUD-page';
 import MedicineRequestCRUDPage from './MedicineRequestCRUD-page';
-import { NurseDashboard } from '../../../components/Nurse_Dashboard/Nurse_Dashboard';
+import { NurseDashboard } from './NurseDashboard-page';
 
 export default function NurseHomePage() {
     const [activeItem, setActiveItem] = useState('Home');

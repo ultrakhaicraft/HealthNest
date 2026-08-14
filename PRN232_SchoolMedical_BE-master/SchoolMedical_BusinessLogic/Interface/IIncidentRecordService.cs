@@ -10,4 +10,6 @@ public interface IIncidentRecordService
     Task<IncidentRecordDetailModel> UpdateIncidentRecordAsync(IncidentRecordUpdateRequest request, string incidentId);
     Task<bool> SoftDeleteIncidentRecordAsync(string incidentId);
     Task<bool> ChangeStatusRecord(string id, string status);
+    Task<int> CountActiveIncidentRecord();
+    Task<IncidentRecordCountPerYear> CountAllIncidentRecordPerYear(int year);
 } 

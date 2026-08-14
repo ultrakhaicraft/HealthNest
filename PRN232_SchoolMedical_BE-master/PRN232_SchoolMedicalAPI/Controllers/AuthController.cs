@@ -36,7 +36,7 @@ public class AuthController : ControllerBase
 
 	[AllowAnonymous]
 	[HttpPost("register")]
-	public async Task<IActionResult> RegisterAsParent([FromBody] RegisterRequest request, bool IsParent)
+	public async Task<IActionResult> Register([FromBody] RegisterRequest request, bool IsParent)
 	{
 		if (!ModelState.IsValid)
 		{

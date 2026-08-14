@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { StudentHealthRecordDetail, StudentHealthRecordService } from "../../feature/API/StudentHealthRecordService";
 
-const NurseRecordDetail = () => {
+const StudentHealthRecordDetailDisplay = () => {
   const { id } = useParams<{ id: string }>();
   const [record, setRecord] = useState<StudentHealthRecordDetail | null>(null);
 
@@ -41,4 +41,4 @@ const NurseRecordDetail = () => {
   );
 };
 
-export default NurseRecordDetail;
+export default StudentHealthRecordDetailDisplay;
