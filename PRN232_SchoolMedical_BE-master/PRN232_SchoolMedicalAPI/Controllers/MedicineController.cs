@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MySqlX.XDevAPI.Common;
 using PRN232_SchoolMedicalAPI.Helpers;
 using SchoolMedical_BusinessLogic.Interface;
 using SchoolMedical_BusinessLogic.Utility;
@@ -28,8 +29,9 @@ public class MedicineController : ControllerBase
     public async Task<IActionResult> GetMedicines([FromQuery] MedicineFilterRequestDto request)
     {
         var result = await _medicineService.GetAllMedicinesAsync(request);
-        HttpContext.Items["CustomMessage"] = "Retrieving All Medicines Successful";
-        return Ok(result);
+		ApiResponseWrapper<PagingModel<MedicineDetailResponseDto>> response = ApiResponseWrapper<PagingModel<MedicineDetailResponseDto>>
+						.Success(result, "Get all medicines success");
+		return Ok(result);
     }
 
     /// <summary>
@@ -39,13 +41,12 @@ public class MedicineController : ControllerBase
     //[Authorize(Roles = "SchoolNurse, Admin, Manager")]
     public async Task<IActionResult> GetMedicineById(string id)
     {
-        var medicine = await _medicineService.GetMedicineDetailByIdAsync(id);
-        if (medicine == null)
-        {
-            throw new KeyNotFoundException("Medicine not found");
-        }
-        HttpContext.Items["CustomMessage"] = "Medicine Found";
-        return Ok(medicine);
+        var result = await _medicineService.GetMedicineDetailByIdAsync(id);
+
+		ApiResponseWrapper<MedicineDetailResponseDto> response = ApiResponseWrapper<MedicineDetailResponseDto>
+						.Success(result, "Get medicine success with Id: "+id);
+
+		return Ok(response);
     }
 
     /// <summary>
@@ -61,10 +62,12 @@ public class MedicineController : ControllerBase
         }
 
         var currentUserId = User.Claims.GetUserIdFromJwtToken();
-        var medicine = await _medicineService.CreateMedicineAsync(request, currentUserId);
+        var result = await _medicineService.CreateMedicineAsync(request, currentUserId);
 
-        HttpContext.Items["CustomMessage"] = "Medicine created successfully";
-        return CreatedAtAction(nameof(GetMedicineById), new { id = medicine.Id }, medicine);
+		ApiResponseWrapper<MedicineDetailResponseDto> response = ApiResponseWrapper<MedicineDetailResponseDto>
+						.Created(result, "Create Medicine successful");
+
+		return StatusCode(201,response);
     }
 
     /// <summary>
@@ -80,9 +83,12 @@ public class MedicineController : ControllerBase
         }
 
         var currentUserId = User.Claims.GetUserIdFromJwtToken();
-        var medicine = await _medicineService.UpdateMedicineAsync(request, id);
-        HttpContext.Items["CustomMessage"] = "Medicine updated successfully";
-        return Ok(medicine);
+        var result = await _medicineService.UpdateMedicineAsync(request, id);
+
+		ApiResponseWrapper<MedicineDetailResponseDto> response = ApiResponseWrapper<MedicineDetailResponseDto>
+						.Success(result, "Update Medicine successful with Id: "+id);
+
+		return Ok(result);
     }
 
     /// <summary>
@@ -92,8 +98,10 @@ public class MedicineController : ControllerBase
     //[Authorize(Roles ="SchoolNurse, Admin, Manager")]
     public async Task<IActionResult> DeleteMedicine(string id)
     {
-        var result = await _medicineService.SoftDeleteMedicineAsync(id);   
-        HttpContext.Items["CustomMessage"] = "Medicine deleted successfully";
-        return Ok(result);
+        await _medicineService.SoftDeleteMedicineAsync(id);
+		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
+						.NoContent("Delete Medicine successful with Id: " + id);
+		
+        return StatusCode(204,response);
     }
 }

@@ -97,4 +97,100 @@ public class VaccineEventService : IVaccineEventService
 
 
 	}
+
+	public async Task<string> CreateVaccineEventAsync(VaccineEventCreateDTO dto)
+	{
+		await Task.Delay(100);
+
+		var createdBy = await _unitOfWork.GetRepository<Account>().GetByIdAsync(dto.CreatedBy);
+		if (createdBy == null)
+		{
+			throw new NotFoundException("Unable to find account for creating vaccine with their Id: " + createdBy.Id);
+		}
+
+		var vaccineEvent = new Vaccineevent
+		{
+			Id = Guid.NewGuid().ToString(),
+			Title = dto.Title,
+			ShortDescription = dto.ShortDescription,
+			Content = dto.Content,
+			DateOccurred = dto.DateOccurred,
+			DateSignupStart = dto.DateSignupStart,
+			DateSignupEnd = dto.DateSignupEnd,
+			Status = EventStatus.Upcoming.ToString(),
+			CreatedBy = createdBy.Id, // Assuming CreatedBy is a property in the create model
+
+		};
+
+		await _unitOfWork.GetRepository<Vaccineevent>().InsertAsync(vaccineEvent);
+		await _unitOfWork.SaveAsync();
+		return vaccineEvent.Id;
+	}
+
+	public async Task DeleteVaccineEvent(string vaccineEventId)
+	{
+		await Task.Delay(100);
+		var vaccineEvent = _unitOfWork.GetRepository<Vaccineevent>().GetById(vaccineEventId);
+		if (vaccineEvent == null)
+		{
+			throw new NotFoundException("Vaccine event", vaccineEventId);
+		}
+		_unitOfWork.GetRepository<Vaccineevent>().Delete(vaccineEvent);
+		await _unitOfWork.SaveAsync(); // Ensure the save operation completes
+		return;
+	}
+
+	public async Task<string> UpdateVaccineEvent(VaccineEventUpdateDTO dto, string vaccineEventId)
+	{
+		await Task.Delay(100);
+
+		var createdBy = await _unitOfWork.GetRepository<Account>().GetByIdAsync(dto.CreatedBy);
+		if (createdBy == null)
+		{
+			throw new NotFoundException("Unable to find account for updating vaccine with their Id: " + createdBy.Id);
+		}
+
+		var vaccineEvent = _unitOfWork.GetRepository<Vaccineevent>().GetById(vaccineEventId);
+		if (vaccineEvent == null)
+		{
+			throw new NotFoundException("Vaccine Event", vaccineEventId);
+		}
+
+		vaccineEvent.Title = dto.Title;
+		vaccineEvent.ShortDescription = dto.ShortDescription;
+		vaccineEvent.Content = dto.Content;
+		vaccineEvent.DateSignupStart = dto.DateSignupStart;
+		vaccineEvent.DateSignupEnd = dto.DateSignupEnd;
+		vaccineEvent.Status = dto.Status;
+		vaccineEvent.CreatedBy = dto.CreatedBy;
+
+		await _unitOfWork.GetRepository<Vaccineevent>().UpdateAsync(vaccineEvent);
+		await _unitOfWork.SaveAsync();
+		return vaccineEvent.Id;
+	}
+
+	public async Task<ViewVaccineEventDetailDTO> GetVaccineEventById(string vaccineEventId)
+	{
+		var repository = _unitOfWork.GetRepository<Vaccineevent>();
+		var healthcheckupevent = await repository
+			.GetQueryable()
+			.Include(i => i.CreatedBy)
+			.FirstOrDefaultAsync(i => i.Id == vaccineEventId);
+
+		if (healthcheckupevent == null)
+		{
+			throw new NotFoundException("Vaccine Event", vaccineEventId);
+		}
+
+		return new ViewVaccineEventDetailDTO
+		{
+			Id = healthcheckupevent.Id,
+			Title = healthcheckupevent.Title,
+			DateSignupEnd = healthcheckupevent.DateSignupEnd,
+			DateSignupStart = healthcheckupevent.DateSignupStart,
+			CreatedBy = healthcheckupevent.CreatedBy,
+			DateOccurred = healthcheckupevent.DateOccurred,
+			Status = healthcheckupevent.Status
+		};
+	}
 }

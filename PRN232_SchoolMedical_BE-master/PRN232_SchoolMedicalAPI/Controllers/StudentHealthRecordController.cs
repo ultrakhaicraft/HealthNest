@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MySqlX.XDevAPI.Common;
 using PRN232_SchoolMedicalAPI.Helpers;
 using SchoolMedical_BusinessLogic.Core;
 using SchoolMedical_BusinessLogic.Interface;
@@ -24,9 +25,12 @@ public class StudentHealthRecordController : ControllerBase
 	[HttpGet]
 	public async Task<IActionResult> GetStudentHealthRecords([FromQuery] StudentHealthRecordQuery request)
 	{
-		var records = await _studentHealthRecordService.GetAllRecords(request);
-		HttpContext.Items["CustomMessage"] = "Get all records successfully";
-		return Ok(records);
+		var result = await _studentHealthRecordService.GetAllRecords(request);
+
+		ApiResponseWrapper<PagingModel<StudentHealthRecordViewModel>> response = ApiResponseWrapper<PagingModel<StudentHealthRecordViewModel>>
+			.Success(result, "Get all student health records successful");
+
+		return Ok(response);
 	}
 
 	/// <summary>
@@ -35,13 +39,12 @@ public class StudentHealthRecordController : ControllerBase
 	[HttpGet("{id}")]
 	public async Task<IActionResult> GetStudentHealthRecordById(string id)
 	{
-		var record = await _studentHealthRecordService.GetRecordByIdAsync(id);
-		if (record == null)
-		{
-			throw new KeyNotFoundException("Student health record not foundby this ID");
-		}
-		HttpContext.Items["CustomMessage"] = "Displaying the record details";
-		return Ok(record);
+		var result = await _studentHealthRecordService.GetRecordByIdAsync(id);
+		
+		ApiResponseWrapper<StudentHealthRecordDetailModel> response = ApiResponseWrapper<StudentHealthRecordDetailModel>
+			.Success(result, "Get student health records successful with Id: "+id);
+
+		return Ok(response);
 	}
 
 	/// <summary>
@@ -50,13 +53,12 @@ public class StudentHealthRecordController : ControllerBase
 	[HttpGet("from-student/{studentId}")]
 	public async Task<IActionResult> GetStudentHealthRecordFromStudentId(string studentId)
 	{
-		var record = await _studentHealthRecordService.GetRecordFromStudentIdAsync(studentId);
-		if (record == null)
-		{
-			throw new KeyNotFoundException("Student health record not foundby this ID");
-		}
-		HttpContext.Items["CustomMessage"] = "Displaying the record details";
-		return Ok(record);
+		var result = await _studentHealthRecordService.GetRecordFromStudentIdAsync(studentId);
+
+		ApiResponseWrapper<StudentHealthRecordDetailModel> response = ApiResponseWrapper<StudentHealthRecordDetailModel>
+			.Success(result, "Get student health records successful with student Id: "+studentId);
+
+		return Ok(response);
 	}
 
 	/// <summary>
@@ -67,13 +69,22 @@ public class StudentHealthRecordController : ControllerBase
 	{
 		if (!ModelState.IsValid)
 		{
-			return BadRequest(ModelState);
+			var errors = ModelState
+			.Where(kvp => kvp.Value?.Errors.Count > 0)
+			.ToDictionary(
+				kvp => kvp.Key,
+				kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToArray()
+			);
+
+			return BadRequest(ApiResponseWrapper<object>.ValidationError(errors));
 		}
 
-		//var createdBy = User.Claims.GetUserIdFromJwtToken() ?? "Unknown";
-		var recordId = await _studentHealthRecordService.CreateRecordAsync(record, record.CreatedBy);
-		HttpContext.Items["CustomMessage"] = "Record created successfully";
-		return CreatedAtAction(nameof(GetStudentHealthRecordById), new { id = recordId }, recordId);
+		var result = await _studentHealthRecordService.CreateRecordAsync(record, record.CreatedBy);
+
+		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
+			.Created(result, "Create student health record successful");
+
+		return StatusCode(201,response);
 	}
 
 	/// <summary>
@@ -85,13 +96,22 @@ public class StudentHealthRecordController : ControllerBase
 	{
 		if (!ModelState.IsValid)
 		{
-			return BadRequest(ModelState);
+			var errors = ModelState
+			.Where(kvp => kvp.Value?.Errors.Count > 0)
+			.ToDictionary(
+				kvp => kvp.Key,
+				kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToArray()
+			);
+
+			return BadRequest(ApiResponseWrapper<object>.ValidationError(errors));
 		}
 
-		
 		await _studentHealthRecordService.UpdateRecordAsync(record, id);
-		HttpContext.Items["CustomMessage"] = "Record updated successfully";
-		return Ok();
+
+		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
+			.Success(string.Empty, "Update student health record successful with Id: " + id);
+
+		return Ok(response);
 	}
 
 	[HttpPut("{id}/status")]
@@ -99,13 +119,22 @@ public class StudentHealthRecordController : ControllerBase
 	{
 		if (!ModelState.IsValid)
 		{
-			return BadRequest(ModelState);
+			var errors = ModelState
+			.Where(kvp => kvp.Value?.Errors.Count > 0)
+			.ToDictionary(
+				kvp => kvp.Key,
+				kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToArray()
+			);
+
+			return BadRequest(ApiResponseWrapper<object>.ValidationError(errors));
 		}
 
-
 		await _studentHealthRecordService.UpdateRecordStatusAsync(id, status);
-		HttpContext.Items["CustomMessage"] = "Record status updated successfully";
-		return Ok();
+
+		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
+			.Success(string.Empty, "Update student health record status successful with Id: " + id);
+
+		return Ok(response);
 	}
 
 	/// <summary>
@@ -115,7 +144,10 @@ public class StudentHealthRecordController : ControllerBase
 	public async Task<IActionResult> DeleteStudentHealthRecord(string id)
 	{
 		await _studentHealthRecordService.DeleteRecordAsync(id);
-		HttpContext.Items["CustomMessage"] = "Record deleted successfully";
-		return Ok();
+
+		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
+					.NoContent("Delete student health records successful with student Id: " + id); 
+
+		return StatusCode(204,response);
 	}
 }

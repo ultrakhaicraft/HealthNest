@@ -104,7 +104,7 @@ namespace SchoolMedical_BusinessLogic.Core
 			return pagedData;
 		}
 
-		public async Task<MedicineRequestResponseDto?> GetMedicineRequestByIdAsync(string id)
+		public async Task<MedicineRequestResponseDto> GetMedicineRequestByIdAsync(string id)
 		{
 			var medicineRequest = await _medicineRequestRepository
 				.Include(mr => mr.RequestByNavigation)
@@ -253,16 +253,15 @@ namespace SchoolMedical_BusinessLogic.Core
 			}
 		}
 
-		public async Task<bool> DeleteMedicineRequestAsync(string id)
+		public async Task DeleteMedicineRequestAsync(string id)
 		{
-			try
-			{
+			
 				_unitOfWork.BeginTransaction();
 
 				var medicineRequest = await _medicineRequestRepository.GetByIdAsync(id);
 				if (medicineRequest == null)
 				{
-					return false;
+					throw new NotFoundException("Medicine Request", id);
 				}
 
 				medicineRequest.Status = RequestStatus.Deleted.ToString();
@@ -270,13 +269,7 @@ namespace SchoolMedical_BusinessLogic.Core
 				await _unitOfWork.SaveAsync();
 
 				_unitOfWork.CommitTransaction();
-				return true;
-			}
-			catch
-			{
-				_unitOfWork.RollBack();
-				throw;
-			}
+				
 		}
 
 		public async Task<PagingModel<MedicineRequestResponseDto>> GetMedicineRequestsByStudentAsync(string studentId, int pageIndex = 1, int pageSize = 5)

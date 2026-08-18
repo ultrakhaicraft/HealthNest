@@ -6,7 +6,7 @@ namespace SchoolMedical_BusinessLogic.Interface
         Task<PagingModel<MedicalSupplyViewModel>> GetAllMedicalSupplyAsync(MedicalSupplyQuery request);
         Task<MedicalSupplyDetailModel> GetMedicalSupplyByIdAsync(string id);
         Task<string> CreateMedicalSupplyAsync(MedicalSupplyCreateModel request, string createdBy);
-        Task<bool> UpdateMedicalSupplyAsync(MedicalSupplyUpdateModel request, string medicineId);
-        Task<bool> SoftDeleteMedicalSupplyAsync(string id);
+        Task UpdateMedicalSupplyAsync(MedicalSupplyUpdateModel request, string medicineId);
+        Task SoftDeleteMedicalSupplyAsync(string id);
     }
 }

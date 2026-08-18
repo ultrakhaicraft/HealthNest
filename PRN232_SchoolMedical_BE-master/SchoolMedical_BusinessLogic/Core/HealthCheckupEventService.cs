@@ -85,6 +85,110 @@ namespace SchoolMedical_BusinessLogic.Core
 
 			return data;
 		}
+		public async Task<HealthCheckupEventDetailDTO> GetHealthCheckupEventById (string healthCheckupEventId)
+		{
+			var repository = _unitOfWork.GetRepository<Healthcheckupevent>();
+			var healthcheckupevent = await repository
+				.GetQueryable()
+				.Include(i => i.CreatedByNavigation)
+				.FirstOrDefaultAsync(i => i.Id == healthCheckupEventId);
+
+			if (healthcheckupevent == null)
+			{
+				throw new NotFoundException("Health Checkup Event", healthCheckupEventId);
+			}
+
+			return new HealthCheckupEventDetailDTO
+			{
+				Id = healthcheckupevent.Id,
+				Title= healthcheckupevent.Title,
+				DateSignupEnd=healthcheckupevent.DateSignupEnd,
+				DateSignupStart=healthcheckupevent.DateSignupStart,
+				CreatedBy=healthcheckupevent.CreatedBy,
+				DateOccurred = healthcheckupevent.DateOccurred,
+				Status = healthcheckupevent.Status
+			};
+		}
+
+		public async Task<string> CreateHealthCheckupAsync(
+			HealthCheckupEventCreateDTO dto)
+		{
+
+			await Task.Delay(100);
+
+			var createdBy = await _unitOfWork.GetRepository<Account>().GetByIdAsync(dto.CreatedBy);
+			if (createdBy == null)
+			{
+				throw new NotFoundException("Unable to find account for creating health checkup with their Id: " + createdBy.Id);
+			}
+
+			var healthCheckupEvent = new Healthcheckupevent
+			{
+				Id = Guid.NewGuid().ToString(),
+				Title = dto.Title,
+				ShortDescription = dto.ShortDescription,
+				Content = dto.Content,
+				DateOccurred = dto.DateOccurred,
+				DateSignupStart = dto.DateSignupStart,
+				DateSignupEnd = dto.DateSignupEnd,
+				Status = EventStatus.Upcoming.ToString(),
+				CreatedBy = createdBy.Id, // Assuming CreatedBy is a property in the create model
+
+			};
+
+			await _unitOfWork.GetRepository<Healthcheckupevent>().InsertAsync(healthCheckupEvent);
+			await _unitOfWork.SaveAsync();
+			return healthCheckupEvent.Id;
+
+		}
+
+		public async Task DeleteHealthCheckupEvent(string healthCheckupEventId)
+		{
+
+			await Task.Delay(100);
+			var healthcheckupEvent = _unitOfWork.GetRepository<Healthcheckupevent>().GetById(healthCheckupEventId);
+			if (healthcheckupEvent == null)
+			{
+				throw new NotFoundException("Health Checkup Event",healthCheckupEventId);
+			}
+			_unitOfWork.GetRepository<Healthcheckupevent>().Delete(healthcheckupEvent);
+			await _unitOfWork.SaveAsync(); // Ensure the save operation completes
+			return;
+
+		}
+
+		public async Task<string> UpdateHealthCheckupEvent(
+			HealthCheckupEventUpdateDTO dto,string healthCheckupId)
+		{
+
+			await Task.Delay(100);
+
+			var createdBy = await _unitOfWork.GetRepository<Account>().GetByIdAsync(dto.CreatedBy);
+			if (createdBy == null)
+			{
+				throw new NotFoundException("Unable to find account for updating health checkup with their Id: " + createdBy.Id);
+			}
+
+			var healthcheckupEvent = _unitOfWork.GetRepository<Healthcheckupevent>().GetById(healthCheckupId);
+			if (healthcheckupEvent == null)
+			{
+				throw new NotFoundException("Health Checkup Event", healthCheckupId);
+			}
+
+		
+			healthcheckupEvent.Title = dto.Title;
+			healthcheckupEvent.ShortDescription = dto.ShortDescription;
+			healthcheckupEvent.Content = dto.Content;
+			healthcheckupEvent.DateSignupStart = dto.DateSignupStart;
+			healthcheckupEvent.DateSignupEnd= dto.DateSignupEnd;
+			healthcheckupEvent.Status = dto.Status;
+			healthcheckupEvent.CreatedBy = dto.CreatedBy;
+
+			await _unitOfWork.GetRepository<Healthcheckupevent>().UpdateAsync(healthcheckupEvent);
+			await _unitOfWork.SaveAsync();
+			return healthcheckupEvent.Id;
+
+		}
 
 		public async Task<int> CountUpcomingHealthCheckup()
 		{

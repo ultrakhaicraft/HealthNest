@@ -79,7 +79,9 @@ public class IncidentRecordService : IIncidentRecordService
 			.FirstOrDefaultAsync(i => i.Id == incidentId);
 
 		if (incident == null)
-			return null;
+		{
+			throw new NotFoundException("Incident Record", incidentId);
+		}
 
 		return new IncidentRecordDetailModel
 		{
@@ -125,7 +127,10 @@ public class IncidentRecordService : IIncidentRecordService
 		var existingIncident = await repository.GetByIdAsync(incidentId);
 
 		if (existingIncident == null)
+		{
 			throw new NotFoundException("Incident Record", incidentId);
+
+		}
 
 		existingIncident.StudentId = request.StudentId;
 		existingIncident.HandleBy = request.HandleBy;
@@ -145,15 +150,14 @@ public class IncidentRecordService : IIncidentRecordService
 		return incidentRecord;
 	}
 
-	public async Task<bool> SoftDeleteIncidentRecordAsync(string incidentId)
+	public async Task SoftDeleteIncidentRecordAsync(string incidentId)
 	{
-		try
-		{
+	
 			var repository = _unitOfWork.GetRepository<Incidentrecord>();
 			var incident = await repository.GetByIdAsync(incidentId);
 
 			if (incident == null)
-				return false;
+				throw new NotFoundException("Incident Record", incidentId);
 
 			incident.Status = RecordStatus.Inactive.ToString();
 			await repository.UpdateAsync(incident);
@@ -163,40 +167,23 @@ public class IncidentRecordService : IIncidentRecordService
 			await _hubContext.Clients.All.SendAsync("IncidentRecordDeleted");
 
 
-			return true;
-		}
-		catch (Exception e) 
-		{
-
-			Console.WriteLine(e.Message);
-			Console.WriteLine(e.StackTrace);
-			return false;
-		}
+			
+		
 	}
 
-	public async Task<bool> ChangeStatusRecord(string id, string status)
+	public async Task ChangeStatusRecord(string id, string status)
 	{
-		try
-		{
+		
 			var repository = _unitOfWork.GetRepository<Incidentrecord>();
 			var incident = await repository.GetByIdAsync(id);
 
 			if (incident == null)
-				return false;
+				throw new NotFoundException("Incident Record", id);
 
 			incident.Status = status;
 			await repository.UpdateAsync(incident);
 			await _unitOfWork.SaveAsync();
-
-			return true;
-		}
-		catch (Exception e)
-		{
-
-			Console.WriteLine(e.Message);
-			Console.WriteLine(e.StackTrace);
-			return false;
-		}
+		
 	}
 
 	public async Task<int> CountActiveIncidentRecord()

@@ -160,26 +160,25 @@ namespace SchoolMedical_BusinessLogic.Core
             };
         }
 
-        public async Task<bool> SoftDeleteMedicalSupplyAsync(string id)
+        public async Task SoftDeleteMedicalSupplyAsync(string id)
         {
             var entity = await medicalSupply.GetByIdAsync(id);
             if (entity == null || entity.IsDeleted)
-                return false;
+                throw new NotFoundException("Medical Supply", id);
 
             entity.IsDeleted = true;
             medicalSupply.Update(entity);
             await _unitOfWork.SaveAsync();
 			await _cache.RemoveAsync("all_medical_supplies"); // Invalidate cache for all medical supplies as a refresh
-			return true;
         }
 
-        public async Task<bool> UpdateMedicalSupplyAsync(MedicalSupplyUpdateModel request, string medicineId)
+        public async Task UpdateMedicalSupplyAsync(MedicalSupplyUpdateModel request, string medicineId)
         {
             var entity = await medicalSupply.GetByIdAsync(medicineId);
             if (entity == null || entity.IsDeleted)
-                return false;
+				throw new NotFoundException("Medical Supply", medicineId);
 
-            entity.Name = request.Name ?? entity.Name;
+			entity.Name = request.Name ?? entity.Name;
             entity.Description = request.Description;
             entity.Amount = request.Amount;
             entity.IsAvailable = request.IsAvailable ?? entity.IsAvailable;
@@ -187,7 +186,6 @@ namespace SchoolMedical_BusinessLogic.Core
             medicalSupply.Update(entity);
             await _unitOfWork.SaveAsync();
 			await _cache.RemoveAsync("all_medical_supplies"); // Invalidate cache for all medical supplies as a refresh
-			return true;
 		}
     }
 }

@@ -26,15 +26,13 @@ namespace SchoolMedical_BusinessLogic.Core
 
 		public async Task<string> CreateRecordAsync(StudentHealthRecordCreateModel record, string createdBy)
 		{
-			try
-			{
+			
 				await Task.Delay(100);
 
 				var parent= await _unitOfWork.GetRepository<Account>().GetByIdAsync(createdBy);
 				if(parent == null)
 				{
-					Console.WriteLine("Parent ID Not Found");
-					return "Can't find createdBy Id";
+					throw new NotFoundException("Unable to find parent account with their Id: " + createdBy);
 				}
 
 				var studentHealthRecord = new Studenthealthrecord
@@ -52,42 +50,29 @@ namespace SchoolMedical_BusinessLogic.Core
 				};
 
 				await _unitOfWork.GetRepository<Studenthealthrecord>().InsertAsync(studentHealthRecord);
-				await _unitOfWork.SaveAsync(); // Ensure the save operation completes
+				await _unitOfWork.SaveAsync(); 
 				return studentHealthRecord.Id;
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine("Error creating student health record: " + e.Message);
-				throw new Exception("An error occurred while creating the student health record.", e);
-			}
+			
 		}
 
 		public async Task DeleteRecordAsync(string recordId)
 		{
-			try
-			{
+			
 				await Task.Delay(100);
 				var record = _unitOfWork.GetRepository<Studenthealthrecord>().GetById(recordId);
 				if (record == null)
 				{
-					throw new Exception("Student health record not found.");
+					throw new NotFoundException("Student health record",recordId);
 				}
 				_unitOfWork.GetRepository<Studenthealthrecord>().Delete(record);
 				await _unitOfWork.SaveAsync(); // Ensure the save operation completes
 				return;
-
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine("Error deleting student health record: " + e.Message);
-				throw new Exception("An error occurred while deleting the student health record.", e);
-			}
+			
 		}
 
 		public async Task<PagingModel<StudentHealthRecordViewModel>> GetAllRecords(StudentHealthRecordQuery recordQuery)
 		{
-			try
-			{
+			
 				await Task.Delay(100);
 				var records = _unitOfWork.GetRepository<Studenthealthrecord>().GetQueryable();
 				
@@ -110,7 +95,7 @@ namespace SchoolMedical_BusinessLogic.Core
 
 				if (records == null || !records.Any())
 				{
-					throw new Exception("No student health records found.");
+					throw new NotFoundException("No student health records found.");
 				}
 
 				var recordResponse = records.Select(record => new StudentHealthRecordViewModel
@@ -132,24 +117,18 @@ namespace SchoolMedical_BusinessLogic.Core
 					TotalPages = pagingModel.TotalPages,
 					Data = pagingModel.Data
 				};
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine("Error getting all student health record: " + e.Message);
-				throw new Exception("An error occurred while getting all the student health record."+ e.Message);
-			}
+		
 		}
 
 		public async Task<StudentHealthRecordDetailModel> GetRecordByIdAsync(string recordId)
 		{
-			try
-			{
+			
 				await Task.Delay(100);
 				var resultList = _unitOfWork.GetRepository<Studenthealthrecord>().Include(x => x.Student).Include(x => x.CreatedByNavigation);
 				var record = resultList.Where(x=>x.Id.Equals(recordId)).FirstOrDefault();
 				if (record == null)
 				{
-					throw new Exception("Student health record not found.");
+					throw new NotFoundException("Student health record",recordId);
 				}
 
 				var recordResponse = new StudentHealthRecordDetailModel
@@ -190,19 +169,12 @@ namespace SchoolMedical_BusinessLogic.Core
 				return recordResponse;
 
 
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine("Error creating student health record: " + e.Message);
-				Console.WriteLine(e.StackTrace);
-				return null;
-			}
+			
 		}
 
 		public async Task<StudentHealthRecordDetailModel> GetRecordFromStudentIdAsync(string studentId)
 		{
-			try
-			{
+			
 				await Task.Delay(100);
 				
 				var resultList = _unitOfWork.GetRepository<Studenthealthrecord>().Include(x => x.Student).Include(x => x.CreatedByNavigation);
@@ -210,7 +182,7 @@ namespace SchoolMedical_BusinessLogic.Core
 
 				if (record == null)
 				{
-					throw new Exception("Student health record not found.");
+					throw new NotFoundException("Student health record", recordId);
 				}
 
 				var recordResponse = new StudentHealthRecordDetailModel
@@ -251,19 +223,18 @@ namespace SchoolMedical_BusinessLogic.Core
 				return recordResponse;
 
 
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine("Error creating student health record: " + e.Message);
-				throw new Exception("An error occurred while getting the student health record.", e);
-			}
+			
 		}
 
 		public async Task UpdateRecordAsync(StudentHealthRecordUpdateModel record, string recordId)
 		{
-			try
-			{
+			
 				var existingRecord =  await _unitOfWork.GetRepository<Studenthealthrecord>().GetByIdAsync(recordId);
+
+				if (existingRecord == null)
+				{
+					throw new NotFoundException("Student Health Record", recordId);
+				}
 
 				existingRecord!.StudentId = record.StudentId?? "";
 				existingRecord.Height = record.Height;
@@ -278,35 +249,24 @@ namespace SchoolMedical_BusinessLogic.Core
 				await _unitOfWork.GetRepository<Studenthealthrecord>().UpdateAsync(existingRecord);
 				await _unitOfWork.SaveAsync(); // Ensure the save operation completes
 				return;
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine("Error updating student health record: " + e.Message);
-				throw new Exception("An error occurred while updating the student health record.", e);
-			}
+			
 		}
 
 		public async Task UpdateRecordStatusAsync(string recordId, string status)
 		{
 
-			try
-			{
 				var existingRecord = await _unitOfWork.GetRepository<Studenthealthrecord>().GetByIdAsync(recordId);
+				if (existingRecord == null)
+				{
+					throw new NotFoundException("Student Health Record", recordId);
+				}
 
-				
 				existingRecord.Status = status;
-
-
 
 				await _unitOfWork.GetRepository<Studenthealthrecord>().UpdateAsync(existingRecord);
 				await _unitOfWork.SaveAsync();
 				return;
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine("Error updating student health record: " + e.Message);
-				throw new Exception("An error occurred while updating the student health record.", e);
-			}
+			
 		}
 	}
 }

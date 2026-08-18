@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SchoolMedical_BusinessLogic.Interface;
 using SchoolMedical_DataAccess.DTOModels;
+using SchoolMedical_DataAccess.Entities;
 using SchoolMedical_DataAccess.Enums;
+using System.Security.Principal;
 
 namespace PRN232_SchoolMedicalAPI.Controllers;
 
@@ -23,8 +25,9 @@ public class AccountController : ControllerBase
 	public async Task<IActionResult> GetAccounts([FromQuery] AccountQuery request)
 	{
 		var accounts = await _accountService.GetAllAccount(request);
-		HttpContext.Items["CustomMessage"] = "Get all accounts successfully";
-		return Ok(accounts);
+		ApiResponseWrapper<PagingModel<AccountViewModel>> response = ApiResponseWrapper<PagingModel<AccountViewModel>>
+			.Success(accounts, "Get all accounts successful");
+		return Ok(response);
 	}
 
 	/// <summary>
@@ -34,11 +37,10 @@ public class AccountController : ControllerBase
 	public async Task<IActionResult> GetAccountById(string id)
 	{
 		var account = await _accountService.GetAccountDetailById(id);
-		if (account == null)
-		{
-			return NotFound("Account not found");
-		}
-		HttpContext.Items["CustomMessage"] = "Account found successfully";
+		
+		ApiResponseWrapper<AccountDetailModel> response = ApiResponseWrapper<AccountDetailModel>
+			.Success(account, "Get account successfully with Id: "+id);
+
 		return Ok(account);
 	}
 
@@ -46,11 +48,8 @@ public class AccountController : ControllerBase
 	public async Task<IActionResult> GetStudentByParentId(string parentId)
 	{
 		var account = await _accountService.getStudentDetail(parentId);
-		if (account == null)
-		{
-			return NotFound("Account not found");
-		}
-		HttpContext.Items["CustomMessage"] = "Account found successfully";
+		ApiResponseWrapper<AccountDetailModel> response = ApiResponseWrapper<AccountDetailModel>
+			.Success(account, "Get Student account successfully with Parent Id: " + parentId);
 		return Ok(account);
 	}
 
@@ -62,12 +61,21 @@ public class AccountController : ControllerBase
 	{
 		if (!ModelState.IsValid)
 		{
-			return BadRequest(ModelState);
+			var errors = ModelState
+			.Where(kvp => kvp.Value?.Errors.Count > 0)
+			.ToDictionary(
+				kvp => kvp.Key,
+				kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToArray()
+			);
+
+			return BadRequest(ApiResponseWrapper<object>.ValidationError(errors));
 		}
 
 		string id = await _accountService.CreateNewAccount(request);
-		HttpContext.Items["CustomMessage"] = "Account created successfully";
-		return CreatedAtAction(nameof(GetAccountById), new { id }, id);
+		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
+			.Created(id, "Create Account Success, giving Id");
+
+		return StatusCode(201, response);
 	}
 
 	/// <summary>
@@ -78,12 +86,21 @@ public class AccountController : ControllerBase
 	{
 		if (!ModelState.IsValid)
 		{
-			return BadRequest(ModelState);
+			var errors = ModelState
+			.Where(kvp => kvp.Value?.Errors.Count > 0)
+			.ToDictionary(
+				kvp => kvp.Key,
+				kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToArray()
+			);
+
+			return BadRequest(ApiResponseWrapper<object>.ValidationError(errors));
 		}
 
 		await _accountService.UpdateAccount(id, request);
-		HttpContext.Items["CustomMessage"] = "Account updated successfully";
-		return Ok();
+		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
+					.Success(string.Empty, "Update Account Success with Id - "+id); 
+
+		return Ok(response);
 	}
 
 	/// <summary>
@@ -93,8 +110,9 @@ public class AccountController : ControllerBase
 	public async Task<IActionResult> DeleteAccount(string id)
 	{
 		await _accountService.SoftDeleteAccount(id);
-		HttpContext.Items["CustomMessage"] = "Account deleted successfully";
-		return Ok();
+		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
+					.NoContent("Delete Account Success with Id - " + id);
+		return StatusCode(204,response);
 	}
 
 	/// <summary>
@@ -104,8 +122,10 @@ public class AccountController : ControllerBase
 	public async Task<IActionResult> ChangeAccountStatus(string id, [FromQuery] AccountStatus status)
 	{
 		await _accountService.ChangeAccountStatus(id, status);
-		HttpContext.Items["CustomMessage"] = "Account status changed successfully";
-		return Ok();
+		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
+					.Success(string.Empty, "Change Account status Success with Id - " + id);
+
+		return Ok(response);
 	}
 
 	[HttpPatch("assign-student")]
@@ -115,23 +135,18 @@ public class AccountController : ControllerBase
 		if (result)
 		{
 			HttpContext.Items["CustomMessage"] = "Link Student to Parent successfully";
-			return Ok();
+			ApiResponseWrapper<string> response = ApiResponseWrapper<string>
+					.Success(string.Empty, "Link Student to Parent successfully");
+
+			return Ok(response);
 		}
 		else
 		{
-			HttpContext.Items["CustomMessage"] = "Assign Student to Parent failed because they are not found or already linked or st";
+			ApiResponseWrapper<string> response = ApiResponseWrapper<string>
+								.ErrorResponse(400, "Assign Student to Parent failed", "No further detail");	
 			return BadRequest();
 		}
 	}
 
-	/// <summary>
-	/// Get all student accounts (no pagination)
-	/// </summary>
-	[HttpGet("students")]
-	public async Task<IActionResult> GetAllStudentAccounts()
-	{
-		var students = await _accountService.GetAllStudentAccounts();
-		HttpContext.Items["CustomMessage"] = "Get all student accounts successfully";
-		return Ok(students);
-	}
+	
 }

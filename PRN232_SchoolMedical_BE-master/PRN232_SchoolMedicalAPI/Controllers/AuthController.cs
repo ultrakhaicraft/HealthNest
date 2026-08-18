@@ -4,6 +4,7 @@ using MySqlX.XDevAPI.Common;
 using PRN232_SchoolMedicalAPI.Helpers;
 using SchoolMedical_BusinessLogic.Interface;
 using SchoolMedical_DataAccess.DTOModels;
+using SchoolMedical_DataAccess.Entities;
 
 
 namespace PRN232_SchoolMedicalAPI.Controllers;
@@ -25,10 +26,18 @@ public class AuthController : ControllerBase
 	{
 		if (!ModelState.IsValid)
 		{
-			return BadRequest();
+			var errors = ModelState
+			.Where(kvp => kvp.Value?.Errors.Count > 0)
+			.ToDictionary(
+				kvp => kvp.Key,
+				kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToArray()
+			);
+
+			return BadRequest(ApiResponseWrapper<object>.ValidationError(errors));
 		}
-		var response = await _authService.Login(request);
-		HttpContext.Items["CustomMessage"] = "Login successfully, granting token";
+		var result = await _authService.Login(request);
+		ApiResponseWrapper<LoginResponse> response = ApiResponseWrapper<LoginResponse>
+					.Success(result, "Login Success"); 
 		return Ok(response);
 	}
 
@@ -40,10 +49,18 @@ public class AuthController : ControllerBase
 	{
 		if (!ModelState.IsValid)
 		{
-			return BadRequest();
+			var errors = ModelState
+			.Where(kvp => kvp.Value?.Errors.Count > 0)
+			.ToDictionary(
+				kvp => kvp.Key,
+				kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToArray()
+			);
+
+			return BadRequest(ApiResponseWrapper<object>.ValidationError(errors));
 		}
-		var response = await _authService.RegisteAsync(request, IsParent);
-		HttpContext.Items["CustomMessage"] = "User registered successfully!"; 
+		var result = await _authService.RegisteAsync(request, IsParent);
+		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
+					.Created(result, "Register Success");
 		return StatusCode(StatusCodes.Status201Created, response);
 
 	}

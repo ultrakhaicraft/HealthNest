@@ -32,6 +32,23 @@ namespace SchoolMedical_DataAccess.DTOModels
 
 	}
 
+	public class HealthCheckupEventCreateDTO
+	{
+		public string CreatedBy { get; set; } = null!;
+		public string Title { get; set; } = null!;
+		public string? ShortDescription { get; set; }
+		public string? Content { get; set; }
+		public DateTime DateOccurred { get; set; }
+		public DateTime? DateSignupStart { get; set; }
+		public DateTime? DateSignupEnd { get; set; }
+		public string? Status { get; set; }
+	}
+
+	public class HealthCheckupEventUpdateDTO : HealthCheckupEventCreateDTO
+	{
+
+	}
+
 	public class HealthCheckupEventQuery
 	{
 		public int PageIndex { get; set; } = 1; // Default to first page

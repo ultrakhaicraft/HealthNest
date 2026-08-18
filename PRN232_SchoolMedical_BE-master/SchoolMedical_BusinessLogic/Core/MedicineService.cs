@@ -28,8 +28,6 @@ public class MedicineService : IMedicineService
 
     public async Task<PagingModel<MedicineDetailResponseDto>> GetAllMedicinesAsync(MedicineFilterRequestDto request)
     {
-        try
-        {
 			var query = _medicineRepository.Include(m => m.CreatedByNavigation)
 			.Where(m => !m.IsDeleted);
 
@@ -74,18 +72,12 @@ public class MedicineService : IMedicineService
 				TotalPages = medicinePage.TotalPages,
 				Data = medicinePage.Data
 			};
-		}
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error fetching all medicine:{ex.Message}");
-            throw new Exception(ex.Message);
-        }
+		
     }
 
-    public async Task<MedicineDetailResponseDto?> GetMedicineDetailByIdAsync(string id)
+    public async Task<MedicineDetailResponseDto> GetMedicineDetailByIdAsync(string id)
     {
-        try
-        {
+        
 			var medicine = await _medicineRepository
 			.Include(m => m.CreatedByNavigation)
 			.Where(m => m.Id == id && !m.IsDeleted)
@@ -101,23 +93,17 @@ public class MedicineService : IMedicineService
 			})
 			.FirstOrDefaultAsync();
 
-			return medicine;
-		}
-        catch (Exception ex)
-        {
-			Console.WriteLine($"Error fetching medicine:{ex.Message}");
-			throw new Exception(ex.Message);
+            if(medicine == null)
+            {
+                throw new NotFoundException("Medicine", id);
+            }
 
-        }
+			return medicine;
+		
     }
 
     public async Task<MedicineDetailResponseDto> CreateMedicineAsync(CreateMedicineRequestDto request, string createdBy)
     {
-        try
-        {
-            //Start Transaction Here
-            await _unitOfWork.BeginTransactionAsync(); 
-
             var medicine = new Medicine
             {
                 Id = Guid.NewGuid().ToString(),
@@ -132,7 +118,6 @@ public class MedicineService : IMedicineService
             await _medicineRepository.InsertAsync(medicine);
             await _unitOfWork.SaveAsync();
 
-            await _unitOfWork.CommitTransactionAsync();
 
             var createdMedicine = await _medicineRepository
                 .Include(m => m.CreatedByNavigation)
@@ -148,20 +133,12 @@ public class MedicineService : IMedicineService
                 CreatedBy = createdMedicine.CreatedBy,
                 CreatedByName = createdMedicine.CreatedByNavigation?.FullName ?? "Unknown"
             };
-        }
-        catch(Exception ex)
-        {
-            Console.WriteLine($"Error creating medicine: {ex.Message}");
-			await _unitOfWork.RollBackAsync();
-            throw new Exception(ex.Message);
-        }
+       
     }
 
     public async Task<MedicineDetailResponseDto> UpdateMedicineAsync(UpdateMedicineRequestDto request, string medicineId)
     {
-        try
-        {
-            await _unitOfWork.BeginTransactionAsync();
+       
 
             var medicine = await _medicineRepository.GetByIdAsync(medicineId);
             if (medicine == null || medicine.IsDeleted)
@@ -177,7 +154,6 @@ public class MedicineService : IMedicineService
             await _medicineRepository.UpdateAsync(medicine);
             await _unitOfWork.SaveAsync();
 
-            await _unitOfWork.CommitTransactionAsync();
 
 			// Fetch the updated medicine with CreatedByNavigation for response
 			var updatedMedicine = await _medicineRepository
@@ -194,39 +170,25 @@ public class MedicineService : IMedicineService
                 CreatedBy = updatedMedicine.CreatedBy,
                 CreatedByName = updatedMedicine.CreatedByNavigation?.FullName ?? "Unknown"
             };
-        }
-        catch(Exception ex)
-		{
-			Console.WriteLine($"Error updating medicine: {ex.Message}");
-			await _unitOfWork.RollBackAsync();
-			throw new Exception(ex.Message);
-		}
+       
     }
 
-    public async Task<bool> SoftDeleteMedicineAsync(string medicineId)
+    public async Task SoftDeleteMedicineAsync(string medicineId)
     {
-        try
-        {
-            _unitOfWork.BeginTransaction();
+      
 
             var medicine = await _medicineRepository.GetByIdAsync(medicineId);
             if (medicine == null || medicine.IsDeleted)
             {
-                return false;
+                throw new NotFoundException("Medicines", medicineId);
             }
 
             medicine.IsDeleted = true;
             await _medicineRepository.UpdateAsync(medicine);
             await _unitOfWork.SaveAsync();
 
-            _unitOfWork.CommitTransaction();
-            return true;
-        }
-        catch
-        {
-            _unitOfWork.RollBack();
-            throw;
-        }
+           
+      
     }
 
     private IQueryable<Medicine> ApplySorting(IQueryable<Medicine> query, string? sortBy, bool isDescending)

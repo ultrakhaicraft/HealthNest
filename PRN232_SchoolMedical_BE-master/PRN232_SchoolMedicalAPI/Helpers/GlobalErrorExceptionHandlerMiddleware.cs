@@ -44,12 +44,7 @@ namespace PRN232_SchoolMedicalAPI.Helpers
 			context.Response.ContentType = "application/json";
 			context.Response.StatusCode = statusCode;
 
-			var response = new ErrorApiResponseWrapper
-			{
-				StatusCode = statusCode,
-				Message = message,
-				Detail = detail
-			};
+			var response = ApiResponseWrapper<string>.ErrorResponse(statusCode,detail,message);
 
 			await context.Response.WriteAsJsonAsync(response);
 		}

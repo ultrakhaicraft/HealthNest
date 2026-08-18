@@ -31,12 +31,11 @@ public class AuthService : IAuthService
 	}
 	public async Task<LoginResponse> Login(LoginRequest request)
 	{
-		try
-		{
+		
 			var account = _unitOfWork.GetRepository<Account>().Find(user => user.Email == request.Email);
 			if (account == null)
 			{
-				throw new NotFoundException(ErrorMessage.EmailNotFound);
+				throw new UnauthorizedException(ErrorMessage.EmailNotFound);
 			}
 			if (!BCrypt.Net.BCrypt.Verify(request.Password, account.Password))
 			{
@@ -44,13 +43,13 @@ public class AuthService : IAuthService
 			}
 
 			var authClaims = new List<Claim>
-		{
-			new Claim("id", account.Id),
-			new Claim(ClaimTypes.Name, account.FullName?? "N/A"),
-			new Claim(ClaimTypes.Email, account.Email ?? "N/A"),
-			new Claim(ClaimTypes.Role, account.Role ?? "N/A"),
-			new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-		};
+			{
+				new Claim("id", account.Id),
+				new Claim(ClaimTypes.Name, account.FullName?? "N/A"),
+				new Claim(ClaimTypes.Email, account.Email ?? "N/A"),
+				new Claim(ClaimTypes.Role, account.Role ?? "N/A"),
+				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+			};
 
 			var token = _jwtUtils.GenerateToken(authClaims, _configuration.GetSection("JwtSettings").Get<JwtModel>(), account);
 
@@ -63,18 +62,11 @@ public class AuthService : IAuthService
 				Id = account.Id.ToString(),
 				Role = account.Role
 			};
-		}
-		catch (Exception e)
-		{
-
-			Console.WriteLine(e.Message);
-			throw new AppException(e.Message);
-		}
+		
 	}
 	public async Task<string> RegisteAsync(RegisterRequest request, bool IsParent)
 	{
-		try
-		{
+		
 			var existingAccount = _unitOfWork.GetRepository<Account>().Find(user => user.Email == request.Email);
 			if (existingAccount != null)
 				throw new BadRequestException(ErrorMessage.EmailExist);
@@ -103,12 +95,7 @@ public class AuthService : IAuthService
 
 
 			return account.Id;
-		}
-		catch (Exception e)
-		{
-			Console.WriteLine(e);
-			return null;
-		}
+		
 	}
 
 	//private methods

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MySqlX.XDevAPI.Common;
 using SchoolMedical_BusinessLogic.Core;
 using SchoolMedical_BusinessLogic.Interface;
 using SchoolMedical_DataAccess.DTOModels;
+using SchoolMedical_DataAccess.Entities;
 
 namespace PRN232_SchoolMedicalAPI.Controllers;
 
@@ -27,13 +29,15 @@ public class DashboardController : Controller
 	[HttpGet("statistics")]
 	public async Task<IActionResult> GetStatistic()
 	{
-		DashboardStatistic stat = new DashboardStatistic();
-		stat.ActiveIncidentRecord = await _incidentRecordService.CountActiveIncidentRecord();
-		stat.PendingMedicineRequest = await _medicineRequestService.CountPendingMedicineRequest();
-		stat.UpcomingVaccineEvent = await _vaccineEventService.CountUpcomingVaccineEvent();
-		stat.UpcomingHealthCheckup = await _healthCheckupEventService.CountUpcomingHealthCheckup();
+		DashboardStatistic result = new DashboardStatistic();
+		result.ActiveIncidentRecord = await _incidentRecordService.CountActiveIncidentRecord();
+		result.PendingMedicineRequest = await _medicineRequestService.CountPendingMedicineRequest();
+		result.UpcomingVaccineEvent = await _vaccineEventService.CountUpcomingVaccineEvent();
+		result.UpcomingHealthCheckup = await _healthCheckupEventService.CountUpcomingHealthCheckup();
 
-		return Ok(stat);
+		ApiResponseWrapper<DashboardStatistic> response = ApiResponseWrapper<DashboardStatistic>
+			.Success(result, "Get all dashboard statistic");
+		return Ok(response);
 	}
 
 	/// <summary>
@@ -43,8 +47,10 @@ public class DashboardController : Controller
 	[HttpGet("count-all-incident-per-year")]
 	public async Task<IActionResult> CountIncidentRecordPerYear([FromQuery] int year)
 	{
-		var result = await _incidentRecordService.CountAllIncidentRecordPerYear(year);
-		return Ok(result);
+		IncidentRecordCountPerYear result = await _incidentRecordService.CountAllIncidentRecordPerYear(year);
+		ApiResponseWrapper<IncidentRecordCountPerYear> response = ApiResponseWrapper<IncidentRecordCountPerYear>
+			.Success(result, "Get all incident count per year success");
+		return Ok(response);
 	}
 
 }

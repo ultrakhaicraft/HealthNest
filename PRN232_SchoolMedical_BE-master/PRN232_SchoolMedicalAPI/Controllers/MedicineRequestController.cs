@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MySqlX.XDevAPI.Common;
 using SchoolMedical_BusinessLogic.Interface;
 using SchoolMedical_BusinessLogic.Utility;
 using SchoolMedical_DataAccess.DTOModels;
+using SchoolMedical_DataAccess.Entities;
 
 namespace PRN232_SchoolMedicalAPI.Controllers
 {
@@ -23,6 +25,10 @@ namespace PRN232_SchoolMedicalAPI.Controllers
         public async Task<IActionResult> GetMedicineRequests([FromQuery] MedicineRequestFilterRequestDto request)
         {
             var result = await _medicineRequestService.GetMedicineRequestsAsync(request);
+
+			ApiResponseWrapper<PagingModel<MedicineRequestResponseDto>> response = ApiResponseWrapper<PagingModel<MedicineRequestResponseDto>>
+			.Success(result, "Get all medicine requests success");
+			
             return Ok(result);
         }
 
@@ -32,13 +38,13 @@ namespace PRN232_SchoolMedicalAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetMedicineRequestById(string id)
         {
-            var medicineRequest = await _medicineRequestService.GetMedicineRequestByIdAsync(id);
-            if (medicineRequest == null)
-            {
-                throw new KeyNotFoundException("Medicine request not found");
-            }
+            var result = await _medicineRequestService.GetMedicineRequestByIdAsync(id);
+           
 
-            return Ok(medicineRequest);
+			ApiResponseWrapper<MedicineRequestResponseDto> response = ApiResponseWrapper<MedicineRequestResponseDto>
+			.Success(result, "Get medicine request success with Id: "+id);
+
+			return Ok(response);
         }
 
         /// <summary>
@@ -47,18 +53,26 @@ namespace PRN232_SchoolMedicalAPI.Controllers
         [HttpGet("student/{studentId}")]
         public async Task<IActionResult> GetMedicineRequestsByStudent(string studentId)
         {
-            var requests = await _medicineRequestService.GetMedicineRequestsByStudentAsync(studentId);
-            return Ok(requests);
+            var result = await _medicineRequestService.GetMedicineRequestsByStudentAsync(studentId);
+			ApiResponseWrapper<PagingModel<MedicineRequestResponseDto>> response = ApiResponseWrapper<PagingModel<MedicineRequestResponseDto>>
+						.Success(result, "Get all medicine requests success for student with Id: "+studentId);
+
+			return Ok(response);
         }
 
         /// <summary>
-        /// Get medicine requests by requester ID
+        /// Get medicine requests by requester Id
         /// </summary>
+        /// <param name="requesterId">Account Id</param>
+        /// <returns></returns>
         [HttpGet("requester/{requesterId}")]
         public async Task<IActionResult> GetMedicineRequestsByRequester(string requesterId)
         {
-            var requests = await _medicineRequestService.GetMedicineRequestsByRequesterAsync(requesterId);
-            return Ok(requests);
+            var result = await _medicineRequestService.GetMedicineRequestsByRequesterAsync(requesterId);
+			ApiResponseWrapper<PagingModel<MedicineRequestResponseDto>> response = ApiResponseWrapper<PagingModel<MedicineRequestResponseDto>>
+						.Success(result, "Get all medicine requests success for requester with Id: " + requesterId);
+
+			return Ok(response);
         }
 
         /// <summary>
@@ -70,13 +84,23 @@ namespace PRN232_SchoolMedicalAPI.Controllers
             // Validation is handled by ResultManipulator middleware
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
-            }
+				var errors = ModelState
+			     .Where(kvp => kvp.Value?.Errors.Count > 0)
+			     .ToDictionary(
+				     kvp => kvp.Key,
+				     kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToArray()
+			     );
 
-            var medicineRequest = await _medicineRequestService.CreateMedicineRequestAsync(request);
+				return BadRequest(ApiResponseWrapper<object>.ValidationError(errors));
+			}
 
-            return CreatedAtAction(nameof(GetMedicineRequestById), new { id = medicineRequest.Id }, medicineRequest);
-        }
+            var result = await _medicineRequestService.CreateMedicineRequestAsync(request);
+
+			ApiResponseWrapper<MedicineRequestResponseDto> response = ApiResponseWrapper<MedicineRequestResponseDto>
+						.Created(result, "Create medicine request Success");
+
+			return StatusCode(201, response);
+		}
 
         /// <summary>
         /// Update existing medicine request
@@ -89,12 +113,22 @@ namespace PRN232_SchoolMedicalAPI.Controllers
             // Validation is handled by ResultManipulator middleware
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
-            }
+				var errors = ModelState
+			    .Where(kvp => kvp.Value?.Errors.Count > 0)
+			    .ToDictionary(
+				    kvp => kvp.Key,
+				    kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToArray()
+			    );
 
-            var medicineRequest = await _medicineRequestService.UpdateMedicineRequestAsync(request,id);
+				return BadRequest(ApiResponseWrapper<object>.ValidationError(errors));
+			}
 
-            return Ok(medicineRequest);
+            var result = await _medicineRequestService.UpdateMedicineRequestAsync(request,id);
+
+			ApiResponseWrapper<MedicineRequestResponseDto> response = ApiResponseWrapper<MedicineRequestResponseDto>
+						.Success(result, "Update medicine requests success with Id: " + id);
+
+			return Ok(response);
         }
 
         /// <summary>
@@ -103,13 +137,12 @@ namespace PRN232_SchoolMedicalAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMedicineRequest(string id)
         {
-            var result = await _medicineRequestService.DeleteMedicineRequestAsync(id);
-            if (!result)
-            {
-                throw new KeyNotFoundException("Medicine request not found");
-            }
+            await _medicineRequestService.DeleteMedicineRequestAsync(id);
 
-            return Ok(new { message = "Medicine request deleted successfully" });
+			ApiResponseWrapper<string> response = ApiResponseWrapper<string>
+			.NoContent("Delete Medicine Request success with Id "+id);
+
+            return StatusCode(204, response);
         }
     }
 }

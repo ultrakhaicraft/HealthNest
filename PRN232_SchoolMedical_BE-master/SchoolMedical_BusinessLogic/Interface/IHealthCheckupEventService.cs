@@ -12,8 +12,12 @@ namespace SchoolMedical_BusinessLogic.Interface
 	public interface  IHealthCheckupEventService
 	{
 		Task<PagingModel<ViewHealthCheckupEventDTO>> GetAllHealthCheckupEvent(HealthCheckupEventQuery request);
-
 		Task<int> CountUpcomingHealthCheckup();
+		Task<string> CreateHealthCheckupAsync(HealthCheckupEventCreateDTO dto);
+		Task DeleteHealthCheckupEvent(string healthCheckupEventId);
+		Task<string> UpdateHealthCheckupEvent(HealthCheckupEventUpdateDTO dto, string healthCheckupId);
+		Task<HealthCheckupEventDetailDTO> GetHealthCheckupEventById(string healthCheckupEventId);
+
 
 
 	}
