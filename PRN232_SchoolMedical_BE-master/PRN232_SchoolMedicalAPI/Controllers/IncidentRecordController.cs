@@ -26,6 +26,7 @@ public class IncidentRecordController : ControllerBase
     /// </summary>
     [HttpGet]
 	//[Authorize(Roles = "SchoolNurse")]
+
 	public async Task<IActionResult> GetIncidentRecords([FromQuery] IncidentRecordQuery filter)
     {
 		var result = await _incidentRecordService.GetAllIncidentRecordsAsync(filter);
@@ -33,7 +34,7 @@ public class IncidentRecordController : ControllerBase
 		ApiResponseWrapper<PagingModel<IncidentRecordViewModel>> response = ApiResponseWrapper<PagingModel<IncidentRecordViewModel>>
 					.Success(result, "Retrieving All Incident Records Successful");
 
-		return Ok(result);
+		return Ok(response);
     }
 
     /// <summary>

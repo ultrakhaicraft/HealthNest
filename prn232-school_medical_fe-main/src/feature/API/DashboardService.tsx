@@ -26,18 +26,16 @@ export interface IncidentRecordCountPerYear{
 
 export const DashboardService = {
   getStatistic: async (): Promise<DashboardStatistic> => {
-    const response = await apiClient.get<DashboardStatistic>('/dashboard/statistics');
-    return response.data;
+    const response = await apiClient.get<ApiResponseWrapper<DashboardStatistic>>('/dashboard/statistics');
+    return response.data.data;
   },
 
   countAllIncidentInAYear: async (year: number): Promise<IncidentRecordCountPerYear> => {
-    const response = await apiClient.get<IncidentRecordCountPerYear>(`/dashboard/count-all-incident-per-year`,
+    const response = await apiClient.get<ApiResponseWrapper<IncidentRecordCountPerYear>>(`/dashboard/count-all-incident-per-year`,
       { params: { year } }
     );
-    return response.data;
+    return response.data.data;
   },
 
-
-  //Create call exclusively for to get upcoming health checkup and vaccine
  
 };

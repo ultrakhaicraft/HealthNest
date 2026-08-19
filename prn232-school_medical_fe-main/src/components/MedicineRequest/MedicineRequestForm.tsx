@@ -19,7 +19,7 @@ interface MedicineRequestFormProps {
 }
 
 
-//Medical Record Form Component
+//Medical Record Form Component for Parent
 const MedicineRequestForm = ({ handleInputChange, handleSubmit, isLoading, error, formData }: MedicineRequestFormProps) => {
   const stored = localStorage.getItem('accountDetail');
   let parentData: AccountDetail | null=null

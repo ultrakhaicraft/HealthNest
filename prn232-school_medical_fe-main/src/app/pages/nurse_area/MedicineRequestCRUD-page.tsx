@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import "../../CSS/IncidentRecordCRUD.css"
+import "../../CSS/Nurse/NurseCRUDPanel.css"
 import { IconDelete, IconEdit, IconPlus, IconView, IconFilter } from '../../../components/IconList';
 import { MedicineRequestService, MedicineRequestResponseDto, MedicineRequestQueryParams } from '../../../feature/API/MedicineRequestService';
 import { MedicineRequestViewDetail } from '../../../components/MedicineRequest/MedicineRequestView';
@@ -8,6 +8,8 @@ import { ConfirmationModal } from '../../../components/ConfirmationModal';
 import CreateMedicineRequestModal from '../../../components/MedicineRequest/CreateMedicineRequestModal';
 import { Toast } from '../../../components/Notification/Toast';
 import UpdateMedicineRequestModal from '../../../components/MedicineRequest/UpdateMedicineRequestModal';
+import { PaginationControls } from '../../../components/PaginationControls';
+import { MedicineRequestFilter } from '../../../components/MedicineRequest/MedicineRequestFilter';
 
 export default function MedicineRequestCRUDPage() {
   const [medicineRequestData, setMedicineRequestData] = useState<MedicineRequestResponseDto[]>([]);
@@ -167,7 +169,7 @@ export default function MedicineRequestCRUDPage() {
 
   return (
     <>
-      <MedicineRequestCRUD 
+      <MedicineRequestCRUDPanel 
         medicineRequestData={medicineRequestData}
         onViewRequest={handleViewRequest}
         onDeleteRequest={handleDeleteClick}
@@ -223,7 +225,7 @@ export default function MedicineRequestCRUDPage() {
   );
 }
 
-interface MedicineRequestCRUDProps {
+interface MedicineRequestCRUDPanelProps {
   medicineRequestData: MedicineRequestResponseDto[];
   onViewRequest: (id: string) => void;
   onDeleteRequest: (request: MedicineRequestResponseDto) => void;
@@ -239,7 +241,7 @@ interface MedicineRequestCRUDProps {
   totalItems: number;
 }
 
-const MedicineRequestCRUD = ({ 
+const MedicineRequestCRUDPanel = ({ 
   medicineRequestData = [], 
   onViewRequest, 
   onDeleteRequest, 
@@ -253,12 +255,12 @@ const MedicineRequestCRUD = ({
   onClearFilters,
   totalPages,
   totalItems
-}: MedicineRequestCRUDProps) => {
+}: MedicineRequestCRUDPanelProps) => {
   return (
     <div className="crud-container">
       <div className="crud-header">
         <div>
-          <h2 className="crud-title">Medicine Request CRUD</h2>
+          <h2 className="crud-title">Medicine Request</h2>
           <p className="crud-subtitle">Manage medicine requests from parents</p>
         </div>
         <div style={{ display: 'flex', gap: '8px' }}>
@@ -274,7 +276,7 @@ const MedicineRequestCRUD = ({
       </div>
       
       {showFilters && (
-        <FilterSection 
+        <MedicineRequestFilter 
           filters={filters}
           onFilterChange={onFilterChange}
           onClearFilters={onClearFilters}
@@ -347,153 +349,6 @@ const MedicineRequestCRUD = ({
   );
 };
 
-interface FilterSectionProps {
-  filters: MedicineRequestQueryParams;
-  onFilterChange: (filterKey: keyof MedicineRequestQueryParams, value: any) => void;
-  onClearFilters: () => void;
-}
-
-const FilterSection = ({ filters, onFilterChange, onClearFilters }: FilterSectionProps) => {
-  return (
-    <div className="filter-section">
-      <div className="filter-row">
-        <div className="filter-group">
-          <label>Request By:</label>
-          <input
-            type="text"
-            value={filters.requestBy || ''}
-            onChange={(e) => onFilterChange('requestBy', e.target.value)}
-            placeholder="Search by requester name..."
-          />
-        </div>
-        
-        <div className="filter-group">
-          <label>For Student:</label>
-          <input
-            type="text"
-            value={filters.forStudent || ''}
-            onChange={(e) => onFilterChange('forStudent', e.target.value)}
-            placeholder="Search by student name..."
-          />
-        </div>
-        
-        <div className="filter-group">
-          <label>Status:</label>
-          <select
-            value={filters.status || ''}
-            onChange={(e) => onFilterChange('status', e.target.value)}
-          >
-            <option value="">All Statuses</option>
-            <option value="Pending">Pending</option>
-            <option value="Approved">Approved</option>
-            <option value="Rejected">Rejected</option>
-            <option value="Completed">Completed</option>
-          </select>
-        </div>
-      </div>
-      
-      <div className="filter-row">
-        <div className="filter-group">
-          <label>Date From:</label>
-          <input
-            type="date"
-            value={filters.dateFrom || ''}
-            onChange={(e) => onFilterChange('dateFrom', e.target.value)}
-          />
-        </div>
-        
-        <div className="filter-group">
-          <label>Date To:</label>
-          <input
-            type="date"
-            value={filters.dateTo || ''}
-            onChange={(e) => onFilterChange('dateTo', e.target.value)}
-          />
-        </div>
-        
-        <div className="filter-group">
-          <label>Sort By:</label>
-          <select
-            value={filters.sortBy || 'DateSent'}
-            onChange={(e) => onFilterChange('sortBy', e.target.value)}
-          >
-            <option value="DateSent">Date Sent</option>
-            <option value="RequestBy">Request By</option>
-            <option value="ForStudent">For Student</option>
-          </select>
-        </div>
-        
-        <div className="filter-group">
-          <label>Order:</label>
-          <select
-            value={filters.isDescending ? 'desc' : 'asc'}
-            onChange={(e) => onFilterChange('isDescending', e.target.value === 'desc')}
-          >
-            <option value="desc">Descending</option>
-            <option value="asc">Ascending</option>
-          </select>
-        </div>
-      </div>
-      
-      <div className="filter-actions">
-        <button className="button button-secondary button-small" onClick={onClearFilters}>
-          Clear Filters
-        </button>
-      </div>
-    </div>
-  );
-};
-
-interface PaginationControlsProps {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-}
-
-const PaginationControls = ({ currentPage, totalPages, onPageChange }: PaginationControlsProps) => {
-  const getPageNumbers = () => {
-    const pages = [];
-    const startPage = Math.max(1, currentPage - 2);
-    const endPage = Math.min(totalPages, currentPage + 2);
-    
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(i);
-    }
-    return pages;
-  };
-
-  if (totalPages <= 1) return null;
-
-  return (
-    <div className="pagination-controls">
-      <button 
-        className="pagination-button"
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-      >
-        Previous
-      </button>
-      
-      {getPageNumbers().map(pageNum => (
-        <button
-          key={pageNum}
-          className={`pagination-button ${pageNum === currentPage ? 'active' : ''}`}
-          onClick={() => onPageChange(pageNum)}
-        >
-          {pageNum}
-        </button>
-      ))}
-      
-      <button
-        className="pagination-button"
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-      >
-        Next
-      </button>
-    </div>
-  );
-};
 
 interface StatusBadgeProps {
   status: string;

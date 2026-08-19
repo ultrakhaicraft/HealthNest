@@ -32,19 +32,19 @@ export const HealthCheckupEventService = {
             sortByLatestDateOccured: true,
             Status: 'Upcoming'
         }
-        const response =await apiClient.get<PaginatedResponse<ViewHealthCheckupEventDTO>>('/health-checkup',
+        const response =await apiClient.get<ApiResponseWrapper<PaginatedResponse<ViewHealthCheckupEventDTO>>>('/health-checkup',
             { params: dashboardQueryParams }
         );
-        return response.data.data;
+        return response.data.data.data;
     },
 
     //Get all health checkup events for dashboard with custom query params
     getAllHealthCheckupEvents: async (dashboardQueryParams: HealthCheckUpEventQueryParams): Promise<ViewHealthCheckupEventDTO[]> => {
         
-        const response =await apiClient.get<PaginatedResponse<ViewHealthCheckupEventDTO>>('/health-checkup',
+        const response =await apiClient.get<ApiResponseWrapper<PaginatedResponse<ViewHealthCheckupEventDTO>>>('/health-checkup',
             { params: dashboardQueryParams }
         );
-        return response.data.data;
+        return response.data.data.data;
     }
 
 }

@@ -108,7 +108,7 @@ public class IncidentRecordService : IIncidentRecordService
 			IncidentType = request.IncidentType,
 			Description = request.Description,
 			DateOccurred = request.DateOccurred,
-			Status = request.Status
+			Status = IncidentStatus.Active.ToString(), //Always active when created for the first time
 		};
 
 		await repository.InsertAsync(newIncident);
@@ -159,7 +159,7 @@ public class IncidentRecordService : IIncidentRecordService
 			if (incident == null)
 				throw new NotFoundException("Incident Record", incidentId);
 
-			incident.Status = RecordStatus.Inactive.ToString();
+			incident.Status = IncidentStatus.Inactive.ToString();
 			await repository.UpdateAsync(incident);
 			await _unitOfWork.SaveAsync();
 
@@ -212,8 +212,8 @@ public class IncidentRecordService : IIncidentRecordService
 		return new IncidentRecordCountPerYear
 		{
 			Year = year,
-			Janunary = countsByMonth.GetValueOrDefault(1),
-			Feburary = countsByMonth.GetValueOrDefault(2),
+			January = countsByMonth.GetValueOrDefault(1),
+			February = countsByMonth.GetValueOrDefault(2),
 			March = countsByMonth.GetValueOrDefault(3),
 			April = countsByMonth.GetValueOrDefault(4),
 			May = countsByMonth.GetValueOrDefault(5),

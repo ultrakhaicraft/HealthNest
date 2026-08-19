@@ -35,8 +35,6 @@ public class IncidentRecordCreateRequest
 	public string? Description { get; set; }
 
 	public DateTime DateOccurred { get; set; }
-
-	public string? Status { get; set; }
 }
 
 public class IncidentRecordUpdateRequest
@@ -65,10 +63,13 @@ public class IncidentRecordViewModel
 	public DateTime DateOccurred { get; set; } //Sort theo ascending date
 	public string? Status { get; set; }
 }
-
 public class IncidentRecordQuery
 {
-
+	public string? StudentId { get; set; }
+	public string? Status { get; set; } 
+	public bool SortByLatest { get; set; } 
+	public DateTime? DateFrom { get; set; }
+	public DateTime? DateTo { get; set; }
 	public int PageIndex { get; set; } = 1; // Default to first page
 	public int PageSize { get; set; } = 10; // Default to 10 items per page
 }
@@ -77,8 +78,8 @@ public class IncidentRecordQuery
 public record IncidentRecordCountPerYear
 {
 	public int Year {  get; set; }
-	public int Janunary { get; set; }
-	public int Feburary { get; set; }
+	public int January { get; set; }
+	public int February { get; set; }
 	public int March { get; set; }
 	public int April { get; set; }
 	public int May { get; set; }

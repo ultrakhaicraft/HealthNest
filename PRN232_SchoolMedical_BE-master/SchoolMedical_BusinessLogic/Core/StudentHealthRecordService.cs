@@ -182,7 +182,7 @@ namespace SchoolMedical_BusinessLogic.Core
 
 				if (record == null)
 				{
-					throw new NotFoundException("Student health record", recordId);
+					throw new NotFoundException("Unable to found Student health record with student Id: "+ studentId);
 				}
 
 				var recordResponse = new StudentHealthRecordDetailModel

@@ -30,18 +30,18 @@ export const VaccineCheckupEventService = {
             sortByLatestDateOccured: true,
             Status: 'Upcoming'
         }
-        const response =await apiClient.get<PaginatedResponse<ViewVaccineEventDTO>>('/vaccine-event',
+        const response =await apiClient.get<ApiResponseWrapper<PaginatedResponse<ViewVaccineEventDTO>>>('/vaccine-event',
             { params: dashboardQueryParams }
         );
-        return response.data.data;
+        return response.data.data.data;
     },
 
     //Get all vaccine checkup events for dashboard with custom query params
     getAllVaccineCheckupEvents: async (dashboardQueryParams: VaccineEventQueryParams): Promise<ViewVaccineEventDTO[]> => {
         
-        const response =await apiClient.get<PaginatedResponse<ViewVaccineEventDTO>>('/vaccine-event',
+        const response =await apiClient.get<ApiResponseWrapper<PaginatedResponse<ViewVaccineEventDTO>>>('/vaccine-event',
             { params: dashboardQueryParams }
         );
-        return response.data.data;
+        return response.data.data.data;
     }
 }

@@ -32,10 +32,9 @@ export const useAuth = () => {
             console.log('Hitting Login response:', response);
 
             // Access the nested data object
-            const userData = response.data;
+            const userData = response.data.data;
             const tokenData = userData.token;
 
-            console.log('Received user data:', userData);
 
             // Store the token
             if (tokenData && tokenData.tokenString) {

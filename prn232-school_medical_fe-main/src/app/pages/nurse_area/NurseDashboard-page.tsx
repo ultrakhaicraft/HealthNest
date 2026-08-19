@@ -1,4 +1,4 @@
-import "../../CSS/NurseDashboard.css";
+import "../../CSS/Nurse/NurseDashboard.css";
 import { HealthCheckupEventService, ViewHealthCheckupEventDTO } from "../../../feature/API/HealthCheckupEventService";
 import { VaccineCheckupEventService, ViewVaccineEventDTO } from "../../../feature/API/VaccineCheckupEventService";
 import { DashboardTables } from "../../../components/Nurse_Dashboard/DashboardTables";
@@ -53,6 +53,7 @@ export const NurseDashboard = ({ username }: NurseDashboardProps) => {
 
         console.log("Statistic", statResult); // fresh, straight from the API call
         console.log("Incident Result", incidentResult);
+        console.log("Health Checkup Result", healthCheckupResult);
        
 
         if (!cancelled) {
@@ -113,10 +114,7 @@ export const NurseDashboard = ({ username }: NurseDashboardProps) => {
             </section>
             <IncidentReportBarChart data={toChartData(incidentData)}  />
             <DashboardTables healthCheckupEvents={healthCheckupEvents} vaccineCheckupEvents={vaccineCheckupEvents} />
-            <section className="dashboard-footer">
-                <p>© 2024 HealthNest. All rights reserved.</p>
-                <p>Having problem ? Contact your administrator.</p>
-            </section>
+            
         </main>
     )
 }

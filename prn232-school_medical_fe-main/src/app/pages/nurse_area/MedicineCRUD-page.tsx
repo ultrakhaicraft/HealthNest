@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 
-import "../../CSS//MedicineCRUD.css"
+import "../../CSS/Nurse/MedicineCRUD.css"
 import { IconDelete, IconEdit, IconPlus, IconView } from '../../../components/IconList';
-import { MedicineService, Medicine, PaginatedResponse } from '../../../feature/API/MedicineService';
+import { MedicineService, Medicine } from '../../../feature/API/MedicineService';
 import { MedicineView } from '../../../components/Medicine/MedicineView';
 import CreateMedicineModal from '../../../components/Medicine/CreateMedicineModal';
 import { ConfirmationModal } from '../../../components/ConfirmationModal';
 import { Toast } from '../../../components/Notification/Toast';
 import UpdateMedicineModal from '../../../components/Medicine/UpdateMedicineModal';
+import { PaginatedResponse } from '../../../feature/ApiClient';
 
 //Vài điều khi code phần này
 //Gọi các API từ Backend thì phải tạo "MedicineService" trong feature/API, làm giống như các Service khác

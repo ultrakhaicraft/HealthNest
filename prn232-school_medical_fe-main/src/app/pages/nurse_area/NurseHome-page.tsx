@@ -1,7 +1,6 @@
 import SideNav from '../../../components/StaffSideNav';
 import { useState } from 'react';
 import MedicineCRUDPage from './MedicineCRUD-page';
-import '../../CSS/MedicineCRUD.css';
 import IncidentRecordCRUDPage from './IncidentRecordCRUD-page';
 import MedicineRequestCRUDPage from './MedicineRequestCRUD-page';
 import { NurseDashboard } from './NurseDashboard-page';

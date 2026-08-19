@@ -111,27 +111,22 @@ const CreateIncidentRecordModal: React.FC<CreateIncidentRecordModalProps> = ({ i
         <form className="modal-body" onSubmit={handleSubmit}>
           <div className="modal-column">
             <div className="detail-row">
-              <span className="detail-label">Student ID</span>
-              <select
+              <label htmlFor="studentId" className="detail-label">Student ID</label>
+              <input
+                id="studentId"
                 className="input-field"
                 name="studentId"
                 value={form.studentId}
                 onChange={handleChange}
-                disabled={isSubmitting || isLoadingStudents}
+                disabled={isSubmitting}
                 required
-              >
-                <option value="">Select a student...</option>
-                {students.map((student) => (
-                  <option key={student.id} value={student.id}>
-                    {student.fullName} ({student.email})
-                  </option>
-                ))}
-              </select>
+              />
               {errors.studentId && <div className="error-message">{errors.studentId}</div>}
             </div>
             <div className="detail-row">
-              <span className="detail-label">Incident</span>
+              <label htmlFor="incidentType" className="detail-label">Incident</label>
               <input
+                id="incidentType"
                 className="input-field"
                 name="incidentType"
                 value={form.incidentType}
@@ -145,8 +140,9 @@ const CreateIncidentRecordModal: React.FC<CreateIncidentRecordModalProps> = ({ i
           </div>
           <div className="modal-column">
             <div className="detail-row">
-              <span className="detail-label">Date Occurred</span>
+              <label htmlFor="dateOccurred" className="detail-label">Date Occurred</label>
               <input
+                id="dateOccurred"
                 className="input-field"
                 name="dateOccurred"
                 type="datetime-local"
@@ -159,8 +155,9 @@ const CreateIncidentRecordModal: React.FC<CreateIncidentRecordModalProps> = ({ i
             </div>
           </div>
           <div className="detail-row full-width">
-            <span className="detail-label">Description</span>
+            <label htmlFor="description" className="detail-label">Description</label>
             <textarea
+              id="description"
               className="input-field detail-description"
               name="description"
               value={form.description}

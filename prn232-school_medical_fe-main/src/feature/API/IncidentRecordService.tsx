@@ -31,12 +31,13 @@ export interface IncidentRecordUpdate {
 }
 
 export interface IncidentRecordQueryParams {
-  //IncidentType?: string;
-  //Status?: string;
-  //StudentId?: string;
+  Status?: string;
+  StudentId?: string;
+  DateFrom?: string;
+  DateTo?: string;
+  SortByLatest?: boolean;
   PageIndex?: number;
   PageSize?: number;
-  //IsDescending?: boolean;
 }
 
 export interface PaginatedResponse<T> {

@@ -30,7 +30,7 @@ public enum IsAvailable
 
 public enum RecordStatus
 {
-	Active,
+	Active, 
 	Inactive, //Soft Delete
 }
 
@@ -54,9 +54,11 @@ public enum EventStatus
 
 public enum IncidentStatus
 {
-	Active,
-	Inactive, //Soft Delete or cancel
-	CompletelyHealed
+	Active, //Incident that has not been solved, currently in treatment
+	Resolved, // Incident that has been solved by nurses in school
+	Hospitalized, // Incident that are unable to be treated in school, now transfer to the hospital or professional medical center 
+	Inactive, //Incident that are deleted or cancelled
+	
 }
 
 
