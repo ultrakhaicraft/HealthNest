@@ -146,8 +146,8 @@ public class StudentHealthRecordController : ControllerBase
 		await _studentHealthRecordService.DeleteRecordAsync(id);
 
 		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
-					.NoContent("Delete student health records successful with student Id: " + id); 
+					.Success(data: string.Empty, "Delete student health records successful with student Id: " + id); 
 
-		return StatusCode(204,response);
+		return Ok(response);
 	}
 }

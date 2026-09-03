@@ -70,9 +70,9 @@ public class MedicalsupplyController : ControllerBase
 	{
 		await medicalSupplyService.SoftDeleteMedicalSupplyAsync(id);
 		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
-					 .NoContent("Update medicine suppplies success with Id: " + id);
+					 .Success(data:string.Empty,"Update medicine suppplies success with Id: " + id);
 
-		return StatusCode(204, response);
+		return Ok(response);
 	}
 }
 

@@ -1,131 +1,78 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import "../../CSS/Nurse/MedicineCRUD.css"
-import { IconDelete, IconEdit, IconPlus, IconView } from '../../../components/IconList';
-import { MedicineService, Medicine } from '../../../feature/API/MedicineService';
+import { MedicineService, MedicineQueryParams, MedicineViewModel } from '../../../feature/API/MedicineService';
 import { MedicineView } from '../../../components/Medicine/MedicineView';
 import CreateMedicineModal from '../../../components/Medicine/CreateMedicineModal';
 import { ConfirmationModal } from '../../../components/ConfirmationModal';
 import { Toast } from '../../../components/Notification/Toast';
 import UpdateMedicineModal from '../../../components/Medicine/UpdateMedicineModal';
-import { PaginatedResponse } from '../../../feature/ApiClient';
+import { MedicineCRUDPanel } from '../../../components/Medicine/MedicineManagementPanel';
 
-//Vài điều khi code phần này
-//Gọi các API từ Backend thì phải tạo "MedicineService" trong feature/API, làm giống như các Service khác
-//Tất cả Sub component nên dời trong file .tsx mới riêng của componen nó trong assests/components
 
-// Main CRUD component for medicines
-const MedicineCRUD = ({ medicineData = [], currentPage, totalPages, setCurrentPage, onViewMedicine, onDeleteMedicine, loading, onCreateMedicine, onEditMedicine }: { medicineData: Medicine[], currentPage: number, totalPages: number, setCurrentPage: (page: number) => void, onViewMedicine: (id: string) => void, onDeleteMedicine: (medicine: Medicine) => void, loading: boolean, onCreateMedicine: () => void, onEditMedicine: (medicine: Medicine) => void }) => {
-  return (
-    <div className="crud-container">
-      <div className="crud-header">
-        <div>
-          <h2 className="crud-title">Medicine CRUD</h2>
-          <p className="crud-subtitle">Manage medicine inventory and records</p>
-        </div>
-        <button className="button button-primary button-small" onClick={onCreateMedicine}>
-          <IconPlus />
-          Create Medicine
-        </button>
-      </div>
-      <div className="crud-table-wrapper">
-        <table className="crud-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Brief Description</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {medicineData.map(medicine => (
-              <tr key={medicine.id}>
-                <td>{medicine.name}</td>
-                <td>{medicine.description}</td>
-                <td><StatusBadge status={medicine.isAvailable ? 'Active' : 'Inactive'} /></td>
-                <td>
-                  <div className="action-buttons">
-                    <button className="action-button" onClick={() => onViewMedicine(medicine.id)} disabled={loading}>
-                      <IconView />
-                    </button>
-                    <button className="action-button" onClick={() => onEditMedicine(medicine)} disabled={loading}><IconEdit /></button>
-                    <button className="action-button action-delete" onClick={() => onDeleteMedicine(medicine)} disabled={loading}>
-                      <IconDelete />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <Pagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />
-    </div>
-  );
-}
 
-interface StatusBadgeProps {
-  status: string;
-}
-
-// Status Badge Component
-const StatusBadge = ({ status }: StatusBadgeProps) => {
-  const statusClass = status === 'Active' ? 'status-badge-active' : 'status-badge-inactive';
-  return <span className={`status-badge ${statusClass}`}>{status}</span>;
-}
-
-// Pagination Component
-const Pagination = ({ currentPage, totalPages, setCurrentPage }: { currentPage: number, totalPages: number, setCurrentPage: (page: number) => void }) => {
-  return (
-    <nav className="pagination-container">
-      <button className="pagination-arrow" disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-      </button>
-      {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-        <button
-          key={page}
-          className={`pagination-number ${currentPage === page ? 'active' : ''}`}
-          onClick={() => setCurrentPage(page)}
-        >
-          {page}
-        </button>
-      ))}
-      <button className="pagination-arrow" disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-      </button>
-    </nav>
-  );
-};
-
+//Page component for managing medicine records
 export default function MedicineCRUDPage() {
-  const [medicineData, setMedicineData] = useState<Medicine[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [selectedMedicine, setSelectedMedicine] = useState<Medicine | null>(null);
+  const [medicineData, setMedicineData] = useState<MedicineViewModel[]>([]);
+  const [selectedMedicine, setSelectedMedicine] = useState<MedicineViewModel | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [medicineToDelete, setMedicineToDelete] = useState<Medicine | null>(null);
+  const [medicineToDelete, setMedicineToDelete] = useState<MedicineViewModel | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' as 'success' | 'error' });
-  const pageSize = 10;
   const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [medicineToEdit, setMedicineToEdit] = useState<Medicine | null>(null);
+  const [medicineToEdit, setMedicineToEdit] = useState<MedicineViewModel | null>(null);
+  const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' as 'success' | 'error' });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState<MedicineQueryParams>({
+    PageIndex: 1,
+    PageSize: 10,
+    SortNameByDescending: true,
+    IsAvailable: true,
+    Id: '',
+    Name: ''
+  });
 
-  const loadMedicines = () => {
-    MedicineService.getAll({ PageIndex: currentPage, PageSize: pageSize })
-      .then((res: PaginatedResponse<Medicine>) => {
-        setMedicineData(res.data);
-        setTotalPages(res.totalPages);
-      })
-      .catch(console.error);
-  };
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalItems, setTotalItems] = useState(0);
+
+  
+
+  const loadMedicines =  useCallback((filterArgs: MedicineQueryParams) => {
+        setLoading(true);
+        MedicineService.getAll(filterArgs)
+        .then((res) => {
+          setMedicineData(res.data);
+          setTotalPages(res.totalPages);
+          setTotalItems(res.totalCount);
+          
+         })
+        .catch((error) => {
+          console.error('Error loading medicine requests:', error);
+        })
+        .finally(() => setLoading(false));
+  },[filters]);
 
   useEffect(() => {
-    loadMedicines();
+    loadMedicines(filters);
   }, [currentPage]);
+
+  const handleMedicineAdded = useCallback((newMedicine: MedicineViewModel) => {
+        setMedicineData(prev => [newMedicine, ...prev]);
+        
+        //Refresh the table to show the new medicine record
+        loadMedicines(filters);
+      },[filters]);
+  
+    // In the parent component (wherever loadMedicines/filters live)
+    const handleApplyFilters = useCallback(() => {
+      loadMedicines(filters);
+    }, [filters, loadMedicines]);
+  
+    //Add a SignalR event listener to listen for new medicine records being added in real-time
+    //useSignalREvent<MedicineViewModel>("MedicineAdded", handleMedicineAdded);
 
   const handleViewMedicine = async (id: string) => {
     setLoading(true);
@@ -140,12 +87,33 @@ export default function MedicineCRUDPage() {
     }
   };
 
+  const handleCreateSuccess = () => {
+    setToast({ message: 'Medicine created successfully!', type: 'success', isVisible: true });
+    setShowCreateModal(false);
+    loadMedicines(filters); // Reload the table to show the new medicine record
+  };
+
+  const handleCreateError = (msg: string) => {
+    setToast({ message: msg, type: 'error', isVisible: true });
+  };
+
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedMedicine(null);
   };
 
-  const handleDeleteClick = (medicine: Medicine) => {
+  const handleUpdateSuccess = () => {
+    setToast({ message: 'Medicine updated successfully!', type: 'success', isVisible: true });
+    setShowUpdateModal(false);
+    setMedicineToEdit(null);
+    loadMedicines(filters); // Reload the table to show the updated medicine record
+  };
+
+  const handleUpdateError = (msg: string) => {
+    setToast({ message: msg, type: 'error', isVisible: true });
+  };
+
+  const handleDeleteClick = (medicine: MedicineViewModel) => {
     setMedicineToDelete(medicine);
     setShowDeleteConfirm(true);
   };
@@ -158,7 +126,7 @@ export default function MedicineCRUDPage() {
       await MedicineService.delete(medicineToDelete.id);
       setShowDeleteConfirm(false);
       setMedicineToDelete(null);
-      loadMedicines(); // Reload the table
+      loadMedicines(filters); // Reload the table
       handleShowToast('Medicine deleted successfully!', 'success');
     } catch (error) {
       console.error('Error deleting medicine:', error);
@@ -189,7 +157,7 @@ export default function MedicineCRUDPage() {
     setToast({ ...toast, isVisible: false });
   };
 
-  const handleEditMedicine = (medicine: Medicine) => {
+  const handleEditMedicine = (medicine: MedicineViewModel) => {
     setMedicineToEdit(medicine);
     setShowUpdateModal(true);
   };
@@ -198,18 +166,43 @@ export default function MedicineCRUDPage() {
     setMedicineToEdit(null);
   };
 
+  const handleFilterChange = (filterKey: keyof MedicineQueryParams, value: any) => {
+        setFilters(prev => ({
+          ...prev,
+          [filterKey]: value,
+          pageIndex: filterKey !== 'PageIndex' ? 1 : value
+        }));
+    };
+  
+    const handleClearFilters = () => {
+      setFilters({
+        PageIndex: 1,
+        PageSize: 10,
+        SortNameByDescending: true,
+        IsAvailable: true,
+        Id: '',
+        Name: ''
+      });
+    };
+
   return (
     <>
-      <MedicineCRUD 
+      <MedicineCRUDPanel 
         medicineData={medicineData} 
-        currentPage={currentPage} 
-        totalPages={totalPages} 
-        setCurrentPage={setCurrentPage}
         onViewMedicine={handleViewMedicine}
         onDeleteMedicine={handleDeleteClick}
         loading={loading}
         onCreateMedicine={handleCreateMedicine}
         onEditMedicine={handleEditMedicine}
+        totalPages={totalPages} 
+        setTotalPages={setTotalPages}
+        totalItems={totalItems}
+        showFilters={showFilters}
+        onToggleFilters={()=> setShowFilters(!showFilters)}
+        filters={filters}
+        onFilterChange={handleFilterChange}
+        onApplyFilters={handleApplyFilters}
+        onClearFilters={handleClearFilters}
       />
       {showModal && selectedMedicine && (
         <MedicineView 
@@ -222,11 +215,8 @@ export default function MedicineCRUDPage() {
         <CreateMedicineModal
           isOpen={showCreateModal}
           onClose={handleCloseCreateModal}
-          onSuccess={() => {
-            loadMedicines();
-            handleShowToast('Medicine created successfully!', 'success');
-          }}
-          onError={(msg: string) => handleShowToast(msg, 'error')}
+          onSuccess={handleCreateSuccess}
+          onError={handleCreateError}
         />
       )}
       {showUpdateModal && medicineToEdit && (
@@ -234,11 +224,8 @@ export default function MedicineCRUDPage() {
           isOpen={showUpdateModal}
           medicine={medicineToEdit}
           onClose={handleCloseUpdateModal}
-          onSuccess={() => {
-            loadMedicines();
-            handleShowToast('Medicine updated successfully!', 'success');
-          }}
-          onError={(msg: string) => handleShowToast(msg, 'error')}
+          onSuccess={handleUpdateSuccess}
+          onError={handleUpdateError}
         />
       )}
       <ConfirmationModal
@@ -246,7 +233,7 @@ export default function MedicineCRUDPage() {
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
         title="Delete Medicine"
-        message={`Are you sure you want to delete "${medicineToDelete?.name}"? This action cannot be undone.`}
+        message={`Are you sure you want to delete this medicine ? This action cannot be undone.`}
         confirmText="Delete"
         cancelText="Cancel"
         isLoading={deleteLoading}

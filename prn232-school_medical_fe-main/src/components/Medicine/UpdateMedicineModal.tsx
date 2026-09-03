@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { MedicineService, Medicine } from '../../feature/API/MedicineService';
+import { MedicineService } from '../../feature/API/MedicineService';
 import { IconClose } from '../IconList';
+import { useUserId } from '../../feature/Hooks/AccountHooks';
 
 interface UpdateMedicineModalProps {
   isOpen: boolean;
@@ -14,7 +15,8 @@ const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medic
   const [form, setForm] = useState({ name: '', description: '', amount: '', isAvailable: true });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const userId= useUserId(); // Custom hook to get the current user's ID
+  
   useEffect(() => {
     if (medicine) {
       setForm({
@@ -31,6 +33,9 @@ const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medic
 
   const validate = () => {
     const errs: { [key: string]: string } = {};
+    if(userId===null){
+      errs.name='Unable to get userId';
+    }
     if (!form.name.trim()) {
       errs.name = 'Medicine name is required.';
     } else if (form.name.length < 2 || form.name.length > 100) {
@@ -66,6 +71,7 @@ const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medic
         description: form.description.trim(),
         amount: Number(form.amount),
         isAvailable: form.isAvailable,
+        createdBy: userId ?? '',
       });
       onClose();
       onSuccess();
@@ -129,23 +135,23 @@ const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medic
               />
               {errors.amount && <div className="error-message">{errors.amount}</div>}
             </div>
-          </div>
-          <div className="modal-column">
+          
+         
             <div className="detail-row">
-              <span className="detail-label">Availability</span>
+              <label htmlFor="availability-select" className="detail-label full-width">Availability</label>
               <select
-                className={`badge-dropdown ${form.isAvailable ? 'status-badge-active' : 'status-badge-inactive'}`}
+                id="availability-select"
+                className="input-field"
                 name="isAvailable"
                 value={form.isAvailable ? 'true' : 'false'}
                 onChange={e => setForm(prev => ({ ...prev, isAvailable: e.target.value === 'true' }))}
                 disabled={isSubmitting}
-                style={{ width: '140px', border: 'none', borderRadius: '16px', color: '#fff', fontWeight: 600, padding: '4px 18px', appearance: 'none', textAlign: 'center', cursor: 'pointer' }}
               >
-                <option value="true" className="status-badge-active">Available</option>
-                <option value="false" className="status-badge-inactive">Unavailable</option>
+                <option value="true" >Available</option>
+                <option value="false" >Unavailable</option>
               </select>
             </div>
-          </div>
+          
           <div className="detail-row full-width">
             <span className="detail-label">Description</span>
             <textarea
@@ -164,6 +170,7 @@ const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medic
                 {isSubmitting ? 'Updating...' : 'Update'}
               </button>
             </div>
+          </div>
           </div>
         </form>
       </div>

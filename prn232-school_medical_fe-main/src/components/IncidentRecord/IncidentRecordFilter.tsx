@@ -2,11 +2,12 @@ import { IncidentRecordQueryParams } from "../../feature/API/IncidentRecordServi
 
 interface IncidentRecordFilterProps {
   filters: IncidentRecordQueryParams;
+  onApplyFilters: () => void;
   onFilterChange: (filterKey: keyof IncidentRecordQueryParams, value: any) => void;
   onClearFilters: () => void;
 }
 
-export const IncidentRecordFilter = ({ filters, onFilterChange, onClearFilters }: IncidentRecordFilterProps) => {
+export const IncidentRecordFilter = ({ filters, onApplyFilters, onFilterChange, onClearFilters }: IncidentRecordFilterProps) => {
   return (
     <div className="filter-section">
       <div className="filter-row">
@@ -69,6 +70,9 @@ export const IncidentRecordFilter = ({ filters, onFilterChange, onClearFilters }
       </div>
       
       <div className="filter-actions">
+        <button className="button button-primary button-small" onClick={onApplyFilters}>
+          Apply Filters
+        </button>
         <button className="button button-secondary button-small" onClick={onClearFilters}>
           Clear Filters
         </button>

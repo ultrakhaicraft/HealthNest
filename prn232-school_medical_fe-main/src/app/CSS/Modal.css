@@ -71,6 +71,17 @@
   gap: 1rem;
 }
 
+.modal-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.modal-row.full-width {
+  grid-column: 1 / -1;
+  margin-top: 1rem;
+}
+
 
 /* Confirmation Modal Styles */
 .confirmation-modal {

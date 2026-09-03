@@ -140,9 +140,9 @@ namespace PRN232_SchoolMedicalAPI.Controllers
             await _medicineRequestService.DeleteMedicineRequestAsync(id);
 
 			ApiResponseWrapper<string> response = ApiResponseWrapper<string>
-			.NoContent("Delete Medicine Request success with Id "+id);
+			.Success(data: string.Empty, "Delete Medicine Request success with Id "+id);
 
-            return StatusCode(204, response);
+            return Ok(response);
         }
     }
 }

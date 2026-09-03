@@ -96,8 +96,8 @@ public class HealthCheckupEventController : Controller
 		await _healthCheckupEventService.DeleteHealthCheckupEvent(id);
 
 		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
-					.NoContent("Health checkup event deleted successfully");
+					.Success(data:string.Empty,"Health checkup event deleted successfully");
 
-		return StatusCode(204, response);
+		return Ok(response);
 	}
 }

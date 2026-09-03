@@ -5,6 +5,9 @@ import IncidentRecordCRUDPage from './IncidentRecordCRUD-page';
 import MedicineRequestCRUDPage from './MedicineRequestCRUD-page';
 import { NurseDashboard } from './NurseDashboard-page';
 
+import '../../CSS/Nurse/NurseTopHeader.css';
+import '../../CSS/Nurse/NurseSideNav.css';
+
 export default function NurseHomePage() {
     const [activeItem, setActiveItem] = useState('Home');
 

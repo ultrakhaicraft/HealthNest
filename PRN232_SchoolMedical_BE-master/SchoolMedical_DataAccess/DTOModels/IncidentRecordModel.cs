@@ -12,6 +12,7 @@ public class IncidentRecordDetailModel
 	public string Id { get; set; } = null!;
 
 	public string StudentId { get; set; } = null!;
+	public string StudentName { get; set; } = null!;
 
 	public string HandleBy { get; set; } = null!;
 

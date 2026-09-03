@@ -136,44 +136,29 @@ const UpdateIncidentRecordModal: React.FC<UpdateIncidentRecordModalProps> = ({ i
               />
             </div>
             <div className="detail-row">
-              <span className="detail-label">Student ID</span>
-              <select
-                className="input-field"
-                name="studentId"
-                value={form.studentId}
-                onChange={handleChange}
-                disabled={isSubmitting || isLoadingStudents}
-                required
-              >
-                <option value="">Select a student...</option>
-                {students.map((student) => (
-                  <option key={student.id} value={student.id}>
-                    {student.id} - {student.fullName}
-                  </option>
-                ))}
-              </select>
-              {errors.studentId && <div className="error-message">{errors.studentId}</div>}
-            </div>
-            <div className="detail-row">
-              <span className="detail-label">Handle By</span>
+              <label htmlFor="handleBy" className="detail-label">Nurse Id</label>
               <input
+                id="handleBy"
                 className="input-field"
                 name="handleBy"
                 value={form.handleBy}
                 onChange={handleChange}
                 disabled={isSubmitting}
+                placeholder="Enter Nurse Id"
                 required
               />
               {errors.handleBy && <div className="error-message">{errors.handleBy}</div>}
             </div>
             <div className="detail-row">
-              <span className="detail-label">Incident</span>
+              <label htmlFor="incidentType" className="detail-label">Incident</label>
               <input
+                id="incidentType"
                 className="input-field"
                 name="incidentType"
                 value={form.incidentType}
                 onChange={handleChange}
                 disabled={isSubmitting}
+                placeholder="Enter injury or incident type"
                 required
               />
               {errors.incidentType && <div className="error-message">{errors.incidentType}</div>}
@@ -181,8 +166,9 @@ const UpdateIncidentRecordModal: React.FC<UpdateIncidentRecordModalProps> = ({ i
           </div>
           <div className="modal-column">
             <div className="detail-row">
-              <span className="detail-label">Status</span>
-             <select
+              <label htmlFor="status" className="detail-label">Status</label>
+              <select
+                id="status"
                 className="input-field"
                 name="status"
                 value={form.status}
@@ -200,8 +186,9 @@ const UpdateIncidentRecordModal: React.FC<UpdateIncidentRecordModalProps> = ({ i
               {errors.status && <div className="error-message">{errors.status}</div>}
             </div>
             <div className="detail-row">
-              <span className="detail-label">Date Occurred</span>
+              <label htmlFor="dateOccurred" className="detail-label">Date Occurred</label>
               <input
+                id="dateOccurred"
                 className="input-field"
                 name="dateOccurred"
                 type="datetime-local"
@@ -214,14 +201,16 @@ const UpdateIncidentRecordModal: React.FC<UpdateIncidentRecordModalProps> = ({ i
             </div>
           </div>
           <div className="detail-row full-width">
-            <span className="detail-label">Description</span>
+            <label htmlFor="description" className="detail-label">Description</label>
             <textarea
+              id="description"
               className="input-field detail-description"
               name="description"
               value={form.description}
               onChange={handleChange}
               maxLength={500}
               disabled={isSubmitting}
+              placeholder="Enter a detailed description of the incident (What happened, how it happened, and any other relevant details)."
               required
             />
             {errors.description && <div className="error-message">{errors.description}</div>}

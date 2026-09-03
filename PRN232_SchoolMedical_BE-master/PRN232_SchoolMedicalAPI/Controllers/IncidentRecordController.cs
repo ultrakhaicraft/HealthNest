@@ -128,8 +128,8 @@ public class IncidentRecordController : ControllerBase
         await _incidentRecordService.SoftDeleteIncidentRecordAsync(id);
        
 		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
-					.NoContent("Incident record deleted successfully");
+					.Success(data:string.Empty,"Incident record deleted successfully");
 
-		return StatusCode(204, response);
+		return Ok(response);
     }
 } 

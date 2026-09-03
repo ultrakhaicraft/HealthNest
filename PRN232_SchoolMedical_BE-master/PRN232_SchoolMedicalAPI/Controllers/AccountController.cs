@@ -111,8 +111,8 @@ public class AccountController : ControllerBase
 	{
 		await _accountService.SoftDeleteAccount(id);
 		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
-					.NoContent("Delete Account Success with Id - " + id);
-		return StatusCode(204,response);
+					.Success(data:string.Empty,"Delete Account Success with Id - " + id);
+		return Ok(response);
 	}
 
 	/// <summary>

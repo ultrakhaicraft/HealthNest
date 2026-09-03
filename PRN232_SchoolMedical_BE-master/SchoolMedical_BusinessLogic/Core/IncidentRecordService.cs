@@ -76,6 +76,7 @@ public class IncidentRecordService : IIncidentRecordService
 		var incident = await repository
 			.GetQueryable()
 			.Include(i => i.HandleByNavigation)
+			.Include(i=>i.Student)	
 			.FirstOrDefaultAsync(i => i.Id == incidentId);
 
 		if (incident == null)
@@ -87,6 +88,7 @@ public class IncidentRecordService : IIncidentRecordService
 		{
 			Id = incident.Id,
 			StudentId = incident.StudentId,
+			StudentName = incident.Student.FullName,
 			HandleBy = incident.HandleBy,
 			HandleByName = incident.HandleByNavigation.FullName,
 			IncidentType = incident.IncidentType,

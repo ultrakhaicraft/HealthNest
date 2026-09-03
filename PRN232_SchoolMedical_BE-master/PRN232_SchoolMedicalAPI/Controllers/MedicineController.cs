@@ -31,7 +31,7 @@ public class MedicineController : ControllerBase
         var result = await _medicineService.GetAllMedicinesAsync(request);
 		ApiResponseWrapper<PagingModel<MedicineDetailResponseDto>> response = ApiResponseWrapper<PagingModel<MedicineDetailResponseDto>>
 						.Success(result, "Get all medicines success");
-		return Ok(result);
+		return Ok(response);
     }
 
     /// <summary>
@@ -82,13 +82,12 @@ public class MedicineController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var currentUserId = User.Claims.GetUserIdFromJwtToken();
         var result = await _medicineService.UpdateMedicineAsync(request, id);
 
 		ApiResponseWrapper<MedicineDetailResponseDto> response = ApiResponseWrapper<MedicineDetailResponseDto>
 						.Success(result, "Update Medicine successful with Id: "+id);
 
-		return Ok(result);
+		return Ok(response);
     }
 
     /// <summary>
@@ -102,6 +101,6 @@ public class MedicineController : ControllerBase
 		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
 						.NoContent("Delete Medicine successful with Id: " + id);
 		
-        return StatusCode(204,response);
+        return Ok(response);
     }
 }

@@ -1,33 +1,47 @@
-import apiClient, { PaginatedResponse, ApiResponseWrapper } from '../ApiClient';
+import apiClient, { PaginatedResponse, ApiResponseWrapper, PageinationParams } from '../ApiClient';
 
-export interface Medicine {
+export interface MedicineViewModel {
   id: string;
   name: string;
-  description: string;
   amount: number;
   isAvailable: boolean;
-  createdBy: string;
   createdByName: string;
 }
 
-export interface MedicineQueryParams {
+export interface MedicineDetailsViewModel extends MedicineViewModel {
+  description: string;
+  createdBy: string; //Id of nurse who created the medicine record
+  isDeleted: boolean;
+}
+
+export interface MedicineCreateModel {
+  name: string;
+  amount: number;
+  createdBy: string;
+  description: string;
+}
+
+export interface MedicineUpdateModel extends MedicineCreateModel {
+  isAvailable: boolean;
+}
+
+export interface MedicineQueryParams extends PageinationParams {
+  Id?: string;
   Name?: string;
   IsAvailable?: boolean;
-  PageIndex?: number;
-  PageSize?: number;
-  IsDescending?: boolean;
+  SortNameByDescending?: boolean;
 }
 
 
 
 export const MedicineService = {
-  getAll: async (params: MedicineQueryParams = {}): Promise<PaginatedResponse<Medicine>> => {
-    const response = await apiClient.get<ApiResponseWrapper<PaginatedResponse<Medicine>>>('/medicine', { params });
+  getAll: async (params: MedicineQueryParams = {}): Promise<PaginatedResponse<MedicineViewModel>> => {
+    const response = await apiClient.get<ApiResponseWrapper<PaginatedResponse<MedicineViewModel>>>('/medicine', { params });
     return response.data.data;
   },
 
-  getById: async (id: string): Promise<Medicine> => {
-    const response = await apiClient.get<ApiResponseWrapper<Medicine>>(`/medicine/${id}`);
+  getById: async (id: string): Promise<MedicineDetailsViewModel> => {
+    const response = await apiClient.get<ApiResponseWrapper<MedicineDetailsViewModel>>(`/medicine/${id}`);
     return response.data.data;
   },
 
@@ -36,13 +50,13 @@ export const MedicineService = {
     return response.data.data;
   },
 
-  create: async (data: { name: string; description: string; amount: number; isAvailable: boolean }): Promise<Medicine> => {
-    const response = await apiClient.post<ApiResponseWrapper<Medicine>>('/medicine', data);
+  create: async (data: MedicineCreateModel): Promise<MedicineDetailsViewModel> => {
+    const response = await apiClient.post<ApiResponseWrapper<MedicineDetailsViewModel>>('/medicine', data);
     return response.data.data;
   },
 
-  update: async (id: string, data: { name: string; description: string; amount: number; isAvailable: boolean }): Promise<Medicine> => {
-    const response = await apiClient.put<ApiResponseWrapper<Medicine>>(`/medicine/${id}`, data);
+  update: async (id: string, data: MedicineUpdateModel): Promise<MedicineDetailsViewModel> => {
+    const response = await apiClient.put<ApiResponseWrapper<MedicineDetailsViewModel>>(`/medicine/${id}`, data);
     return response.data.data;
   },
 }; 

@@ -1,0 +1,113 @@
+/* Header */
+.nurse-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
+  margin-bottom: 1.5rem;
+}
+
+/* Header Search */
+.nurse-header-search {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1;
+  max-width: 400px;
+}
+
+.search-icon{
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+.search-input{
+  border:none;
+  outline:none;
+  font-size: 0.9rem;
+  width: 100%;
+  color: #1e293b;
+  background:transparent;
+}
+
+.search-input::placeholder {
+  color: #94a3b8;
+}
+
+/* Header Actions */
+.nurse-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.icon-button{
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background-color: #f1f5f9;
+  color: #475569;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.icon-button:hover {
+  background-color: #17283d;
+  color: #fff;
+}
+
+.nurse-header-divider {
+  width: 1px;
+  height: 28px;
+  background-color: #e2e8f0;
+  margin: 0 0.25rem;
+}
+
+/* Header Profile */
+.nurse-header-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  cursor: pointer;
+}
+
+.profile-text{
+  text-align: right;
+}
+
+.profile-name{
+  margin:0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.2;
+}
+
+.profile-role{
+  margin:0;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #1e293b;
+  line-height: 1.2;
+}
+
+.profile-avatar{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #2563eb;
+  background-image: linear-gradient(135deg, #3b82f6, #1e3a8a);
+  flex-shrink: 0;
+}
+
+.dropdown-chevron {
+  color: #94a3b8;
+}

@@ -119,6 +119,7 @@ const CreateIncidentRecordModal: React.FC<CreateIncidentRecordModalProps> = ({ i
                 value={form.studentId}
                 onChange={handleChange}
                 disabled={isSubmitting}
+                placeholder="Enter Student ID"
                 required
               />
               {errors.studentId && <div className="error-message">{errors.studentId}</div>}
@@ -132,13 +133,12 @@ const CreateIncidentRecordModal: React.FC<CreateIncidentRecordModalProps> = ({ i
                 value={form.incidentType}
                 onChange={handleChange}
                 disabled={isSubmitting}
+                placeholder="Enter injury or incident type"
                 required
               />
               {errors.incidentType && <div className="error-message">{errors.incidentType}</div>}
             </div>
-           
-          </div>
-          <div className="modal-column">
+
             <div className="detail-row">
               <label htmlFor="dateOccurred" className="detail-label">Date Occurred</label>
               <input
@@ -153,7 +153,8 @@ const CreateIncidentRecordModal: React.FC<CreateIncidentRecordModalProps> = ({ i
               />
               {errors.dateOccurred && <div className="error-message">{errors.dateOccurred}</div>}
             </div>
-          </div>
+
+          
           <div className="detail-row full-width">
             <label htmlFor="description" className="detail-label">Description</label>
             <textarea
@@ -164,6 +165,7 @@ const CreateIncidentRecordModal: React.FC<CreateIncidentRecordModalProps> = ({ i
               onChange={handleChange}
               maxLength={500}
               disabled={isSubmitting}
+              placeholder="Enter a detailed description of the incident (What happened, how it happened, and any other relevant details)."
               required
             />
             {errors.description && <div className="error-message">{errors.description}</div>}
@@ -177,6 +179,7 @@ const CreateIncidentRecordModal: React.FC<CreateIncidentRecordModalProps> = ({ i
                 {isSubmitting ? 'Submitting...' : 'Submit'}
               </button>
             </div>
+          </div>
           </div>
         </form>
       </div>

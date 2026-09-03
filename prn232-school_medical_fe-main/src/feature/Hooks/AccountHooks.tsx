@@ -10,3 +10,7 @@ export const useUserRole = () => {
   console.log('User Role:', userRole);
   return userRole;
 }
+
+export const useUserId = (): string | null => {
+  return localStorage.getItem('userId');
+};

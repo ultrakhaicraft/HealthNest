@@ -25,6 +25,12 @@ export interface ApiErrorResponse{
   detail: string;
 }
 
+// Params for pagination, can be extended for filtering and sorting as needed
+export interface PageinationParams {
+  PageIndex?: number;
+  PageSize?: number;
+}
+
 // Get the API URL from environment variables for security and flexibility
 const API_URL = import.meta.env.VITE_API_URL || 'https://localhost:7085/api';
 

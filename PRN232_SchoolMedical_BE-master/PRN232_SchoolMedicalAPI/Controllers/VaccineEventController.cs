@@ -95,8 +95,8 @@ public class VaccineEventController : Controller
 		await _vaccineEventService.DeleteVaccineEvent(id);
 
 		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
-					.NoContent("Vaccine event deleted successfully");
+					.Success(string.Empty,"Vaccine event deleted successfully");
 
-		return StatusCode(204, response);
+		return Ok(response);
 	}
 }

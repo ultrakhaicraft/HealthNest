@@ -1,0 +1,42 @@
+.side-nav {
+  width: 240px;
+  background-color: white;
+  padding: 1.5rem 1rem;
+  height: 100vh;
+  position: sticky;
+  top: 0; /* Stick below header */
+  border-right: 1px solid #e5e7eb;
+}
+
+.side-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-item, .nav-item:focus, .nav-item:active {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  color: #374151;
+  font-weight: 500;
+  margin-bottom: 2rem;
+  transition: background-color 0.2s, color 0.2s;
+  font-size: large;
+}
+
+.nav-item:hover, .nav-item:focus {
+  background-color: #f3f4f6;
+}
+
+.nav-item.active {
+  background-color: #eef2ff;
+  color: #3730a3;
+  font-weight: 600;
+}
+
+.nav-item svg {
+  margin-right: 0.75rem;
+}

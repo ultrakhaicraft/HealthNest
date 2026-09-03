@@ -3,9 +3,11 @@ import { useState, useEffect, useCallback } from 'react';
 import "../../CSS/Nurse/IncidentRecordCRUD.css"
 import "../../CSS/Nurse/NurseCRUDPanel.css"
 import "../../CSS/Nurse/NurseStatusBadge.css"
+import "../../CSS/Nurse/NurseModal.css"
+
 import { IconDelete, IconEdit, IconFilter, IconPlus, IconView } from '../../../components/IconList';
 import { IncidentRecordQueryParams, IncidentRecordService, IncidentRecordView } from '../../../feature/API/IncidentRecordService';
-import { IncidentRecordViewDetail } from '../../../components/IncidentRecord/IncidentRecordView';
+import { IncidentRecordViewDetail } from '../../../components/IncidentRecord/IncidentRecordViewDetailModal';
 import { ConfirmationModal } from '../../../components/ConfirmationModal';
 import CreateIncidentRecordModal from '../../../components/IncidentRecord/CreateIncidentRecordModal';
 import { Toast } from '../../../components/Notification/Toast';
@@ -13,6 +15,7 @@ import UpdateIncidentRecordModal from '../../../components/IncidentRecord/Update
 import { useSignalREvent } from '../../../components/SignalR/SignalrHook';
 import { IncidentRecordFilter } from '../../../components/IncidentRecord/IncidentRecordFilter';
 import { PaginationControls } from '../../../components/PaginationControls';
+import { IncidentRecordCRUDPanel } from '../../../components/IncidentRecord/IncidentRecordManagementPanel';
 
 // Main App Component
 export default function IncidentRecordCRUDPage() {
@@ -44,39 +47,6 @@ export default function IncidentRecordCRUDPage() {
   
 
    // Function to load incidents with pagination, will run again based on PageIndex and PageSize changes
-
-  /*
-  const loadIncidents = useCallback((PageIndexArg: number = 0, PageSizeArg: number = 10) => {
-      const params: IncidentRecordQueryParams = {
-        PageIndex: PageIndexArg,
-        PageSize: PageSizeArg
-      }
-
-      IncidentRecordService.getAll(params)
-      .then((res) => {
-        setIncidentData(res.data ?? []);
-        setTotalPages(res.totalPages);
-        setPageIndex(res.pageIndex);
-        setTotalCount(res.totalCount);
-      })
-      .catch(console.error);
-  }, [PageIndex, PageSize]);
-
-  useEffect(() => {
-      loadIncidents(PageIndex, PageSize);
-      
-    }, [PageIndex, PageSize]);
-
-    const handleIncidentAdded = useCallback((newIncident: IncidentRecordView) => {
-    setIncidentData(prev => [newIncident, ...prev]);
-    
-    //Refresh the table to show the new incident record
-    loadIncidents();
-  }, []);
-
-  */
-    
-
     const loadIncidents =  useCallback((filterArgs: IncidentRecordQueryParams) => {
       setLoading(true);
       IncidentRecordService.getAll(filterArgs)
@@ -86,7 +56,7 @@ export default function IncidentRecordCRUDPage() {
         setTotalItems(res.totalCount);
        })
       .catch((error) => {
-        console.error('Error loading medicine requests:', error);
+        console.error('Error loading incident records:', error);
       })
       .finally(() => setLoading(false));
     },[filters]);
@@ -96,14 +66,18 @@ export default function IncidentRecordCRUDPage() {
     useEffect(()=>{
       loadIncidents(filters);
     },[]);
-    const handleIncidentAdded = useCallback((newIncident: IncidentRecordView) => {
-    setIncidentData(prev => [newIncident, ...prev]);
     
-    //Refresh the table to show the new incident record
+    const handleIncidentAdded = useCallback((newIncident: IncidentRecordView) => {
+      setIncidentData(prev => [newIncident, ...prev]);
+      
+      //Refresh the table to show the new incident record
+      loadIncidents(filters);
+    },[filters]);
+
+  // In the parent component (wherever loadIncidents/filters live)
+  const handleApplyFilters = useCallback(() => {
     loadIncidents(filters);
-  },[filters]);
-
-
+  }, [filters, loadIncidents]);
 
   //Add a SignalR event listener to listen for new incident records being added in real-time
   useSignalREvent<IncidentRecordView>("IncidentRecordAdded", handleIncidentAdded);
@@ -228,7 +202,7 @@ export default function IncidentRecordCRUDPage() {
 
   return (
     <>
-      <IncidentRecordCRUD 
+      <IncidentRecordCRUDPanel 
         incidentData={incidentData}
         onViewIncident={handleViewIncident}
         onDeleteIncident={handleDeleteClick}
@@ -242,8 +216,9 @@ export default function IncidentRecordCRUDPage() {
         onToggleFilters={() => setShowFilters(!showFilters)}
         filters={filters}
         onFilterChange={handleFilterChange}
-        onClearFilters={handleClearFilters}
-      />
+        onClearFilters={handleClearFilters} 
+        onApplyFilters={handleApplyFilters}      
+        />
       {showModal && selectedIncident && (
         <IncidentRecordViewDetail 
           incidentRecord={selectedIncident} 
@@ -269,7 +244,7 @@ export default function IncidentRecordCRUDPage() {
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
         title="Delete Incident Record"
-        message={`Are you sure you want to delete incident record "${incidentToDelete?.id}"? This action cannot be undone.`}
+        message={`Are you sure you want to delete this incident record ? This action cannot be undone.`}
         confirmText="Delete"
         cancelText="Cancel"
         isLoading={deleteLoading}
@@ -285,149 +260,7 @@ export default function IncidentRecordCRUDPage() {
   );
 }
 
-// All Sub component of the page
-// Main CRUD component for incident records
-const IncidentRecordCRUD = ({ 
-  incidentData = [], onViewIncident, 
-  onDeleteIncident, loading, 
-  onCreateIncident, onEditIncident, 
-  totalPages, 
-  totalItems, showFilters, 
-  onToggleFilters, filters,
-  onFilterChange, onClearFilters }: IncidentRecordCRUDPanelProps) => {
-  return (
-    <div className="crud-container">
-      <div className="crud-header">
-        <div>
-          <h2 className="crud-title">Incident Record Management Panel</h2>
-          <p className="crud-subtitle">Manage student incident records and reports such as create, update, and delete</p>
-        </div>
-        <div className="crud-actions">
-          <button className="button button-secondary button-small" onClick={onToggleFilters}>
-                      <IconFilter />
-                      {showFilters ? 'Hide Filters' : 'Show Filters'}
-          </button>
-          <button className="button button-primary button-small" onClick={onCreateIncident}>
-            <IconPlus />
-            Create Incident Record
-          </button>
-        </div>
-      </div>
 
-      {showFilters && (
-              <IncidentRecordFilter 
-                filters={filters}
-                onFilterChange={onFilterChange}
-                onClearFilters={onClearFilters}
-              />
-      )}
-      
-      <div className="crud-table-wrapper">
-        <div className="crud-table-info">
-          <span>Total: {totalItems} items</span>
-          <span>Page {filters.PageIndex || 1} of {totalPages}</span>
-        </div>
-        <table className="crud-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Student Name</th>
-              <th>Incident</th>
-              <th>Date Occurred</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading && (
-              <tr>
-                <td colSpan={6} style={{textAlign: 'center', padding: '2rem'}}>
-                  Loading incident records...
-                </td>
-              </tr>
-            )}
-            {incidentData.length === 0 && !loading && (
-              <tr>
-                <td colSpan={6} style={{textAlign: 'center', padding: '2rem'}}>
-                  No incident records found
-                </td>
-              </tr>
-            )}
-            {incidentData.map(incident => (
-              <tr key={incident.id}>
-                <td>{incident.id}</td>
-                <td>{incident.studentName}</td>
-                <td>{incident.incidentType}</td>
-                <td>{new Date(incident.dateOccurred).toLocaleDateString()}</td>
-                <td><StatusBadge status={incident.status} /></td>
-                <td>
-                  <div className="action-buttons">
-                    <button className="action-button" onClick={() => onViewIncident(incident.id)} disabled={loading}>
-                      <IconView />
-                    </button>
-                    <button className="action-button" onClick={() => onEditIncident(incident)} disabled={loading}>
-                      <IconEdit />
-                    </button>
-                    <button className="action-button action-delete" onClick={() => onDeleteIncident(incident)} disabled={loading}>
-                      <IconDelete />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        <PaginationControls 
-                  currentPage={filters.PageIndex || 1}
-                  totalPages={totalPages}
-                  onPageChange={(page) => onFilterChange('PageIndex', page)}
-        />
-      </div>
-    </div>
-  );
-}
-
-interface StatusBadgeProps {
-  status: string;
-}
-
-interface IncidentRecordCRUDPanelProps {
-  incidentData: IncidentRecordView[];
-  onViewIncident: (id: string) => void;
-  onDeleteIncident: (incident: IncidentRecordView) => void;
-  loading: boolean;
-  showFilters: boolean;
-  onToggleFilters: () => void;
-  filters: IncidentRecordQueryParams;
-  onFilterChange: (filterKey: keyof IncidentRecordQueryParams, value: any) => void;
-  onClearFilters: () => void;
-  onCreateIncident: () => void;
-  onEditIncident: (incident: IncidentRecordView) => void;
-  totalPages: number;
-  setTotalPages: React.Dispatch<React.SetStateAction<number>>;
-  totalItems: number;
-}
-
-// Status Badge Component
-const StatusBadge = ({ status }: StatusBadgeProps) => {
-  const getStatusClass = (status: string) => {
-    switch (status) {
-      case 'Active':
-        return 'status-badge-active';
-      case 'Inactive':
-        return 'status-badge-inactive';
-      case 'Completed':
-        return 'status-badge-resolved';
-      case 'Pending':
-        return 'status-badge-pending';
-      default:
-        return 'status-badge-pending';
-    }
-  };
-  
-  return <span className={`status-badge ${getStatusClass(status)}`}>{status}</span>;
-};
 
 
 
