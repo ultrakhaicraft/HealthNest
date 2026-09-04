@@ -45,8 +45,8 @@ export const MedicineService = {
     return response.data.data;
   },
 
-  delete: async (id: string): Promise<boolean> => {
-    const response = await apiClient.delete<ApiResponseWrapper<boolean>>(`/medicine/${id}`);
+  delete: async (id: string): Promise<string> => {
+    const response = await apiClient.delete<ApiResponseWrapper<string>>(`/medicine/${id}`);
     return response.data.data;
   },
 

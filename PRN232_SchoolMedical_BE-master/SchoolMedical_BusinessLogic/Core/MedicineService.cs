@@ -26,7 +26,7 @@ public class MedicineService : IMedicineService
         _medicineRepository = _unitOfWork.GetRepository<Medicine>();
     }
 
-    public async Task<PagingModel<MedicineDetailResponseDto>> GetAllMedicinesAsync(MedicineFilterRequestDto request)
+    public async Task<PagingModel<MedicineDetailResponseDto>> GetAllMedicinesAsync(MedicineQueryDto request)
     {
 			var query = _medicineRepository.Include(m => m.CreatedByNavigation)
 			.Where(m => !m.IsDeleted);
@@ -43,7 +43,7 @@ public class MedicineService : IMedicineService
 			}
 
 			// Apply sorting
-			query = ApplySorting(query, request.SortBy, request.IsDescending);
+			query = ApplySorting(query, request.SortByNameByDescending);
 
             //Convert Medicine to MedicineDetailResponseDto
 
@@ -102,7 +102,7 @@ public class MedicineService : IMedicineService
 		
     }
 
-    public async Task<MedicineDetailResponseDto> CreateMedicineAsync(CreateMedicineRequestDto request, string createdBy)
+    public async Task<MedicineDetailResponseDto> CreateMedicineAsync(MedicineCreateDto request, string createdBy)
     {
             var medicine = new Medicine
             {
@@ -136,7 +136,7 @@ public class MedicineService : IMedicineService
        
     }
 
-    public async Task<MedicineDetailResponseDto> UpdateMedicineAsync(UpdateMedicineRequestDto request, string medicineId)
+    public async Task<MedicineDetailResponseDto> UpdateMedicineAsync(UpdateMedicineDto request, string medicineId)
     {
        
 
@@ -191,23 +191,13 @@ public class MedicineService : IMedicineService
       
     }
 
-    private IQueryable<Medicine> ApplySorting(IQueryable<Medicine> query, string? sortBy, bool isDescending)
+    private IQueryable<Medicine> ApplySorting(IQueryable<Medicine> query, bool SortByNameIsDescending)
     {
-        if (string.IsNullOrEmpty(sortBy))
-            sortBy = "Name";
+       
 
-        Expression<Func<Medicine, object>> keySelector = sortBy.ToLower() switch
-        {
-            "name" => m => m.Name,
-            "amount" => m => m.Amount,
-            "isavailable" => m => m.IsAvailable ?? false,
-            "createdby" => m => m.CreatedBy,
-            _ => m => m.Name
-        };
-
-        return isDescending
-            ? query.OrderByDescending(keySelector)
-            : query.OrderBy(keySelector);
+        return SortByNameIsDescending
+			? query.OrderByDescending(m=>m.Name)
+            : query.OrderBy(m => m.Name);
     }
 
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SchoolMedical_DataAccess.DTOModels
 {
-    public class CreateMedicineRequestDto
+    public class MedicineCreateDto
     {
         [Required(ErrorMessage = "Medicine name is required")]
         [StringLength(100, MinimumLength = 2, ErrorMessage = "Medicine name must be between 2 and 100 characters")]
@@ -23,7 +23,7 @@ namespace SchoolMedical_DataAccess.DTOModels
     }
 
     //No ID because API Query already have Id
-    public class UpdateMedicineRequestDto
+    public class UpdateMedicineDto
     {   
 
         [Required(ErrorMessage = "Medicine name is required")]
@@ -39,7 +39,7 @@ namespace SchoolMedical_DataAccess.DTOModels
         public bool? IsAvailable { get; set; }
     }
 
-    public class MedicineFilterRequestDto
+    public class MedicineQueryDto
     {
         [StringLength(100, ErrorMessage = "Name filter cannot exceed 100 characters")]
         public string? Name { get; set; }
@@ -52,11 +52,7 @@ namespace SchoolMedical_DataAccess.DTOModels
         [Range(1, 100, ErrorMessage = "Page size must be between 1 and 100")]
         public int PageSize { get; set; } = 10;
 
-        [RegularExpression("^(Name|Amount|IsAvailable|CreatedBy)$",
-            ErrorMessage = "Sort by must be one of: Name, Amount, IsAvailable, CreatedBy")]
-        public string? SortBy { get; set; } = "Name";
-
-        public bool IsDescending { get; set; } = false;
+        public bool SortByNameByDescending { get; set; } = false;
     }
 
     public class MedicineDetailResponseDto

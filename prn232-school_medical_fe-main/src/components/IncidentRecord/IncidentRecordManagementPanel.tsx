@@ -3,6 +3,7 @@
 import { IncidentRecordView, IncidentRecordQueryParams } from "../../feature/API/IncidentRecordService";
 import { IconFilter, IconPlus, IconView, IconEdit, IconDelete } from "../IconList";
 import { PaginationControls } from "../PaginationControls";
+import { StatusBadge } from "../StatusBadge";
 import { IncidentRecordFilter } from "./IncidentRecordFilter";
 
 // Main CRUD component for incident records
@@ -108,9 +109,6 @@ export const IncidentRecordCRUDPanel = ({
   );
 }
 
-interface StatusBadgeProps {
-  status: string;
-}
 
 interface IncidentRecordCRUDPanelProps {
   incidentData: IncidentRecordView[];
@@ -130,22 +128,3 @@ interface IncidentRecordCRUDPanelProps {
   totalItems: number;
 }
 
-// Status Badge Component
-const StatusBadge = ({ status }: StatusBadgeProps) => {
-  const getStatusClass = (status: string) => {
-    switch (status) {
-      case 'Active':
-        return 'status-badge-active';
-      case 'Inactive':
-        return 'status-badge-inactive';
-      case 'Completed':
-        return 'status-badge-resolved';
-      case 'Pending':
-        return 'status-badge-pending';
-      default:
-        return 'status-badge-pending';
-    }
-  };
-  
-  return <span className={`status-badge ${getStatusClass(status)}`}>{status}</span>;
-};

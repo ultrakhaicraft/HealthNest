@@ -32,8 +32,6 @@ public class MedicalSupplyUpdateModel
 
 	public bool? IsAvailable { get; set; }
 
-	public bool IsDeleted { get; set; }
-
 }
 
 public class MedicalSupplyViewModel

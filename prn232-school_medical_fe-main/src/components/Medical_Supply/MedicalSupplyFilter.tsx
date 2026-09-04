@@ -1,25 +1,25 @@
-import { MedicineQueryParams } from "../../feature/API/MedicineService";
+import { MedicalSupplyQuery } from "../../feature/API/MedicalSupplyService";
 
-interface MedicineFilterProps {
-  filters: MedicineQueryParams;
+interface MedicalSupplyFilterProps {
+  filters: MedicalSupplyQuery;
   onApplyFilters: () => void;
-  onFilterChange: (filterKey: keyof MedicineQueryParams, value: any) => void;
+  onFilterChange: (filterKey: keyof MedicalSupplyQuery, value: any) => void;
   onClearFilters: () => void;
 }
 
-export const MedicineFilter = ({ filters, onApplyFilters, onFilterChange, onClearFilters }: MedicineFilterProps) => {
+export const MedicalSupplyFilter = ({ filters, onApplyFilters, onFilterChange, onClearFilters }: MedicalSupplyFilterProps) => {
   return (
     <div className="filter-section">
       <div className="filter-row">
         
         <div className="filter-group">
-          <label htmlFor="MedicineId">Medicine Id:</label>
+          <label htmlFor="MedicineId">Medical Supply Name:</label>
           <input
             id="MedicineId"
             type="text"
-            value={filters.Id || ''}
-            onChange={(e) => onFilterChange('Id', e.target.value)}
-            placeholder="Search by Medicine ID..."
+            value={filters.Name || ''}
+            onChange={(e) => onFilterChange('Name', e.target.value)}
+            placeholder="Search by Medical Supply Name..."
           />
         </div>
         
@@ -38,11 +38,11 @@ export const MedicineFilter = ({ filters, onApplyFilters, onFilterChange, onClea
       
       <div className="filter-row">
         <div className="filter-group">
-          <label htmlFor="SortNameByDescending">Sort By Name (Descending):</label>
+          <label htmlFor="SortByNameByDescending">Sort By Name (Descending):</label>
           <select
-            id="SortNameByDescending"
-            value={filters.SortNameByDescending ? 'true' : 'false'}
-            onChange={(e) => onFilterChange('SortNameByDescending', e.target.value === 'true')}
+            id="SortByNameByDescending"
+            value={filters.SortByNameByDescending ? 'true' : 'false'}
+            onChange={(e) => onFilterChange('SortByNameByDescending', e.target.value === 'true')}
           >
             <option value="" selected>None</option>
             <option value="true">True</option>

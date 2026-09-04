@@ -5,7 +5,6 @@ import "../../CSS/Nurse/NurseCRUDPanel.css"
 import "../../CSS/Nurse/NurseStatusBadge.css"
 import "../../CSS/Nurse/NurseModal.css"
 
-import { IconDelete, IconEdit, IconFilter, IconPlus, IconView } from '../../../components/IconList';
 import { IncidentRecordQueryParams, IncidentRecordService, IncidentRecordView } from '../../../feature/API/IncidentRecordService';
 import { IncidentRecordViewDetail } from '../../../components/IncidentRecord/IncidentRecordViewDetailModal';
 import { ConfirmationModal } from '../../../components/ConfirmationModal';
@@ -13,8 +12,6 @@ import CreateIncidentRecordModal from '../../../components/IncidentRecord/Create
 import { Toast } from '../../../components/Notification/Toast';
 import UpdateIncidentRecordModal from '../../../components/IncidentRecord/UpdateIncidentRecordModal';
 import { useSignalREvent } from '../../../components/SignalR/SignalrHook';
-import { IncidentRecordFilter } from '../../../components/IncidentRecord/IncidentRecordFilter';
-import { PaginationControls } from '../../../components/PaginationControls';
 import { IncidentRecordCRUDPanel } from '../../../components/IncidentRecord/IncidentRecordManagementPanel';
 
 // Main App Component

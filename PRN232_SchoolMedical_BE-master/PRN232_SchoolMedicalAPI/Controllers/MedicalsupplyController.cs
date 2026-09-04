@@ -7,7 +7,7 @@ using SchoolMedical_DataAccess.Enums;
 namespace PRN232_SchoolMedicalAPI.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/medical-supply")]
 public class MedicalsupplyController : ControllerBase
 {
     private readonly IMedicalSupplyService medicalSupplyService;

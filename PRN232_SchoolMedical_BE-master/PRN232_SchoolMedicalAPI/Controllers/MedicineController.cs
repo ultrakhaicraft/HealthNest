@@ -26,7 +26,7 @@ public class MedicineController : ControllerBase
     /// </summary>
     [HttpGet]
     //[Authorize(Roles ="SchoolNurse, Admin, Manager")]
-    public async Task<IActionResult> GetMedicines([FromQuery] MedicineFilterRequestDto request)
+    public async Task<IActionResult> GetMedicines([FromQuery] MedicineQueryDto request)
     {
         var result = await _medicineService.GetAllMedicinesAsync(request);
 		ApiResponseWrapper<PagingModel<MedicineDetailResponseDto>> response = ApiResponseWrapper<PagingModel<MedicineDetailResponseDto>>
@@ -54,7 +54,7 @@ public class MedicineController : ControllerBase
     /// </summary>
     [HttpPost]
     //[Authorize(Roles ="SchoolNurse, Admin, Manager")]
-    public async Task<IActionResult> CreateMedicine([FromBody] CreateMedicineRequestDto request)
+    public async Task<IActionResult> CreateMedicine([FromBody] MedicineCreateDto request)
     {
         if (!ModelState.IsValid)
         {
@@ -75,7 +75,7 @@ public class MedicineController : ControllerBase
     /// </summary>
     [HttpPut("{id}")]
     //[Authorize(Roles ="SchoolNurse, Admin, Manager")]
-    public async Task<IActionResult> UpdateMedicine(string id, [FromBody] UpdateMedicineRequestDto request)
+    public async Task<IActionResult> UpdateMedicine(string id, [FromBody] UpdateMedicineDto request)
     {
         if (!ModelState.IsValid)
         {

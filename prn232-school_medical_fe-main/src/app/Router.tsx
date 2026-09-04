@@ -4,6 +4,7 @@ import { Routes, Route } from 'react-router-dom';
 import { Spinner } from '../components/spinner';
 import CreateMedicineRequest from './pages/parent_area/ParentCreateMedRequest-page';
 import { ProtectedRoute } from './ProtectedRoute';
+import MedicalSupplyCRUDPage from './pages/nurse_area/MedicalSupplyCRUD-page';
 
 
 // Lazy load all the pages/routes
@@ -89,6 +90,9 @@ export const AppRouter = () => {
         } />
         <Route path="/nurse/medicines" element={
           <ProtectedRoute allowedRoles={[UserRole.Nurse]}><MedicineCRUDPage /></ProtectedRoute>
+        } />
+        <Route path="/nurse/medicalSupplies" element={
+          <ProtectedRoute allowedRoles={[UserRole.Nurse]}><MedicalSupplyCRUDPage /></ProtectedRoute>
         } />
         <Route path="/nurse/incidents" element={
           <ProtectedRoute allowedRoles={[UserRole.Nurse]}><IncidentRecordCRUDPage /></ProtectedRoute>

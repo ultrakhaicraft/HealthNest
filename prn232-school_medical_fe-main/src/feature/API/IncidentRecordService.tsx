@@ -4,12 +4,16 @@ export interface IncidentRecordView {
   id: string;
   studentId: string;
   studentName?: string;
-  handleBy: string;
-  handleByName?: string;
   incidentType: string;
-  description: string;
   dateOccurred: string;
   status: string;
+}
+
+export interface IncidentRecordViewDetail extends IncidentRecordView {
+  handleBy: string;
+  handleByName?: string;
+  description: string;
+
 }
 
 export interface IncidentRecordCreate {
@@ -40,23 +44,23 @@ export const IncidentRecordService = {
     return response.data.data;
   },
 
-  getById: async (id: string): Promise<IncidentRecordView> => {
-    const response = await apiClient.get<ApiResponseWrapper<IncidentRecordView>>(`/incident-record/${id}`);
+  getById: async (id: string): Promise<IncidentRecordViewDetail> => {
+    const response = await apiClient.get<ApiResponseWrapper<IncidentRecordViewDetail>>(`/incident-record/${id}`);
     return response.data.data;
   },
 
-  create: async (data: IncidentRecordCreate): Promise<IncidentRecordView> => {
-    const response = await apiClient.post<ApiResponseWrapper<IncidentRecordView>>('/incident-record', data);
+  create: async (data: IncidentRecordCreate): Promise<IncidentRecordViewDetail> => {
+    const response = await apiClient.post<ApiResponseWrapper<IncidentRecordViewDetail>>('/incident-record', data);
     return response.data.data;
   },
 
-  update: async (id: string, data: IncidentRecordUpdate): Promise<IncidentRecordView> => {
-    const response = await apiClient.put<ApiResponseWrapper<IncidentRecordView>>(`/incident-record/${id}`, data);
+  update: async (id: string, data: IncidentRecordUpdate): Promise<IncidentRecordViewDetail> => {
+    const response = await apiClient.put<ApiResponseWrapper<IncidentRecordViewDetail>>(`/incident-record/${id}`, data);
     return response.data.data;
   },
 
-  delete: async (id: string): Promise<boolean> => {
-    const response = await apiClient.delete<ApiResponseWrapper<boolean>>(`/incident-record/${id}`);
+  delete: async (id: string): Promise<string> => {
+    const response = await apiClient.delete<ApiResponseWrapper<string>>(`/incident-record/${id}`);
     return response.data.data;
   },
 };

@@ -9,7 +9,7 @@ import '../../CSS/ParentHomepage.css';
 
 export default function StudentHomePage() {
     // This component represents the student homepage
-    const userType = 'student'; // This can be dynamically set based on user authentication]
+    const userType = 'student'; // This can be dynamically set based on user authentication
 
     return (
         <div className="normal-page">

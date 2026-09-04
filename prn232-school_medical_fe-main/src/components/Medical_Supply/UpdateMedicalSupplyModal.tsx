@@ -1,35 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import { MedicineDetailsViewModel, MedicineService } from '../../feature/API/MedicineService';
+import { MedicineService } from '../../feature/API/MedicineService';
 import { IconClose } from '../IconList';
 import { useUserId } from '../../feature/Hooks/AccountHooks';
+import { MedicalSupplyDetailsViewModel } from '../../feature/API/MedicalSupplyService';
 
-interface UpdateMedicineModalProps {
+interface UpdateMedicalSupplyModalProps {
   isOpen: boolean;
-  medicine: MedicineDetailsViewModel | null;
+  medicalSupply: MedicalSupplyDetailsViewModel | null;
   onClose: () => void;
   onSuccess: () => void;
   onError: (msg: string) => void;
 }
 
-const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medicine, onClose, onSuccess, onError }) => {
+const UpdateMedicalSupplyModal: React.FC<UpdateMedicalSupplyModalProps> = ({ isOpen, medicalSupply, onClose, onSuccess, onError }) => {
   const [form, setForm] = useState({ name: '', description: '', amount: '', isAvailable: true });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const userId= useUserId(); // Custom hook to get the current user's ID
   
   useEffect(() => {
-    if (medicine) {
+    if (medicalSupply) {
       setForm({
-        name: medicine.name || '',
-        description: medicine.description || '',
-        amount: medicine.amount?.toString() || '',
-        isAvailable: medicine.isAvailable,
+        name: medicalSupply.name || '',
+        description: medicalSupply.description || '',
+        amount: medicalSupply.amount?.toString() || '',
+        isAvailable: medicalSupply.isAvailable,
       });
       setErrors({});
     }
-  }, [medicine, isOpen]);
+  }, [medicalSupply, isOpen]);
 
-  if (!isOpen || !medicine) return null;
+  if (!isOpen || !medicalSupply) return null;
 
   const validate = () => {
     const errs: { [key: string]: string } = {};
@@ -66,7 +67,7 @@ const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medic
     if (Object.keys(errs).length > 0) return;
     setIsSubmitting(true);
     try {
-      await MedicineService.update(medicine.id, {
+      await MedicineService.update(medicalSupply.id, {
         name: form.name.trim(),
         description: form.description.trim(),
         amount: Number(form.amount),
@@ -76,7 +77,7 @@ const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medic
       onClose();
       onSuccess();
     } catch (err: any) {
-      onError(err?.response?.data?.message || 'Failed to update medicine.');
+      onError(err?.response?.data?.message || 'Failed to update medical supply.');
     } finally {
       setIsSubmitting(false);
     }
@@ -92,7 +93,7 @@ const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medic
     <div className="modal-overlay" onClick={handleOverlayClick}>
       <div className="modal-content">
         <div className="modal-header">
-          <h2 className="modal-title">Update Medicine</h2>
+          <h2 className="modal-title">Update Medical Supply</h2>
           <button className="modal-close" onClick={onClose} disabled={isSubmitting}>
             <IconClose />
           </button>
@@ -103,7 +104,7 @@ const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medic
               <span className="detail-label">ID</span>
               <input
                 className="input-field"
-                value={medicine.id}
+                value={medicalSupply.id}
                 disabled
                 style={{ background: '#f3f4f6', color: '#6b7280' }}
               />
@@ -178,4 +179,4 @@ const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medic
   );
 };
 
-export default UpdateMedicineModal; 
+export default UpdateMedicalSupplyModal; 

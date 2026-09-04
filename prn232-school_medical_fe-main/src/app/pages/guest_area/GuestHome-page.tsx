@@ -2,6 +2,7 @@
 import Footer from '../../../components/Landing_Page/footer';
 import HomepageNavBar from '../../../components/Landing_Page/homepage-nav-bar'; 
 import '../../../app/CSS/GuestHomepage.css'
+import SchoolHomePageImage from '../../../../src/assets/images/SchoolHomePage.jpg'; // Import the image
 
 function Homepage() {
   return (
@@ -19,8 +20,8 @@ function Homepage() {
               At Starlight Academy, we believe in fostering academic excellence and holistic well-being for every student. Our dedicated medical services ensure that health and safety are at the heart of our thriving school community.
             </p>
           </div>
-          <div className="hero-image">
-            <div className="image-placeholder">[School Image Placeholder]</div>
+          <div className="hero-image">        
+            <img className="image-placeholder" src={SchoolHomePageImage} alt="Starlight Academy" />  
           </div>
         </div>
       </section>

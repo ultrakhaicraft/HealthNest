@@ -1,13 +1,14 @@
 import { IncidentRecordQueryParams } from "../../feature/API/IncidentRecordService";
-import { MedicineQueryParams, MedicineViewModel } from "../../feature/API/MedicineService";
+import { MedicineDetailsViewModel, MedicineQueryParams, MedicineViewModel } from "../../feature/API/MedicineService";
 import { IconPlus, IconView, IconEdit, IconDelete, IconFilter } from "../IconList";
 import { PaginationControls } from "../PaginationControls";
+import { StatusBadge } from "../StatusBadge";
 import { MedicineFilter } from "./MedicineFilter";
 
 interface MedicineCRUDPanelProps {
   medicineData: MedicineViewModel[];
   onViewMedicine: (id: string) => void;
-  onDeleteMedicine: (medicine: MedicineViewModel) => void;
+  onDeleteMedicine: (medicineId: string) => void;
   loading: boolean;
   showFilters: boolean;
   onToggleFilters: () => void;
@@ -16,7 +17,7 @@ interface MedicineCRUDPanelProps {
   onApplyFilters: () => void;
   onClearFilters: () => void;
   onCreateMedicine: () => void;
-  onEditMedicine: (medicine: MedicineViewModel) => void;
+  onEditMedicine: (medicineId: string) => void;
   totalPages: number;
   setTotalPages: React.Dispatch<React.SetStateAction<number>>;
   totalItems: number;
@@ -96,8 +97,8 @@ export const MedicineCRUDPanel = ({
                     <button className="action-button" onClick={() => onViewMedicine(medicine.id)} disabled={loading}>
                       <IconView />
                     </button>
-                    <button className="action-button" onClick={() => onEditMedicine(medicine)} disabled={loading}><IconEdit /></button>
-                    <button className="action-button action-delete" onClick={() => onDeleteMedicine(medicine)} disabled={loading}>
+                    <button className="action-button" onClick={() => onEditMedicine(medicine.id)} disabled={loading}><IconEdit /></button>
+                    <button className="action-button action-delete" onClick={() => onDeleteMedicine(medicine.id)} disabled={loading}>
                       <IconDelete />
                     </button>
                   </div></td>
@@ -115,13 +116,4 @@ export const MedicineCRUDPanel = ({
   );
 }
 
-interface StatusBadgeProps {
-  status: string;
-}
-
-// Status Badge Component
-const StatusBadge = ({ status }: StatusBadgeProps) => {
-  const statusClass = status === 'Available' ? 'status-badge-active' : 'status-badge-inactive';
-  return <span className={`status-badge ${statusClass}`}>{status}</span>;
-}
-
+  
