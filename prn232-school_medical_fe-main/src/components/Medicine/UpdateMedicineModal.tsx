@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MedicineDetailsViewModel, MedicineService } from '../../feature/API/MedicineService';
+import { MedicineDetailsViewModel, MedicineService, MedicineUpdateModel } from '../../feature/API/MedicineService';
 import { IconClose } from '../IconList';
 import { useUserId } from '../../feature/Hooks/AccountHooks';
 
@@ -7,12 +7,19 @@ interface UpdateMedicineModalProps {
   isOpen: boolean;
   medicine: MedicineDetailsViewModel | null;
   onClose: () => void;
-  onSuccess: () => void;
+  onSubmit: (id: string, payload: MedicineUpdateModel) => void;
   onError: (msg: string) => void;
 }
 
-const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medicine, onClose, onSuccess, onError }) => {
-  const [form, setForm] = useState({ name: '', description: '', amount: '', isAvailable: true });
+const initialForm = {
+  name: '',
+  description: '',
+  amount: '',
+  isAvailable: true,
+};
+
+const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medicine, onClose, onSubmit, onError }) => {
+  const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const userId= useUserId(); // Custom hook to get the current user's ID
@@ -65,21 +72,16 @@ const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medic
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
     setIsSubmitting(true);
-    try {
-      await MedicineService.update(medicine.id, {
-        name: form.name.trim(),
-        description: form.description.trim(),
-        amount: Number(form.amount),
-        isAvailable: form.isAvailable,
-        createdBy: userId ?? '',
-      });
-      onClose();
-      onSuccess();
-    } catch (err: any) {
-      onError(err?.response?.data?.message || 'Failed to update medicine.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    
+    onSubmit(medicine.id, {
+      name: form.name,
+      description: form.description,
+      amount: Number(form.amount),
+      isAvailable: form.isAvailable,
+      createdBy: userId || '', // Use the userId from the custom hook
+    });
+    
+    setIsSubmitting(false);
   };
 
   const handleOverlayClick = (e: React.MouseEvent) => {
@@ -100,17 +102,20 @@ const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medic
         <form className="modal-body" onSubmit={handleSubmit}>
           <div className="modal-column">
             <div className="detail-row">
-              <span className="detail-label">ID</span>
+              <label htmlFor="medicine-id" className="detail-label">ID</label>
               <input
+                id="medicine-id"
                 className="input-field"
                 value={medicine.id}
                 disabled
                 style={{ background: '#f3f4f6', color: '#6b7280' }}
               />
+              {errors.id && <div className="error-message">{errors.id}</div>}
             </div>
             <div className="detail-row">
-              <span className="detail-label">Name</span>
+              <label htmlFor="medicine-name" className="detail-label">Name</label>
               <input
+                id="medicine-name"
                 className="input-field"
                 name="name"
                 value={form.name}
@@ -122,8 +127,9 @@ const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medic
               {errors.name && <div className="error-message">{errors.name}</div>}
             </div>
             <div className="detail-row">
-              <span className="detail-label">Amount</span>
+              <label htmlFor="medicine-amount" className="detail-label">Amount</label>
               <input
+                id="medicine-amount"
                 className="input-field"
                 name="amount"
                 type="number"
@@ -153,8 +159,9 @@ const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medic
             </div>
           
           <div className="detail-row full-width">
-            <span className="detail-label">Description</span>
+            <label htmlFor="medicine-description" className="detail-label">Description</label>
             <textarea
+              id="medicine-description"
               className="input-field detail-description"
               name="description"
               value={form.description}

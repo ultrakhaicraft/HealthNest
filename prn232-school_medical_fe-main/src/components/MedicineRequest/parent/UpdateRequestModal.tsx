@@ -1,23 +1,23 @@
 import { useState, useEffect } from "react";
-import { MedicineUpdateCreation } from "../../feature/API/MedicineRequestService";
-import Modal from "../GenericModal";
+import { MedicineUpdateCreation } from "../../../feature/API/MedicineRequestService";
+import Modal from "../../GenericModal";
 import '../../app/CSS/UpdateMedicineRequestModal.css';
 
 const statuses: string[] = ["Pending", "Approved", "Rejected", "Deleted"];
 
-export interface UpdateRequestModalProps {
+export interface UpdateOwnedMedicineRequestModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: MedicineUpdateCreation) => void;
   initialData: MedicineUpdateCreation;
 }
 
-const UpdateRequestModal = ({
+export const UpdateOwnedMedicineRequestModal = ({
   isOpen,
   onClose,
   onSubmit,
   initialData,
-}: UpdateRequestModalProps) => {
+}: UpdateOwnedMedicineRequestModalProps) => {
   const [formData, setFormData] = useState<MedicineUpdateCreation>(initialData);
 
   // Update formData when initialData changes (e.g., on re-open)

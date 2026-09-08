@@ -1,6 +1,6 @@
 // src/components/Elements/Spinner/Spinner.tsx
 import React from 'react';
-import '../app/CSS/Spinner.css'; // Import the CSS for the spinner
+import '../app/CSS/Others/Spinner.css'; // Import the CSS for the spinner
 
 // Define the types for the component props
 interface SpinnerProps {

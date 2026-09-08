@@ -26,10 +26,9 @@ export interface MedicineUpdateModel extends MedicineCreateModel {
 }
 
 export interface MedicineQueryParams extends PageinationParams {
-  Id?: string;
   Name?: string;
-  IsAvailable?: boolean;
-  SortNameByDescending?: boolean;
+  Status?: string;
+  SortByNameByDescending?: boolean;
 }
 
 

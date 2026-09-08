@@ -9,12 +9,14 @@ interface SideNavProps {
 const SideNav = ({ activeItem, onSelect }: SideNavProps) => {
   const navItems = [
     { icon: <IconHome className="icon-small" />, label: 'Home' },
-    { icon: <IconStudentRecord className="icon-small" />, label: 'Student Record' },
+    { icon: <IconMedical className="icon-small" />, label: 'Medical Supplies' },
     { icon: <IconMedicine className="icon-small" />, label: 'Medicine' },
     { icon: <IconMedical className="icon-small" />, label: 'Medicine Request' },
+    { icon: <IconStudentRecord className="icon-small" />, label: 'Student Record' },
     { icon: <IconIncidentReport className="icon-small" />, label: 'Incident Report' },
     { icon: <IconVaccine className="icon-small" />, label: 'Vaccine' },
     { icon: <IconHealthCheckup className="icon-small" />, label: 'Health Checkup' },
+    
   ];
 
  const { logout } = useAuth();

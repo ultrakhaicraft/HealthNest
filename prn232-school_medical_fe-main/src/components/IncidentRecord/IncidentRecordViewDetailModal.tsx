@@ -1,14 +1,14 @@
 import React from 'react';
-import { IncidentRecordView } from '../../feature/API/IncidentRecordService';
+import { IncidentRecordView, IncidentRecordViewDetail } from '../../feature/API/IncidentRecordService';
 import { IconClose } from '../IconList';
 
 interface IncidentRecordViewProps {
-  incidentRecord: IncidentRecordView;
+  incidentRecord: IncidentRecordViewDetail;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const IncidentRecordViewDetail: React.FC<IncidentRecordViewProps> = ({ incidentRecord, isOpen, onClose }) => {
+export const IncidentRecordViewDetailModal: React.FC<IncidentRecordViewProps> = ({ incidentRecord, isOpen, onClose }) => {
   if (!isOpen) return null;
 
   const handleOverlayClick = (e: React.MouseEvent) => {

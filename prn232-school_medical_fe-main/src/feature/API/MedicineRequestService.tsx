@@ -1,65 +1,64 @@
-import apiClient, { PaginatedResponse, ApiResponseWrapper } from "../ApiClient";
+import apiClient, { PaginatedResponse, ApiResponseWrapper, PageinationParams } from "../ApiClient";
 
 
 
-export interface MedicineRequestQueryParams {
-    requestBy?: string;
-    forStudent?: string;
+export interface MedicineRequestQueryParams extends PageinationParams {
+    requestByName?: string; //Parent Name
+    forStudentName?: string; //Student Name
     dateFrom?: string;
     dateTo?: string;
     status?: string;
-    pageIndex?: number;
-    pageSize?: number;
-    sortBy?: string;
-    isDescending?: boolean;
+    sortByLatestDate?: boolean;
+   
 }
 
-
-
-export interface MedicineRequestCreation {
+export interface MedicineRequestCreateModel {
     requestBy: string;
     forStudent: string;
     description: string;
 }
 
-export interface MedicineUpdateCreation extends MedicineRequestCreation {
+export interface MedicineRequestUpdateModel extends MedicineRequestCreateModel {
     status?: string;
 }
 
-export interface MedicineRequestResponseDto {
+export interface MedicineRequestViewModel {
     id: string;
-    requestBy: string;
     requestByName: string;
-    forStudent: string;
     forStudentName: string;
-    description: string;
     dateSent: string;
     status: string;
+}
+
+export interface MedicineRequestDetailsModel extends MedicineRequestViewModel {
+    requestBy: string;
+    forStudent: string;
+    description: string;
 }
 
 
 
 export const MedicineRequestService = {
-    getAll: async (params: MedicineRequestQueryParams): Promise<PaginatedResponse<MedicineRequestResponseDto>> => {
-        const response = await apiClient.get<ApiResponseWrapper<PaginatedResponse<MedicineRequestResponseDto>>>
+    getAll: async (params: MedicineRequestQueryParams): Promise<PaginatedResponse<MedicineRequestViewModel>> => {
+        const response = await apiClient.get<ApiResponseWrapper<PaginatedResponse<MedicineRequestViewModel>>>
             ('/medical-request', { params });
         return response.data.data;
     },
 
-    getById: async (id: string): Promise<MedicineRequestResponseDto> => {
-        const response = await apiClient.get<ApiResponseWrapper<MedicineRequestResponseDto>>
+    getById: async (id: string): Promise<MedicineRequestDetailsModel> => {
+        const response = await apiClient.get<ApiResponseWrapper<MedicineRequestDetailsModel>>
             (`/medical-request/${id}`);
         return response.data.data;
     },
 
-    getByRequesterId: async (requesterId: string): Promise<PaginatedResponse<MedicineRequestResponseDto>> => {
-        const response = await apiClient.get<ApiResponseWrapper<PaginatedResponse<MedicineRequestResponseDto>>>
+    getByRequesterId: async (requesterId: string): Promise<PaginatedResponse<MedicineRequestViewModel>> => {
+        const response = await apiClient.get<ApiResponseWrapper<PaginatedResponse<MedicineRequestViewModel>>>
             (`/medical-request/requester/${requesterId}`);
         return response.data.data;
     },
 
-    create: async (data: MedicineRequestCreation): Promise<MedicineRequestResponseDto> => {
-        const response = await apiClient.post<ApiResponseWrapper<MedicineRequestResponseDto>>
+    create: async (data: MedicineRequestCreateModel): Promise<MedicineRequestDetailsModel> => {
+        const response = await apiClient.post<ApiResponseWrapper<MedicineRequestDetailsModel>>
             ('/medical-request', data);
         return response.data.data;
     },
@@ -69,8 +68,8 @@ export const MedicineRequestService = {
         return response.data.data;
     },
     
-    update: async (id: string, data: MedicineUpdateCreation): Promise<MedicineRequestResponseDto> => {
-        const response = await apiClient.put<ApiResponseWrapper<MedicineRequestResponseDto>>
+    update: async (id: string, data: MedicineRequestUpdateModel): Promise<MedicineRequestDetailsModel> => {
+        const response = await apiClient.put<ApiResponseWrapper<MedicineRequestDetailsModel>>
             (`/medical-request/${id}`, data);
         return response.data.data;
     }

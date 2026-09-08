@@ -1,6 +1,6 @@
 import React from 'react';
 
-import '../../app/CSS/Login.css'
+import '../../app/CSS/Guest/Login.css';
 
 interface AuthLayoutProps {
   children: React.ReactNode;

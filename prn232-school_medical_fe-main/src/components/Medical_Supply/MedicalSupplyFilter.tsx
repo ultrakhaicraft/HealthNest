@@ -1,13 +1,24 @@
+import { useEffect, useState } from "react";
 import { MedicalSupplyQuery } from "../../feature/API/MedicalSupplyService";
 
 interface MedicalSupplyFilterProps {
   filters: MedicalSupplyQuery;
-  onApplyFilters: () => void;
-  onFilterChange: (filterKey: keyof MedicalSupplyQuery, value: any) => void;
+  onApplyFilters: (filters: MedicalSupplyQuery) => void;
   onClearFilters: () => void;
 }
 
-export const MedicalSupplyFilter = ({ filters, onApplyFilters, onFilterChange, onClearFilters }: MedicalSupplyFilterProps) => {
+export const MedicalSupplyFilter = ({ filters, onApplyFilters, onClearFilters }: MedicalSupplyFilterProps) => {
+  const [filterSettings, setFilterSettings] = useState<MedicalSupplyQuery>(filters);
+  
+  useEffect(() => {
+      setFilterSettings(filters);
+    }, [filters]);
+
+  const handleChange = (key: keyof MedicalSupplyQuery, value: any) => {
+    console.log(`Filter changed: ${key} = ${value}`);
+    setFilterSettings((prev) => ({...prev, [key]: value }));
+  }
+
   return (
     <div className="filter-section">
       <div className="filter-row">
@@ -17,8 +28,8 @@ export const MedicalSupplyFilter = ({ filters, onApplyFilters, onFilterChange, o
           <input
             id="MedicineId"
             type="text"
-            value={filters.Name || ''}
-            onChange={(e) => onFilterChange('Name', e.target.value)}
+            value={filterSettings.Name || ''}
+            onChange={(e) => handleChange('Name', e.target.value)}
             placeholder="Search by Medical Supply Name..."
           />
         </div>
@@ -27,11 +38,11 @@ export const MedicalSupplyFilter = ({ filters, onApplyFilters, onFilterChange, o
           <label htmlFor="IsAvailable">Status:</label>
           <select
             id="IsAvailable"
-            value={filters.IsAvailable ? 'true' : 'false'}
-            onChange={(e) => onFilterChange('IsAvailable', e.target.value === 'true')}>
-            <option value="" selected >All</option>
-            <option value="true">Available</option>
-            <option value="false">Unavailable</option>
+            value={filterSettings.Status || ''}
+            onChange={(e) => handleChange('Status', e.target.value)}>
+            <option value="" >All</option>
+            <option value="Available">Available</option>
+            <option value="Unavailable">Unavailable</option>
           </select>
         </div>
       </div>
@@ -41,10 +52,9 @@ export const MedicalSupplyFilter = ({ filters, onApplyFilters, onFilterChange, o
           <label htmlFor="SortByNameByDescending">Sort By Name (Descending):</label>
           <select
             id="SortByNameByDescending"
-            value={filters.SortByNameByDescending ? 'true' : 'false'}
-            onChange={(e) => onFilterChange('SortByNameByDescending', e.target.value === 'true')}
+            value={filterSettings.SortByNameByDescending ? 'true' : 'false'}
+            onChange={(e) => handleChange('SortByNameByDescending', e.target.value === 'true')}
           >
-            <option value="" selected>None</option>
             <option value="true">True</option>
             <option value="false">False</option>
           </select>
@@ -52,7 +62,7 @@ export const MedicalSupplyFilter = ({ filters, onApplyFilters, onFilterChange, o
       </div>
       
       <div className="filter-actions">
-        <button className="button button-primary button-small" onClick={onApplyFilters}>
+        <button className="button button-primary button-small" onClick={() => onApplyFilters(filterSettings)}>
           Apply Filters
         </button>
         <button className="button button-secondary button-small" onClick={onClearFilters}>

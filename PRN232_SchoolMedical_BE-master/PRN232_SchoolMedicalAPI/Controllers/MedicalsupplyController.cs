@@ -37,7 +37,7 @@ public class MedicalsupplyController : ControllerBase
 		ApiResponseWrapper<MedicalSupplyDetailModel> response = ApiResponseWrapper<MedicalSupplyDetailModel>
 					 .Success(result, "Get all medicine suppplies success with Id: " + id);
 
-		return Ok(result);
+		return Ok(response);
 	}
 
 	// POST: api/medicalsupply
@@ -45,8 +45,8 @@ public class MedicalsupplyController : ControllerBase
 	public async Task<IActionResult> Create([FromBody] MedicalSupplyCreateModel request)
 	{
 
-		var createdBy = "admin";
-		var result = await medicalSupplyService.CreateMedicalSupplyAsync(request, createdBy);
+		
+		var result = await medicalSupplyService.CreateMedicalSupplyAsync(request);
 		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
 					 .Created(result, "Create Medical Supply success");
 		return StatusCode(201,response);

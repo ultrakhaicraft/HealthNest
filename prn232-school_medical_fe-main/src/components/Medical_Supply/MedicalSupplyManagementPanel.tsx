@@ -1,35 +1,39 @@
 import { MedicalSupplyQuery, MedicalSupplyViewModel } from "../../feature/API/MedicalSupplyService";
-import { MedicineQueryParams } from "../../feature/API/MedicineService";
 import { IconFilter, IconPlus, IconView, IconEdit, IconDelete } from "../IconList";
-import { MedicineFilter } from "../Medicine/MedicineFilter";
 import { PaginationControls } from "../PaginationControls";
 import { StatusBadge } from "../StatusBadge";
 import { MedicalSupplyFilter } from "./MedicalSupplyFilter";
 
+
+interface PaginationState {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  onPageChange: (page: number) => void;
+}
+
+interface FilterState {
+  value: MedicalSupplyQuery;
+  show: boolean;
+  onToggle: () => void;
+  onApply: (filters: MedicalSupplyQuery) => void;
+  onClear: () => void;
+}
+
 interface MedicalSupplyCRUDPanelProps {
   medicalSupplyData: MedicalSupplyViewModel[];
-  onViewMedicalSupply: (id: string) => void;
-  onDeleteMedicalSupply: (medicalSupply: MedicalSupplyViewModel) => void;
   loading: boolean;
-  showFilters: boolean;
-  onToggleFilters: () => void;
-  filters: MedicalSupplyQuery;
-  onFilterChange: (filterKey: keyof MedicalSupplyQuery, value: any) => void;
-  onApplyFilters: () => void;
-  onClearFilters: () => void;
-  onCreateMedicalSupply: () => void;
-  onEditMedicalSupply: (medicalSupply: MedicalSupplyViewModel) => void;
-  totalPages: number;
-  setTotalPages: React.Dispatch<React.SetStateAction<number>>;
-  totalItems: number;
+  pagination: PaginationState;
+  filterState: FilterState;
+  onView: (id: string) => void;
+  onEdit: (medicine: MedicalSupplyViewModel) => void;
+  onDelete: (medicineId: string) => void;
+  onCreate: () => void;
 }
 
 export const MedicalSupplyCRUDPanel = ({ 
-  medicalSupplyData = [], totalPages, setTotalPages, 
-  totalItems, showFilters, onToggleFilters,
-  filters, onFilterChange, onApplyFilters, onClearFilters,
-  onViewMedicalSupply, onDeleteMedicalSupply, 
-  loading, onCreateMedicalSupply, onEditMedicalSupply }: 
+  medicalSupplyData = [], loading, pagination, filterState,
+  onView, onEdit, onDelete, onCreate }: 
   MedicalSupplyCRUDPanelProps) => {
   return (
     <div className="crud-container">
@@ -39,27 +43,26 @@ export const MedicalSupplyCRUDPanel = ({
               <p className="crud-subtitle">Manage medical supply inventory and records</p>
             </div>
             <div className="crud-actions">
-                <button className="button button-secondary button-small" onClick={onToggleFilters}>
+                <button className="button button-secondary button-small" onClick={filterState.onToggle}>
                   <IconFilter />
-                  {showFilters ? 'Hide Filters' : 'Show Filters'}
+                  {filterState.show ? 'Hide Filters' : 'Show Filters'}
                 </button>
-                <button className="button button-primary button-small" onClick={onCreateMedicalSupply}>
+                <button className="button button-primary button-small" onClick={onCreate}>
                 <IconPlus />
                 Create a Medical Supply item
                 </button>
             </div>
           </div>
-          {showFilters && (
+          {filterState.show && (
             <MedicalSupplyFilter 
-            filters={filters}
-            onFilterChange={onFilterChange}
-            onClearFilters={onClearFilters} 
-            onApplyFilters={onApplyFilters} />
+            filters={filterState.value}
+            onClearFilters={filterState.onClear}
+            onApplyFilters={filterState.onApply} />
           )}
           <div className="crud-table-wrapper">
             <div className="crud-table-info">
-              <span>Total: {totalItems} items</span>
-              <span>Page {filters.PageIndex || 1} of {totalPages}</span>
+              <span>Total: {pagination.totalItems} items</span>
+              <span>Page {pagination.currentPage} of {pagination.totalPages}</span>
             </div>
             <table className="crud-table">
               <thead>
@@ -95,11 +98,11 @@ export const MedicalSupplyCRUDPanel = ({
                     <td><StatusBadge status={medicalSupply.isAvailable ? 'Available' : 'Unavailable'} /></td>
                     <td>{medicalSupply.createdByName}</td>
                     <td><div className="action-buttons">
-                        <button className="action-button" onClick={() => onViewMedicalSupply(medicalSupply.id)} disabled={loading}>
+                        <button className="action-button" onClick={() => onView(medicalSupply.id)} disabled={loading}>
                           <IconView />
                         </button>
-                        <button className="action-button" onClick={() => onEditMedicalSupply(medicalSupply)} disabled={loading}><IconEdit /></button>
-                        <button className="action-button action-delete" onClick={() => onDeleteMedicalSupply(medicalSupply)} disabled={loading}>
+                        <button className="action-button" onClick={() => onEdit(medicalSupply)} disabled={loading}><IconEdit /></button>
+                        <button className="action-button action-delete" onClick={() => onDelete(medicalSupply.id)} disabled={loading}>
                           <IconDelete />
                         </button>
                       </div></td>
@@ -109,9 +112,9 @@ export const MedicalSupplyCRUDPanel = ({
             </table>
           </div>
           <PaginationControls 
-                            currentPage={filters.PageIndex || 1}
-                            totalPages={totalPages}
-                            onPageChange={(page) => onFilterChange('PageIndex', page)}
+                            currentPage={pagination.currentPage}
+                            totalPages={pagination.totalPages}
+                            onPageChange={(page) => filterState.onChange('PageIndex', page)}
           />
         </div>
   )

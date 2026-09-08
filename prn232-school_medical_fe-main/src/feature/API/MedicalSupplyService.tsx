@@ -27,7 +27,7 @@ export interface MedicalSupplyUpdateModel extends MedicalSupplyCreateModel {
 
 export interface MedicalSupplyQuery extends PageinationParams {
   Name?: string;
-  IsAvailable?: boolean;
+  Status?: string;
   SortByNameByDescending?: boolean;
 }
 
@@ -41,6 +41,7 @@ export const MedicalSupplyService = {
 
   getById: async (id: string): Promise<MedicalSupplyDetailsViewModel> => {
     const response = await apiClient.get<ApiResponseWrapper<MedicalSupplyDetailsViewModel>>(`/medical-supply/${id}`);
+    console.log('Fetched medical supply details in service level:', response.data.data);
     return response.data.data;
   },
 

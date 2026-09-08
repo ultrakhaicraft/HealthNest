@@ -1,12 +1,12 @@
-import FormSection from '../../components/FormSection'
+import FormSection from '../../FormSection'
 import { 
   IconHeart, 
   IconActivity, 
   IconEye, 
   IconInfo, 
   IconPaperPlane,  
-} from '../../components/IconList'; // Importing icons from a separate file
-import { AccountDetail } from '../../feature/API/AccountService';
+} from '../../IconList'; // Importing icons from a separate file
+import { AccountDetail } from '../../../feature/API/AccountService';
 
 interface MedicineRequestFormProps {
     formData: {

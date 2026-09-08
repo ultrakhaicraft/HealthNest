@@ -14,11 +14,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SchoolMedical_BusinessLogic.Core;
 
 public class IncidentRecordService : IIncidentRecordService
 {
+	
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IDistributedCache _cache;
 	private readonly IHubContext<MyHub> _hubContext;
@@ -34,38 +36,32 @@ public class IncidentRecordService : IIncidentRecordService
 
 	public async Task<PagingModel<IncidentRecordViewModel>> GetAllIncidentRecordsAsync(IncidentRecordQuery request)
 	{
-		//Get the data from cache if available, otherwise fetch from the database and cache it for future requests
-		const string cacheKey = "all_incident_record";
-
-		var cachedData = await _cache.GetStringAsync(cacheKey);
-		if (cachedData != null)
-		{
-			var cachedIncidents = JsonSerializer.Deserialize<List<IncidentRecordViewModel>>(cachedData)!;
-			var pagedData = await PagingExtension.ToPagingModel(cachedIncidents, request.PageIndex, request.PageSize);
-			return pagedData;
-		}
-
+	
 
 		var repository = _unitOfWork.GetRepository<Incidentrecord>();
 		IQueryable<Incidentrecord> incidents = await repository.GetQueryableAsync();
 
-		List<IncidentRecordViewModel> incidentViewModels = incidents.Select(i => new IncidentRecordViewModel
-		{
-			Id = i.Id,
-			StudentId = i.StudentId,
-			StudentName = i.Student.FullName,
-			IncidentType = i.IncidentType,
-			DateOccurred = i.DateOccurred,
-			Status = i.Status
-		}).ToList();
+		incidents = ApplyFilter(incidents,request.Status!,request.StudentName!,request.DateFrom,request.DateTo);
+		incidents = ApplySorting(incidents, request.SortByLatest);
 
-		// Cache the data for future requests
-		await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(incidentViewModels), new DistributedCacheEntryOptions
-		{
-			AbsoluteExpirationRelativeToNow = CacheDuration
-		});
+		// Paginate at the DB level too — Skip/Take translates to SQL OFFSET/FETCH
+		var totalCount = await incidents.CountAsync();
+		var pageData = await incidents
+			.Skip((request.PageIndex - 1) * request.PageSize)
+			.Take(request.PageSize)
+			.Select(i => new IncidentRecordViewModel
+			{
+				Id = i.Id,
+				StudentId = i.StudentId,
+				StudentName = i.Student.FullName,
+				IncidentType = i.IncidentType,
+				DateOccurred = i.DateOccurred,
+				Status = i.Status
+			})
+		.ToListAsync();
 
-		var pagedResult = await PagingExtension.ToPagingModel(incidentViewModels, request.PageIndex, request.PageSize);
+
+		var pagedResult = await PagingExtension.ToPagingModel(pageData, totalCount, request.PageIndex, request.PageSize);
 
 		return pagedResult;
 	}
@@ -120,6 +116,8 @@ public class IncidentRecordService : IIncidentRecordService
 		var incidentRecord = await GetIncidentRecordDetailByIdAsync(newIncident.Id);
 		await _hubContext.Clients.All.SendAsync("IncidentRecordAdded", incidentRecord);
 
+		
+
 		return incidentRecord;
 	}
 
@@ -148,6 +146,7 @@ public class IncidentRecordService : IIncidentRecordService
 		var incidentRecord = await GetIncidentRecordDetailByIdAsync(existingIncident.Id);
 		await _hubContext.Clients.All.SendAsync("IncidentRecordUpdated", incidentRecord);
 
+		
 
 		return incidentRecord;
 	}
@@ -161,7 +160,7 @@ public class IncidentRecordService : IIncidentRecordService
 			if (incident == null)
 				throw new NotFoundException("Incident Record", incidentId);
 
-			incident.Status = IncidentStatus.Inactive.ToString();
+			incident.Status = IncidentStatus.Deleted.ToString();
 			await repository.UpdateAsync(incident);
 			await _unitOfWork.SaveAsync();
 
@@ -170,7 +169,7 @@ public class IncidentRecordService : IIncidentRecordService
 
 
 			
-		
+
 	}
 
 	public async Task ChangeStatusRecord(string id, string status)
@@ -185,7 +184,9 @@ public class IncidentRecordService : IIncidentRecordService
 			incident.Status = status;
 			await repository.UpdateAsync(incident);
 			await _unitOfWork.SaveAsync();
-		
+
+			
+
 	}
 
 	public async Task<int> CountActiveIncidentRecord()
@@ -198,6 +199,7 @@ public class IncidentRecordService : IIncidentRecordService
 
 	}
 
+	//Todo: Create cache here
 	public async Task<IncidentRecordCountPerYear> CountAllIncidentRecordPerYear(int year)
 	{
 		var repository = _unitOfWork.GetRepository<Incidentrecord>();
@@ -228,4 +230,42 @@ public class IncidentRecordService : IIncidentRecordService
 			December = countsByMonth.GetValueOrDefault(12)
 		};
 	}
+
+	private IQueryable<Incidentrecord> ApplySorting(IQueryable<Incidentrecord> query, bool SortByLatestDateOccurred)
+	{
+
+		return SortByLatestDateOccurred
+			? query.OrderByDescending(m => m.DateOccurred)
+			: query.OrderBy(m => m.DateOccurred);
+	}
+
+	private IQueryable<Incidentrecord> ApplyFilter(IQueryable<Incidentrecord> query, 
+		string Status, string StudentName,DateTime? dateFrom, DateTime? dateTo)
+	{
+		// First, filter non-deleted status record
+		query = query.Where(m => m.Status != IncidentStatus.Deleted.ToString());
+
+		if (!string.IsNullOrEmpty(StudentName))
+			query = query.Where(m => m.Student.FullName == StudentName);
+
+		if (!string.IsNullOrEmpty(Status))
+			query = query.Where(m => m.Status == Status);
+
+		if (dateFrom != null && dateTo != null)
+		{
+			query = query.Where(m => m.DateOccurred > dateFrom && m.DateOccurred < dateTo);
+
+		} else if (dateFrom != null)
+		{
+			query = query.Where(m => m.DateOccurred > dateFrom);
+		} else if (dateTo != null)
+		{
+			query = query.Where(m => m.DateOccurred < dateTo);
+		}
+
+		return query;
+
+	}
+
+	
 }

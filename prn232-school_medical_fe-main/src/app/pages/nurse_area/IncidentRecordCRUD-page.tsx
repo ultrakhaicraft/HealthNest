@@ -1,257 +1,194 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 
 import "../../CSS/Nurse/IncidentRecordCRUD.css"
 import "../../CSS/Nurse/NurseCRUDPanel.css"
 import "../../CSS/Nurse/NurseStatusBadge.css"
 import "../../CSS/Nurse/NurseModal.css"
 
-import { IncidentRecordQueryParams, IncidentRecordService, IncidentRecordView } from '../../../feature/API/IncidentRecordService';
-import { IncidentRecordViewDetail } from '../../../components/IncidentRecord/IncidentRecordViewDetailModal';
+import { IncidentRecordCreate, IncidentRecordQueryParams, IncidentRecordUpdate } from '../../../feature/API/IncidentRecordService';
+import { IncidentRecordViewDetailModal } from '../../../components/IncidentRecord/IncidentRecordViewDetailModal';
 import { ConfirmationModal } from '../../../components/ConfirmationModal';
 import CreateIncidentRecordModal from '../../../components/IncidentRecord/CreateIncidentRecordModal';
 import { Toast } from '../../../components/Notification/Toast';
 import UpdateIncidentRecordModal from '../../../components/IncidentRecord/UpdateIncidentRecordModal';
-import { useSignalREvent } from '../../../components/SignalR/SignalrHook';
 import { IncidentRecordCRUDPanel } from '../../../components/IncidentRecord/IncidentRecordManagementPanel';
+import { useIncidentRecords } from '../../../feature/Hooks/IncidentRecord/useIncidentRecords';
+import { useIncidentRecordModals } from '../../../feature/Hooks/IncidentRecord/useIncidentRecordModals';
+import { useUserId } from '../../../feature/Hooks/AccountHooks';
+
+
+const DEFAULT_FILTER: IncidentRecordQueryParams = {
+  PageIndex: 1,
+    PageSize: 10,
+    SortByLatest: true,
+    Status: '',
+    StudentName: '',
+    DateFrom: '',
+    DateTo: ''
+};
 
 // Main App Component
 export default function IncidentRecordCRUDPage() {
-  const [incidentData, setIncidentData] = useState<IncidentRecordView[]>([]);
-  const [selectedIncident, setSelectedIncident] = useState<IncidentRecordView | null>(null);
-  const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [incidentToDelete, setIncidentToDelete] = useState<IncidentRecordView | null>(null);
-  const [deleteLoading, setDeleteLoading] = useState(false);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [incidentToUpdate, setIncidentToUpdate] = useState<IncidentRecordView | null>(null);
-  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error'; isVisible: boolean }>({ message: '', type: 'success', isVisible: false });
-
   const [showFilters, setShowFilters] = useState(false);
-  const [filters, setFilters] = useState<IncidentRecordQueryParams>({
-      PageIndex: 1,
-      PageSize: 10,
-      SortByLatest: true,
-      Status: '',
-      StudentId: '',
-      DateFrom: '',
-      DateTo: ''
-  });
-  const [totalPages, setTotalPages] = useState(0);
-  const [totalItems, setTotalItems] = useState(0);
+  const [filters, setFilters] = useState<IncidentRecordQueryParams>(DEFAULT_FILTER);
+  const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' as 'success' | 'error' });
+  const [actionLoading, setActionLoading] = useState(false);
 
+  const incidentRecords = useIncidentRecords(filters);
+  const modal = useIncidentRecordModals();
   
+  const handleShowToast = (message: string, type: 'success' | 'error') => {
+    setToast({ isVisible: true, message, type });
+  };
+  
+  const handleCloseToast = () => {
+    setToast({ ...toast, isVisible: false });
+  };
 
-   // Function to load incidents with pagination, will run again based on PageIndex and PageSize changes
-    const loadIncidents =  useCallback((filterArgs: IncidentRecordQueryParams) => {
-      setLoading(true);
-      IncidentRecordService.getAll(filterArgs)
-      .then((res) => {
-        setIncidentData(res.data ?? []);
-        setTotalPages(res.totalPages);
-        setTotalItems(res.totalCount);
-       })
-      .catch((error) => {
-        console.error('Error loading incident records:', error);
-      })
-      .finally(() => setLoading(false));
-    },[filters]);
-
-
-    //Load incidents based on filters changes
-    useEffect(()=>{
-      loadIncidents(filters);
-    },[]);
+  const handleApplyFilters = (newFilters: IncidentRecordQueryParams) => {
+      setFilters({...newFilters,PageIndex: 1}); // Reset to first page when filters change
+    }
+  
+    const handlePageChange = (page: number) => {
+      setFilters((prev) => ({ ...prev, PageIndex: page }));
+    };
     
-    const handleIncidentAdded = useCallback((newIncident: IncidentRecordView) => {
-      setIncidentData(prev => [newIncident, ...prev]);
-      
-      //Refresh the table to show the new incident record
-      loadIncidents(filters);
-    },[filters]);
-
-  // In the parent component (wherever loadIncidents/filters live)
-  const handleApplyFilters = useCallback(() => {
-    loadIncidents(filters);
-  }, [filters, loadIncidents]);
-
-  //Add a SignalR event listener to listen for new incident records being added in real-time
-  useSignalREvent<IncidentRecordView>("IncidentRecordAdded", handleIncidentAdded);
-
-
-  const handleViewIncident = async (id: string) => {
-    setLoading(true);
-    try {
-      const incident = await IncidentRecordService.getById(id);
-      setSelectedIncident(incident);
-      setShowModal(true);
-    } catch (error) {
-      console.error('Error fetching incident details:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setSelectedIncident(null);
-  };
-
-  const handleDeleteClick = (incident: IncidentRecordView) => {
-    setIncidentToDelete(incident);
-    setShowDeleteConfirm(true);
-  };
-
-  const handleDeleteConfirm = async () => {
-    if (!incidentToDelete) return;
+    const handleClearFilters = () => {
+        setFilters(DEFAULT_FILTER);
+    };
+  
     
-    setDeleteLoading(true);
-    try {
-      await IncidentRecordService.delete(incidentToDelete.id);
-      setShowDeleteConfirm(false);
-      setIncidentToDelete(null);
-      setToast({ message: 'Incident record deleted successfully!', type: 'success', isVisible: true });
-      loadIncidents(filters); // Reload the table
-    } catch (error: any) {
-      setToast({ message: error?.response?.data?.message || 'Error deleting incident record.', type: 'error', isVisible: true });
-      console.error('Error deleting incident record:', error);
-    } finally {
-      setDeleteLoading(false);
-    }
-  };
-
-  const handleDeleteCancel = () => {
-    setShowDeleteConfirm(false);
-    setIncidentToDelete(null);
-  };
-
-  const handleCreateIncident = () => {
-    setShowCreateModal(true);
-  };
-
-  const handleCloseCreateModal = () => {
-    setShowCreateModal(false);
-  };
-
-  const handleCreateSuccess = () => {
-    setToast({ message: 'Incident record created successfully!', type: 'success', isVisible: true });
-    setShowCreateModal(false);
-    loadIncidents(filters); // Reload the table to show the new incident record
-  };
-
-  const handleCreateError = (msg: string) => {
-    setToast({ message: msg, type: 'error', isVisible: true });
-  };
-
-  const handleEditIncident = async (incident: IncidentRecordView) => {
-    setLoading(true);
-    try {
-      const fullIncident = await IncidentRecordService.getById(incident.id);
-      setIncidentToUpdate(fullIncident);
-      setShowUpdateModal(true);
-    } catch (error: any) {
-      setToast({ message: error?.response?.data?.message || 'Failed to load incident record for editing.', type: 'error', isVisible: true });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCloseUpdateModal = () => {
-    setShowUpdateModal(false);
-    setIncidentToUpdate(null);
-  };
-
-  const handleUpdateSuccess = () => {
-    setToast({ message: 'Incident record updated successfully!', type: 'success', isVisible: true });
-    setShowUpdateModal(false);
-    setIncidentToUpdate(null);
-    loadIncidents(filters); // Reload the table to show the updated incident record
-  };
-
-  const handleUpdateError = (msg: string) => {
-    setToast({ message: msg, type: 'error', isVisible: true });
-  };
-
-  const handleToastClose = () => {
-    setToast((prev) => ({ ...prev, isVisible: false }));
-  };
-
-  const handleFilterChange = (filterKey: keyof IncidentRecordQueryParams, value: any) => {
-      setFilters(prev => ({
-        ...prev,
-        [filterKey]: value,
-        pageIndex: filterKey !== 'PageIndex' ? 1 : value
-      }));
-  };
-
-  const handleClearFilters = () => {
-    setFilters({
-      PageIndex: 1,
-      PageSize: 10,
-      SortByLatest: true,
-      Status: '',
-      StudentId: '',
-      DateFrom: '',
-      DateTo: ''
-    });
-  };
+    
+     // --- View ---
+    const handleView = async (id: string) => {
+      try {
+        const incidentRecord = await incidentRecords.getById(id);
+        modal.openView(incidentRecord);
+      } catch {
+        handleShowToast('Failed to load incident record details.', 'error');
+      }
+    };
+  
+    // --- Edit ---
+    const handleEdit = async (id: string) => {
+      try {
+        const incidentRecord = await incidentRecords.getById(id);
+        modal.openEdit(incidentRecord);
+      } catch {
+        handleShowToast('Failed to load incident record for editing.', 'error');
+      }
+    };
+  
+    const handleUpdateSubmit = async (id: string, payload: IncidentRecordUpdate) => {
+      setActionLoading(true);
+      try {
+        await incidentRecords.update(id, payload);
+        handleShowToast('Incident record updated successfully!', 'success');
+        modal.close();
+      } catch (err: any) {
+        handleShowToast(err?.response?.data?.message || 'Failed to update incident record.', 'error');
+      } finally {
+        setActionLoading(false);
+      }
+    };
+  
+    // --- Create ---
+    const handleCreateSubmit = async (payload: IncidentRecordCreate) => {
+      setActionLoading(true);
+      try {
+        await incidentRecords.create(payload);
+        handleShowToast('Incident record created successfully!', 'success');
+        modal.close();
+      } catch (err: any) {
+        handleShowToast(err?.response?.data?.message || 'Failed to create incident record.', 'error');
+      } finally {
+        setActionLoading(false);
+      }
+    };
+  
+    // --- Delete ---
+    const handleDeleteConfirm = async (incidentId: string) => {
+      setActionLoading(true);
+      try {
+        await incidentRecords.remove(incidentId);
+        handleShowToast('Incident record deleted successfully!', 'success');
+        modal.close();
+      } catch {
+        handleShowToast('Failed to delete incident record.', 'error');
+      } finally {
+        setActionLoading(false);
+      }
+    };
 
   return (
     <>
       <IncidentRecordCRUDPanel 
-        incidentData={incidentData}
-        onViewIncident={handleViewIncident}
-        onDeleteIncident={handleDeleteClick}
-        loading={loading}
-        onCreateIncident={handleCreateIncident}
-        onEditIncident={handleEditIncident}
-        totalPages={totalPages}
-        setTotalPages={setTotalPages}
-        totalItems={totalItems}
-        showFilters={showFilters}
-        onToggleFilters={() => setShowFilters(!showFilters)}
-        filters={filters}
-        onFilterChange={handleFilterChange}
-        onClearFilters={handleClearFilters} 
-        onApplyFilters={handleApplyFilters}      
+        incidentData={incidentRecords.data}
+        loading={incidentRecords.loading}
+        pagination={{
+          currentPage: filters.PageIndex || 1,
+          totalPages: incidentRecords.totalPages,
+          totalItems: incidentRecords.totalItems,
+          onPageChange: handlePageChange,
+        }}
+        filterState={{
+          value: filters,
+          show: showFilters,
+          onToggle: () => setShowFilters((s) => !s),
+          onApply: handleApplyFilters,
+          onClear: handleClearFilters,
+        }}
+        onView={handleView}
+        onEdit={(incident) => handleEdit(incident.id)}
+        onDelete={(incidentId) => modal.openDelete(incidentId)}
+        onCreate={modal.openCreate}
         />
-      {showModal && selectedIncident && (
-        <IncidentRecordViewDetail 
-          incidentRecord={selectedIncident} 
-          isOpen={showModal}
-          onClose={handleCloseModal} 
+      {modal.state.type === 'view' && (
+        <IncidentRecordViewDetailModal 
+          incidentRecord={modal.state.incidentRecord} 
+          isOpen={true}
+          onClose={modal.close} 
         />
       )}
+
+      {modal.state.type === 'create' && (
       <CreateIncidentRecordModal
-        isOpen={showCreateModal}
-        onClose={handleCloseCreateModal}
-        onSuccess={handleCreateSuccess}
-        onError={handleCreateError}
+        isOpen={true}
+        onClose={modal.close}
+        onSubmit={handleCreateSubmit}
+        onError={(msg)=> handleShowToast(msg, 'error')}
       />
+      )}
+
+      {modal.state.type === 'edit' && (
       <UpdateIncidentRecordModal
-        isOpen={showUpdateModal}
-        incidentRecord={incidentToUpdate}
-        onClose={handleCloseUpdateModal}
-        onSuccess={handleUpdateSuccess}
-        onError={handleUpdateError}
+        isOpen={true}
+        incidentRecord={modal.state.incidentRecord}
+        onClose={modal.close}
+        onSubmit={handleUpdateSubmit}
+        onError={(msg)=> handleShowToast(msg, 'error')}
       />
+      )}
+
+      {modal.state.type === 'delete' && (
       <ConfirmationModal
-        isOpen={showDeleteConfirm}
-        onClose={handleDeleteCancel}
-        onConfirm={handleDeleteConfirm}
+        isOpen={modal.state.type === 'delete'}
+        onClose={modal.close}
+        onConfirm={() => handleDeleteConfirm(modal.state.type === 'delete' ? modal.state.incidentRecordId : '')}
         title="Delete Incident Record"
         message={`Are you sure you want to delete this incident record ? This action cannot be undone.`}
         confirmText="Delete"
         cancelText="Cancel"
-        isLoading={deleteLoading}
+        isLoading={actionLoading}
         type="danger"
       />
+      )}
+
       <Toast
         message={toast.message}
         type={toast.type}
         isVisible={toast.isVisible}
-        onClose={handleToastClose}
+        onClose={handleCloseToast}
       />
     </>
   );

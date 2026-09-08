@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { MedicineRequestResponseDto } from "../../feature/API/MedicineRequestService";
-import { IconMedicineBottle, IconPlus, IconHistory, IconView, IconEdit, IconCalendar, IconStatus } from "../IconList";
+import { IconMedicineBottle, IconPlus, IconHistory, IconView, IconEdit, IconCalendar, IconStatus } from "../../IconList";
+import { MedicineRequestDetailsModel } from "../../../feature/API/MedicineRequestService";
 
 const MedicineRequestPage = ({ requestsData,openModal }: RequestPageListProps) => {
     return (
@@ -23,7 +23,7 @@ const MedicineRequestPage = ({ requestsData,openModal }: RequestPageListProps) =
 };
 
 export interface RequestPageListProps {
-    requestsData: MedicineRequestResponseDto[];
+    requestsData: MedicineRequestDetailsModel[];
     openModal: (requestId: string) => void;
 }
 
@@ -52,7 +52,7 @@ const RequestList = ({ requestsData, openModal }: RequestPageListProps) => {
 };
 
 export interface RequestCardProps {
-    request: MedicineRequestResponseDto;
+    request: MedicineRequestDetailsModel;
     openModal: (requestId: string) => void;
 }
 

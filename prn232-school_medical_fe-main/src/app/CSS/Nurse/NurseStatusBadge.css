@@ -1,5 +1,6 @@
 /* Status Badge */
 .status-badge {
+  margin: 0 0.5rem;
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
   font-size: 0.75rem;

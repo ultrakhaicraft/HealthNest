@@ -2,13 +2,13 @@ import React from 'react';
 import { MedicineDetailsViewModel } from '../../feature/API/MedicineService';
 import { IconClose } from '../IconList';
 
-interface MedicalSupplyViewDetailModalProps {
-  medicalSupply: MedicineDetailsViewModel;
+interface MedicineViewProps {
+  medicine: MedicineDetailsViewModel;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const MedicalSupplyViewDetailModal: React.FC<MedicalSupplyViewDetailModalProps> = ({ medicalSupply, isOpen, onClose }) => {
+export const MedicineViewDetailModal: React.FC<MedicineViewProps> = ({ medicine, isOpen, onClose }) => {
   if (!isOpen) return null;
 
   const handleOverlayClick = (e: React.MouseEvent) => {
@@ -21,27 +21,31 @@ export const MedicalSupplyViewDetailModal: React.FC<MedicalSupplyViewDetailModal
     <div className="modal-overlay" onClick={handleOverlayClick}>
       <div className="modal-content">
         <div className="modal-header">
-          <h2 className="modal-title">Medical Supply Details</h2>
+          <h2 className="modal-title">Medicine Details</h2>
           <button className="modal-close" onClick={onClose}>
             <IconClose />
           </button>
         </div>
-        <div id="medical-supply-detail" className="modal-body">
+        
+        <div id="medicine-detail" className="modal-body">
           <div className="modal-group modal-row full-width">
-            <p><strong>Name:</strong> {medicalSupply.name}</p>
-            <p><strong>ID:</strong> {medicalSupply.id}</p>
-            <p><strong>Amount:</strong> {medicalSupply.amount}</p>
-            <p><strong>Created By:</strong> {medicalSupply.createdByName}</p>
+            <p><strong>Name:</strong> {medicine.name}</p>
+            <p><strong>ID:</strong> {medicine.id}</p>
+            <p><strong>Amount:</strong> {medicine.amount}</p>
+            <p><strong>Created By:</strong> {medicine.createdByName}</p>
             <p><strong>Availability:</strong>
-            <span className={`status-badge ${medicalSupply.isAvailable ? 'status-badge-active' : 'status-badge-inactive'}`}>
-                  {medicalSupply.isAvailable ? 'Available' : 'Unavailable'}
+            <span className={`status-badge ${medicine.isAvailable ? 'status-badge-active' : 'status-badge-inactive'}`}>
+                  {medicine.isAvailable ? 'Available' : 'Unavailable'}
             </span>
             </p>
-          </div>         
+          </div>
+
+          
           <div className="modal-group modal-row full-width">
             <p className="detail-label"><strong>Description:</strong></p>
-            <div className="detail-value detail-description">{medicalSupply.description}</div>
+            <div className="detail-value detail-description">{medicine.description}</div>
           </div>
+
         </div>
       </div>
     </div>

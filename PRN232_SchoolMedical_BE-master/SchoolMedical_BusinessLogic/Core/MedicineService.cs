@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.Ocsp;
 using SchoolMedical_BusinessLogic.Interface;
 using SchoolMedical_BusinessLogic.Utility;
 using SchoolMedical_DataAccess.DTOModels;
@@ -26,23 +27,16 @@ public class MedicineService : IMedicineService
         _medicineRepository = _unitOfWork.GetRepository<Medicine>();
     }
 
+    //Todo: Add Redis Caching
     public async Task<PagingModel<MedicineDetailResponseDto>> GetAllMedicinesAsync(MedicineQueryDto request)
     {
 			var query = _medicineRepository.Include(m => m.CreatedByNavigation)
 			.Where(m => !m.IsDeleted);
 
-			// Apply filters search by name and availability
-			if (!string.IsNullOrEmpty(request.Name))
-			{
-				query = query.Where(m => m.Name.ToLower().Contains(request.Name.ToLower()));
-			}
+        	//Apply filtering and sorting
+            query = ApplyFilter(query, request.Status, request.Name);
 
-			if (request.IsAvailable.HasValue)
-			{
-				query = query.Where(m => m.IsAvailable == request.IsAvailable.Value);
-			}
 
-			// Apply sorting
 			query = ApplySorting(query, request.SortByNameByDescending);
 
             //Convert Medicine to MedicineDetailResponseDto
@@ -193,11 +187,36 @@ public class MedicineService : IMedicineService
 
     private IQueryable<Medicine> ApplySorting(IQueryable<Medicine> query, bool SortByNameIsDescending)
     {
-       
-
+      
         return SortByNameIsDescending
 			? query.OrderByDescending(m=>m.Name)
             : query.OrderBy(m => m.Name);
     }
+
+	private IQueryable<Medicine> ApplyFilter(IQueryable<Medicine> query, string status, string name)
+	{
+
+		// Apply filters search by name and availability
+		if (!string.IsNullOrEmpty(name))
+		{
+			query = query.Where(m => m.Name.ToLower().Contains(name.ToLower()));
+		}
+
+        if (!string.IsNullOrEmpty(status))
+        {
+			if (status.Equals("Available", StringComparison.OrdinalIgnoreCase))
+			{
+				query = query.Where(m => m.IsAvailable == true);
+			}
+
+			if (status.Equals("Unavailable", StringComparison.OrdinalIgnoreCase))
+			{
+				query = query.Where(m => m.IsAvailable == false);
+			}
+		}
+
+        return query;
+
+	}
 
 }

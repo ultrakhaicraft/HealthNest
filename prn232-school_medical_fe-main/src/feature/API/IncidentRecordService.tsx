@@ -30,7 +30,7 @@ export interface IncidentRecordUpdate extends IncidentRecordCreate {
 
 export interface IncidentRecordQueryParams extends PageinationParams {
   Status?: string;
-  StudentId?: string;
+  StudentName?: string;
   DateFrom?: string;
   DateTo?: string;
   SortByLatest?: boolean;

@@ -6,16 +6,37 @@ import { PaginationControls } from "../PaginationControls";
 import { StatusBadge } from "../StatusBadge";
 import { IncidentRecordFilter } from "./IncidentRecordFilter";
 
+
+interface PaginationState {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  onPageChange: (page: number) => void;
+}
+
+interface FilterState {
+  value: IncidentRecordQueryParams;
+  show: boolean;
+  onToggle: () => void;
+  onApply: (filters: IncidentRecordQueryParams) => void;
+  onClear: () => void;
+}
+
+interface IncidentRecordCRUDPanelProps {
+  incidentData: IncidentRecordView[];
+  loading: boolean;
+  pagination: PaginationState;
+  filterState: FilterState;
+  onView: (id: string) => void;
+  onEdit: (incident: IncidentRecordView) => void;
+  onDelete: (incidentId: string) => void;
+  onCreate: () => void;
+}
+
 // Main CRUD component for incident records
 export const IncidentRecordCRUDPanel = ({ 
-  incidentData = [], onViewIncident, 
-  onDeleteIncident, loading, 
-  onCreateIncident, onEditIncident, 
-  totalPages, 
-  totalItems, showFilters, 
-  onToggleFilters, filters,
-
-  onFilterChange, onClearFilters, onApplyFilters }: IncidentRecordCRUDPanelProps) => {
+  incidentData = [], loading, pagination, filterState,
+  onView, onEdit, onDelete, onCreate }: IncidentRecordCRUDPanelProps) => {
   return (
     <div className="crud-container">
       <div className="crud-header">
@@ -24,34 +45,34 @@ export const IncidentRecordCRUDPanel = ({
           <p className="crud-subtitle">Manage student incident records and reports such as create, update, and delete</p>
         </div>
         <div className="crud-actions">
-          <button className="button button-secondary button-small" onClick={onToggleFilters}>
+          <button className="button button-secondary button-small" onClick={filterState.onToggle}>
                       <IconFilter />
-                      {showFilters ? 'Hide Filters' : 'Show Filters'}
+                      {filterState.show ? 'Hide Filters' : 'Show Filters'}
           </button>
-          <button className="button button-primary button-small" onClick={onCreateIncident}>
+          <button className="button button-primary button-small" onClick={onCreate}>
             <IconPlus />
             Create Incident Record
           </button>
         </div>
       </div>
 
-      {showFilters && (
+      {filterState.show && (
               <IncidentRecordFilter 
-              filters={filters}
-              onFilterChange={onFilterChange}
-              onClearFilters={onClearFilters} 
-              onApplyFilters={onApplyFilters}              />
+              filters={filterState.value}
+              onClearFilters={filterState.onClear} 
+              onApplyFilters={filterState.onApply} 
+              />
       )}
       
       <div className="crud-table-wrapper">
         <div className="crud-table-info">
-          <span>Total: {totalItems} items</span>
-          <span>Page {filters.PageIndex || 1} of {totalPages}</span>
+          <span>Total: {pagination.totalItems} items</span>
+          <span>Page {pagination.currentPage} of {pagination.totalPages}</span>
         </div>
         <table className="crud-table">
           <thead>
             <tr>
-              <th>ID</th>
+              <th>Record ID</th>
               <th>Student Name</th>
               <th>Incident</th>
               <th>Date Occurred</th>
@@ -83,13 +104,13 @@ export const IncidentRecordCRUDPanel = ({
                 <td><StatusBadge status={incident.status} /></td>
                 <td>
                   <div className="action-buttons">
-                    <button className="action-button" onClick={() => onViewIncident(incident.id)} disabled={loading}>
+                    <button className="action-button" onClick={() => onView(incident.id)} disabled={loading}>
                       <IconView />
                     </button>
-                    <button className="action-button" onClick={() => onEditIncident(incident)} disabled={loading}>
+                    <button className="action-button" onClick={() => onEdit(incident)} disabled={loading}>
                       <IconEdit />
                     </button>
-                    <button className="action-button action-delete" onClick={() => onDeleteIncident(incident)} disabled={loading}>
+                    <button className="action-button action-delete" onClick={() => onDelete(incident.id)} disabled={loading}>
                       <IconDelete />
                     </button>
                   </div>
@@ -100,31 +121,13 @@ export const IncidentRecordCRUDPanel = ({
         </table>
 
         <PaginationControls 
-                  currentPage={filters.PageIndex || 1}
-                  totalPages={totalPages}
-                  onPageChange={(page) => onFilterChange('PageIndex', page)}
+                  currentPage={pagination.currentPage}
+                  totalPages={pagination.totalPages}
+                  onPageChange={pagination.onPageChange}
         />
       </div>
     </div>
   );
 }
 
-
-interface IncidentRecordCRUDPanelProps {
-  incidentData: IncidentRecordView[];
-  onViewIncident: (id: string) => void;
-  onDeleteIncident: (incident: IncidentRecordView) => void;
-  loading: boolean;
-  showFilters: boolean;
-  onToggleFilters: () => void;
-  filters: IncidentRecordQueryParams;
-  onFilterChange: (filterKey: keyof IncidentRecordQueryParams, value: any) => void;
-  onApplyFilters: () => void;
-  onClearFilters: () => void;
-  onCreateIncident: () => void;
-  onEditIncident: (incident: IncidentRecordView) => void;
-  totalPages: number;
-  setTotalPages: React.Dispatch<React.SetStateAction<number>>;
-  totalItems: number;
-}
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import UpdateRequestModal from "../../../components/MedicineRequest/UpdateRequestModal"
+import UpdateRequestModal from "../../../components/MedicineRequest/parent/UpdateRequestModal"
 import { MedicineRequestResponseDto, MedicineRequestService, MedicineUpdateCreation } from "../../../feature/API/MedicineRequestService";
 import Modal from "../../../components/GenericModal";
 

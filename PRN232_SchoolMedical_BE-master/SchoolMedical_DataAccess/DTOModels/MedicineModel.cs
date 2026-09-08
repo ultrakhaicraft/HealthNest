@@ -44,9 +44,9 @@ namespace SchoolMedical_DataAccess.DTOModels
         [StringLength(100, ErrorMessage = "Name filter cannot exceed 100 characters")]
         public string? Name { get; set; }
 
-        public bool? IsAvailable { get; set; }
+        public string? Status { get; set; } // Available, Unavailable
 
-        [Range(1, int.MaxValue, ErrorMessage = "Page index must be greater than 0")]
+		[Range(1, int.MaxValue, ErrorMessage = "Page index must be greater than 0")]
         public int PageIndex { get; set; } = 1;
 
         [Range(1, 100, ErrorMessage = "Page size must be between 1 and 100")]

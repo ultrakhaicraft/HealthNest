@@ -2,18 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { MedicineService } from '../../feature/API/MedicineService';
 import { IconClose } from '../IconList';
 import { useUserId } from '../../feature/Hooks/AccountHooks';
-import { MedicalSupplyDetailsViewModel } from '../../feature/API/MedicalSupplyService';
+import { MedicalSupplyDetailsViewModel, MedicalSupplyService, MedicalSupplyUpdateModel } from '../../feature/API/MedicalSupplyService';
 
 interface UpdateMedicalSupplyModalProps {
   isOpen: boolean;
   medicalSupply: MedicalSupplyDetailsViewModel | null;
   onClose: () => void;
-  onSuccess: () => void;
+  onSubmit: (id: string, payload: MedicalSupplyUpdateModel) => void;
   onError: (msg: string) => void;
 }
 
-const UpdateMedicalSupplyModal: React.FC<UpdateMedicalSupplyModalProps> = ({ isOpen, medicalSupply, onClose, onSuccess, onError }) => {
-  const [form, setForm] = useState({ name: '', description: '', amount: '', isAvailable: true });
+const initialForm = {
+  name: '',
+  description: '',
+  amount: '',
+  isAvailable: true,
+}
+
+const UpdateMedicalSupplyModal: React.FC<UpdateMedicalSupplyModalProps> = ({ isOpen, medicalSupply, onClose, onSubmit, onError }) => {
+  const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const userId= useUserId(); // Custom hook to get the current user's ID
@@ -66,21 +73,16 @@ const UpdateMedicalSupplyModal: React.FC<UpdateMedicalSupplyModalProps> = ({ isO
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
     setIsSubmitting(true);
-    try {
-      await MedicineService.update(medicalSupply.id, {
-        name: form.name.trim(),
-        description: form.description.trim(),
-        amount: Number(form.amount),
-        isAvailable: form.isAvailable,
-        createdBy: userId ?? '',
-      });
-      onClose();
-      onSuccess();
-    } catch (err: any) {
-      onError(err?.response?.data?.message || 'Failed to update medical supply.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    
+    onSubmit(medicalSupply.id, {
+      name: form.name.trim(),
+      description: form.description.trim(),
+      amount: Number(form.amount),
+      isAvailable: form.isAvailable,
+      createdBy: userId || '', // Use the userId from the custom hook
+    });
+
+    setIsSubmitting(false);
   };
 
   const handleOverlayClick = (e: React.MouseEvent) => {
@@ -101,8 +103,9 @@ const UpdateMedicalSupplyModal: React.FC<UpdateMedicalSupplyModalProps> = ({ isO
         <form className="modal-body" onSubmit={handleSubmit}>
           <div className="modal-column">
             <div className="detail-row">
-              <span className="detail-label">ID</span>
+              <label htmlFor="medical-supply-id" className="detail-label">ID</label>
               <input
+                id="medical-supply-id"
                 className="input-field"
                 value={medicalSupply.id}
                 disabled
@@ -110,8 +113,9 @@ const UpdateMedicalSupplyModal: React.FC<UpdateMedicalSupplyModalProps> = ({ isO
               />
             </div>
             <div className="detail-row">
-              <span className="detail-label">Name</span>
+              <label htmlFor="medical-supply-name" className="detail-label">Name</label>
               <input
+                id="medical-supply-name"
                 className="input-field"
                 name="name"
                 value={form.name}
@@ -123,8 +127,9 @@ const UpdateMedicalSupplyModal: React.FC<UpdateMedicalSupplyModalProps> = ({ isO
               {errors.name && <div className="error-message">{errors.name}</div>}
             </div>
             <div className="detail-row">
-              <span className="detail-label">Amount</span>
+              <label htmlFor="medical-supply-amount" className="detail-label">Amount</label>
               <input
+                id="medical-supply-amount"
                 className="input-field"
                 name="amount"
                 type="number"

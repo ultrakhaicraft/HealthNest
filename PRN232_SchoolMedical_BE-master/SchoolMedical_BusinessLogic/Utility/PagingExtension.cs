@@ -41,7 +41,7 @@ public static class PagingExtension
 	/// <param name="pageIndex">The index of the page to retrieve (1-based).</param>
 	/// <param name="pageSize">The number of items per page.</param>
 	/// <returns>A paginated list of items.</returns>
-	public async static Task<PagingModel<T>> ToPagingModel<T>(IList<T> source, int pageIndex, int pageSize)
+	public async static Task<PagingModel<T>> ToPagingModel<T>(IList<T> source,  int pageIndex, int pageSize)
 	{
 		var totalCount = source.Count;
 		var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
@@ -55,4 +55,20 @@ public static class PagingExtension
 			Data = data
 		};
 	}
+
+	public async static Task<PagingModel<T>> ToPagingModel<T>(List<T> source, int totalCount, int pageIndex, int pageSize)
+	{
+		await Task.Delay(1000);
+		var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+		return new PagingModel<T>
+		{
+			PageIndex = pageIndex,
+			PageSize = pageSize,
+			TotalCount = totalCount,
+			TotalPages = totalPages,
+			Data = source
+		};
+	}
+
+
 }

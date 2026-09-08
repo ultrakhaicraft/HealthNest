@@ -1,18 +1,24 @@
 import React, { useState } from 'react';
-import { MedicineService } from '../../feature/API/MedicineService';
+import { MedicineCreateModel, MedicineService } from '../../feature/API/MedicineService';
 import { IconClose } from '../IconList';
 import { useUserId } from '../../feature/Hooks/AccountHooks';
 
 interface CreateMedicineModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: () => void;
+  onSubmit: (payload: MedicineCreateModel) => void;
   onError: (msg: string) => void;
 }
 
-//TODO: Get CreatedById from the current logged in user context or auth service and put it in the input field.
-const CreateMedicineModal: React.FC<CreateMedicineModalProps> = ({ isOpen, onClose, onSuccess, onError }) => {
-  const [form, setForm] = useState({ name: '', description: '', amount: '', isAvailable: true });
+const initialForm = {
+  name: '',
+  description: '',
+  amount: '',
+  isAvailable: true,
+}
+
+const CreateMedicineModal: React.FC<CreateMedicineModalProps> = ({ isOpen, onClose, onSubmit, onError }) => {
+  const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const userId= useUserId(); // Custom hook to get the current user's ID
@@ -58,21 +64,15 @@ const CreateMedicineModal: React.FC<CreateMedicineModalProps> = ({ isOpen, onClo
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
     setIsSubmitting(true);
-    try {
-      await MedicineService.create({
-        name: form.name.trim(),
-        description: form.description.trim(),
-        amount: Number(form.amount),
-        createdBy: userId ?? '',
-      });
-      handleClear();
-      onClose();
-      onSuccess();
-    } catch (err: any) {
-      onError(err?.response?.data?.message || 'Failed to create medicine.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    
+    onSubmit({
+      name: form.name.trim(),
+      description: form.description.trim(),
+      amount: Number(form.amount),
+      createdBy: userId || '', // Use the userId from the custom hook
+    });
+
+    setIsSubmitting(false);
   };
 
   const handleOverlayClick = (e: React.MouseEvent) => {

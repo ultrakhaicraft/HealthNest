@@ -1,6 +1,6 @@
 import React from 'react';
-import { MedicineRequestResponseDto } from '../../feature/API/MedicineRequestService';
-import { IconClose } from '../IconList';
+import { MedicineRequestResponseDto } from '../../../feature/API/MedicineRequestService';
+import { IconClose } from '../../IconList';
 
 interface MedicineRequestViewProps {
   medicineRequest: MedicineRequestResponseDto;

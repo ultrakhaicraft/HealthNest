@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { IncidentRecordService } from '../../feature/API/IncidentRecordService';
-import { accountService, AccountView } from '../../feature/API/AccountService';
+import { IncidentRecordCreate } from '../../feature/API/IncidentRecordService';
 import { IconClose } from '../IconList';
+import { useUserId } from '../../feature/Hooks/AccountHooks';
 
 interface CreateIncidentRecordModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: () => void;
+  onSubmit: (payload: IncidentRecordCreate) => void;
   onError: (msg: string) => void;
 }
 
@@ -19,22 +19,11 @@ const initialForm = {
   status: '',
 };
 
-const CreateIncidentRecordModal: React.FC<CreateIncidentRecordModalProps> = ({ isOpen, onClose, onSuccess, onError }) => {
+const CreateIncidentRecordModal: React.FC<CreateIncidentRecordModalProps> = ({ isOpen, onClose, onSubmit, onError }) => {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [students, setStudents] = useState<AccountView[]>([]);
-  const [isLoadingStudents, setIsLoadingStudents] = useState(false);
-
-  React.useEffect(() => {
-    if (isOpen) {
-      setIsLoadingStudents(true);
-      accountService.getAllStudents()
-        .then(setStudents)
-        .catch(() => setStudents([]))
-        .finally(() => setIsLoadingStudents(false));
-    }
-  }, [isOpen]);
+  const userId = useUserId(); // Custom hook to get the current user's ID
 
   if (!isOpen) return null;
 
@@ -74,23 +63,17 @@ const CreateIncidentRecordModal: React.FC<CreateIncidentRecordModalProps> = ({ i
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
     setIsSubmitting(true);
-    try {
-      await IncidentRecordService.create({
-        studentId: form.studentId.trim(),
-        incidentType: form.incidentType.trim(),
-        description: form.description.trim(),
-        dateOccurred: form.dateOccurred,
-        status: "Active",
-        handleBy: ''
-      });
-      handleClear();
-      onClose();
-      onSuccess();
-    } catch (err: any) {
-      onError(err?.response?.data?.message || 'Failed to create incident record.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    
+     onSubmit({
+      studentId: form.studentId.trim(),
+      incidentType: form.incidentType.trim(),
+      description: form.description.trim(),
+      dateOccurred: form.dateOccurred,
+      status: "Active",
+      handleBy: userId || '', //Temporarily make the creator will be the handler of the incident record
+    });
+
+    setIsSubmitting(false);
   };
 
   const handleOverlayClick = (e: React.MouseEvent) => {

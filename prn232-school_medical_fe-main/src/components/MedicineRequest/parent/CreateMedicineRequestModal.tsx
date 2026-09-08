@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { MedicineRequestService } from '../../feature/API/MedicineRequestService';
-import { accountService, AccountView } from '../../feature/API/AccountService';
-import { IconClose } from '../IconList';
+import { MedicineRequestService } from '../../../feature/API/MedicineRequestService';
+import { accountService, AccountView } from '../../../feature/API/AccountService';
+import { IconClose } from '../../IconList';
 
 interface CreateMedicineRequestModalProps {
   isOpen: boolean;

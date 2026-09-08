@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Toast } from '../../../components/Notification/Toast';
 import { AccountDetail } from '../../../feature/API/AccountService';
-import MedicineRequestForm from '../../../components/MedicineRequest/MedicineRequestForm';
+import MedicineRequestForm from '../../../components/MedicineRequest/parent/MedicineRequestForm';
 import { MedicineRequestCreation, MedicineRequestService } from '../../../feature/API/MedicineRequestService';
 
 // Create MedicineRequest Component - This is the entry point

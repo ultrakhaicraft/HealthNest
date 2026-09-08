@@ -1,17 +1,24 @@
 import { useState } from "react";
-import { MedicalSupplyService } from "../../feature/API/MedicalSupplyService";
+import { MedicalSupplyCreateModel, MedicalSupplyService } from "../../feature/API/MedicalSupplyService";
 import { useUserId } from "../../feature/Hooks/AccountHooks";
 import { IconClose } from "../IconList";
 
 interface CreateMedicalSupplyModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: () => void;
+  onSubmit: (payload: MedicalSupplyCreateModel) => void;
   onError: (msg: string) => void;
 }
 
-export const CreateMedicalSupplyModal = ({ isOpen, onClose, onSuccess, onError }: CreateMedicalSupplyModalProps) => {
-    const [form, setForm] = useState({ name: '', description: '', amount: '', isAvailable: true });
+const initialForm = {
+  name: '',
+  description: '',
+  amount: '',
+  isAvailable: true,
+};
+
+export const CreateMedicalSupplyModal = ({ isOpen, onClose, onSubmit, onError }: CreateMedicalSupplyModalProps) => {
+    const [form, setForm] = useState(initialForm);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const userId= useUserId(); // Custom hook to get the current user's ID
@@ -38,7 +45,7 @@ export const CreateMedicalSupplyModal = ({ isOpen, onClose, onSuccess, onError }
     };
 
     const handleClear = () => {
-        setForm({ name: '', description: '', amount: '', isAvailable: true });
+        setForm(initialForm);
         setErrors({});
     };
 
@@ -57,21 +64,15 @@ export const CreateMedicalSupplyModal = ({ isOpen, onClose, onSuccess, onError }
         setErrors(errs);
         if (Object.keys(errs).length > 0) return;
         setIsSubmitting(true);
-        try {
-          await MedicalSupplyService.create({
-            name: form.name.trim(),
-            description: form.description.trim(),
-            amount: Number(form.amount),
-            createdBy: userId ?? '',
-          });
-          handleClear();
-          onClose();
-          onSuccess();
-        } catch (err: any) {
-          onError(err?.response?.data?.message || 'Failed to create medical supply.');
-        } finally {
-          setIsSubmitting(false);
-        }
+        
+        onSubmit({
+          name: form.name.trim(),
+          description: form.description.trim(),
+          amount: Number(form.amount),
+          createdBy: userId ?? '',
+        });
+
+        setIsSubmitting(false);
       };
     
       const handleOverlayClick = (e: React.MouseEvent) => {

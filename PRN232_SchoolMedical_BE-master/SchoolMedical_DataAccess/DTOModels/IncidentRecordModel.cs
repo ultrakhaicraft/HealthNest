@@ -66,10 +66,10 @@ public class IncidentRecordViewModel
 }
 public class IncidentRecordQuery
 {
-	public string? StudentId { get; set; }
-	public string? Status { get; set; } 
-	public bool SortByLatest { get; set; } 
-	public DateTime? DateFrom { get; set; }
+	public string? StudentName { get; set; } = string.Empty;
+	public string? Status { get; set; }  = string.Empty;
+	public bool SortByLatest { get; set; } = true;
+	public DateTime? DateFrom { get; set; } 
 	public DateTime? DateTo { get; set; }
 	public int PageIndex { get; set; } = 1; // Default to first page
 	public int PageSize { get; set; } = 10; // Default to 10 items per page

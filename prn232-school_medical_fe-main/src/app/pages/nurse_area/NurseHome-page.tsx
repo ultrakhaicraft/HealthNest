@@ -7,6 +7,7 @@ import { NurseDashboard } from './NurseDashboard-page';
 
 import '../../CSS/Nurse/NurseTopHeader.css';
 import '../../CSS/Nurse/NurseSideNav.css';
+import MedicalSupplyCRUDPage from './MedicalSupplyCRUD-page';
 
 export default function NurseHomePage() {
     const [activeItem, setActiveItem] = useState('Home');
@@ -29,6 +30,8 @@ export default function NurseHomePage() {
         mainContent = <IncidentRecordCRUDPage />;
     } else if (activeItem === 'Medicine Request') {
         mainContent = <MedicineRequestCRUDPage />;
+    } else if (activeItem === 'Medical Supplies') {
+        mainContent = <MedicalSupplyCRUDPage />;
     } else {
         mainContent = <div style={{ padding: '2rem' }}>Feature coming soon.</div>;
     }

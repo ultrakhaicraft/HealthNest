@@ -57,7 +57,8 @@ public enum IncidentStatus
 	Active, //Incident that has not been solved, currently in treatment
 	Resolved, // Incident that has been solved by nurses in school
 	Hospitalized, // Incident that are unable to be treated in school, now transfer to the hospital or professional medical center 
-	Inactive, //Incident that are deleted or cancelled
+	Inactive, //Incident that are cancelled
+	Deleted, //Incident that are deleted and will not show in UI
 	
 }
 

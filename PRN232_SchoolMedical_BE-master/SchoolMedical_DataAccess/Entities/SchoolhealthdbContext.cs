@@ -47,10 +47,6 @@ public partial class SchoolhealthdbContext : DbContext
 
             entity.HasIndex(e => e.Email, "Email").IsUnique();
 
-            entity.HasIndex(e => e.ParentId, "FK_Account_Parent");
-
-            entity.HasIndex(e => e.Role, "IDX_Account_Role");
-
             entity.Property(e => e.Id).HasMaxLength(50);
             entity.Property(e => e.Address).HasMaxLength(100);
             entity.Property(e => e.Email).HasMaxLength(50);
@@ -65,7 +61,12 @@ public partial class SchoolhealthdbContext : DbContext
                 .HasForeignKey(d => d.ParentId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("FK_Account_Parent");
-        });
+
+			//Index
+			entity.HasIndex(e => e.ParentId, "FK_Account_Parent");
+
+			entity.HasIndex(e => e.Role, "IDX_Account_Role");
+		});
 
         modelBuilder.Entity<Healthcheckupevent>(entity =>
         {

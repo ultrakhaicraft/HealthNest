@@ -1,37 +1,51 @@
+import { useEffect, useState } from "react";
 import { MedicineQueryParams } from "../../feature/API/MedicineService";
 
 interface MedicineFilterProps {
   filters: MedicineQueryParams;
-  onApplyFilters: () => void;
-  onFilterChange: (filterKey: keyof MedicineQueryParams, value: any) => void;
+  onApplyFilters: (filters: MedicineQueryParams) => void;
   onClearFilters: () => void;
 }
 
-export const MedicineFilter = ({ filters, onApplyFilters, onFilterChange, onClearFilters }: MedicineFilterProps) => {
+export const MedicineFilter = ({ filters, onApplyFilters, onClearFilters }: MedicineFilterProps) => {
+  const [filterDraft, setFilterDraft] = useState<MedicineQueryParams>(filters);
+
+  //Change the filterDraft state whenever the filters prop changes
+  useEffect(() => {
+    setFilterDraft(filters);
+  }, [filters]);
+
+  const handleChange = (key: keyof MedicineQueryParams, value: any) => {
+    console.log(`Filter changed: ${key} = ${value}`);
+    setFilterDraft((prev) => ({ ...prev, [key]: value }));
+  };
+
   return (
     <div className="filter-section">
       <div className="filter-row">
         
         <div className="filter-group">
-          <label htmlFor="MedicineId">Medicine Id:</label>
+          <label htmlFor="MedicineId">Medicine Name:</label>
           <input
             id="MedicineId"
             type="text"
-            value={filters.Id || ''}
-            onChange={(e) => onFilterChange('Id', e.target.value)}
-            placeholder="Search by Medicine ID..."
+            value={filterDraft.Name || ''}
+            onChange={(e) => handleChange('Name', e.target.value)}
+            placeholder="Search by Medicine Name..."
           />
         </div>
         
         <div className="filter-group">
-          <label htmlFor="IsAvailable">Status:</label>
+          <label htmlFor="Status">Status:</label>
           <select
-            id="IsAvailable"
-            value={filters.IsAvailable ? 'true' : 'false'}
-            onChange={(e) => onFilterChange('IsAvailable', e.target.value === 'true')}>
-            <option value="" selected >All</option>
-            <option value="true">Available</option>
-            <option value="false">Unavailable</option>
+            id="Status"
+            value={filterDraft.Status || ''}
+            onChange={(e) => {
+              handleChange('Status', e.target.value);
+            }}>
+            <option value="" >All</option>
+            <option value="Available">Available</option>
+            <option value="Unavailable">Unavailable</option>
           </select>
         </div>
       </div>
@@ -41,10 +55,9 @@ export const MedicineFilter = ({ filters, onApplyFilters, onFilterChange, onClea
           <label htmlFor="SortNameByDescending">Sort By Name (Descending):</label>
           <select
             id="SortNameByDescending"
-            value={filters.SortNameByDescending ? 'true' : 'false'}
-            onChange={(e) => onFilterChange('SortNameByDescending', e.target.value === 'true')}
+            value={filterDraft.SortByNameByDescending ? 'true' : 'false'}
+            onChange={(e) => handleChange('SortByNameByDescending', e.target.value === 'true')}
           >
-            <option value="" selected>None</option>
             <option value="true">True</option>
             <option value="false">False</option>
           </select>
@@ -52,7 +65,7 @@ export const MedicineFilter = ({ filters, onApplyFilters, onFilterChange, onClea
       </div>
       
       <div className="filter-actions">
-        <button className="button button-primary button-small" onClick={onApplyFilters}>
+        <button className="button button-primary button-small" onClick={() => onApplyFilters(filterDraft)}>
           Apply Filters
         </button>
         <button className="button button-secondary button-small" onClick={onClearFilters}>

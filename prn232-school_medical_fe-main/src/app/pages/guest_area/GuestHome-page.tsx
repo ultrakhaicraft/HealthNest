@@ -1,7 +1,7 @@
 
 import Footer from '../../../components/Landing_Page/footer';
 import HomepageNavBar from '../../../components/Landing_Page/homepage-nav-bar'; 
-import '../../../app/CSS/GuestHomepage.css'
+import '../../../app/CSS/Guest/GuestHomepage.css'
 import SchoolHomePageImage from '../../../../src/assets/images/SchoolHomePage.jpg'; // Import the image
 
 function Homepage() {

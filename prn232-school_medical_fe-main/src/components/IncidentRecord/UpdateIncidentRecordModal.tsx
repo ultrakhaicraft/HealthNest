@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { IncidentRecordService, IncidentRecordView } from '../../feature/API/IncidentRecordService';
-import { accountService, AccountView } from '../../feature/API/AccountService';
+import { IncidentRecordUpdate, IncidentRecordViewDetail } from '../../feature/API/IncidentRecordService';
 import { IconClose } from '../IconList';
-
-
 
 interface UpdateIncidentRecordModalProps {
   isOpen: boolean;
-  incidentRecord: IncidentRecordView | null;
+  incidentRecord: IncidentRecordViewDetail | null;
   onClose: () => void;
-  onSuccess: () => void;
+  onSubmit: (id: string, payload: IncidentRecordUpdate) => void;
   onError: (msg: string) => void;
 }
-const statuses: string[] =["Active","Inactive","CompletelyHealed"];
-const UpdateIncidentRecordModal: React.FC<UpdateIncidentRecordModalProps> = ({ isOpen, incidentRecord, onClose, onSuccess, onError }) => {
-  const [form, setForm] = useState({
+const statuses: string[] =["Active","Inactive","Resolved","Hospitalized"];
+
+const initialForm = {
     studentId: '',
     handleBy: '',
     handleByName:'',
@@ -22,11 +19,12 @@ const UpdateIncidentRecordModal: React.FC<UpdateIncidentRecordModalProps> = ({ i
     description: '',
     dateOccurred: '',
     status: '',
-  });
+}
+
+const UpdateIncidentRecordModal: React.FC<UpdateIncidentRecordModalProps> = ({ isOpen, incidentRecord, onClose, onSubmit, onError }) => {
+  const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [students, setStudents] = useState<AccountView[]>([]);
-  const [isLoadingStudents, setIsLoadingStudents] = useState(false);
 
   useEffect(() => {
     if (incidentRecord) {
@@ -43,15 +41,6 @@ const UpdateIncidentRecordModal: React.FC<UpdateIncidentRecordModalProps> = ({ i
     }
   }, [incidentRecord, isOpen]);
 
-  useEffect(() => {
-    if (isOpen) {
-      setIsLoadingStudents(true);
-      accountService.getAllStudents()
-        .then(setStudents)
-        .catch(() => setStudents([]))
-        .finally(() => setIsLoadingStudents(false));
-    }
-  }, [isOpen]);
 
   if (!isOpen || !incidentRecord) return null;
 
@@ -91,22 +80,17 @@ const UpdateIncidentRecordModal: React.FC<UpdateIncidentRecordModalProps> = ({ i
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
     setIsSubmitting(true);
-    try {
-      await IncidentRecordService.update(incidentRecord.id, {
-        studentId: form.studentId.trim(),
-        handleBy: form.handleBy.trim(),
-        incidentType: form.incidentType.trim(),
-        description: form.description.trim(),
-        dateOccurred: form.dateOccurred,
-        status: form.status.trim(),
-      });
-      onClose();
-      onSuccess();
-    } catch (err: any) {
-      onError(err?.response?.data?.message || 'Failed to update incident record.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    
+    onSubmit(incidentRecord.id,{
+      studentId: form.studentId,
+      incidentType: form.incidentType,
+      description: form.description,
+      dateOccurred: form.dateOccurred,
+      status: form.status,
+      handleBy: form.handleBy,
+    });
+
+    setIsSubmitting(false);
   };
 
   const handleOverlayClick = (e: React.MouseEvent) => {
@@ -173,7 +157,7 @@ const UpdateIncidentRecordModal: React.FC<UpdateIncidentRecordModalProps> = ({ i
                 name="status"
                 value={form.status}
                 onChange={handleChange}
-                disabled={isSubmitting || isLoadingStudents}
+                disabled={isSubmitting}
                 required
               >
                 <option value="">Select a status...</option>

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using SchoolMedical_BusinessLogic.Interface;
 using SchoolMedical_BusinessLogic.Utility;
 using SchoolMedical_DataAccess.DTOModels;
@@ -10,116 +11,59 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SchoolMedical_BusinessLogic.Core
 {
     public class MedicalSupplyService : IMedicalSupplyService
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private const string cacheKey = "all_medical_supplies";
+		private readonly IUnitOfWork _unitOfWork;
         private readonly IDistributedCache _cache;
-		private readonly IGenericRepository<Medicalsupply> medicalSupply;
+		private readonly IGenericRepository<Medicalsupply> _medicalSuppliesRepository;
         private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(10); 
 
 		public MedicalSupplyService(IUnitOfWork unitOfWork, IDistributedCache cache)
 		{
 			_unitOfWork = unitOfWork;
-			medicalSupply = _unitOfWork.GetRepository<Medicalsupply>();
+			_medicalSuppliesRepository = _unitOfWork.GetRepository<Medicalsupply>();
             _cache = cache;
 		}
 
-		public async Task<string> CreateMedicalSupplyAsync(MedicalSupplyCreateModel request, string createdBy)
+		public async Task<string> CreateMedicalSupplyAsync(MedicalSupplyCreateModel request)
         {
-            var newSupply = new Medicalsupply
+			if (string.IsNullOrEmpty(request.CreatedBy) || request.CreatedBy==null)
+				throw new BadRequestException("CreatedBy Id is empty, please input this data");
+
+			var newSupply = new Medicalsupply
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = request.Name ?? "",
                 Description = request.Description,
                 Amount = request.Amount,
-                CreatedBy = createdBy //User ID of the creator
+                CreatedBy = request.CreatedBy //User ID of the creator
 			};
 
-            await medicalSupply.InsertAsync(newSupply);
+            await _medicalSuppliesRepository.InsertAsync(newSupply);
             await _unitOfWork.SaveAsync();
-			await _cache.RemoveAsync("all_medical_supplies"); // Invalidate cache for all medical supplies as a refresh
 
 			return newSupply.Id;
 		}
-		/*
-        public async Task<PagingModel<MedicalSupplyViewModel>> GetAllMedicalSupplyAsync(MedicalSupplyQuery request)
-        {
-            
-            int pageIndex = 1; 
-            int pageSize = 10; 
-
-            var allData = await medicalSupply.GetQueryableAsync();
-
-            int totalCount = allData.Count();
-            int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
-
-            var pagedData = allData
-                .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize)
-                .Select(x => new MedicalSupplyModel
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Description = x.Description,
-                    Amount = x.Amount,
-                    IsAvailable = x.IsAvailable,
-                    IsDeleted = x.IsDeleted,
-                    CreatedBy = x.CreatedBy,
-                    CreatedByNavigationId = x.CreatedByNavigation.Id
-                })
-                .ToList();
-
-            return new PagingModel<MedicalSupplyModel>
-            {
-                PageIndex = pageIndex,
-                PageSize = pageSize,
-                TotalCount = totalCount,
-                TotalPages = totalPages,
-                Data = pagedData
-            };
-            
-
-            var allData = await _unitOfWork.GetRepository<Medicalsupply>().GetQueryableAsync();
-            allData = allData.Where(x => !x.IsDeleted);
-
-            var viewData = allData.Select(x => new MedicalSupplyViewModel
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Amount = x.Amount,
-                IsAvailable = x.IsAvailable,
-                IsDeleted = x.IsDeleted,
-            });
-				
-            var pagedData = await PagingExtension.ToPagingModel(viewData, request.PageIndex, request.PageSize);
-            return pagedData;
-
-		}
-        */
+		
 
 		public async Task<PagingModel<MedicalSupplyViewModel>> GetAllMedicalSupplyAsync(MedicalSupplyQuery request)
         {
-            //Try to get data from cache first
-            const string cacheKey = "all_medical_supplies";
 
-            var cachedData = await _cache.GetStringAsync(cacheKey);
-            if(cachedData!= null)
-            {
-                var cachedSupplies = JsonSerializer.Deserialize<List<MedicalSupplyViewModel>>(cachedData)!;
-                var pagedData = await PagingExtension.ToPagingModel(cachedSupplies, request.PageIndex, request.PageSize);
-                return pagedData;
-			}
 
-			//If not in cache, fetch from database
+			var supplies = _medicalSuppliesRepository.Include(m => m.CreatedByNavigation)
+			 .Where(m => !m.IsDeleted);
 
-            IQueryable<Medicalsupply> supplies = await medicalSupply.GetQueryableAsync();
-			supplies = supplies.Where(x => !x.IsDeleted);
+			//Apply filtering and sorting
+			supplies = ApplyFilter(supplies, request.Status, request.Name);
 
-			//Proceed with filtering and paging
-            List<MedicalSupplyViewModel> viewData = supplies.Select(x => new MedicalSupplyViewModel
+			supplies = ApplySorting(supplies, request.SortByNameByDescending);
+
+			List<MedicalSupplyViewModel> viewData = supplies.Select(x => new MedicalSupplyViewModel
             {
                 Id = x.Id,
                 Name = x.Name,
@@ -144,9 +88,13 @@ namespace SchoolMedical_BusinessLogic.Core
 
 		public async Task<MedicalSupplyDetailModel> GetMedicalSupplyByIdAsync(string id)
         {
-            var entity = await medicalSupply.GetByIdAsync(id);
+            var entity = await _medicalSuppliesRepository
+                .Include(x => x.CreatedByNavigation)
+                .Where(x => x.Id == id && !x.IsDeleted)
+                .FirstOrDefaultAsync();
+
             if (entity == null || entity.IsDeleted)
-                return null;
+                throw new NotFoundException("Medical Supply", id);
 
             return new MedicalSupplyDetailModel
 			{
@@ -156,25 +104,25 @@ namespace SchoolMedical_BusinessLogic.Core
                 Amount = entity.Amount,
                 IsAvailable = entity.IsAvailable,
                 IsDeleted = entity.IsDeleted,
-                CreatedBy = entity.CreatedBy,
+                CreatedBy = entity.CreatedByNavigation.Id,
+                CreatedByName = entity.CreatedByNavigation.FullName
             };
         }
 
         public async Task SoftDeleteMedicalSupplyAsync(string id)
         {
-            var entity = await medicalSupply.GetByIdAsync(id);
+            var entity = await _medicalSuppliesRepository.GetByIdAsync(id);
             if (entity == null || entity.IsDeleted)
                 throw new NotFoundException("Medical Supply", id);
 
             entity.IsDeleted = true;
-            medicalSupply.Update(entity);
+            _medicalSuppliesRepository.Update(entity);
             await _unitOfWork.SaveAsync();
-			await _cache.RemoveAsync("all_medical_supplies"); // Invalidate cache for all medical supplies as a refresh
         }
 
         public async Task UpdateMedicalSupplyAsync(MedicalSupplyUpdateModel request, string medicineId)
         {
-            var entity = await medicalSupply.GetByIdAsync(medicineId);
+            var entity = await _medicalSuppliesRepository.GetByIdAsync(medicineId);
             if (entity == null || entity.IsDeleted)
 				throw new NotFoundException("Medical Supply", medicineId);
 
@@ -183,9 +131,42 @@ namespace SchoolMedical_BusinessLogic.Core
             entity.Amount = request.Amount;
             entity.IsAvailable = request.IsAvailable ?? entity.IsAvailable;
 
-            medicalSupply.Update(entity);
+            _medicalSuppliesRepository.Update(entity);
             await _unitOfWork.SaveAsync();
-			await _cache.RemoveAsync("all_medical_supplies"); // Invalidate cache for all medical supplies as a refresh
 		}
-    }
+
+		private IQueryable<Medicalsupply> ApplySorting(IQueryable<Medicalsupply> query, bool SortByNameIsDescending)
+		{
+
+			return SortByNameIsDescending
+				? query.OrderByDescending(m => m.Name)
+				: query.OrderBy(m => m.Name);
+		}
+
+		private IQueryable<Medicalsupply> ApplyFilter(IQueryable<Medicalsupply> query, string status, string name)
+		{
+
+			// Apply filters search by name and availability
+			if (!string.IsNullOrEmpty(name))
+			{
+				query = query.Where(m => m.Name.ToLower().Contains(name.ToLower()));
+			}
+
+			if (!string.IsNullOrEmpty(status))
+			{
+				if (status.Equals("Available", StringComparison.OrdinalIgnoreCase))
+				{
+					query = query.Where(m => m.IsAvailable == true);
+				}
+
+				if (status.Equals("Unavailable", StringComparison.OrdinalIgnoreCase))
+				{
+					query = query.Where(m => m.IsAvailable == false);
+				}
+			}
+
+			return query;
+
+		}
+	}
 }

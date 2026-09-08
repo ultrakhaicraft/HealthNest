@@ -49,6 +49,7 @@ public class MedicalSupplyDetailModel
 	public string? Id { get; set; }
 
 	public string? CreatedBy { get; set; }
+	public string? CreatedByName { get; set; }
 
 	public string? Name { get; set; }
 
@@ -64,6 +65,9 @@ public class MedicalSupplyDetailModel
 
 public class MedicalSupplyQuery
 {
+	public string? Name { get; set; } = string.Empty;
+	public string? Status { get; set; } = string.Empty;
+	public bool SortByNameByDescending { get; set; } = false;
 	public int PageIndex { get; set; } = 1; // Default to first page
 	public int PageSize { get; set; } = 10; // Default to 10 items per page
 }

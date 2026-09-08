@@ -4,7 +4,7 @@ import Footer from '../../../components/Landing_Page/footer';
 import UserHomeNavBar from '../../../components/User_homepage/horizontal-nav-bar';
 
 import '../../CSS/MedicineRequest.css';
-import MedicineRequestPage from '../../../components/MedicineRequest/MedicineRequestPage';
+import MedicineRequestPage from '../../../components/MedicineRequest/parent/MedicineRequestPage';
 import { MedicineRequestResponseDto, MedicineRequestService } from '../../../feature/API/MedicineRequestService';
 import UpdateMedicineRequest from './UpdateMedicineRequest';
 

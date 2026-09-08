@@ -4,7 +4,6 @@ import { Routes, Route } from 'react-router-dom';
 import { Spinner } from '../components/spinner';
 import CreateMedicineRequest from './pages/parent_area/ParentCreateMedRequest-page';
 import { ProtectedRoute } from './ProtectedRoute';
-import MedicalSupplyCRUDPage from './pages/nurse_area/MedicalSupplyCRUD-page';
 
 
 // Lazy load all the pages/routes
@@ -18,6 +17,7 @@ const CreateStudentHealthRecordForm = React.lazy(() => import('../app/pages/pare
 const UpdateStudentHealthRecordPage = React.lazy(() => import('../app/pages/parent_area/UpdateStudentHealthRecord-page'));
 const ViewStudentHealthRecordPage = React.lazy(() => import('../app/pages/parent_area/ViewStudentHealthRecord-page'));
 const MedicineCRUDPage = React.lazy(() => import('../app/pages/nurse_area/MedicineCRUD-page'));
+const MedicalSupplyCRUDPage = React.lazy(() => import('../app/pages/nurse_area/MedicalSupplyCRUD-page'));
 const IncidentRecordCRUDPage = React.lazy(() => import('../app/pages/nurse_area/IncidentRecordCRUD-page'));
 const ParentMedicineRequest = React.lazy(() => import('../app/pages/parent_area/ParentMedicineRequest-page'));
 const ParentUserProfile = React.lazy(() => import('../app/pages/ParentUserProfile-Page'));
