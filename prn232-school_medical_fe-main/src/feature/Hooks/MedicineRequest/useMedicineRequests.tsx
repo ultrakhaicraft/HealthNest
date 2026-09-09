@@ -2,7 +2,8 @@ import { useState, useCallback, useEffect } from "react";
 import { MedicineRequestCreateModel, MedicineRequestDetailsModel, MedicineRequestQueryParams, MedicineRequestService, MedicineRequestUpdateModel, MedicineRequestViewModel } from "../../API/MedicineRequestService";
 
 //Data fetching and data management hooks for MedicalSupplyCRUDPage
-export function useMedicineRequests(filters: MedicineRequestQueryParams) {
+//RequesterId is optional for nurse, but mandatory for parent
+export function useMedicineRequests(filters: MedicineRequestQueryParams, requesterId: string) {
   const [data, setData] = useState<MedicineRequestViewModel[]>([]);
   const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
@@ -25,6 +26,24 @@ export function useMedicineRequests(filters: MedicineRequestQueryParams) {
   useEffect(() => {
     refetch();
   }, [refetch]);
+
+  //Fetch medicine request owned by specific parent
+  const refetchByParent = useCallback(() => {
+    setLoading(true);
+    setError(null);
+    return MedicineRequestService.getAllByRequesterId(requesterId,filters)
+      .then((res) => {
+        setData(res.data);
+        setTotalPages(res.totalPages);
+        setTotalItems(res.totalCount);
+      })
+      .catch(() => setError('Failed to load medicine requests.'))
+      .finally(() => setLoading(false));
+  }, [filters]);
+
+  useEffect(() => {
+    refetchByParent();
+  }, [refetchByParent]);
 
   const getById = useCallback((id: string): Promise<MedicineRequestDetailsModel> => {
     const medicineRequest = MedicineRequestService.getById(id);

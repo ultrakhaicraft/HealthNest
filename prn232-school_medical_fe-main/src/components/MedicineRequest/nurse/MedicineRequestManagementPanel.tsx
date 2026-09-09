@@ -4,14 +4,14 @@ import { PaginationControls } from "../../PaginationControls";
 import { StatusBadge } from "../../StatusBadge";
 import { MedicineRequestFilter } from "./MedicineRequestFilter";
 
-interface PaginationState {
+export interface PaginationState {
   currentPage: number;
   totalPages: number;
   totalItems: number;
   onPageChange: (page: number) => void;
 }
 
-interface FilterState {
+export interface FilterState {
   value: MedicineRequestQueryParams;
   show: boolean;
   onToggle: () => void;
@@ -19,19 +19,19 @@ interface FilterState {
   onClear: () => void;
 }
 
-interface MedicineRequestCRUDPanelProps {
+export interface MedicineRequestCRUDPanelProps {
   medicineRequestData: MedicineRequestViewModel[];
   loading: boolean;
   pagination: PaginationState;
   filterState: FilterState;
   onView: (id: string) => void;
   onEdit: (medicine: MedicineRequestViewModel) => void;
-  
+  userRole: string;
 }
 
 
 export default function MedicineRequestCRUDPanel({ 
-    medicineRequestData = [], loading, pagination, filterState,
+    medicineRequestData = [], loading, pagination, filterState, userRole,
     onView, onEdit
 }: MedicineRequestCRUDPanelProps) {
   return (
@@ -51,6 +51,7 @@ export default function MedicineRequestCRUDPanel({
       
       {filterState.show && (
         <MedicineRequestFilter 
+          userRole={userRole}
           filters={filterState.value}
           onApplyFilters={filterState.onApply}
           onClearFilters={filterState.onClear}

@@ -20,6 +20,7 @@ namespace SchoolMedical_BusinessLogic.Core
 			_medicineRequestRepository = _unitOfWork.GetRepository<Medicinerequest>();
 		}
 
+		//Create an "Apply Filter" function
 		public async Task<PagingModel<MedicineRequestResponseDto>> GetMedicineRequestsAsync(MedicineRequestFilterRequestDto request)
 		{
 			IQueryable<Medicinerequest> query = _medicineRequestRepository
@@ -126,6 +127,7 @@ namespace SchoolMedical_BusinessLogic.Core
 			return medicineRequest;
 		}
 
+		
 		public async Task<MedicineRequestResponseDto> CreateMedicineRequestAsync(CreateMedicineRequestRequestDto request)
 		{
 			try
@@ -145,6 +147,8 @@ namespace SchoolMedical_BusinessLogic.Core
 				{
 					throw new KeyNotFoundException("Student not found");
 				}
+
+				//TODO: Also Validate if the children Id belong to the parent Id
 
 				var medicineRequest = new Medicinerequest
 				{

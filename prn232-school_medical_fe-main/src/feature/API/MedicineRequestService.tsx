@@ -45,17 +45,18 @@ export const MedicineRequestService = {
         return response.data.data;
     },
 
+    getAllByRequesterId: async (requesterId: string, params: MedicineRequestQueryParams): Promise<PaginatedResponse<MedicineRequestViewModel>> => {
+        const response = await apiClient.get<ApiResponseWrapper<PaginatedResponse<MedicineRequestViewModel>>>
+            (`/medical-request/requester/${requesterId}`, {params});
+        return response.data.data;
+    },
+
     getById: async (id: string): Promise<MedicineRequestDetailsModel> => {
         const response = await apiClient.get<ApiResponseWrapper<MedicineRequestDetailsModel>>
             (`/medical-request/${id}`);
         return response.data.data;
     },
 
-    getByRequesterId: async (requesterId: string): Promise<PaginatedResponse<MedicineRequestViewModel>> => {
-        const response = await apiClient.get<ApiResponseWrapper<PaginatedResponse<MedicineRequestViewModel>>>
-            (`/medical-request/requester/${requesterId}`);
-        return response.data.data;
-    },
 
     create: async (data: MedicineRequestCreateModel): Promise<MedicineRequestDetailsModel> => {
         const response = await apiClient.post<ApiResponseWrapper<MedicineRequestDetailsModel>>

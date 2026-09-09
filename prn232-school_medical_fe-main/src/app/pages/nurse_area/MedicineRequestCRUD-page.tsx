@@ -2,12 +2,14 @@ import { useState } from 'react';
 
 import "../../CSS/Nurse/NurseCRUDPanel.css"
 import { MedicineRequestQueryParams, MedicineRequestUpdateModel } from '../../../feature/API/MedicineRequestService';
-import { MedicineRequestViewDetail } from '../../../components/MedicineRequest/parent/MedicineRequestView';
+import { MedicineRequestViewDetail } from '../../../components/MedicineRequest/parent/MedicineRequestViewDetailModal';
 import { Toast } from '../../../components/Notification/Toast';
 import UpdateMedicineRequestModal from '../../../components/MedicineRequest/nurse/UpdateMedicineRequestModal';
 import { useMedicineRequests } from '../../../feature/Hooks/MedicineRequest/useMedicineRequests';
 import { useMedicineRequestModals } from '../../../feature/Hooks/MedicineRequest/useMedicineRequestModal';
 import MedicineRequestCRUDPanel from '../../../components/MedicineRequest/nurse/MedicineRequestManagementPanel';
+import { useUserRole } from '../../../feature/Hooks/Account/AccountHooks';
+import { SCHOOLNURSE_ROLE } from '../../../feature/Constant';
 
 const DEFAULT_FILTER: MedicineRequestQueryParams = {
   PageIndex: 1,
@@ -26,8 +28,9 @@ export default function MedicineRequestCRUDPage() {
   const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' as 'success' | 'error' });
   const [actionLoading, setActionLoading] = useState(false);
 
-  const medicineRequests = useMedicineRequests(filters);
+  const medicineRequests = useMedicineRequests(filters,''); //No Requester Id needed
   const modal = useMedicineRequestModals();
+  const userRole = useUserRole() ?? SCHOOLNURSE_ROLE;
 
   const handleShowToast = (message: string, type: 'success' | 'error') => {
       setToast({ isVisible: true, message, type });
@@ -105,6 +108,7 @@ export default function MedicineRequestCRUDPage() {
         }}
         onView={handleView}
         onEdit={(medicine) => handleEdit(medicine.id)}
+        userRole={userRole}
       />
       {modal.state.type==='view' && (
         <MedicineRequestViewDetail 

@@ -1,30 +1,43 @@
 import { useEffect, useState } from "react";
 import { MedicineRequestQueryParams } from "../../../feature/API/MedicineRequestService";
+import { SCHOOLNURSE_ROLE } from "../../../feature/Constant";
 
 
 interface MedicineRequestFilterProps {
   filters: MedicineRequestQueryParams;
   onApplyFilters: (filters: MedicineRequestQueryParams) => void;
   onClearFilters: () => void;
+  userRole: string;
 }
 
-export const MedicineRequestFilter = ({ filters, onApplyFilters, onClearFilters }: MedicineRequestFilterProps) => {
-   const [filterSettings, setFilterSettings] = useState<MedicineRequestQueryParams>(filters);
+export const MedicineRequestFilter = ({ filters, onApplyFilters, onClearFilters, userRole }: MedicineRequestFilterProps) => {
+  const [filterSettings, setFilterSettings] = useState<MedicineRequestQueryParams>(filters);
+  const [toggleRequestByFilter, setToggleRequestByFilter]= useState<boolean>(false);
+
+  //If userRole somehow change, rerun the toggle check
+  useEffect(()=>{
+    if(userRole===SCHOOLNURSE_ROLE){
+      setToggleRequestByFilter(true)
+    }else{
+      setToggleRequestByFilter(false)
+    }
+  },[userRole])
   
-    //Change the filterSettings state whenever the filters prop changes
-    useEffect(() => {
-      setFilterSettings(filters);
-    }, [filters]);
+  //Change the filterSettings state whenever the filters prop changes
+  useEffect(() => {
+    setFilterSettings(filters);
+  }, [filters]);
   
-    const handleChange = (key: keyof MedicineRequestQueryParams, value: any) => {
-      console.log(`Filter changed: ${key} = ${value}`);
-      setFilterSettings((prev) => ({ ...prev, [key]: value }));
-    };
+  const handleChange = (key: keyof MedicineRequestQueryParams, value: any) => {
+    console.log(`Filter changed: ${key} = ${value}`);
+    setFilterSettings((prev) => ({ ...prev, [key]: value }));
+  };
 
   return (
     <div className="filter-section">
       <div className="filter-row">
-        <div className="filter-group">
+        {/*If user role is school nurse, they can see request by filter. Otherwise, hide it */}
+        {toggleRequestByFilter && (<div className="filter-group">
           <label>Request By:</label>
           <input
             type="text"
@@ -32,7 +45,7 @@ export const MedicineRequestFilter = ({ filters, onApplyFilters, onClearFilters 
             onChange={(e) => handleChange('requestByName', e.target.value)}
             placeholder="Search by requester name..."
           />
-        </div>
+        </div>)}
         
         <div className="filter-group">
           <label>For Student:</label>

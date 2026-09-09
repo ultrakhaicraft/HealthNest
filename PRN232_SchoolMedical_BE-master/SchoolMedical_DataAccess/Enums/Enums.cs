@@ -11,8 +11,7 @@ public enum AccountRole
 	Student, 
 	Parent, 
 	SchoolNurse, 
-	Manager, 
-	Admin
+	Admin //Basically also Manager
 }
 
 public enum AccountStatus

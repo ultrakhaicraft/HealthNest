@@ -164,8 +164,8 @@ export default function MedicalSupplyCRUDPage() {
         isOpen={true}
         onClose={modal.close}
         onConfirm={() => handleDeleteConfirm(modal.state.type === 'delete' ? modal.state.medicalSupplyId : '')}
-        title="Delete Medicine"
-        message={`Are you sure you want to delete this medicine ? This action cannot be undone.`}
+        title="Delete Medical Supply"
+        message={`Are you sure you want to delete this medical supply ? This action cannot be undone.`}
         confirmText="Delete"
         cancelText="Cancel"
         isLoading={actionLoading}

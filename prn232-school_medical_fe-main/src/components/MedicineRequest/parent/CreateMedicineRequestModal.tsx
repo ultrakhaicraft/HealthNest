@@ -1,64 +1,48 @@
 import React, { useState } from 'react';
-import { MedicineRequestService } from '../../../feature/API/MedicineRequestService';
+import { MedicineRequestCreateModel, MedicineRequestService } from '../../../feature/API/MedicineRequestService';
 import { accountService, AccountView } from '../../../feature/API/AccountService';
 import { IconClose } from '../../IconList';
+import { useUserId } from '../../../feature/Hooks/Account/AccountHooks';
 
 interface CreateMedicineRequestModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: () => void;
+  onSubmit: (payload: MedicineRequestCreateModel) => void;
   onError: (msg: string) => void;
 }
 
 const initialForm = {
-  requestBy: '',
   forStudent: '',
   description: '',
 };
 
-const CreateMedicineRequestModal: React.FC<CreateMedicineRequestModalProps> = ({ isOpen, onClose, onSuccess, onError }) => {
+//Exclusively for Parent
+//Todo: Add a way to select their children via select tag
+const CreateMedicineRequestModal: React.FC<CreateMedicineRequestModalProps> = ({ isOpen, onClose, onSubmit, onError }) => {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [students, setStudents] = useState<AccountView[]>([]);
-  const [parents, setParents] = useState<AccountView[]>([]);
-  const [isLoadingData, setIsLoadingData] = useState(false);
+  const [students, setStudents] = useState<AccountView[]>([]); //Keep this useState
+  const [isLoadingData, setIsLoadingData] = useState(false); //Keep this useState
+  const requesterId = useUserId() ?? '';
 
-  React.useEffect(() => {
-    if (isOpen) {
-      setIsLoadingData(true);
-      Promise.all([
-        accountService.getAllStudents(),
-        accountService.getAllParents()
-      ])
-        .then(([studentsData, parentsData]) => {
-          setStudents(studentsData);
-          setParents(parentsData);
-        })
-        .catch(() => {
-          setStudents([]);
-          setParents([]);
-        })
-        .finally(() => setIsLoadingData(false));
-    }
-  }, [isOpen]);
 
   if (!isOpen) return null;
 
   const validate = () => {
     const errs: { [key: string]: string } = {};
-    if (!form.requestBy.trim()) {
-      errs.requestBy = 'Requester is required.';
+    if (requesterId == null || !requesterId) {
+      errs.requestBy = 'Unable to get requesterId';
     }
     if (!form.forStudent.trim()) {
-      errs.forStudent = 'Student is required.';
+      errs.forStudent = 'Student Id is required.';
     }
     if (!form.description.trim()) {
       errs.description = 'Description is required.';
     } else if (form.description.length > 500) {
       errs.description = 'Description cannot exceed 500 characters.';
     }
-    
+
     return errs;
   };
 
@@ -78,20 +62,14 @@ const CreateMedicineRequestModal: React.FC<CreateMedicineRequestModalProps> = ({
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
     setIsSubmitting(true);
-    try {
-      await MedicineRequestService.create({
-        requestBy: form.requestBy.trim(),
-        forStudent: form.forStudent.trim(),
-        description: form.description.trim(),
-      });
-      handleClear();
-      onClose();
-      onSuccess();
-    } catch (err: any) {
-      onError(err?.response?.data?.message || 'Failed to create medicine request.');
-    } finally {
-      setIsSubmitting(false);
-    }
+
+    onSubmit({
+      forStudent: form.forStudent.trim(),
+      description: form.description.trim(),
+      requestBy: requesterId || '', //Temporarily make the creator will be the handler of the incident record
+    });
+
+    setIsSubmitting(false);
   };
 
   const handleOverlayClick = (e: React.MouseEvent) => {
@@ -112,49 +90,40 @@ const CreateMedicineRequestModal: React.FC<CreateMedicineRequestModalProps> = ({
         <form className="modal-body" onSubmit={handleSubmit}>
           <div className="modal-column">
             <div className="detail-row">
-              <span className="detail-label">Request By</span>
-              <select
+              <label htmlFor='requestBy-Id' className="detail-label">Requester ID &lpar Your Id as a parent &rpar</label>
+              <input
+                id="requestBy-Id"
                 className="input-field"
-                name="requestBy"
-                value={form.requestBy}
+                name="requesterId"
+                value={requesterId}
                 onChange={handleChange}
-                disabled={isSubmitting || isLoadingData}
+                disabled={isSubmitting}
+                readOnly
                 required
-              >
-                <option value="">Select requester...</option>
-                {parents.map((parent) => (
-                  <option key={parent.id} value={parent.id}>
-                    {parent.fullName} ({parent.email})
-                  </option>
-                ))}
-              </select>
+              />
               {errors.requestBy && <div className="error-message">{errors.requestBy}</div>}
             </div>
-            
+
             <div className="detail-row">
-              <span className="detail-label">For Student</span>
-              <select
+              <label htmlFor='studentId' className="detail-label">Student Id &lpar Your children Id as the school student &rpar</label>
+              <input
+                id="studentId"
                 className="input-field"
-                name="forStudent"
+                name="studentId"
                 value={form.forStudent}
                 onChange={handleChange}
-                disabled={isSubmitting || isLoadingData}
+                disabled={isSubmitting}
+                placeholder="Enter Student ID"
                 required
-              >
-                <option value="">Select student...</option>
-                {students.map((student) => (
-                  <option key={student.id} value={student.id}>
-                    {student.fullName} ({student.email})
-                  </option>
-                ))}
-              </select>
-              {errors.forStudent && <div className="error-message">{errors.forStudent}</div>}
+              />
+                {errors.forStudent && <div className="error-message">{errors.forStudent}</div>}
             </div>
           </div>
-          
+
           <div className="detail-row full-width">
-            <span className="detail-label">Description</span>
+            <label htmlFor='medicineRequestDescription' className="detail-label">Description</label>
             <textarea
+              id="medicineRequestDescription"
               className="input-field detail-description"
               name="description"
               value={form.description}
@@ -166,7 +135,7 @@ const CreateMedicineRequestModal: React.FC<CreateMedicineRequestModalProps> = ({
             />
             {errors.description && <div className="error-message">{errors.description}</div>}
           </div>
-          
+
           <div className="detail-row full-width">
             <div className="modal-footer button-row-right">
               <button type="button" className="button button-secondary" onClick={handleClear} disabled={isSubmitting} style={{ marginRight: '12px' }}>

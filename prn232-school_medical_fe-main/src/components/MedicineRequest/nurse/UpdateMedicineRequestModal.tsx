@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MedicineRequestDetailsModel, MedicineRequestUpdateModel } from '../../../feature/API/MedicineRequestService';
 import { IconClose } from '../../IconList';
+import { MedicineRequestStatuses } from '../../../feature/Constant';
 
 interface UpdateMedicineRequestModalProps {
   isOpen: boolean;
@@ -10,11 +11,11 @@ interface UpdateMedicineRequestModalProps {
   onError: (msg: string) => void;
 }
 
-const statuses: string[] = ["Pending", "Approved", "Rejected", "Deleted"];
 
 //Only the nurse can update the status of the medicine request. The parent can only view the details of the request.
 //Since parents can update the request beside the status
-const UpdateMedicineRequestModal: React.FC<UpdateMedicineRequestModalProps> = ({ isOpen, medicineRequest, onClose, onSubmit, onError }) => {
+const UpdateMedicineRequestModal: React.FC<UpdateMedicineRequestModalProps> = 
+({ isOpen, medicineRequest, onClose, onSubmit, onError }) => {
   const [status, setStatus] = useState<string>('');
   const [errors, setErrors] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -105,7 +106,7 @@ const UpdateMedicineRequestModal: React.FC<UpdateMedicineRequestModalProps> = ({
                 required
               >
                 <option value="">Select status...</option>
-                {statuses.map((status) => (
+                {MedicineRequestStatuses.map((status) => (
                   <option key={status} value={status}>
                     {status}
                   </option>

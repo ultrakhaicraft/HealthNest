@@ -1,3 +1,5 @@
+import { accountService } from "../../API/AccountService";
+
 //Hooks related to authentication and user role management
 export const useIsAuthenticated = () => {
   const token = localStorage.getItem('authToken'); 
@@ -14,3 +16,7 @@ export const useUserRole = () => {
 export const useUserId = (): string | null => {
   return localStorage.getItem('userId');
 };
+
+export const useUserName = (): string => {
+  return localStorage.getItem('userName') || '';
+}

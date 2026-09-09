@@ -2,32 +2,41 @@
 import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Spinner } from '../components/spinner';
-import CreateMedicineRequest from './pages/parent_area/ParentCreateMedRequest-page';
 import { ProtectedRoute } from './ProtectedRoute';
 
 
 // Lazy load all the pages/routes
+//Guest
 const Homepage = React.lazy(() => import('../app/pages/guest_area/GuestHome-page'));
 const Login = React.lazy(() => import('../app/pages/guest_area/Login-page'));
 const Register = React.lazy(() => import('../app/pages/guest_area/Register-page'));
-const ParentHomepage = React.lazy(() => import('../app/pages/parent_area/ParentHome-page'));
+const DisplayBlogsPage = React.lazy(() => import('../app/pages/guest_area/DisplayBlogList-page'));
+const BogDetailPage = React.lazy(() => import('../app/pages/guest_area/BlogDetail-page'));
+
+//Student
 const StudentHomepage = React.lazy(() => import('../app/pages/student_area/StudentHome-page'));
-const NurseHomepage = React.lazy(() => import('../app/pages/nurse_area/NurseHome-page'));
+
+
+//Parent
+const ParentHomepage = React.lazy(() => import('./pages/parent_area/ParentContainerPage'));
 const CreateStudentHealthRecordForm = React.lazy(() => import('../app/pages/parent_area/CreateStudentHealthRecord-page'));
-const UpdateStudentHealthRecordPage = React.lazy(() => import('../app/pages/parent_area/UpdateStudentHealthRecord-page'));
 const ViewStudentHealthRecordPage = React.lazy(() => import('../app/pages/parent_area/ViewStudentHealthRecord-page'));
+const ParentMedicineRequestCRUDPage = React.lazy(() => import('./pages/parent_area/ParentMedicineRequestCRUD-page'));
+const ParentUserProfile = React.lazy(() => import('../app/pages/ParentUserProfile-Page'));
+const LinkStudentPage = React.lazy(() => import('../app/pages/LinkingStudent-Page'));
+
+//Nurse
+const NurseHomepage = React.lazy(() => import('../app/pages/nurse_area/NurseHome-page'));
 const MedicineCRUDPage = React.lazy(() => import('../app/pages/nurse_area/MedicineCRUD-page'));
 const MedicalSupplyCRUDPage = React.lazy(() => import('../app/pages/nurse_area/MedicalSupplyCRUD-page'));
 const IncidentRecordCRUDPage = React.lazy(() => import('../app/pages/nurse_area/IncidentRecordCRUD-page'));
-const ParentMedicineRequest = React.lazy(() => import('../app/pages/parent_area/ParentMedicineRequest-page'));
-const ParentUserProfile = React.lazy(() => import('../app/pages/ParentUserProfile-Page'));
-const LinkStudentPage = React.lazy(() => import('../app/pages/LinkingStudent-Page'));
-const DisplayBlogsPage = React.lazy(() => import('../app/pages/guest_area/DisplayBlogList-page'));
-const BogDetailPage = React.lazy(() => import('../app/pages/guest_area/BlogDetail-page'));
+
+
+//Others
+const UnauthorizedPage = React.lazy(() => import('../app/pages/Unauthorized-Page'));
 const StudentHealthRecordList = React.lazy(() => import('../components/Student_Health_Record/StudentHealthRecordList'));
 const StudentHealthRecordDetailDisplay = React.lazy(() => import('../components/Student_Health_Record/StudentHealthRecordDetailDisplay'));
 const MedicalRecordView = React.lazy(() => import('../components/Student_Health_Record/MedicalRecordView'));
-const UnauthorizedPage = React.lazy(() => import('../app/pages/Unauthorized-Page'));
 
 enum UserRole {
   Parent = 'Parent',
@@ -85,9 +94,6 @@ export const AppRouter = () => {
         <Route path="/viewStudentHealthRecord" element={
           <ProtectedRoute><ViewStudentHealthRecordPage /></ProtectedRoute>
         } />
-        <Route path="/updateStudentHealthRecord" element={
-          <ProtectedRoute><UpdateStudentHealthRecordPage /></ProtectedRoute>
-        } />
         <Route path="/nurse/medicines" element={
           <ProtectedRoute allowedRoles={[UserRole.Nurse]}><MedicineCRUDPage /></ProtectedRoute>
         } />
@@ -100,11 +106,9 @@ export const AppRouter = () => {
         <Route path="/parentUserProfile" element={
           <ProtectedRoute allowedRoles={[UserRole.Parent]}><ParentUserProfile /></ProtectedRoute>
         } />
-        <Route path="/createMedicineRequest" element={
-          <ProtectedRoute allowedRoles={[UserRole.Parent]}><CreateMedicineRequest /></ProtectedRoute>
-        } />
-        <Route path="/requestMedicine" element={
-          <ProtectedRoute allowedRoles={[UserRole.Parent]}><ParentMedicineRequest /></ProtectedRoute>
+        
+        <Route path="/parent/requestMedicine" element={
+          <ProtectedRoute allowedRoles={[UserRole.Parent]}><ParentMedicineRequestCRUDPage /></ProtectedRoute>
         } />
         <Route path="/assignStudentToParent" element={
           <ProtectedRoute><LinkStudentPage /></ProtectedRoute>
@@ -115,9 +119,10 @@ export const AppRouter = () => {
         <Route path="/nurse/records/:id" element={
           <ProtectedRoute><StudentHealthRecordDetailDisplay /></ProtectedRoute>
         } />
-        <Route path="/parent/medical-record" element={
+
+        {/*<Route path="/parent/medical-record" element={
           <ProtectedRoute><MedicalRecordView /></ProtectedRoute>
-        } />
+        } />*/}
       </Routes>
     </Suspense>
   )

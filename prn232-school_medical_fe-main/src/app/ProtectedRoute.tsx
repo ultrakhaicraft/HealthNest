@@ -1,7 +1,7 @@
 // src/routes/ProtectedRoute.tsx
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useIsAuthenticated, useUserRole } from '../feature/Hooks/AccountHooks';
+import { useIsAuthenticated, useUserRole } from '../feature/Hooks/Account/AccountHooks';
 
 interface ProtectedRouteProps {
   children: React.ReactElement;
