@@ -3,9 +3,8 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom';
 import App from './app/App.tsx';
 
-//All CSS imports
+//Only Global.css can be used here, Do not import any other css
 import './app/CSS/Global.css';
-import '../src/app/CSS/Parent/ParentStudentNavBar.css'
 
 
 

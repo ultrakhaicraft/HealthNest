@@ -14,14 +14,14 @@ function Homepage() {
       <section className="hero">
         <div className="hero-container">
           <div className="hero-text">
-            <h1>Welcome to Starlight Academy</h1>
-            <h2>Empowering Minds, Nurturing Health</h2>
+            <h1>Welcome to HealthNest</h1>
+            <h2>Safe and sound school healthcare service</h2>
             <p>
-              At Starlight Academy, we believe in fostering academic excellence and holistic well-being for every student. Our dedicated medical services ensure that health and safety are at the heart of our thriving school community.
+              A special web application aims to improve the service of medical department in a school, Providing to care the student without effort.
             </p>
           </div>
           <div className="hero-image">        
-            <img className="image-placeholder" src={SchoolHomePageImage} alt="Starlight Academy" />  
+            <img className="image-placeholder" src={SchoolHomePageImage} alt="An Image of a school" />  
           </div>
         </div>
       </section>
@@ -29,36 +29,36 @@ function Homepage() {
       {/* About Section */}
       <section className="about">
         <div className="about-container">
-          <h3>About Our School & Medical Services</h3>
+          <h3>About HealthNest Services</h3>
           <p>
-            Starlight Academy offers a nurturing learning environment, focusing on the academic, emotional, and physical well-being of every student. Our on-campus medical team provides comprehensive healthcare support, including vaccination programs, regular health checkups, and proactive student health monitoring. With modern facilities and a compassionate staff, we ensure our students feel safe, healthy, and ready to achieve their best.
+            HealthNest offers user-friendly, quick and modern healthcare management service, with good feature such as including vaccination and regular health checkups news, medicine and medical supplies inventory tracking, and proactive student health monitoring. The service ensures that school medical staff can effectively use the system to improve how they can help their student with their medical attention.
           </p>
         </div>
       </section>
 
       {/* Services Section */}
       <section className="services">
-        <h2>School Medical Services</h2>
+        <h2>What Healthnest Offers</h2>
         <div className="services-grid">
-          <div className="service-card">
-            <div className="icon">💉</div>
-            <h4>Vaccination</h4>
-            <p>
-              Comprehensive vaccination drives to protect students from preventable diseases, conducted in a safe and supportive environment.
-            </p>
-          </div>
-          <div className="service-card">
-            <div className="icon">🩺</div>
-            <h4>Health Checkup</h4>
-            <p>
-              Regular health checkups by certified medical professionals to monitor and maintain students’ overall health and well-being.
-            </p>
-          </div>
           <div className="service-card">
             <div className="icon">💓</div>
             <h4>Student Health Monitoring</h4>
             <p>
-              Ongoing health tracking and support for every student to ensure a safe, nurturing, and responsive school environment.
+              Enable Ongoing health tracking for student through recording incident in school, as well as managing their health record for future care.
+            </p>
+          </div>
+          <div className="service-card">
+            <div className="icon">🩺</div>
+            <h4>Manage in house Medicine and Medical Supply</h4>
+            <p>
+              Track an inventory of medicine and medical for school medical staff, which helps organize and notify if an item need to be restocked before hand.
+            </p>
+          </div>
+          <div className="service-card">
+            <div className="icon">💉</div>
+            <h4>Vaccine and Health Checkup Annoucement</h4>
+            <p>
+              Provide news related to latest vaccine and health checkup events for the student in school.
             </p>
           </div>
         </div>

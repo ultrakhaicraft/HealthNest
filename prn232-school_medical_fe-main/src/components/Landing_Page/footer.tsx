@@ -3,7 +3,7 @@
 function Footer() {
     return (
         <footer className="footer">
-        <p>© 2024 Starlight Academy. All rights reserved.</p>
+        <p>© 2026 HealthNest. All rights reserved.</p>
         <div className="social-icons">
           Contact us:
           <a href="#">🔵</a>

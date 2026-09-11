@@ -12,8 +12,8 @@ export const AuthLayout = ({ children }: AuthLayoutProps) => {
   return (
     <div className='flex-page'>
       <div className='child left-side'>
-        <div className='logo'>Starlight Academy</div>
-        <div className='tagline'>Empowering Minds, Nurturing Health</div>
+        <div className='logo'>HealthNest</div>
+        <div className='tagline'>Safe and sound school healthcare service</div>
       </div>
       <div className='child right-side'>
         {children}

@@ -1,13 +1,14 @@
-import { IconView, IconEdit, IconFilter } from "../../IconList";
+import { IconView, IconEdit, IconFilter, IconPlus } from "../../IconList";
 import { PaginationControls } from "../../PaginationControls";
 import { StatusBadge } from "../../StatusBadge";
 import { MedicineRequestFilter } from "../nurse/MedicineRequestFilter";
 import { MedicineRequestCRUDPanelProps } from "../nurse/MedicineRequestManagementPanel";
+import "../../../app/CSS/Nurse/NurseCRUDPanel.css"
 
 
 export const ParentMedicineRequestManagementPanel = ({
     medicineRequestData = [], loading, pagination, filterState, userRole,
-    onView, onEdit
+    onView, onEdit, onCreate
  }: MedicineRequestCRUDPanelProps) => {
     return (
         <div className="crud-container">
@@ -21,6 +22,10 @@ export const ParentMedicineRequestManagementPanel = ({
                     <IconFilter />
                     {filterState.show ? 'Hide Filters' : 'Show Filters'}
                   </button>
+                  <button className="button button-primary button-small" onClick={onCreate}>
+                                  <IconPlus />
+                                  Create a Medical Supply item
+                                  </button>
                 </div>
               </div>
               

@@ -27,6 +27,8 @@ export interface MedicineRequestCRUDPanelProps {
   onView: (id: string) => void;
   onEdit: (medicine: MedicineRequestViewModel) => void;
   userRole: string;
+  onCreate?: () => void;
+  onDelete: (medicineId: string) => void;
 }
 
 

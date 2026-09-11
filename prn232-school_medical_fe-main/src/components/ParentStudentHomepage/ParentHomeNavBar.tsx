@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import styles from "../../app/CSS/Parent/ParentStudentNavBar.module.css"
+
 interface UserHomeNavBarProps {
   activeItem: string;
   onSelect: (label: string) => void;
@@ -12,20 +14,17 @@ const ParentnavItems = [
 ];
 
 export default function ParentHomeNavBar({ activeItem, onSelect }: UserHomeNavBarProps) {
-
-
-
   return (
-    <header className="header">
-      <div className="header-container">
-        <div className="logo">🎓 Starlight Academy</div>
-        <nav className="nav">
+    <header className={styles.header}>
+      <div className={styles.headerContainer}>
+        <div className={styles.logo}>🎓 Starlight Academy</div>
+        <nav className={styles.nav}>
           <ul>
             {ParentnavItems.map(item => (
               <li key={item.label}>
                 <button
                   type="button"
-                  className={activeItem === item.label ? 'nav-item active' : 'nav-item'}
+                  className={activeItem === item.label ? `${styles.navItem} ${styles.active}` : styles.navItem}
                   onClick={() => onSelect(item.label)}
                 >
                   <span>{item.label}</span>
@@ -65,17 +64,17 @@ const ProfileDropdown = () => {
   };
 
   return (
-    <div className="profile-dropdown-container" ref={dropdownRef}>
+    <div className={styles.profileDropdownContainer} ref={dropdownRef}>
       <img
-        className="profile-avatar"
+        className={styles.profileAvatar}
         src="./assets/PRN_Avatar.svg"
         alt="User profile"
         onClick={() => setOpen(prev => !prev)}
       />
       {open && (
-        <div className="dropdown-menu">
-          <button onClick={handleNavigateProfile} className="dropdown-item">👤 View Profile</button>
-          <button onClick={handleLogout} className="dropdown-item logout">🚪 Logout</button>
+        <div className={styles.dropdownMenu}>
+          <button onClick={handleNavigateProfile} className={styles.dropdownItem}>👤 View Profile</button>
+          <button onClick={handleLogout} className={'${styles.dropdownItem} ${styles.dropdownItemLogout}'}>🚪 Logout</button>
         </div>
       )}
     </div>

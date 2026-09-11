@@ -1,0 +1,130 @@
+/*** IMPORTANT ***/
+/** Which page/component files used ? ParentStudentNavBar.css **/
+
+.header {
+  background-color: white;
+  border-bottom: 1px solid #ddd;
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.headerContainer {
+  max-width: 100vw;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+.logo {
+  display: flex;
+  align-items: center;
+  position: relative;
+  left: 5%;
+  font-size: 1.8rem;
+  font-weight: bolder;
+  color: #2b50ec;
+}
+
+.nav ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+
+.navItem {
+  display: inline-flex;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #2b50ec;       /* matches .logo's blue */
+  border-radius: 6px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.navItem:hover {
+  background-color: #eef2fb;
+}
+
+.active {
+  background-color: #2b50ec;
+  color: #ffffff;
+}
+
+
+.profileDropdownContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.profileAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid #ccc;
+}
+
+.dropdownMenu {
+  position: absolute;
+  right: 0;
+  margin-top: 8px;
+  background-color: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  z-index: 1000;
+  min-width: 160px;
+}
+
+.dropdownItem {
+  width: 100%;
+  padding: 10px 16px;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+}
+
+.dropdownItem:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdownItemLogout {
+  color: #d00;
+}
+
+
+/*.navigation ul {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+}
+
+.navigation a {
+  text-decoration: none;
+  color: #4b5563; /* Gray text 
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.navigation a:hover,
+.navigation a.active {
+  color: #4f46e5; /* Primary blue for hover/active 
+}
+*/

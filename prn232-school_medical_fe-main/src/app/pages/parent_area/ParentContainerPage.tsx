@@ -1,6 +1,5 @@
 import Footer from '../../../components/Landing_Page/footer';
 import '../../CSS/Parent/ParentHomepage.css'; // Importing the CSS for the parent homepage
-import '../../CSS/Parent/ParentStudentNavBar.css'
 import { UserRole } from '../../../feature/Constant';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { getActiveItemFromPath, userouteForLabel } from '../../../feature/Hooks/Other/RouterHooks';

@@ -18,6 +18,53 @@ html {
   /* Ensures padding and border are included in element's total width and height */
 }
 
+/*Affect GuestHomePage header*/
+.header {
+  background-color: white;
+  border-bottom: 1px solid #ddd;
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/*Affect GuestHomePage header*/
+.header-container {
+  max-width: 100vw;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/*Affect GuestHomePage header*/
+.logo {
+  display: flex;
+  align-items: center;
+  position: relative;
+  left: 5%;
+  font-size: 1.8rem;
+  font-weight: bolder;
+  color: #2b50ec;
+}
+
+/*Affect GuestHomePage header*/
+.nav a {
+  display: inline-flex;
+  text-decoration: none;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #2b50ec;       /* matches .logo's blue */
+  border-radius: 6px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
 .normal-page {
   width: 100%;
   min-height: 100vh;
@@ -129,14 +176,6 @@ html {
   box-shadow: 0 0 0 2px rgba(58, 58, 118, 0.2);
 }
 
-
-.logo {
-  position: relative;
-  left: 5%;
-  font-size: 1.8rem;
-  font-weight: bolder;
-  color: #2b50ec;
-}
 
 
 .login-button {

@@ -12,6 +12,7 @@ import { ConfirmationModal } from '../../../components/ConfirmationModal';
 import { ParentMedicineRequestManagementPanel } from '../../../components/MedicineRequest/parent/ParentMedicineRequestManagementPanel';
 import CreateMedicineRequestModal from '../../../components/MedicineRequest/parent/CreateMedicineRequestModal';
 import UpdateOwnedMedicineRequestModal from '../../../components/MedicineRequest/parent/UpdateOwnedMedicineRequestModal';
+import { UserRole } from '../../../feature/Constant';
 
 const DEFAULT_FILTER: MedicineRequestQueryParams = {
   PageIndex: 1,
@@ -142,7 +143,9 @@ export default function ParentMedicineRequestCRUDPage() {
         }}
         onView={handleView}
         onEdit={(medicine) => handleEdit(medicine.id)}
-        userRole={userRole ?? PARENT_ROLE}
+        onDelete={(medicineRequestId) => modal.openDelete(medicineRequestId)}
+        userRole={userRole ?? UserRole.Parent}
+        onCreate={modal.openCreate}
       />
       {modal.state.type==='view' && (
         <MedicineRequestViewDetail 
