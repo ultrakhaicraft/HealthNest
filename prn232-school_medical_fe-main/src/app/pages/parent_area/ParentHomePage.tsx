@@ -1,10 +1,9 @@
-import HealthStatus from "../../../components/User_homepage/health-status-box";
-import HealthAnnouncements from "../../../components/User_homepage/news-box";
-import WelcomeBox from "../../../components/User_homepage/welcome-box";
-import { AccountDetail } from "../../../feature/API/AccountService";
+import HealthStatus from "../../../components/ParentStudentHomepage/health-status-box";
+import HealthAnnouncements from "../../../components/ParentStudentHomepage/news-box";
+import WelcomeBox from "../../../components/ParentStudentHomepage/welcome-box";
+import { useAccountDetail } from "../../../feature/Hooks/Account/useAccountDetail";
 
 interface ParentHomePageProps {
-    accountDetail: AccountDetail | null;
     isStudentExist: boolean;
     userType: string;
   }
@@ -12,7 +11,9 @@ interface ParentHomePageProps {
 
 // Act as first thing to show when parent login, it will show the welcome box, health status and health announcement
 // Kinda like a dashboard for parent, but not really a dashboard, just a homepage for parent
-export default function ParentHomePage({ accountDetail, isStudentExist, userType }: ParentHomePageProps){
+export default function ParentHomePage({isStudentExist, userType }: ParentHomePageProps){
+    const {accountDetail} = useAccountDetail();
+
     return(
         <>
             <WelcomeBox

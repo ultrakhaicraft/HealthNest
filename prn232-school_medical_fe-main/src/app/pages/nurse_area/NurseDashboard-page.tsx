@@ -5,6 +5,7 @@ import { DashboardTables } from "../../../components/Nurse_Dashboard/DashboardTa
 import { IncidentReportBarChart } from "../../../components/Nurse_Dashboard/IncidentReportBarChart";
 import { useEffect, useState } from "react";
 import { DashboardService, DashboardStatistic, IncidentRecordCountPerYear } from "../../../feature/API/DashboardService";
+import { useUserName } from "../../../feature/Hooks/Account/AccountHooks";
 
 
 interface NurseDashboardProps {
@@ -29,32 +30,35 @@ const MONTHS: { key: keyof Omit<IncidentRecordCountPerYear, 'year'>; label: stri
 
 
 export const NurseDashboard = ({ username }: NurseDashboardProps) => {
-  const [stat, setStat] = useState<DashboardStatistic|null>(null);
+  const [stat, setStat] = useState<DashboardStatistic | null>(null);
   const [healthCheckupEvents, setHealthCheckupEvents] = useState<ViewHealthCheckupEventDTO[]>([]);
   const [vaccineCheckupEvents, setVaccineCheckupEvents] = useState<ViewVaccineEventDTO[]>([]);
-  const [incidentData,setIncidentData]=useState<IncidentRecordCountPerYear|null>(null);
+  const [incidentData, setIncidentData] = useState<IncidentRecordCountPerYear | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
+  //Get username 
+  username=useUserName();
+
+  useEffect(() => {
     let cancelled = false;
 
     const loadDashboard = async () => {
       try {
         setLoading(true);
 
+
+
         //Attempt to load all the data concurrently to reduce loading time
-        const [statResult, incidentResult,healthCheckupResult,vaccineCheckupResult] = await Promise.all([
+        const [statResult, incidentResult, healthCheckupResult, vaccineCheckupResult] = await Promise.all([
           DashboardService.getStatistic(),
           DashboardService.countAllIncidentInAYear(2026),
           HealthCheckupEventService.getTop5HealthCheckupEvents(),
           VaccineCheckupEventService.getTop5VaccineCheckupEvents(),
         ]);
 
-        console.log("Statistic", statResult); // fresh, straight from the API call
-        console.log("Incident Result", incidentResult);
-        console.log("Health Checkup Result", healthCheckupResult);
-       
+        console.log(username);
+
 
         if (!cancelled) {
           setStat(statResult);
@@ -70,7 +74,7 @@ export const NurseDashboard = ({ username }: NurseDashboardProps) => {
     };
 
     loadDashboard();
-    
+
     return () => {
       cancelled = true;
     };
@@ -85,36 +89,36 @@ export const NurseDashboard = ({ username }: NurseDashboardProps) => {
     }));
   }
 
-  
 
-    return (
-        <main className="dashboard-container">
-            <section className="dashboard-header">
-                <h1>Nurse Dashboard</h1>
-                <h2>Welcome nurse, {username} !</h2>
-            </section>
-            {error && <p className="dashboard-error">{error}</p>}
-            <section className="dashboard-number-cards">
-                <div className="dashboard-card">
-                    <p className="card-label">Active Incident Reports</p>
-                    <p className="card-value">{stat?.activeIncidentRecord ?? 0}</p>
-                </div>
-                <div className="dashboard-card">
-                    <p className="card-label">Pending Medicine Requests</p>
-                    <p className="card-value">{stat?.pendingMedicineRequest ?? 0}</p>
-                </div>
-                <div className="dashboard-card">
-                    <p className="card-label">Upcoming Vaccine Appointments</p>
-                    <p className="card-value">{stat?.upcomingVaccineEvent ?? 0}</p>
-                </div>
-                <div className="dashboard-card">
-                    <p className="card-label">Upcoming Health Checkups</p>
-                    <p className="card-value">{stat?.upcomingHealthCheckup ?? 0}</p>
-                </div>      
-            </section>
-            <IncidentReportBarChart data={toChartData(incidentData)}  />
-            <DashboardTables healthCheckupEvents={healthCheckupEvents} vaccineCheckupEvents={vaccineCheckupEvents} />
-            
-        </main>
-    )
+
+  return (
+    <main className="dashboard-container">
+      <section className="dashboard-header">
+        <h1>Nurse Dashboard</h1>
+        <h2>Welcome nurse, {username}!</h2>
+      </section>
+      {error && <p className="dashboard-error">{error}</p>}
+      <section className="dashboard-number-cards">
+        <div className="dashboard-card">
+          <p className="card-label">Active Incident Reports</p>
+          <p className="card-value">{stat?.activeIncidentRecord ?? 0}</p>
+        </div>
+        <div className="dashboard-card">
+          <p className="card-label">Pending Medicine Requests</p>
+          <p className="card-value">{stat?.pendingMedicineRequest ?? 0}</p>
+        </div>
+        <div className="dashboard-card">
+          <p className="card-label">Upcoming Vaccine Appointments</p>
+          <p className="card-value">{stat?.upcomingVaccineEvent ?? 0}</p>
+        </div>
+        <div className="dashboard-card">
+          <p className="card-label">Upcoming Health Checkups</p>
+          <p className="card-value">{stat?.upcomingHealthCheckup ?? 0}</p>
+        </div>
+      </section>
+      <IncidentReportBarChart data={toChartData(incidentData)} />
+      <DashboardTables healthCheckupEvents={healthCheckupEvents} vaccineCheckupEvents={vaccineCheckupEvents} />
+
+    </main>
+  )
 }

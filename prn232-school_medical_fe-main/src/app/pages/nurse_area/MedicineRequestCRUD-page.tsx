@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import "../../CSS/Nurse/NurseCRUDPanel.css"
 import { MedicineRequestQueryParams, MedicineRequestUpdateModel } from '../../../feature/API/MedicineRequestService';
 import { MedicineRequestViewDetail } from '../../../components/MedicineRequest/parent/MedicineRequestViewDetailModal';
 import { Toast } from '../../../components/Notification/Toast';
@@ -9,7 +8,7 @@ import { useMedicineRequests } from '../../../feature/Hooks/MedicineRequest/useM
 import { useMedicineRequestModals } from '../../../feature/Hooks/MedicineRequest/useMedicineRequestModal';
 import MedicineRequestCRUDPanel from '../../../components/MedicineRequest/nurse/MedicineRequestManagementPanel';
 import { useUserRole } from '../../../feature/Hooks/Account/AccountHooks';
-import { SCHOOLNURSE_ROLE } from '../../../feature/Constant';
+import { UserRole } from '../../../feature/Constant';
 
 const DEFAULT_FILTER: MedicineRequestQueryParams = {
   PageIndex: 1,
@@ -30,7 +29,7 @@ export default function MedicineRequestCRUDPage() {
 
   const medicineRequests = useMedicineRequests(filters,''); //No Requester Id needed
   const modal = useMedicineRequestModals();
-  const userRole = useUserRole() ?? SCHOOLNURSE_ROLE;
+  const userRole = useUserRole() ?? UserRole.Nurse;
 
   const handleShowToast = (message: string, type: 'success' | 'error') => {
       setToast({ isVisible: true, message, type });

@@ -1,5 +1,5 @@
 
-import UserHomeNavBar from '../../../components/User_homepage/horizontal-nav-bar';
+import UserHomeNavBar from '../../../components/ParentStudentHomepage/ParentHomeNavBar';
 import Footer from '../../../components/Landing_Page/footer';
 
 import MedicalRecordForm from '../../../components/Student_Health_Record/MedicalRecordForm'; // Importing the medical record form component

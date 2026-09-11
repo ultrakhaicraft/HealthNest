@@ -1,3 +1,31 @@
+.navigation ul {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+}
+
+.navigation a {
+  text-decoration: none;
+  color: #4b5563; /* Gray text */
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.navigation a:hover,
+.navigation a.active {
+  color: #4f46e5; /* Primary blue for hover/active */
+}
+
+
+.nav a {
+  margin: 0 1rem;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+
 .profile-dropdown-container {
   position: relative;
   display: inline-block;

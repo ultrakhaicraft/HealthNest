@@ -1,37 +1,43 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 interface UserHomeNavBarProps {
-    userType: string;
+  activeItem: string;
+  onSelect: (label: string) => void;
 }
 
-export default function UserHomeNavBar({userType}: UserHomeNavBarProps) {
+const ParentnavItems = [
+  { label: 'Home' },
+  { label: 'Student Health Record' },
+  { label: 'Medicine Request' },
+];
 
-    let homeUrl: string='';
-    switch (userType) {
-      case 'parent':
-        homeUrl='/parentHomepage'
-        break;
-      case 'student':
-        homeUrl='/studentHomepage'
-        break;
-      default:
-        break;
-    }
+export default function ParentHomeNavBar({ activeItem, onSelect }: UserHomeNavBarProps) {
 
-    return (
-        <header className="header">
-        <div className="header-container">
-          <div className="logo">🎓 Starlight Academy</div>
-          <nav className="nav">
-            <a href={homeUrl}>Home</a>
-            {userType === 'parent' && <a href="/viewStudentHealthRecord">Student Health Record</a>}
-            {userType === 'parent' && <a href="/requestMedicine">Request Medicine</a>}
-            <a href="#">News</a>               
-          </nav>
-          <ProfileDropdown/>
-        </div>
+
+
+  return (
+    <header className="header">
+      <div className="header-container">
+        <div className="logo">🎓 Starlight Academy</div>
+        <nav className="nav">
+          <ul>
+            {ParentnavItems.map(item => (
+              <li key={item.label}>
+                <button
+                  type="button"
+                  className={activeItem === item.label ? 'nav-item active' : 'nav-item'}
+                  onClick={() => onSelect(item.label)}
+                >
+                  <span>{item.label}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <ProfileDropdown />
+      </div>
     </header>
-    );
+  );
 }
 
 const ProfileDropdown = () => {

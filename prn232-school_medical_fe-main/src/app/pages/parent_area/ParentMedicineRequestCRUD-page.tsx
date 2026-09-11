@@ -1,17 +1,15 @@
 import { useState } from 'react';
 
 import '../../CSS/Nurse/MedicineRequest.css';
+import "../../CSS/Nurse/NurseCRUDPanel.css"
 import { MedicineRequestQueryParams } from '../../../feature/API/MedicineRequestService';
 import { useMedicineRequestModals } from '../../../feature/Hooks/MedicineRequest/useMedicineRequestModal';
 import { useMedicineRequests } from '../../../feature/Hooks/MedicineRequest/useMedicineRequests';
-import UpdateMedicineRequestModal from '../../../components/MedicineRequest/nurse/UpdateMedicineRequestModal';
 import { MedicineRequestViewDetail } from '../../../components/MedicineRequest/parent/MedicineRequestViewDetailModal';
 import { Toast } from '../../../components/Notification/Toast';
 import { useUserId, useUserRole } from '../../../feature/Hooks/Account/AccountHooks';
 import { ConfirmationModal } from '../../../components/ConfirmationModal';
 import { ParentMedicineRequestManagementPanel } from '../../../components/MedicineRequest/parent/ParentMedicineRequestManagementPanel';
-import { PARENT_ROLE } from '../../../feature/Constant';
-import CreateMedicineRequest from './ParentCreateMedRequest-page';
 import CreateMedicineRequestModal from '../../../components/MedicineRequest/parent/CreateMedicineRequestModal';
 import UpdateOwnedMedicineRequestModal from '../../../components/MedicineRequest/parent/UpdateOwnedMedicineRequestModal';
 

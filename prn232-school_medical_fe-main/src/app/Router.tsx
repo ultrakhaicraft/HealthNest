@@ -3,6 +3,8 @@ import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Spinner } from '../components/spinner';
 import { ProtectedRoute } from './ProtectedRoute';
+import { UserRole } from '../feature/Constant';
+import { NurseDashboard } from './pages/nurse_area/NurseDashboard-page';
 
 
 // Lazy load all the pages/routes
@@ -18,7 +20,8 @@ const StudentHomepage = React.lazy(() => import('../app/pages/student_area/Stude
 
 
 //Parent
-const ParentHomepage = React.lazy(() => import('./pages/parent_area/ParentContainerPage'));
+const ParentContainerPage = React.lazy(() => import('./pages/parent_area/ParentContainerPage'));
+const ParentHomepage = React.lazy(() => import('./pages/parent_area/ParentHomePage'));
 const CreateStudentHealthRecordForm = React.lazy(() => import('../app/pages/parent_area/CreateStudentHealthRecord-page'));
 const ViewStudentHealthRecordPage = React.lazy(() => import('../app/pages/parent_area/ViewStudentHealthRecord-page'));
 const ParentMedicineRequestCRUDPage = React.lazy(() => import('./pages/parent_area/ParentMedicineRequestCRUD-page'));
@@ -30,6 +33,7 @@ const NurseHomepage = React.lazy(() => import('../app/pages/nurse_area/NurseHome
 const MedicineCRUDPage = React.lazy(() => import('../app/pages/nurse_area/MedicineCRUD-page'));
 const MedicalSupplyCRUDPage = React.lazy(() => import('../app/pages/nurse_area/MedicalSupplyCRUD-page'));
 const IncidentRecordCRUDPage = React.lazy(() => import('../app/pages/nurse_area/IncidentRecordCRUD-page'));
+const MedicineRequestCRUDPage = React.lazy(() => import('../app/pages/nurse_area/MedicineRequestCRUD-page'))
 
 
 //Others
@@ -38,12 +42,7 @@ const StudentHealthRecordList = React.lazy(() => import('../components/Student_H
 const StudentHealthRecordDetailDisplay = React.lazy(() => import('../components/Student_Health_Record/StudentHealthRecordDetailDisplay'));
 const MedicalRecordView = React.lazy(() => import('../components/Student_Health_Record/MedicalRecordView'));
 
-enum UserRole {
-  Parent = 'Parent',
-  Student = 'Student',
-  Nurse = 'SchoolNurse',
-  Admin = 'Admin',
-}
+
 
 
 // A simple component to center the spinner
@@ -79,14 +78,28 @@ export const AppRouter = () => {
 
 
         {/* Protected Routes */}
-        <Route path="/parentHomepage" element={
-          <ProtectedRoute allowedRoles={[UserRole.Parent]}><ParentHomepage /></ProtectedRoute>
-        } />
+        <Route path="/nurse" element={
+          <ProtectedRoute allowedRoles={[UserRole.Nurse]}><NurseHomepage/></ProtectedRoute>
+        }>
+          <Route index element={<NurseDashboard username=''/>}/>
+          <Route path="medicines" element={<MedicineCRUDPage />} />
+          <Route path="incidents" element={<IncidentRecordCRUDPage />} />
+          <Route path="medicine-requests" element={<MedicineRequestCRUDPage />} />
+          <Route path="medical-supplies" element={<MedicalSupplyCRUDPage />} />
+        </Route>
+
+        <Route path="/parent" element={
+          <ProtectedRoute allowedRoles={[UserRole.Parent]}><ParentContainerPage /></ProtectedRoute>
+        } >
+          <Route index element={<ParentHomepage/>}/>
+          <Route path="user-profile" element={<ParentUserProfile />} />
+          <Route path="link-student-to-parent" element={<LinkStudentPage />} />
+          <Route path="medicine-request" element={<ParentMedicineRequestCRUDPage />} />
+        </Route>
+
+
         <Route path="/studentHomepage" element={
           <ProtectedRoute allowedRoles={[UserRole.Student]}><StudentHomepage /></ProtectedRoute>
-        } />
-        <Route path="/nurseHomepage" element={
-          <ProtectedRoute allowedRoles={[UserRole.Nurse]}><NurseHomepage /></ProtectedRoute>
         } />
         <Route path="/createStudentHealthRecord" element={
           <ProtectedRoute><CreateStudentHealthRecordForm /></ProtectedRoute>
@@ -94,32 +107,7 @@ export const AppRouter = () => {
         <Route path="/viewStudentHealthRecord" element={
           <ProtectedRoute><ViewStudentHealthRecordPage /></ProtectedRoute>
         } />
-        <Route path="/nurse/medicines" element={
-          <ProtectedRoute allowedRoles={[UserRole.Nurse]}><MedicineCRUDPage /></ProtectedRoute>
-        } />
-        <Route path="/nurse/medicalSupplies" element={
-          <ProtectedRoute allowedRoles={[UserRole.Nurse]}><MedicalSupplyCRUDPage /></ProtectedRoute>
-        } />
-        <Route path="/nurse/incidents" element={
-          <ProtectedRoute allowedRoles={[UserRole.Nurse]}><IncidentRecordCRUDPage /></ProtectedRoute>
-        } />
-        <Route path="/parentUserProfile" element={
-          <ProtectedRoute allowedRoles={[UserRole.Parent]}><ParentUserProfile /></ProtectedRoute>
-        } />
         
-        <Route path="/parent/requestMedicine" element={
-          <ProtectedRoute allowedRoles={[UserRole.Parent]}><ParentMedicineRequestCRUDPage /></ProtectedRoute>
-        } />
-        <Route path="/assignStudentToParent" element={
-          <ProtectedRoute><LinkStudentPage /></ProtectedRoute>
-        } />
-        <Route path="/nurse/records" element={
-          <ProtectedRoute><StudentHealthRecordList /></ProtectedRoute>
-        } />
-        <Route path="/nurse/records/:id" element={
-          <ProtectedRoute><StudentHealthRecordDetailDisplay /></ProtectedRoute>
-        } />
-
         {/*<Route path="/parent/medical-record" element={
           <ProtectedRoute><MedicalRecordView /></ProtectedRoute>
         } />*/}

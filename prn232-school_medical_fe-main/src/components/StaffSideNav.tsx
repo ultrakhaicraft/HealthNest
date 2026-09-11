@@ -1,15 +1,16 @@
 import { useAuth } from "../feature/API/LoginService";
 import { IconHealthCheckup, IconHome, IconIncidentReport, IconMedical, IconMedicine, IconStudentRecord, IconVaccine } from "./IconList";
 
+
 interface SideNavProps {
   activeItem: string;
   onSelect: (label: string) => void;
 }
 
-const SideNav = ({ activeItem, onSelect }: SideNavProps) => {
+const NurseSideNav = ({ activeItem, onSelect }: SideNavProps) => {
   const navItems = [
     { icon: <IconHome className="icon-small" />, label: 'Home' },
-    { icon: <IconMedical className="icon-small" />, label: 'Medical Supplies' },
+    { icon: <IconMedical className="icon-small" />, label: 'Medical Supply' },
     { icon: <IconMedicine className="icon-small" />, label: 'Medicine' },
     { icon: <IconMedical className="icon-small" />, label: 'Medicine Request' },
     { icon: <IconStudentRecord className="icon-small" />, label: 'Student Record' },
@@ -61,4 +62,4 @@ const SideNav = ({ activeItem, onSelect }: SideNavProps) => {
   );
 }
 
-export default SideNav
+export default NurseSideNav

@@ -41,6 +41,7 @@ public class MedicalSupplyViewModel
 	public int Amount { get; set; }
 	public bool? IsAvailable { get; set; }
 	public bool IsDeleted { get; set; }
+	public string? CreatedByName { get; set; } = string.Empty;
 
 }
 

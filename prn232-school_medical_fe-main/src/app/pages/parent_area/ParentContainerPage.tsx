@@ -1,52 +1,37 @@
-import { useState } from 'react';
 import Footer from '../../../components/Landing_Page/footer';
-import UserHomepageNavBar from '../../../components/User_homepage/horizontal-nav-bar'; 
-import '../../../app/CSS/Parent/ParentHomepage.css'; // Importing the CSS for the parent homepage
-import { useAccountDetail } from '../../../feature/Hooks/Account/useAccountDetail';
-import ParentHomePage from './ParentHomePage';
-import ParentMedicineRequestCRUDPage from './ParentMedicineRequestCRUD-page';
+import '../../CSS/Parent/ParentHomepage.css'; // Importing the CSS for the parent homepage
+import '../../CSS/Parent/ParentStudentNavBar.css'
+import { UserRole } from '../../../feature/Constant';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { getActiveItemFromPath, userouteForLabel } from '../../../feature/Hooks/Other/RouterHooks';
+import ParentHomeNavBar from '../../../components/ParentStudentHomepage/ParentHomeNavBar';
 
 
 // This component represents the parent container page for other components.
 export default function ParentContainerPage() {
-    //Call Get Account Detail from Service
-    const { accountDetail, isStudentExist } = useAccountDetail();
-    const userType = 'parent'; // Hardcoded user type for this page
+    const userType = UserRole.Parent;
+    const navigate = useNavigate();
+    const location = useLocation();
 
-    const [activeItem, setActiveItem] = useState('Home');
+    // Derive the active nav item from the URL instead of local state
+    const activeItem = getActiveItemFromPath(location.pathname, userType);
 
-    
-     let mainContent;
-        if (activeItem === 'Home') {
-            mainContent = (
-                <ParentHomePage 
-                    accountDetail={accountDetail}
-                    isStudentExist={isStudentExist}
-                    userType={userType}
-                />
-            );
-        } else if (activeItem === 'Student Health Records') {
-            mainContent = <MedicineCRUDPage />;
-        } else if (activeItem === 'Incident Report') {
-            mainContent = <IncidentRecordCRUDPage />;
-        } else if (activeItem === 'Medicine Request') {
-            mainContent = <ParentMedicineRequestCRUDPage />;
-        } else {
-            mainContent = <div style={{ padding: '2rem' }}>Feature coming soon.</div>;
-        }
-    
+    const handleSelect = (label: string) => {
+        navigate(userouteForLabel(label,userType)); // e.g. 'Medicine' -> '/nurseHomepage/medicines'
+    };
 
     return (
         <div className="normal-page">
-            <UserHomepageNavBar
-            userType={userType} 
+            <ParentHomeNavBar
+                activeItem={activeItem}
+                onSelect={handleSelect}
             />
             <div className="main-content">
-                {mainContent}
+                <Outlet />
             </div>
             <Footer />
         </div>
-        
+
     );
 }
 

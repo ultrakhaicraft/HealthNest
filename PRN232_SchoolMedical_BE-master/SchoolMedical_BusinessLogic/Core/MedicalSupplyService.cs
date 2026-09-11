@@ -70,6 +70,7 @@ namespace SchoolMedical_BusinessLogic.Core
                 Amount = x.Amount,
                 IsAvailable = x.IsAvailable,
                 IsDeleted = x.IsDeleted,
+				CreatedByName = x.CreatedByNavigation.FullName
             }).ToList();
 
 

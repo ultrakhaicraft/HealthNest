@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { MedicineRequestQueryParams } from "../../../feature/API/MedicineRequestService";
-import { SCHOOLNURSE_ROLE } from "../../../feature/Constant";
+import { UserRole } from "../../../feature/Constant";
 
 
 interface MedicineRequestFilterProps {
@@ -16,7 +16,7 @@ export const MedicineRequestFilter = ({ filters, onApplyFilters, onClearFilters,
 
   //If userRole somehow change, rerun the toggle check
   useEffect(()=>{
-    if(userRole===SCHOOLNURSE_ROLE){
+    if(userRole===UserRole.Nurse){
       setToggleRequestByFilter(true)
     }else{
       setToggleRequestByFilter(false)

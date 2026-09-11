@@ -1,10 +1,10 @@
 
 import React from 'react';
 import Footer from '../../../components/Landing_Page/footer';
-import UserHomepageNavBar from '../../../components/User_homepage/horizontal-nav-bar'; 
-import WelcomeBox from '../../../components/User_homepage/welcome-box';
-import HealthStatus from '../../../components/User_homepage/health-status-box';
-import HealthAnnouncements from '../../../components/User_homepage/news-box';
+import UserHomepageNavBar from '../../../components/ParentStudentHomepage/ParentHomeNavBar'; 
+import WelcomeBox from '../../../components/ParentStudentHomepage/welcome-box';
+import HealthStatus from '../../../components/ParentStudentHomepage/health-status-box';
+import HealthAnnouncements from '../../../components/ParentStudentHomepage/news-box';
 import '../../CSS/ParentHomepage.css';
 
 export default function StudentHomePage() {
