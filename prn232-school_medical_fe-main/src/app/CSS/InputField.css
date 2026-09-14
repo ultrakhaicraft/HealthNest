@@ -1,0 +1,51 @@
+.input-group {
+   margin-top: 1rem;
+ }
+
+ .input-label {
+   display: block;
+   font-size: 0.875rem;
+   font-weight: 500;
+   color: #374151;
+   margin-bottom: 0.25rem;
+ }
+
+ .input-field,
+ .textarea-field {
+   width: 100%;
+   padding: 0.5rem 0.75rem;
+   border: 1px solid #d1d5db;
+   border-radius: 0.5rem;
+   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+   transition: all 0.2s;
+   box-sizing: border-box;
+   /* Important for width calculation */
+ }
+
+ .input-field:focus,
+ .textarea-field:focus {
+   outline: none;
+   border-color: transparent;
+   box-shadow: 0 0 0 2px #3b82f6;
+ }
+
+ .input-with-unit {
+   position: relative;
+ }
+
+ .input-with-unit .input-field {
+   padding-right: 3rem;
+   /* Space for unit */
+ }
+
+ .input-unit {
+   position: absolute;
+   top: 0;
+   bottom: 0;
+   right: 0;
+   display: flex;
+   align-items: center;
+   padding-right: 0.75rem;
+   font-size: 0.875rem;
+   color: #6b7280;
+ }

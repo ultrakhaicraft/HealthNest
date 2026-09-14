@@ -1,6 +1,8 @@
 import { useState, useCallback, useEffect } from "react";
 import { MedicineRequestCreateModel, MedicineRequestDetailsModel, MedicineRequestQueryParams, MedicineRequestService, MedicineRequestUpdateModel, MedicineRequestViewModel } from "../../API/MedicineRequestService";
 
+type FetchStrategy = 'all' | 'byRequester';
+
 //Data fetching and data management hooks for MedicalSupplyCRUDPage
 //RequesterId is optional for nurse, but mandatory for parent
 export function useMedicineRequests(filters: MedicineRequestQueryParams, requesterId: string) {
@@ -9,11 +11,16 @@ export function useMedicineRequests(filters: MedicineRequestQueryParams, request
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const strategy: FetchStrategy = requesterId ? 'byRequester' : 'all';
 
   const refetch = useCallback(() => {
     setLoading(true);
     setError(null);
-    return MedicineRequestService.getAll(filters)
+    const request = strategy==='byRequester'
+    ? MedicineRequestService.getAllByRequesterId(requesterId!,filters)
+    : MedicineRequestService.getAll(filters);
+
+    return request
       .then((res) => {
         setData(res.data);
         setTotalPages(res.totalPages);
@@ -27,23 +34,7 @@ export function useMedicineRequests(filters: MedicineRequestQueryParams, request
     refetch();
   }, [refetch]);
 
-  //Fetch medicine request owned by specific parent
-  const refetchByParent = useCallback(() => {
-    setLoading(true);
-    setError(null);
-    return MedicineRequestService.getAllByRequesterId(requesterId,filters)
-      .then((res) => {
-        setData(res.data);
-        setTotalPages(res.totalPages);
-        setTotalItems(res.totalCount);
-      })
-      .catch(() => setError('Failed to load medicine requests.'))
-      .finally(() => setLoading(false));
-  }, [filters]);
-
-  useEffect(() => {
-    refetchByParent();
-  }, [refetchByParent]);
+  
 
   const getById = useCallback((id: string): Promise<MedicineRequestDetailsModel> => {
     const medicineRequest = MedicineRequestService.getById(id);

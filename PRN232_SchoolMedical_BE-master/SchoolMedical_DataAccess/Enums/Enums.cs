@@ -27,12 +27,14 @@ public enum IsAvailable
 	No=0
 }
 
+//Used for RecordStatus
 public enum RecordStatus
 {
 	Active, 
 	Inactive, //Soft Delete
 }
 
+//Exclusive for Medicine Request 
 public enum RequestStatus
 {
 	Pending,
@@ -41,7 +43,7 @@ public enum RequestStatus
 	Deleted, //Soft Delete
 }
 
-//Become deleted through Soft Delete API
+//Exclusive for HealthCheckup and Vaccine Event
 public enum EventStatus
 {
 	Upcoming,
@@ -51,6 +53,7 @@ public enum EventStatus
 	
 }
 
+//Exclusive for IncidentRecord
 public enum IncidentStatus
 {
 	Active, //Incident that has not been solved, currently in treatment

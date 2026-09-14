@@ -2,14 +2,19 @@ import NurseSideNav from '../../../components/StaffSideNav';
 import '../../CSS/Nurse/NurseSideNav.css';
 import '../../CSS/Nurse/NurseTopHeader.css';
 import "../../CSS/Nurse/NurseCRUDPanel.css"
+import "../../CSS/Nurse/NurseModal.css"
+import "../../CSS/InputField.css"
 import { useUserName } from '../../../feature/Hooks/Account/AccountHooks';
 import { NurseHeader } from '../../../components/NurseHeader';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { getActiveItemFromPath, userouteForLabel } from '../../../feature/Hooks/Other/RouterHooks';
 import { UserRole } from '../../../feature/Constant';
 
+
+
 //A Container component for Nurse Home Page, which includes the Side Navigation and the main content area. 
 //The main content area changes based on the selected item in the side navigation.
+
 export default function NurseHomePage() {
     // Function to get user full name from localStorage
     const userRole = UserRole.Nurse

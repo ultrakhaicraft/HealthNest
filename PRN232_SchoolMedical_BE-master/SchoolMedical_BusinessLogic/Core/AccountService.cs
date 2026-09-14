@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SchoolMedical_BusinessLogic.Core;
 
@@ -27,32 +28,27 @@ public class AccountService : IAccountService
 
 	public Task ChangeAccountStatus(string userId, AccountStatus status)
 	{
-		try
-		{
+		
 			var account = _unitOfWork.GetRepository<Account>().Find(user => user.Id == userId && user.Status != AccountStatus.Inactive.ToString());
 			if (account == null)
 			{
-				throw new AppException("Account not found or already inactive.");
+				throw new NotFoundException("Account not found or already inactive with Id: "+userId);
 			}
 			account.Status = status.ToString();
 			_unitOfWork.GetRepository<Account>().Update(account);
 			_unitOfWork.Save();
 			return Task.CompletedTask;
-		}
-		catch (Exception e)
-		{
-			Console.WriteLine(e);
-			return null;
-		}
+		
 	}
 
 	public async Task<string> CreateNewAccount(AccountCreateRequest request)
 	{
-		try
-		{
+		
 			if (!IsValid(request.Password))
 			{
-				throw new AppException("Password does not meet the required criteria.");
+				throw new BadRequestException("Password does not meet the required criteria: \n" +
+					"1. Must have length greater than 8\n" +
+					"2. Must have letters numbers, and special characters");
 			}
 
 			var account = new Account
@@ -71,27 +67,20 @@ public class AccountService : IAccountService
 			await _unitOfWork.GetRepository<Account>().InsertAsync(account);
 			await _unitOfWork.SaveAsync();
 			return account.Id;
-		}
-		catch (Exception e)
-		{
-
-			Console.WriteLine(e);
-			return null;
-		}
+		
 	}
 
 	public async Task<AccountDetailModel> GetAccountDetailById(string userId)
 	{
-		try
-		{
+		
 			var accounts= await  _unitOfWork.GetRepository<Account>().FindAsync(user => user.Id == userId);
 			if (accounts == null)
 			{
-				throw new AppException("Account not found.");
+				throw new NotFoundException("Account not found with Id: "+userId);
 			}
 			if (accounts.Status == AccountStatus.Inactive.ToString())
 			{
-				throw new AppException("Account is inactive.");
+				throw new BadRequestException("Account is inactive with Id: "+userId);
 			}
 
 			var detail= new AccountDetailModel
@@ -121,55 +110,19 @@ public class AccountService : IAccountService
 
 			return detail;
 
-		}
-		catch (Exception e)
-		{
-
-			Console.WriteLine(e);
-			return null;
-		}
+		
 	}
 
 	public async Task<PagingModel<AccountViewModel>> GetAllAccount(AccountQuery request)
 	{
-		try
-		{
+		
 			var query = await _unitOfWork.GetRepository<Account>().GetQueryableAsync();
 			
-			// Filter Based on Status (using string-to-enum conversion)
-			if (!string.IsNullOrEmpty(request.Status.ToString()))
-			{
-				if (Enum.TryParse<AccountStatus>(request.Status.ToString(), true, out var parsedStatus))
-				{
-					query = query.Where(account => account.Status == parsedStatus.ToString());
-				}
-			}
-
-			// Filter Based on Role (using string-to-enum conversion)
-			if (!string.IsNullOrEmpty(request.Role.ToString()))
-			{
-				if (Enum.TryParse<AccountRole>(request.Role.ToString(), true, out var parsedRole))
-				{
-					query = query.Where(account => account.Role == parsedRole.ToString());
-				}
-			}
-
-			// Search Based on FullName (case-insensitive search using ToLower)
-			if (!string.IsNullOrEmpty(request.FullName))
-			{
-				string nameFilter = request.FullName.ToLower();
-				query = query.Where(account => account.FullName != null && account.FullName.ToLower().Contains(nameFilter));
-			}
-
-			//Search Based on Email
-			if (!string.IsNullOrEmpty(request.Email))
-			{
-				query = query.Where(account => account.Email != null && account.Email.Equals(request.Email));
-			}
+			query = ApplyFilters(query, request);
 
 			if (query == null || !query.Any())
 			{
-				throw new AppException("No accounts found.");
+				throw new NotFoundException("Unable to found account given the filter request");
 			}
 
 			var accountViews = query.Select(account => new AccountViewModel
@@ -191,46 +144,32 @@ public class AccountService : IAccountService
 				TotalPages = pagingModel.TotalPages,
 				Data = pagingModel.Data
 			};
-		}
-		catch (Exception e)
-		{
-
-			Console.WriteLine(e);
-			return null;
-		}
+		
 	}
 
 	public async Task SoftDeleteAccount(string userId)
 	{
-		try
-		{
+		
 
-			var account = _unitOfWork.GetRepository<Account>().Find(user => user.Id == userId && user.Status != AccountStatus.Inactive.ToString());
+			var account = await _unitOfWork.GetRepository<Account>().FindAsync(user => user.Id == userId && user.Status != AccountStatus.Inactive.ToString());
 			if (account == null)
 			{
-				throw new Exception("Account not found or already inactive.");
+				throw new NotFoundException("Account not found or already inactive with Id: "+userId);
 			}
 			account.Status = AccountStatus.Inactive.ToString();
 			_unitOfWork.GetRepository<Account>().Update(account);
 			_unitOfWork.Save();
 			
-		}
-		catch (Exception e)
-		{
-
-			Console.WriteLine(e);
-			
-		}
+		
 	}
 
 	public async Task UpdateAccount(string userId, AccountUpdateRequest request)
 	{
-		try
-		{
-			var account = _unitOfWork.GetRepository<Account>().Find(user => user.Id == userId && user.Status != AccountStatus.Inactive.ToString());
+		
+			var account = await _unitOfWork.GetRepository<Account>().FindAsync(user => user.Id == userId && user.Status != AccountStatus.Inactive.ToString());
 			if (account == null)
 			{
-				throw new AppException("Account not found or already inactive.");
+				throw new NotFoundException("Account not found or already inactive with Id: " + userId);
 			}
 			account.FullName = request.FullName;
 			account.Email = request.Email;
@@ -241,54 +180,46 @@ public class AccountService : IAccountService
 			_unitOfWork.GetRepository<Account>().Update(account);
 			_unitOfWork.Save();
 			
-		}
-		catch (Exception e)
-		{
-
-			Console.WriteLine(e);
-			
-		}
+		
 	}
 
-	public async Task<AccountDetailModel> getStudentDetail(string parentId)
+	public async Task<PagingModel<AccountViewModel>> getStudentsByParentId(string parentId, AccountQuery request)
 	{
-		try
+
+		//Get a potential list of student id through parent id
+		var query = await _unitOfWork.GetRepository<Account>().GetQueryableAsync();
+
+
+		var accounts = query.Where(user => user.ParentId == parentId
+		&&user.Role== AccountRole.Student.ToString()
+		&&user.Status != AccountStatus.Inactive.ToString());
+
+		if (accounts == null || !accounts.Any())
 		{
-			//Get student id through parent id
-			var accounts = await _unitOfWork.GetRepository<Account>().FindAsync(user => user.ParentId == parentId);
-			if (accounts == null)
-			{
-				throw new AppException("Student Account not found.");
-			}
-			if(accounts.Role != AccountRole.Student.ToString())
-			{
-				throw new AppException("Account is not a student.");
-			}
-			if (accounts.Status == AccountStatus.Inactive.ToString())
-			{
-				throw new AppException("Student Account is inactive.");
-			}
-
-			return new AccountDetailModel
-			{
-				Id = accounts.Id,
-				FullName = accounts.FullName,
-				Email = accounts.Email,
-				PhoneNumber = accounts.PhoneNumber,
-				Address = accounts.Address,
-				Role = accounts.Role,
-				Status = accounts.Status,
-				ParentId = accounts.ParentId,
-				ParentName = accounts.Parent != null ? accounts.Parent.FullName : null
-			};
-
+			throw new NotFoundException("Accounts associated with ParentId are not found or already inactive with Id or not a student");
 		}
-		catch (Exception e)
+
+		var accountViews = accounts.Select(account => new AccountViewModel
 		{
+			Id = account.Id,
+			FullName = account.FullName,
+			Email = account.Email,
+			Role = account.Role,
+			Status = account.Status,
+		});
 
-			Console.WriteLine(e);
-			return null;
-		}
+		var pagingModel = await PagingExtension.ToPagingModel<AccountViewModel>(accountViews, request.PageNumber, request.PageSize); // Default page index and size
+
+		return new PagingModel<AccountViewModel>
+		{
+			PageIndex = pagingModel.PageIndex,
+			PageSize = pagingModel.PageSize,
+			TotalCount = pagingModel.TotalCount,
+			TotalPages = pagingModel.TotalPages,
+			Data = pagingModel.Data
+		};
+
+
 	}
 
 	public async Task<List<AccountViewModel>> GetAllStudentAccounts()
@@ -312,11 +243,10 @@ public class AccountService : IAccountService
 
 	public async Task<bool> AssignStudentToParent(string parentId, string studentId)
 	{
-		try
-		{
+		
 			//Get student Account
-			var account = _unitOfWork.GetRepository<Account>()
-				.Find(user => user.Id == studentId && user.Status != AccountStatus.Inactive.ToString());
+			var account = await _unitOfWork.GetRepository<Account>()
+				.FindAsync(user => user.Id == studentId && user.Status != AccountStatus.Inactive.ToString());
 
 			
 
@@ -343,12 +273,7 @@ public class AccountService : IAccountService
 			_unitOfWork.GetRepository<Account>().Update(account);
 			_unitOfWork.Save();
 			return true;
-		}
-		catch (Exception e)
-		{
-			Console.WriteLine(e);
-			return false;
-		}
+		
 	}
 
 
@@ -366,6 +291,42 @@ public class AccountService : IAccountService
 		if (!Regex.IsMatch(password, @"[@#$%^&*!_]")) return false;
 
 		return true;
+	}
+
+	private static IQueryable<Account> ApplyFilters(IQueryable<Account> query, AccountQuery request)
+	{
+		// Filter Based on Status (using string-to-enum conversion)
+		if (!string.IsNullOrEmpty(request.Status.ToString()))
+		{
+			if (Enum.TryParse<AccountStatus>(request.Status.ToString(), true, out var parsedStatus))
+			{
+				query = query.Where(account => account.Status == parsedStatus.ToString());
+			}
+		}
+
+		// Filter Based on Role (using string-to-enum conversion)
+		if (!string.IsNullOrEmpty(request.Role.ToString()))
+		{
+			if (Enum.TryParse<AccountRole>(request.Role.ToString(), true, out var parsedRole))
+			{
+				query = query.Where(account => account.Role == parsedRole.ToString());
+			}
+		}
+
+		// Search Based on FullName (case-insensitive search using ToLower)
+		if (!string.IsNullOrEmpty(request.FullName))
+		{
+			string nameFilter = request.FullName.ToLower();
+			query = query.Where(account => account.FullName != null && account.FullName.ToLower().Contains(nameFilter));
+		}
+
+		//Search Based on Email
+		if (!string.IsNullOrEmpty(request.Email))
+		{
+			query = query.Where(account => account.Email != null && account.Email.Equals(request.Email));
+		}
+
+		return query;
 	}
 
 	private async Task<(string studentId, string studentName)> FindStudentByParentId(string parentId)

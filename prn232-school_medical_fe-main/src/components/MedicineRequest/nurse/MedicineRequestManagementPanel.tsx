@@ -25,10 +25,10 @@ export interface MedicineRequestCRUDPanelProps {
   pagination: PaginationState;
   filterState: FilterState;
   onView: (id: string) => void;
-  onEdit: (medicine: MedicineRequestViewModel) => void;
+  onEdit: (medicineRequest: MedicineRequestViewModel) => void;
   userRole: string;
   onCreate?: () => void;
-  onDelete: (medicineId: string) => void;
+  onDelete: (medicineRequestId: string) => void;
 }
 
 

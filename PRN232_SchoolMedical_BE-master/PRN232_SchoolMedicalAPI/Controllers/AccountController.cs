@@ -41,16 +41,17 @@ public class AccountController : ControllerBase
 		ApiResponseWrapper<AccountDetailModel> response = ApiResponseWrapper<AccountDetailModel>
 			.Success(account, "Get account successfully with Id: "+id);
 
-		return Ok(account);
+		return Ok(response);
 	}
 
 	[HttpGet("{parentId}/student")]
-	public async Task<IActionResult> GetStudentByParentId(string parentId)
+	public async Task<IActionResult> GetStudentByParentId(string parentId, [FromQuery] AccountQuery request)
 	{
-		var account = await _accountService.getStudentDetail(parentId);
-		ApiResponseWrapper<AccountDetailModel> response = ApiResponseWrapper<AccountDetailModel>
-			.Success(account, "Get Student account successfully with Parent Id: " + parentId);
-		return Ok(account);
+		var account = await _accountService.getStudentsByParentId(parentId, request);
+		ApiResponseWrapper<PagingModel<AccountViewModel>> response = ApiResponseWrapper<PagingModel<AccountViewModel>>
+			.Success(account, "Get Students account successfully with Parent Id: " + parentId);
+
+		return Ok(response);
 	}
 
 	/// <summary>

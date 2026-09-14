@@ -74,7 +74,7 @@ const ProfileDropdown = () => {
       {open && (
         <div className={styles.dropdownMenu}>
           <button onClick={handleNavigateProfile} className={styles.dropdownItem}>👤 View Profile</button>
-          <button onClick={handleLogout} className={'${styles.dropdownItem} ${styles.dropdownItemLogout}'}>🚪 Logout</button>
+          <button onClick={handleLogout} className={`${styles.dropdownItem} ${styles.dropdownItemLogout}`}>🚪 Logout</button>
         </div>
       )}
     </div>

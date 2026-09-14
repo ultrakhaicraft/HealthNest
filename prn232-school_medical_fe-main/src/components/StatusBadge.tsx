@@ -1,3 +1,5 @@
+import styles from "../app/CSS/CRUDStatusBadge.module.css";
+
 interface StatusBadgeProps {
   status: string;
 }
@@ -8,21 +10,23 @@ export const StatusBadge = ({ status }: StatusBadgeProps) => {
   const getStatusClass = (status: string) => {
     switch (status) {
       case 'Active':
-        return 'status-badge-active';
+        return `${styles.statusBadgeActive}`;
       case 'Inactive':
-        return 'status-badge-inactive';
+        return `${styles.statusBadgeInactive}`;
       case 'Completed':
-        return 'status-badge-resolved';
+        return `${styles.statusBadgeResolved}`;
       case 'Pending':
-        return 'status-badge-pending';
+        return `${styles.statusBadgePending}`;
+      case 'Cancelled':
+        return `${styles.statusBadgeCancelled}`
       case 'Available':
-        return 'status-badge-active';
+        return `${styles.statusBadgeActive}`;
       case 'Unavailable':
-        return 'status-badge-inactive';
+        return `${styles.statusBadgeInactive}`;
       default:
-        return 'status-badge-active'; // Default to active if status is unknown
+        return `${styles.statusBadgeActive}`; // Default to active if status is unknown
     }
   };
   
-  return <span className={`status-badge ${getStatusClass(status)}`}>{status}</span>;
+  return <span className={`${styles.statusBadge} ${getStatusClass(status)}`}>{status}</span>;
 };

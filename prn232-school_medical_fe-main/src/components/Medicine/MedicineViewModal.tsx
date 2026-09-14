@@ -1,6 +1,7 @@
 import React from 'react';
 import { MedicineDetailsViewModel } from '../../feature/API/MedicineService';
 import { IconClose } from '../IconList';
+import { StatusBadge } from '../StatusBadge';
 
 interface MedicineViewProps {
   medicine: MedicineDetailsViewModel;
@@ -34,9 +35,7 @@ export const MedicineViewDetailModal: React.FC<MedicineViewProps> = ({ medicine,
             <p><strong>Amount:</strong> {medicine.amount}</p>
             <p><strong>Created By:</strong> {medicine.createdByName}</p>
             <p><strong>Availability:</strong>
-            <span className={`status-badge ${medicine.isAvailable ? 'status-badge-active' : 'status-badge-inactive'}`}>
-                  {medicine.isAvailable ? 'Available' : 'Unavailable'}
-            </span>
+            <StatusBadge status={medicine.isAvailable? 'Available':'Unavailable'}></StatusBadge>
             </p>
           </div>
 

@@ -85,12 +85,19 @@ export const accountService = {
    */
   getDetailById: async (userId: string): Promise<AccountDetail> => {
     const response = await apiClient.get<ApiResponseWrapper<AccountDetail>>(`/account/${userId}`);
+    console.log("userId: ",userId);
+    console.log("Detail logged: ", response.data.data);
     return response.data.data;
   },
 
-
-  getStudentFromParentId: async (parentId: string): Promise<AccountDetail> => {
-    const response = await apiClient.get<ApiResponseWrapper<AccountDetail>>(`/account/${parentId}/student`);
+  /* 
+  Fetch all student account that contain Parent Id
+  Useful to check what student belong to which parent
+  */
+  getStudentFromParentId: async (parentId: string, params: GetAllAccountsParams): Promise<PaginatedResponse<AccountView>> => {
+    const response = await apiClient.get<ApiResponseWrapper<PaginatedResponse<AccountView>>>(`/account/${parentId}/student`,
+      {params: params}
+    );
     return response.data.data;
   },
 

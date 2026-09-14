@@ -114,7 +114,7 @@ export const MedicalSupplyCRUDPanel = ({
           <PaginationControls 
                             currentPage={pagination.currentPage}
                             totalPages={pagination.totalPages}
-                            onPageChange={(page) => filterState.onChange('PageIndex', page)}
+                            onPageChange={pagination.onPageChange}
           />
         </div>
   )

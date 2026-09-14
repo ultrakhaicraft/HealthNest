@@ -1,9 +1,17 @@
 import { useState, useEffect, useCallback } from 'react';
-import { AccountDetail, accountService } from '../../API/AccountService';
+import { AccountDetail, accountService, GetAllAccountsParams } from '../../API/AccountService';
 
-export function useAccountDetail() {
+export const  useAccountDetail =()=> {
   const [accountDetail, setAccountDetail] = useState<AccountDetail | null>(null);
   const [isStudentExist, setIsStudentExist] = useState<boolean>(true);
+  const defaultQuery: GetAllAccountsParams = {
+    FullName: '',
+    Email: '',
+    Role: '',
+    Status: '',
+    PageNumber: 1,
+    PageSize: 5
+  };
 
   const getAccountDetail = useCallback(async () => {
     const userId = localStorage.getItem('userId');
@@ -12,35 +20,42 @@ export function useAccountDetail() {
       return;
     }
 
+    let result: AccountDetail;
     try {
-      const result = await accountService.getDetailById(userId);
+      result = await accountService.getDetailById(userId); // assignment, no `const`/`let` here
+    } catch (error) {
+      console.error('Failed to fetch account details:', error);
+      return; // genuine failure — nothing more we can do
+    }
 
-      console.log('Account detail fetched successfully:', result);
+    console.log(result);
 
-      // TODO: verify this — if a parent has no linked student, getStudentFromParentId
-      // likely throws (e.g. 404) rather than resolving to null/undefined. If so, this
-      // whole block never reaches the if/else below, the outer catch swallows it,
-      // and setAccountDetail/setIsStudentExist(false) never fire — meaning a parent
-      // with no linked student may see a broken homepage instead of the
-      // "no student linked" alert. Confirm actual backend behavior and consider
-      // wrapping this call in its own try/catch if it does throw on no-student.
-      const studentDetail = await accountService.getStudentFromParentId(result.id);
+    try {
+      console.log(result.id);
+      const studentDetail = await accountService.getStudentFromParentId(result.id, defaultQuery);
+      const firstStudent = studentDetail.data[0];
+      console.log(studentDetail);
 
-      if (studentDetail) {
+      //TODO: Need to find a way to handle multiple child, like a multiple child dashboard thing
+      if (firstStudent) {
         setIsStudentExist(true);
-        result.studentId = studentDetail.id;
-        result.studentName = studentDetail.fullName;
+        result.studentId = firstStudent.id;
+        result.studentName = firstStudent.fullName;
       } else {
         setIsStudentExist(false);
         result.studentId = "";
         result.studentName = "";
       }
-
-      setAccountDetail(result);
-      localStorage.setItem("accountDetail", JSON.stringify(result));
-    } catch (error) {
-      console.error('Failed to fetch account details:', error);
+    } catch {
+      // 404 (or any failure) fetching linked student → treat as "no student linked"
+      setIsStudentExist(false);
+      result.studentId = "";
+      result.studentName = "";
     }
+
+    setAccountDetail(result);
+    localStorage.setItem("accountDetail", JSON.stringify(result));
+
   }, []);
 
   useEffect(() => {

@@ -33,9 +33,7 @@ export const MedicalSupplyViewDetailModal: React.FC<MedicalSupplyViewDetailModal
             <p><strong>Amount:</strong> {medicalSupply.amount}</p>
             <p><strong>Created By:</strong> {medicalSupply.createdByName}</p>
             <p><strong>Availability:</strong>
-            <span className={`status-badge ${medicalSupply.isAvailable ? 'status-badge-active' : 'status-badge-inactive'}`}>
-                  {medicalSupply.isAvailable ? 'Available' : 'Unavailable'}
-            </span>
+            <StatusBadge status={medicine.isAvailable? 'Available':'Unavailable'}></StatusBadge>
             </p>
           </div>         
           <div className="modal-group modal-row full-width">

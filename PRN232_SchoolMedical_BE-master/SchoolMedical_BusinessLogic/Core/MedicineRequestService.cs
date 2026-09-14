@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.Ocsp;
 using SchoolMedical_BusinessLogic.Interface;
 using SchoolMedical_BusinessLogic.Utility;
 using SchoolMedical_DataAccess.DTOModels;
@@ -28,64 +29,12 @@ namespace SchoolMedical_BusinessLogic.Core
 				.Include(mr => mr.ForStudentNavigation);
 
 			// Apply filters
-			if (!string.IsNullOrEmpty(request.RequestBy))
-			{
-				query = query.Where(mr => mr.RequestBy == request.RequestBy);
-			}
-
-			if (!string.IsNullOrEmpty(request.ForStudent))
-			{
-				query = query.Where(mr => mr.ForStudent == request.ForStudent);
-			}
-
-			if (request.DateFrom.HasValue)
-			{
-				query = query.Where(mr => mr.DateSent >= request.DateFrom.Value);
-			}
-
-			if (request.DateTo.HasValue)
-			{
-				query = query.Where(mr => mr.DateSent <= request.DateTo.Value);
-			}
-
-			if (request.Status.HasValue)
-			{
-				query = query.Where(mr => mr.Status == request.Status.Value.ToString());
-			}
+			query= ApplyFilter(query,request);
 
 
 			// Apply sorting
-			query = ApplySorting(query, request.SortBy, request.IsDescending);
+			query = ApplySorting(query, request.SortByDateSentByDesc);
 
-			/*
-            // Get total count
-            var totalCount = await query.CountAsync();
-
-            // Apply paging
-            var medicineRequests = await query
-                .Skip((request.PageIndex - 1) * request.PageSize)
-                .Take(request.PageSize)
-                .Select(mr => new MedicineRequestResponseDto
-                {
-                    Id = mr.Id,
-                    RequestBy = mr.RequestBy,
-                    RequestByName = mr.RequestByNavigation.FullName ?? "Unknown",
-                    ForStudent = mr.ForStudent,
-                    ForStudentName = mr.ForStudentNavigation.FullName ?? "Unknown",
-                    Description = mr.Description,
-                    DateSent = mr.DateSent
-                })
-                .ToListAsync();
-
-            return new PagingModel<MedicineRequestResponseDto>
-            {
-                PageIndex = request.PageIndex,
-                PageSize = request.PageSize,
-                TotalCount = totalCount,
-                TotalPages = (int)Math.Ceiling((double)totalCount / request.PageSize),
-                Data = medicineRequests
-            };
-            */
 
 			var response = query.Select(mr => new MedicineRequestResponseDto
 			{
@@ -99,6 +48,10 @@ namespace SchoolMedical_BusinessLogic.Core
 				Status= mr.Status
 			});
 
+			if (query == null)
+			{
+				throw new NotFoundException("Unable to found Medicine Request with given filters");
+			}
 
 			var pagedData = await PagingExtension.ToPagingModel(response, request.PageIndex, request.PageSize);
 
@@ -124,31 +77,37 @@ namespace SchoolMedical_BusinessLogic.Core
 				})
 				.FirstOrDefaultAsync();
 
+			if (medicineRequest == null)
+			{
+				throw new NotFoundException("Medicine Request", id);
+			}
+
 			return medicineRequest;
 		}
 
 		
 		public async Task<MedicineRequestResponseDto> CreateMedicineRequestAsync(CreateMedicineRequestRequestDto request)
 		{
-			try
-			{
-				_unitOfWork.BeginTransaction();
-
+			
 				// Validate that RequestBy and ForStudent exist
 				var requester = await _unitOfWork.GetRepository<Account>().GetByIdAsync(request.RequestBy);
 				var student = await _unitOfWork.GetRepository<Account>().GetByIdAsync(request.ForStudent);
 
 				if (requester == null)
 				{
-					throw new KeyNotFoundException("Requester not found");
+					throw new NotFoundException("Requester not found");
 				}
 
 				if (student == null)
 				{
-					throw new KeyNotFoundException("Student not found");
+					throw new NotFoundException("Student not found");
 				}
 
-				//TODO: Also Validate if the children Id belong to the parent Id
+				if (student.ParentId != request.RequestBy || student.ParentId==null)
+				{
+					throw new BadRequestException(
+						"This student isn't your children/kids, please pick the child that has parentId as your account id");
+				}
 
 				var medicineRequest = new Medicinerequest
 				{
@@ -162,8 +121,6 @@ namespace SchoolMedical_BusinessLogic.Core
 
 				await _medicineRequestRepository.InsertAsync(medicineRequest);
 				await _unitOfWork.SaveAsync();
-
-				_unitOfWork.CommitTransaction();
 
 				// Reload with navigation properties
 				var createdRequest = await _medicineRequestRepository
@@ -182,20 +139,13 @@ namespace SchoolMedical_BusinessLogic.Core
 					DateSent = createdRequest.DateSent,
 					Status = createdRequest.Status
 				};
-			}
-			catch(Exception e)
-			{
-				_unitOfWork.RollBack();
-				Console.WriteLine($"Error creating medicine request: {e.Message}");
-				return null;
-			}
 		}
+			
+		
 
 		public async Task<MedicineRequestResponseDto> UpdateMedicineRequestAsync(UpdateMedicineRequestRequestDto request, string id)
 		{
-			try
-			{
-				_unitOfWork.BeginTransaction();
+			
 
 				var medicineRequest = await _medicineRequestRepository.GetByIdAsync(id);
 				if (medicineRequest == null)
@@ -217,7 +167,13 @@ namespace SchoolMedical_BusinessLogic.Core
 					throw new KeyNotFoundException("Student not found");
 				}
 
-				medicineRequest.RequestBy = request.RequestBy;
+				if (student.ParentId != request.RequestBy || student.ParentId == null)
+				{
+					throw new BadRequestException(
+						"This student isn't your children/kids, please pick the child that has parentId as your account id");
+				}
+
+			medicineRequest.RequestBy = request.RequestBy;
 				medicineRequest.ForStudent = request.ForStudent;
 				medicineRequest.Description = request.Description;
 				
@@ -230,7 +186,6 @@ namespace SchoolMedical_BusinessLogic.Core
 				await _medicineRequestRepository.UpdateAsync(medicineRequest);
 				await _unitOfWork.SaveAsync();
 
-				_unitOfWork.CommitTransaction();
 
 				// Reload with navigation properties
 				var updatedRequest = await _medicineRequestRepository
@@ -249,12 +204,7 @@ namespace SchoolMedical_BusinessLogic.Core
 					DateSent = updatedRequest.DateSent,
 					Status = updatedRequest.Status
 				};
-			}
-			catch
-			{
-				_unitOfWork.RollBack();
-				throw;
-			}
+			
 		}
 
 		public async Task DeleteMedicineRequestAsync(string id)
@@ -276,53 +226,132 @@ namespace SchoolMedical_BusinessLogic.Core
 				
 		}
 
-		public async Task<PagingModel<MedicineRequestResponseDto>> GetMedicineRequestsByStudentAsync(string studentId, int pageIndex = 1, int pageSize = 5)
+		public async Task<PagingModel<MedicineRequestResponseDto>> GetMedicineRequestsByStudentAsync(string studentId, MedicineRequestFilterRequestDto request)
 		{
-			var query = _medicineRequestRepository
+			IQueryable<Medicinerequest> query = _medicineRequestRepository
 				.Include(mr => mr.RequestByNavigation)
 				.Include(mr => mr.ForStudentNavigation)
-				.Where(mr => mr.ForStudent == studentId)
-				.OrderByDescending(mr => mr.DateSent)
-				.Select(mr => new MedicineRequestResponseDto
-				{
-					Id = mr.Id,
-					RequestBy = mr.RequestBy,
-					RequestByName = mr.RequestByNavigation.FullName ?? "Unknown",
-					ForStudent = mr.ForStudent,
-					ForStudentName = mr.ForStudentNavigation.FullName ?? "Unknown",
-					Description = mr.Description,
-					DateSent = mr.DateSent,
-					Status = mr.Status
-				});
+				.Where(mr => mr.ForStudent == studentId);
 
-			var pagedResult = await PagingExtension.ToPagingModel(query, pageIndex, pageSize);
-			return pagedResult;
+			// Apply filters
+			query = ApplyFilter(query, request);
+
+
+			// Apply sorting
+			query = ApplySorting(query, request.SortByDateSentByDesc);
+
+			var response = query.Select(mr => new MedicineRequestResponseDto
+			{
+				Id = mr.Id,
+				RequestBy = mr.RequestBy,
+				RequestByName = mr.RequestByNavigation.FullName ?? "Unknown",
+				ForStudent = mr.ForStudent,
+				ForStudentName = mr.ForStudentNavigation.FullName ?? "Unknown",
+				Description = mr.Description,
+				DateSent = mr.DateSent,
+				Status = mr.Status
+			});
+
+			if (query == null)
+			{
+				throw new NotFoundException("Unable to found Medicine Request with given filters by Student Id: " + studentId);
+			}
+
+			var pagedData = await PagingExtension.ToPagingModel(response, request.PageIndex, request.PageSize);
+
+			return pagedData;
 		}
 
-		public async Task<PagingModel<MedicineRequestResponseDto>> GetMedicineRequestsByRequesterAsync(string requesterId, int pageIndex = 1, int pageSize = 5)
+		/// <summary>
+		/// Get Medicine Request created by Requester (Parent)
+		/// </summary>
+		/// <param name="requesterId"></param>
+		/// <param name="pageIndex"></param>
+		/// <param name="pageSize"></param>
+		/// <returns></returns>
+		public async Task<PagingModel<MedicineRequestResponseDto>> GetMedicineRequestsByRequesterAsync(string requesterId, MedicineRequestFilterRequestDto request)
 		{
-			var query = _medicineRequestRepository
+			IQueryable<Medicinerequest> query = _medicineRequestRepository
 				.Include(mr => mr.RequestByNavigation)
 				.Include(mr => mr.ForStudentNavigation)
-				.Where(mr => mr.RequestBy == requesterId)
-				.OrderByDescending(mr => mr.DateSent)
-				.Select(mr => new MedicineRequestResponseDto
-				{
-					Id = mr.Id,
-					RequestBy = mr.RequestBy,
-					RequestByName = mr.RequestByNavigation.FullName ?? "Unknown",
-					ForStudent = mr.ForStudent,
-					ForStudentName = mr.ForStudentNavigation.FullName ?? "Unknown",
-					Description = mr.Description,
-					DateSent = mr.DateSent,
-					Status = mr.Status
-				});
+				.Where(mr=>mr.RequestBy==requesterId);
 
-			var pagedResult = await PagingExtension.ToPagingModel(query, pageIndex, pageSize);
-			return pagedResult;
+			// Apply filters
+			query = ApplyFilter(query, request);
+
+
+			// Apply sorting
+			query = ApplySorting(query, request.SortByDateSentByDesc);
+
+			var response = query.Select(mr => new MedicineRequestResponseDto
+			{
+				Id = mr.Id,
+				RequestBy = mr.RequestBy,
+				RequestByName = mr.RequestByNavigation.FullName ?? "Unknown",
+				ForStudent = mr.ForStudent,
+				ForStudentName = mr.ForStudentNavigation.FullName ?? "Unknown",
+				Description = mr.Description,
+				DateSent = mr.DateSent,
+				Status = mr.Status
+			});
+
+			if (query == null)
+			{
+				throw new NotFoundException("Unable to found Medicine Request with given filters by Requester Id: "+requesterId);
+			}
+
+			var pagedData = await PagingExtension.ToPagingModel(response, request.PageIndex, request.PageSize);
+
+			return pagedData;
 		}
 
-		private IQueryable<Medicinerequest> ApplySorting(IQueryable<Medicinerequest> query, string? sortBy, bool isDescending)
+		private IQueryable<Medicinerequest> ApplySorting(IQueryable<Medicinerequest> query, bool SortByDateSentByDesc)
+		{
+
+			return SortByDateSentByDesc
+				? query.OrderByDescending(m => m.DateSent)
+				: query.OrderBy(m => m.DateSent);
+		}
+
+		
+
+		private IQueryable<Medicinerequest> ApplyFilter(IQueryable<Medicinerequest> query, MedicineRequestFilterRequestDto request)
+		{
+			//Important filter: Filter Deleted Medicine Request out
+			query = query.Where(mr => mr.Status != RequestStatus.Deleted.ToString());
+
+			// Apply filters search by name and availability
+			if (!string.IsNullOrEmpty(request.RequestBy))
+			{
+				query = query.Where(mr => mr.RequestBy == request.RequestBy);
+			}
+
+			if (!string.IsNullOrEmpty(request.ForStudent))
+			{
+				query = query.Where(mr => mr.ForStudent == request.ForStudent);
+			}
+
+			if (request.DateFrom.HasValue)
+			{
+				query = query.Where(mr => mr.DateSent >= request.DateFrom.Value);
+			}
+
+			if (request.DateTo.HasValue)
+			{
+				query = query.Where(mr => mr.DateSent <= request.DateTo.Value);
+			}
+
+			if (request.Status.HasValue)
+			{
+				query = query.Where(mr => mr.Status == request.Status.Value.ToString());
+			}
+
+			return query;
+
+		}
+
+		//Used later
+		private IQueryable<Medicinerequest> ApplySortingAdvance(IQueryable<Medicinerequest> query, string? sortBy, bool isDescending)
 		{
 			if (string.IsNullOrEmpty(sortBy))
 				sortBy = "DateSent";

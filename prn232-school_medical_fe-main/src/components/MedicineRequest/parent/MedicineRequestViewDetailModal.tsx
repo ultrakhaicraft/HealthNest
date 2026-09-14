@@ -1,9 +1,10 @@
 import React from 'react';
-import { MedicineRequestResponseDto } from '../../../feature/API/MedicineRequestService';
+import { MedicineRequestDetailsModel } from '../../../feature/API/MedicineRequestService';
 import { IconClose } from '../../IconList';
+import { StatusBadge } from '../../StatusBadge';
 
 interface MedicineRequestViewProps {
-  medicineRequest: MedicineRequestResponseDto;
+  medicineRequest: MedicineRequestDetailsModel;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -26,49 +27,17 @@ export const MedicineRequestViewDetail: React.FC<MedicineRequestViewProps> = ({ 
             <IconClose />
           </button>
         </div>
-        <div className="modal-body">
+        <div id="medicine-request-detail" className="modal-body">
           <div className="modal-column">
             <div className="detail-row">
-              <span className="detail-label">ID</span>
-              <span className="detail-value">{medicineRequest.id}</span>
-            </div>
-            
-            
-            <div className="detail-row">
-              <span className="detail-label">Request By</span>
-              <span className="detail-value">{medicineRequest.requestBy}</span>
-            </div>
-
-            <div className="detail-row">
-              <span className="detail-label">Requester Name</span>
-              <span className="detail-value">{medicineRequest.requestByName}</span>
-            </div>
-
-            <div className="detail-row">
-              <span className="detail-label">For Student</span>
-              <span className="detail-value">{medicineRequest.forStudent}</span>
-            </div>
-            
-            <div className="detail-row">
-              <span className="detail-label">Student Name</span>
-              <span className="detail-value">{medicineRequest.forStudentName}</span>
-            </div>
-          </div>
-          
-          <div className="modal-column">
-            <div className="detail-row">
-              <span className="detail-label">Date Sent</span>
-              <span className="detail-value">{new Date(medicineRequest.dateSent).toLocaleString()}</span>
-            </div>
-            
-            <div className="detail-row">
-              <span className="detail-label">Status</span>
-              <span className="detail-value">
-                <span className={`status-badge ${getStatusClass(medicineRequest.status)}`}>
-                  {medicineRequest.status}
-                </span>
-              </span>
-            </div>
+              <p><strong>Medicine Request ID:</strong> {medicineRequest.id}</p>
+              <p><strong>Requester ID:</strong> {medicineRequest.requestBy}</p>
+              <p><strong>Requester Name:</strong> {medicineRequest.requestByName}</p>
+              <p><strong>Student ID:</strong> {medicineRequest.forStudent}</p>
+              <p><strong>Student Name:</strong> {medicineRequest.forStudentName}</p>
+              <p><strong>Date Sent:</strong> {new Date(medicineRequest.dateSent).toLocaleString()}</p>
+              <p><strong>Status:</strong> <StatusBadge status={medicineRequest.status}></StatusBadge></p>
+            </div>            
           </div>
           
           <div className="detail-row full-width">

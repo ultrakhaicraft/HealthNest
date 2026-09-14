@@ -1,3 +1,5 @@
+import { UserRole } from "../../feature/Constant";
+
 interface HealthStatusProps {
     lastCheckupDate: string;
     userType: string; // Optional prop for user type
@@ -7,6 +9,7 @@ interface HealthStatusProps {
 
 
 function HealthStatus({lastCheckupDate, userType} : HealthStatusProps) {
+  console.log("User role for HealthStatus: ", userType);
     return(
         <section className="health-status-card">
       <div className="health-status-icon-area">
@@ -18,7 +21,7 @@ function HealthStatus({lastCheckupDate, userType} : HealthStatusProps) {
       </div>
       <div className="health-status-details">
         {
-          userType === 'parent' ? (
+          userType === UserRole.Parent ? (
             <h2 className="health-status-title">Your Child's Health Status</h2>
           ) : (
             <h2 className="health-status-title">Your Health Status</h2>

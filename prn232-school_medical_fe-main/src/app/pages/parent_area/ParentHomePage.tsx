@@ -1,18 +1,19 @@
+import { useOutletContext } from "react-router-dom";
 import HealthStatus from "../../../components/ParentStudentHomepage/health-status-box";
 import HealthAnnouncements from "../../../components/ParentStudentHomepage/news-box";
 import WelcomeBox from "../../../components/ParentStudentHomepage/welcome-box";
 import { useAccountDetail } from "../../../feature/Hooks/Account/useAccountDetail";
+import { ParentOutletContext } from "./ParentContainerPage";
 
-interface ParentHomePageProps {
-    isStudentExist: boolean;
-    userType: string;
-  }
+
 
 
 // Act as first thing to show when parent login, it will show the welcome box, health status and health announcement
 // Kinda like a dashboard for parent, but not really a dashboard, just a homepage for parent
-export default function ParentHomePage({isStudentExist, userType }: ParentHomePageProps){
-    const {accountDetail} = useAccountDetail();
+export default function ParentHomePage(){
+    const {accountDetail,isStudentExist} = useAccountDetail();
+    const {userType} = useOutletContext<ParentOutletContext>();
+
 
     return(
         <>

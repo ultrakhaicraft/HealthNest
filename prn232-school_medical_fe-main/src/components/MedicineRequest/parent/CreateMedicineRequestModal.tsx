@@ -90,7 +90,7 @@ const CreateMedicineRequestModal: React.FC<CreateMedicineRequestModalProps> = ({
         <form className="modal-body" onSubmit={handleSubmit}>
           <div className="modal-column">
             <div className="detail-row">
-              <label htmlFor='requestBy-Id' className="detail-label">Requester ID &lpar Your Id as a parent &rpar</label>
+              <label htmlFor='requestBy-Id' className="detail-label">{'Requester ID (Your Id as a parent)'}</label>
               <input
                 id="requestBy-Id"
                 className="input-field"
@@ -105,38 +105,37 @@ const CreateMedicineRequestModal: React.FC<CreateMedicineRequestModalProps> = ({
             </div>
 
             <div className="detail-row">
-              <label htmlFor='studentId' className="detail-label">Student Id &lpar Your children Id as the school student &rpar</label>
+              <label htmlFor='studentId' className="detail-label">{'Student Id (Your children Id as the school student)'}</label>
               <input
                 id="studentId"
                 className="input-field"
-                name="studentId"
+                name="forStudent"
                 value={form.forStudent}
                 onChange={handleChange}
                 disabled={isSubmitting}
                 placeholder="Enter Student ID"
                 required
               />
-                {errors.forStudent && <div className="error-message">{errors.forStudent}</div>}
+              {errors.forStudent && <div className="error-message">{errors.forStudent}</div>}
             </div>
-          </div>
 
-          <div className="detail-row full-width">
-            <label htmlFor='medicineRequestDescription' className="detail-label">Description</label>
-            <textarea
-              id="medicineRequestDescription"
-              className="input-field detail-description"
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              maxLength={500}
-              disabled={isSubmitting}
-              placeholder="Describe the medicine request..."
-              required
-            />
-            {errors.description && <div className="error-message">{errors.description}</div>}
-          </div>
 
-          <div className="detail-row full-width">
+            <div className="detail-row full-width">
+              <label htmlFor='medicineRequestDescription' className="detail-label">Description</label>
+              <textarea
+                id="medicineRequestDescription"
+                className="input-field detail-description"
+                name="description"
+                value={form.description}
+                onChange={handleChange}
+                maxLength={500}
+                disabled={isSubmitting}
+                placeholder="Describe the medicine request..."
+                required
+              />
+              {errors.description && <div className="error-message">{errors.description}</div>}
+            </div>
+            <div className="detail-row full-width">
             <div className="modal-footer button-row-right">
               <button type="button" className="button button-secondary" onClick={handleClear} disabled={isSubmitting} style={{ marginRight: '12px' }}>
                 Clear
@@ -146,6 +145,9 @@ const CreateMedicineRequestModal: React.FC<CreateMedicineRequestModalProps> = ({
               </button>
             </div>
           </div>
+          </div>
+
+          
         </form>
       </div>
     </div>

@@ -1,8 +1,5 @@
 import { useState, useEffect } from "react";
-import Modal from "../../GenericModal";
-import '../../../app/CSS/Nurse/UpdateMedicineRequestModal.css';
 import { MedicineRequestDetailsModel, MedicineRequestUpdateModel } from "../../../feature/API/MedicineRequestService";
-import { useUserId } from "../../../feature/Hooks/Account/AccountHooks";
 import { IconClose } from "../../IconList";
 
 const initialForm = {
@@ -105,7 +102,7 @@ const UpdateOwnedMedicineRequestModal = ({
           <form className="modal-body" onSubmit={handleSubmit}>
             <div className="modal-column">
               <div className="detail-row">
-                <label htmlFor="requester-id" className="detail-label">Requester ID &lpar Your Id as a parent &rpar</label>
+                <label htmlFor="requester-id" className="detail-label">{'Requester ID (Your Id as a parent)'}</label>
                 <input
                   id="requester-id"
                   className="input-field"
@@ -117,7 +114,7 @@ const UpdateOwnedMedicineRequestModal = ({
                 {errors.requesterBy && <div className="error-message">{errors.requesterBy}</div>}
               </div>
               <div className="detail-row">
-                <label htmlFor="student-id" className="detail-label">Student Id &lpar Your children Id as the school student &rpar</label>
+                <label htmlFor="student-id" className="detail-label">{'Student Id (Your children Id as the school student)'}</label>
                 <input
                   id="student-id"
                   className="input-field"

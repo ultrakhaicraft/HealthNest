@@ -48,12 +48,9 @@ namespace SchoolMedical_DataAccess.DTOModels
 
         [Range(1, 100, ErrorMessage = "Page size must be between 1 and 100")]
         public int PageSize { get; set; } = 10;
+        
+        public bool SortByDateSentByDesc { get; set; } = false;
 
-        [RegularExpression("^(DateSent|RequestBy|ForStudent)$",
-            ErrorMessage = "Sort by must be one of: DateSent, RequestBy, ForStudent")]
-        public string? SortBy { get; set; } = "DateSent";
-
-        public bool IsDescending { get; set; } = true;
     }
 
     public class MedicineRequestResponseDto

@@ -108,6 +108,7 @@ export default function MedicineRequestCRUDPage() {
         onView={handleView}
         onEdit={(medicine) => handleEdit(medicine.id)}
         userRole={userRole}
+        onDelete={()=>{}}
       />
       {modal.state.type==='view' && (
         <MedicineRequestViewDetail 

@@ -51,9 +51,9 @@ namespace PRN232_SchoolMedicalAPI.Controllers
         /// Get medicine requests by student ID
         /// </summary>
         [HttpGet("student/{studentId}")]
-        public async Task<IActionResult> GetMedicineRequestsByStudent(string studentId)
+        public async Task<IActionResult> GetMedicineRequestsByStudent(string studentId, [FromQuery] MedicineRequestFilterRequestDto request)
         {
-            var result = await _medicineRequestService.GetMedicineRequestsByStudentAsync(studentId);
+            var result = await _medicineRequestService.GetMedicineRequestsByStudentAsync(studentId, request);
 			ApiResponseWrapper<PagingModel<MedicineRequestResponseDto>> response = ApiResponseWrapper<PagingModel<MedicineRequestResponseDto>>
 						.Success(result, "Get all medicine requests success for student with Id: "+studentId);
 
@@ -66,9 +66,9 @@ namespace PRN232_SchoolMedicalAPI.Controllers
         /// <param name="requesterId">Account Id</param>
         /// <returns></returns>
         [HttpGet("requester/{requesterId}")]
-        public async Task<IActionResult> GetMedicineRequestsByRequester(string requesterId)
+        public async Task<IActionResult> GetMedicineRequestsByRequester(string requesterId, [FromQuery] MedicineRequestFilterRequestDto request)
         {
-            var result = await _medicineRequestService.GetMedicineRequestsByRequesterAsync(requesterId);
+            var result = await _medicineRequestService.GetMedicineRequestsByRequesterAsync(requesterId, request);
 			ApiResponseWrapper<PagingModel<MedicineRequestResponseDto>> response = ApiResponseWrapper<PagingModel<MedicineRequestResponseDto>>
 						.Success(result, "Get all medicine requests success for requester with Id: " + requesterId);
 

@@ -1,5 +1,7 @@
-/* Status Badge */
-.status-badge {
+/*** IMPORTANT ***/
+/** Which page/component files used ? CRUDStatusBadge.css **/
+
+.statusBadge {
   margin: 0 0.5rem;
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
@@ -8,27 +10,32 @@
   display: inline-block;
 }
 
-.status-badge-active {
+.statusBadgeActive {
   background-color: #dcfce7;
   color: #166534;
 }
 
-.status-badge-inactive {
+.statusBadgeInactive {
   background-color: #fee2e2;
   color: #991b1b;
 }
 
-.status-badge-hospitalized {
+.statusBadgeCancelled {
+  background-color: #fee2e2;
+  color: #851717;
+}
+
+.statusBadgeHospitalized {
   background-color: #fee2e2;
   color: #991b1b;
 }
 
-.status-badge-pending {
+.statusBadgePending {
   background-color: #fef3c7;
   color: #92400e;
 }
 
-.status-badge-resolved {
+.statusBadgeResolved {
   background-color: #dbeafe;
   color: #1e40af;
 }
