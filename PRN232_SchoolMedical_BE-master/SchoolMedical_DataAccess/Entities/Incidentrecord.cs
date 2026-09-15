@@ -9,7 +9,7 @@ public partial class Incidentrecord
 
     public string StudentId { get; set; } = null!;
 
-    public string HandleBy { get; set; } = null!;
+    public string HandleBy { get; set; } = null!; //Nurse Id
 
     public string? IncidentType { get; set; }
 
@@ -19,7 +19,7 @@ public partial class Incidentrecord
 
     public string? Status { get; set; }
 
-    public virtual Account HandleByNavigation { get; set; } = null!;
+    public virtual Nurse HandleByNavigation { get; set; } = null!;  //Nurse create and handle the incident
 
-    public virtual Account Student { get; set; } = null!;
+    public virtual Student Student { get; set; } = null!; //Student who associate with the record
 }

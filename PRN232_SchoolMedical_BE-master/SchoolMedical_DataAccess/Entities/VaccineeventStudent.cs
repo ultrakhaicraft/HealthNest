@@ -15,6 +15,6 @@ namespace SchoolMedical_DataAccess.Entities
 		public string? Status { get; set; } // e.g. "SignedUp", "Attended", "NoShow", "Completed"
 
 		public virtual Vaccineevent Vaccineevent { get; set; } = null!;
-		public virtual Account Student { get; set; } = null!;
+		public virtual Student Student { get; set; } = null!;
 	}
 }

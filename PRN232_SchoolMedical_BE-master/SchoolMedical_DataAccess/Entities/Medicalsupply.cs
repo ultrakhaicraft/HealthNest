@@ -7,7 +7,7 @@ public partial class Medicalsupply
 {
     public string Id { get; set; } = null!;
 
-    public string CreatedBy { get; set; } = null!;
+    public string CreatedBy { get; set; } = null!; // Nurse Id
 
     public string Name { get; set; } = null!;
 
@@ -19,5 +19,5 @@ public partial class Medicalsupply
 
 	public bool IsDeleted { get; set; } = false;
 
-	public virtual Account CreatedByNavigation { get; set; } = null!;
+	public virtual Nurse CreatedByNavigation { get; set; } = null!;
 }
