@@ -6,7 +6,7 @@ namespace SchoolMedical_DataAccess.Entities;
 public partial class Healthcheckupevent
 {
 	public string Id { get; set; } = null!;
-	public string CreatedBy { get; set; } = null!;
+	public string CreatedBy { get; set; } = null!; //Admin Id
 	public string Title { get; set; } = null!;
 	public string? ShortDescription { get; set; }
 	public string? Content { get; set; }
@@ -15,6 +15,6 @@ public partial class Healthcheckupevent
 	public DateTime? DateSignupEnd { get; set; }
 	public string? Status { get; set; }
 
-	public virtual Account CreatedByNavigation { get; set; } = null!;
+	public virtual Admin CreatedByNavigation { get; set; } = null!; //Admin who created this
 	public virtual ICollection<HealthcheckupeventStudent> HealthcheckupeventStudents { get; set; } = new List<HealthcheckupeventStudent>();
 }
