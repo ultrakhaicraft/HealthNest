@@ -118,13 +118,10 @@ const UpdateOwnedMedicineRequestModal = ({
                 <input
                   id="student-id"
                   className="input-field"
-                  name="name"
-                  value={form.forStudent}
-                  onChange={handleChange}
-                  disabled={isSubmitting}
-                  maxLength={100}
+                  value={medicineRequest.forStudent}
+                  disabled
                   readOnly
-                  required
+                  style={{ background: '#f3f4f6', color: '#6b7280' }}
                 />
                 {errors.forStudent && <div className="error-message">{errors.forStudent}</div>}
               </div>

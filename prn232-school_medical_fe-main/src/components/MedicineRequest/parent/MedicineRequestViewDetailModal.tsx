@@ -28,8 +28,7 @@ export const MedicineRequestViewDetail: React.FC<MedicineRequestViewProps> = ({ 
           </button>
         </div>
         <div id="medicine-request-detail" className="modal-body">
-          <div className="modal-column">
-            <div className="detail-row">
+          <div className="modal-group modal-row full-width">
               <p><strong>Medicine Request ID:</strong> {medicineRequest.id}</p>
               <p><strong>Requester ID:</strong> {medicineRequest.requestBy}</p>
               <p><strong>Requester Name:</strong> {medicineRequest.requestByName}</p>
@@ -37,13 +36,10 @@ export const MedicineRequestViewDetail: React.FC<MedicineRequestViewProps> = ({ 
               <p><strong>Student Name:</strong> {medicineRequest.forStudentName}</p>
               <p><strong>Date Sent:</strong> {new Date(medicineRequest.dateSent).toLocaleString()}</p>
               <p><strong>Status:</strong> <StatusBadge status={medicineRequest.status}></StatusBadge></p>
-            </div>            
+              <p><strong>Description:</strong></p>
+              <div className="detail-value detail-description">{medicineRequest.description}</div>            
           </div>
           
-          <div className="detail-row full-width">
-            <span className="detail-label">Description</span>
-            <div className="detail-value detail-description">{medicineRequest.description}</div>
-          </div>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { MedicineDetailsViewModel } from '../../feature/API/MedicineService';
 import { IconClose } from '../IconList';
+import { StatusBadge } from '../StatusBadge';
 
 interface MedicalSupplyViewDetailModalProps {
   medicalSupply: MedicineDetailsViewModel;
@@ -33,13 +34,11 @@ export const MedicalSupplyViewDetailModal: React.FC<MedicalSupplyViewDetailModal
             <p><strong>Amount:</strong> {medicalSupply.amount}</p>
             <p><strong>Created By:</strong> {medicalSupply.createdByName}</p>
             <p><strong>Availability:</strong>
-            <StatusBadge status={medicine.isAvailable? 'Available':'Unavailable'}></StatusBadge>
+            <StatusBadge status={medicalSupply.isAvailable? 'Available':'Unavailable'}></StatusBadge>
             </p>
-          </div>         
-          <div className="modal-group modal-row full-width">
-            <p className="detail-label"><strong>Description:</strong></p>
+            <p><strong>Description:</strong></p>
             <div className="detail-value detail-description">{medicalSupply.description}</div>
-          </div>
+          </div>         
         </div>
       </div>
     </div>

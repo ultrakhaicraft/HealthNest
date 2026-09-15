@@ -29,7 +29,7 @@ namespace PRN232_SchoolMedicalAPI.Controllers
 			ApiResponseWrapper<PagingModel<MedicineRequestResponseDto>> response = ApiResponseWrapper<PagingModel<MedicineRequestResponseDto>>
 			.Success(result, "Get all medicine requests success");
 			
-            return Ok(result);
+            return Ok(response);
         }
 
         /// <summary>

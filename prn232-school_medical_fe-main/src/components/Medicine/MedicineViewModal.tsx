@@ -37,14 +37,9 @@ export const MedicineViewDetailModal: React.FC<MedicineViewProps> = ({ medicine,
             <p><strong>Availability:</strong>
             <StatusBadge status={medicine.isAvailable? 'Available':'Unavailable'}></StatusBadge>
             </p>
-          </div>
-
-          
-          <div className="modal-group modal-row full-width">
-            <p className="detail-label"><strong>Description:</strong></p>
+            <p><strong>Description:</strong></p>
             <div className="detail-value detail-description">{medicine.description}</div>
           </div>
-
         </div>
       </div>
     </div>

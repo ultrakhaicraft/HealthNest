@@ -19,9 +19,13 @@ export function useMedicineRequests(filters: MedicineRequestQueryParams, request
     const request = strategy==='byRequester'
     ? MedicineRequestService.getAllByRequesterId(requesterId!,filters)
     : MedicineRequestService.getAll(filters);
+            console.log("request return: ", request);
+
 
     return request
       .then((res) => {
+        console.log("request used: ", res.data);
+
         setData(res.data);
         setTotalPages(res.totalPages);
         setTotalItems(res.totalCount);
