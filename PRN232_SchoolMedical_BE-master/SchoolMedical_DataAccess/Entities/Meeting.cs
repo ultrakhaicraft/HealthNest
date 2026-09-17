@@ -15,7 +15,7 @@ namespace SchoolMedical_DataAccess.Entities
 		public string? Content { get; set; }
 		public DateTime ScheduledDate { get; set; }
 		public string? Status { get; set; } // e.g. "Scheduled", "Completed", "Cancelled"
-		public bool ParentAttended { get; set; } = false; // NEW — did the parent actually join
+		public bool ParentAttended { get; set; } = false; // Do the parent actually join
 
 		public virtual Student Student { get; set; } = null!;
 		public virtual Nurse HandleByNavigation { get; set; } = null!;

@@ -150,7 +150,7 @@ namespace SchoolMedical_BusinessLogic.Core
 						StudentId = v.StudentId,
 						StudentName = v.Student.FullName, // Assuming Student has a FullName property
 						RecordDate = v.RecordDate,
-						Vaccine = v.Vaccine,
+						VaccineTitle = v.VaccineTitle,
 						Status = v.Status
 					}).ToList(),
 					treatmentRecordViewModels = record.Treatmentrecords.Select(t => new TreatmentRecordViewModel
@@ -159,7 +159,7 @@ namespace SchoolMedical_BusinessLogic.Core
 						StudentId = t.StudentId,
 						StudentName = t.Student.FullName, // Assuming Student has a FullName property
 						RecordDate = t.RecordDate,
-						Treatment = t.Treatment,
+						TreatmentTitle = t.TreatmentTitle,
 						Status = t.Status
 					}).ToList()
 					*/
@@ -204,7 +204,7 @@ namespace SchoolMedical_BusinessLogic.Core
 						StudentId = v.StudentId,
 						StudentName = v.Student.FullName, // Assuming Student has a FullName property
 						RecordDate = v.RecordDate,
-						Vaccine = v.Vaccine,
+						VaccineTitle = v.VaccineTitle,
 						Status = v.Status
 					}).ToList(),
 					treatmentRecordViewModels = record.Treatmentrecords.Select(t => new TreatmentRecordViewModel
@@ -213,7 +213,7 @@ namespace SchoolMedical_BusinessLogic.Core
 						StudentId = t.StudentId,
 						StudentName = t.Student.FullName, // Assuming Student has a FullName property
 						RecordDate = t.RecordDate,
-						Treatment = t.Treatment,
+						TreatmentTitle = t.TreatmentTitle,
 						Status = t.Status
 					}).ToList()
 					*/

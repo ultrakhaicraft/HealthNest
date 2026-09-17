@@ -58,7 +58,7 @@ public class VaccineEventController : Controller
 		var result = await _vaccineEventService.CreateVaccineEventAsync(request);
 
 		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
-					.Created(result, "Vaccine event created successfully");
+					.Created(result, "VaccineTitle event created successfully");
 
 		return StatusCode(201, response);
 	}
@@ -82,7 +82,7 @@ public class VaccineEventController : Controller
 		var result = await _vaccineEventService.UpdateVaccineEvent(request, id);
 
 		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
-					.Success(result, "Vaccine event updated successfully with id: " + id);
+					.Success(result, "VaccineTitle event updated successfully with id: " + id);
 
 		return Ok(response);
 	}
@@ -95,7 +95,7 @@ public class VaccineEventController : Controller
 		await _vaccineEventService.DeleteVaccineEvent(id);
 
 		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
-					.Success(string.Empty,"Vaccine event deleted successfully");
+					.Success(string.Empty,"VaccineTitle event deleted successfully");
 
 		return Ok(response);
 	}

@@ -43,7 +43,7 @@ public enum RequestStatus
 	Deleted, //Soft Delete
 }
 
-//Exclusive for HealthCheckup and Vaccine Event
+//Exclusive for HealthCheckup and VaccineTitle Event
 public enum EventStatus
 {
 	Upcoming,

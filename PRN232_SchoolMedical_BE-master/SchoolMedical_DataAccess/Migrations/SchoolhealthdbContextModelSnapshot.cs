@@ -411,7 +411,7 @@ namespace SchoolMedical_DataAccess.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<string>("Treatment")
+                    b.Property<string>("TreatmentTitle")
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
@@ -515,7 +515,7 @@ namespace SchoolMedical_DataAccess.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<string>("Vaccine")
+                    b.Property<string>("VaccineTitle")
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 

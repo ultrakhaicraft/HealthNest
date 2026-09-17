@@ -133,7 +133,7 @@ public class VaccineEventService : IVaccineEventService
 		var vaccineEvent = _unitOfWork.GetRepository<Vaccineevent>().GetById(vaccineEventId);
 		if (vaccineEvent == null)
 		{
-			throw new NotFoundException("Vaccine event", vaccineEventId);
+			throw new NotFoundException("VaccineTitle event", vaccineEventId);
 		}
 		_unitOfWork.GetRepository<Vaccineevent>().Delete(vaccineEvent);
 		await _unitOfWork.SaveAsync(); // Ensure the save operation completes
@@ -153,7 +153,7 @@ public class VaccineEventService : IVaccineEventService
 		var vaccineEvent = _unitOfWork.GetRepository<Vaccineevent>().GetById(vaccineEventId);
 		if (vaccineEvent == null)
 		{
-			throw new NotFoundException("Vaccine Event", vaccineEventId);
+			throw new NotFoundException("VaccineTitle Event", vaccineEventId);
 		}
 
 		vaccineEvent.Title = dto.Title;
@@ -179,7 +179,7 @@ public class VaccineEventService : IVaccineEventService
 
 		if (healthcheckupevent == null)
 		{
-			throw new NotFoundException("Vaccine Event", vaccineEventId);
+			throw new NotFoundException("VaccineTitle Event", vaccineEventId);
 		}
 
 		return new ViewVaccineEventDetailDTO
