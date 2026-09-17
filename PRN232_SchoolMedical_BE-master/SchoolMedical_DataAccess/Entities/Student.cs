@@ -24,4 +24,6 @@ public partial class Student
 	public virtual Studenthealthrecord? StudentHealthRecord { get; set; } // Attach to Student Class
 	public virtual ICollection<Meeting> MeetingStudents { get; set; } = new List<Meeting>(); //What kind of meeting does this Student Have
 
+
+
 }

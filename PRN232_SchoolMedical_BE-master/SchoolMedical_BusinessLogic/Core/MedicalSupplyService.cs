@@ -70,7 +70,7 @@ namespace SchoolMedical_BusinessLogic.Core
                 Amount = x.Amount,
                 IsAvailable = x.IsAvailable,
                 IsDeleted = x.IsDeleted,
-				CreatedByName = x.CreatedByNavigation.FullName
+				CreatedByName = x.CreatedByNavigation.Account.FullName
             }).ToList();
 
 
@@ -106,7 +106,7 @@ namespace SchoolMedical_BusinessLogic.Core
                 IsAvailable = entity.IsAvailable,
                 IsDeleted = entity.IsDeleted,
                 CreatedBy = entity.CreatedByNavigation.Id,
-                CreatedByName = entity.CreatedByNavigation.FullName
+                CreatedByName = entity.CreatedByNavigation.Account.FullName
             };
         }
 

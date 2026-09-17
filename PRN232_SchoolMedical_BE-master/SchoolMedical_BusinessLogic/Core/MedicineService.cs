@@ -50,7 +50,7 @@ public class MedicineService : IMedicineService
                     Amount = m.Amount,
                     IsAvailable = m.IsAvailable,
                     CreatedBy = m.CreatedBy,
-                    CreatedByName = m.CreatedByNavigation.FullName ?? "Unknown"
+                    CreatedByName = m.CreatedByNavigation.Account.FullName ?? "Unknown"
                 });
 
 
@@ -83,7 +83,7 @@ public class MedicineService : IMedicineService
 				Amount = m.Amount,
 				IsAvailable = m.IsAvailable,
 				CreatedBy = m.CreatedBy,
-				CreatedByName = m.CreatedByNavigation.FullName ?? "Unknown"
+				CreatedByName = m.CreatedByNavigation.Account.FullName ?? "Unknown"
 			})
 			.FirstOrDefaultAsync();
 
@@ -125,7 +125,7 @@ public class MedicineService : IMedicineService
                 Amount = createdMedicine.Amount,
                 IsAvailable = createdMedicine.IsAvailable,
                 CreatedBy = createdMedicine.CreatedBy,
-                CreatedByName = createdMedicine.CreatedByNavigation?.FullName ?? "Unknown"
+                CreatedByName = createdMedicine.CreatedByNavigation?.Account.FullName ?? "Unknown"
             };
        
     }
@@ -143,7 +143,7 @@ public class MedicineService : IMedicineService
 			medicine.Name = request.Name;
             medicine.Description = request.Description;
             medicine.Amount = request.Amount;
-            medicine.IsAvailable = request.IsAvailable;
+            medicine.IsAvailable = request.IsAvailable.HasValue;
 
             await _medicineRepository.UpdateAsync(medicine);
             await _unitOfWork.SaveAsync();
@@ -162,7 +162,7 @@ public class MedicineService : IMedicineService
                 Amount = updatedMedicine.Amount,
                 IsAvailable = updatedMedicine.IsAvailable,
                 CreatedBy = updatedMedicine.CreatedBy,
-                CreatedByName = updatedMedicine.CreatedByNavigation?.FullName ?? "Unknown"
+                CreatedByName = updatedMedicine.CreatedByNavigation?.Account.FullName ?? "Unknown"
             };
        
     }

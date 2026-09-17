@@ -62,7 +62,7 @@ public partial class SchoolhealthdbContext : DbContext
 
             entity.Property(e => e.AccountCreationDateTime)
                 .HasColumnType("datetime")
-                .HasDefaultValue("CURRENT_TIMESTAMP");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             //Relationships
             //Since these table is relies on Account, they will be useless if Account is deleted

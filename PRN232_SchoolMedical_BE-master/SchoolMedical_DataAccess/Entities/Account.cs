@@ -15,7 +15,7 @@ public partial class Account
 	public string? Address { get; set; }
 	public string? Status { get; set; }
 	public string Gender { get; set; } = null!; //Male or Female
-	public string AvatarUrl { get; set; } = null!; //Image URL
+	public string? AvatarUrl { get; set; } //Image Url (Optional)
 	public DateTime DateOfBirth { get; set; }   //Time should be default to 0 o'clock
 	public DateTime AccountCreationDateTime { get; set; } //Non-nullable, but when migrations, it might throw an error because previous accounts does not have this data
 

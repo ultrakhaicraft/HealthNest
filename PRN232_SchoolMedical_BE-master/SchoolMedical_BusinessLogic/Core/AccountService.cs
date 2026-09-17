@@ -61,7 +61,7 @@ public class AccountService : IAccountService
 				Address = request.Address,
 				Role = request.Role,
 				Status = AccountStatus.Active.ToString(),
-				ParentId = request.ParentId
+				
 			};
 			
 			await _unitOfWork.GetRepository<Account>().InsertAsync(account);
@@ -104,8 +104,7 @@ public class AccountService : IAccountService
 			}
 			else if(accounts.Role==AccountRole.Student.ToString())
 			{
-				detail.ParentId = accounts.ParentId;
-				detail.ParentName = accounts.Parent != null ? accounts.Parent.FullName : null;
+				detail.ParentName = accounts.Parent != null ? accounts.FullName : null;
 			}
 
 			return detail;
@@ -176,7 +175,6 @@ public class AccountService : IAccountService
 			account.PhoneNumber = request.PhoneNumber;
 			account.Address = request.Address;
 			account.Role = request.Role;
-			account.ParentId = request.ParentId;
 			_unitOfWork.GetRepository<Account>().Update(account);
 			_unitOfWork.Save();
 			
@@ -190,7 +188,7 @@ public class AccountService : IAccountService
 		var query = await _unitOfWork.GetRepository<Account>().GetQueryableAsync();
 
 
-		var accounts = query.Where(user => user.ParentId == parentId
+		var accounts = query.Where(user => user.Student.ParentId == parentId
 		&&user.Role== AccountRole.Student.ToString()
 		&&user.Status != AccountStatus.Inactive.ToString());
 
@@ -263,12 +261,11 @@ public class AccountService : IAccountService
 			}
 
 			//If student already assigned to parent 
-			if (!string.IsNullOrEmpty(account.ParentId))
+			/*if (!string.IsNullOrEmpty(account.ParentId))
 			{
 				throw new AppException("Account already linked");
-			}
+			}*/
 
-			account.ParentId = parentId;
 			account.Status = AccountStatus.Active.ToString(); // Set status to Active since it's now linked to a parent
 			_unitOfWork.GetRepository<Account>().Update(account);
 			_unitOfWork.Save();
@@ -331,7 +328,7 @@ public class AccountService : IAccountService
 
 	private async Task<(string studentId, string studentName)> FindStudentByParentId(string parentId)
 	{
-		var student= await _unitOfWork.GetRepository<Account>().FindAsync(x=>x.ParentId.Equals(parentId));
+		var student= await _unitOfWork.GetRepository<Account>().FindAsync(x=>x.Student.ParentId.Equals(parentId));
 		if (student == null) { 
 			Console.WriteLine("No student found for this parent ID.");
 			return (string.Empty, string.Empty); // Return empty values if no student found

@@ -80,7 +80,7 @@ namespace SchoolMedical_BusinessLogic.Core
 				//Search by student name by accessing Student Object
 				if (!String.IsNullOrEmpty(recordQuery.StudentName))
 				{
-					records = records.Where(r => r.Student.FullName.Contains(recordQuery.StudentName, StringComparison.OrdinalIgnoreCase));
+					records = records.Where(r => r.Student.Account.FullName.Contains(recordQuery.StudentName, StringComparison.OrdinalIgnoreCase));
 				}
 
 				//Filter by status
@@ -102,8 +102,8 @@ namespace SchoolMedical_BusinessLogic.Core
 				{
 					Id = record.Id,
 					StudentId = record.StudentId,
-					StudentName = record.Student.FullName, // Assuming Student has a FullName property
-					CreatedBy = record.CreatedByNavigation.FullName, // Assuming CreatedByNavigation has a FullName property
+					StudentName = record.Student.Account.FullName, // Assuming Student has a FullName property
+					CreatedBy = record.CreatedByNavigation.Account.FullName, // Assuming CreatedByNavigation has a FullName property
 					Status = record.Status
 				});
 
@@ -135,7 +135,7 @@ namespace SchoolMedical_BusinessLogic.Core
 				{
 					Id = record.Id,
 					StudentId = record.StudentId,
-					StudentName = record.Student.FullName, // Assuming Student has a Name property
+					StudentName = record.Student.Account.FullName, // Assuming Student has a Name property
 					CreatedBy = record.CreatedByNavigation.Id, // Assuming CreatedByNavigation has a Name property
 					Height = record.Height,
 					Allergies = record.Allergies,
@@ -189,7 +189,7 @@ namespace SchoolMedical_BusinessLogic.Core
 				{
 					Id = record.Id,
 					StudentId = record.StudentId,
-					StudentName = record.Student.FullName, // Assuming Student has a Name property
+					StudentName = record.Student.Account.FullName, // Assuming Student has a Name property
 					CreatedBy = record.CreatedByNavigation.Id, // Assuming CreatedByNavigation has a Name property
 					Height = record.Height,
 					Allergies = record.Allergies,
