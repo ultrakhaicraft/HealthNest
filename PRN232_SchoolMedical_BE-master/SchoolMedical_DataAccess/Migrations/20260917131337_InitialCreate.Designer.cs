@@ -11,8 +11,8 @@ using SchoolMedical_DataAccess.Entities;
 namespace SchoolMedical_DataAccess.Migrations
 {
     [DbContext(typeof(SchoolhealthdbContext))]
-    [Migration("20260714090410_UpdateDBWithNewEntities")]
-    partial class UpdateDBWithNewEntities
+    [Migration("20260917131337_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,9 +28,21 @@ namespace SchoolMedical_DataAccess.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
+                    b.Property<DateTime>("AccountCreationDateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
                     b.Property<string>("Address")
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
+
+                    b.Property<string>("AvatarUrl")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -39,12 +51,13 @@ namespace SchoolMedical_DataAccess.Migrations
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<string>("ParentId")
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -57,24 +70,40 @@ namespace SchoolMedical_DataAccess.Migrations
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("varchar(15)");
-
-                    b.Property<string>("Status")
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
+
+                    b.Property<string>("Status")
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)");
 
                     b.HasKey("Id")
                         .HasName("PRIMARY");
 
+                    b.HasIndex("Role")
+                        .HasDatabaseName("IX_Accounts_Role");
+
                     b.HasIndex(new[] { "Email" }, "Email")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "ParentId" }, "FK_Account_Parent");
-
-                    b.HasIndex(new[] { "Role" }, "IDX_Account_Role");
+                        .IsUnique()
+                        .HasDatabaseName("IX_Accounts_Email");
 
                     b.ToTable("accounts", (string)null);
+                });
+
+            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Admin", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id")
+                        .HasName("PRIMARY");
+
+                    b.ToTable("admins", (string)null);
                 });
 
             modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Healthcheckupevent", b =>
@@ -105,8 +134,8 @@ namespace SchoolMedical_DataAccess.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("Status")
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -117,6 +146,8 @@ namespace SchoolMedical_DataAccess.Migrations
                         .HasName("PRIMARY");
 
                     b.HasIndex(new[] { "CreatedBy" }, "IDX_HealthCheckupEvent_CreatedBy");
+
+                    b.HasIndex(new[] { "DateOccurred" }, "IDX_HealthCheckupEvent_DateOccurred");
 
                     b.ToTable("healthcheckupevents", (string)null);
                 });
@@ -138,8 +169,8 @@ namespace SchoolMedical_DataAccess.Migrations
                         .HasColumnType("datetime");
 
                     b.Property<string>("Status")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)");
 
                     b.HasKey("HealthcheckupeventId", "StudentId");
 
@@ -170,8 +201,8 @@ namespace SchoolMedical_DataAccess.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("Status")
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)");
 
                     b.Property<string>("StudentId")
                         .IsRequired()
@@ -180,6 +211,8 @@ namespace SchoolMedical_DataAccess.Migrations
 
                     b.HasKey("Id")
                         .HasName("PRIMARY");
+
+                    b.HasIndex(new[] { "DateOccurred" }, "IDX_IncidentRecord_DateOccurred");
 
                     b.HasIndex(new[] { "HandleBy" }, "IDX_IncidentRecord_HandleBy");
 
@@ -211,8 +244,11 @@ namespace SchoolMedical_DataAccess.Migrations
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValueSql("'1'");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<bool?>("IsDeleted")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValueSql("'0'");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -250,8 +286,11 @@ namespace SchoolMedical_DataAccess.Migrations
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValueSql("'1'");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<bool?>("IsDeleted")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValueSql("'0'");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -262,6 +301,8 @@ namespace SchoolMedical_DataAccess.Migrations
                         .HasName("PRIMARY");
 
                     b.HasIndex(new[] { "CreatedBy" }, "IDX_Medicine_CreatedBy");
+
+                    b.HasIndex(new[] { "Name" }, "IDX_Medicine_Name");
 
                     b.ToTable("medicines", (string)null);
                 });
@@ -289,8 +330,8 @@ namespace SchoolMedical_DataAccess.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("Status")
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)");
 
                     b.HasKey("Id")
                         .HasName("PRIMARY");
@@ -325,8 +366,8 @@ namespace SchoolMedical_DataAccess.Migrations
                         .HasColumnType("datetime");
 
                     b.Property<string>("Status")
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)");
 
                     b.Property<string>("StudentId")
                         .IsRequired()
@@ -345,6 +386,73 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.HasIndex(new[] { "StudentId" }, "IDX_Meeting_StudentId");
 
                     b.ToTable("meeting", (string)null);
+                });
+
+            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Nurse", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id")
+                        .HasName("PRIMARY");
+
+                    b.ToTable("nurses", (string)null);
+                });
+
+            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Parent", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("IncomeLevel")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<string>("RelationshipStatus")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25)");
+
+                    b.HasKey("Id")
+                        .HasName("PRIMARY");
+
+                    b.ToTable("parents", (string)null);
+                });
+
+            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Student", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Class")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<string>("CurrentHealthStatus")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)");
+
+                    b.Property<string>("ParentId")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("Id")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex("ParentId")
+                        .HasDatabaseName("IX_Students_ParentId");
+
+                    b.ToTable("students", (string)null);
                 });
 
             modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Studenthealthrecord", b =>
@@ -371,8 +479,8 @@ namespace SchoolMedical_DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)");
 
                     b.Property<string>("StudentId")
                         .IsRequired()
@@ -406,8 +514,8 @@ namespace SchoolMedical_DataAccess.Migrations
                         .HasColumnType("datetime");
 
                     b.Property<string>("Status")
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)");
 
                     b.Property<string>("StudentHealthRecordId")
                         .IsRequired()
@@ -454,8 +562,8 @@ namespace SchoolMedical_DataAccess.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("Status")
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -466,6 +574,8 @@ namespace SchoolMedical_DataAccess.Migrations
                         .HasName("PRIMARY");
 
                     b.HasIndex(new[] { "CreatedBy" }, "IDX_VaccineEvent_CreatedBy");
+
+                    b.HasIndex(new[] { "DateOccurred" }, "IDX_VaccineEvent_DateOccurred");
 
                     b.ToTable("vaccineevents", (string)null);
                 });
@@ -487,8 +597,8 @@ namespace SchoolMedical_DataAccess.Migrations
                         .HasColumnType("datetime");
 
                     b.Property<string>("Status")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)");
 
                     b.HasKey("VaccineeventId", "StudentId");
 
@@ -510,8 +620,8 @@ namespace SchoolMedical_DataAccess.Migrations
                         .HasColumnType("datetime");
 
                     b.Property<string>("Status")
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)");
 
                     b.Property<string>("StudentHealthRecordId")
                         .IsRequired()
@@ -530,20 +640,21 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.ToTable("vaccinerecords", (string)null);
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Account", b =>
+            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Admin", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Account", "Parent")
-                        .WithMany("InverseParent")
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .HasConstraintName("FK_Account_Parent");
+                    b.HasOne("SchoolMedical_DataAccess.Entities.Account", "Account")
+                        .WithOne("Admin")
+                        .HasForeignKey("SchoolMedical_DataAccess.Entities.Admin", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_Admin_Account");
 
-                    b.Navigation("Parent");
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Healthcheckupevent", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Account", "CreatedByNavigation")
+                    b.HasOne("SchoolMedical_DataAccess.Entities.Admin", "CreatedByNavigation")
                         .WithMany("HealthcheckupeventCreatedByNavigations")
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -562,7 +673,7 @@ namespace SchoolMedical_DataAccess.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_HealthcheckupeventStudent_Event");
 
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Account", "Student")
+                    b.HasOne("SchoolMedical_DataAccess.Entities.Student", "Student")
                         .WithMany("HealthcheckupeventStudents")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -576,17 +687,17 @@ namespace SchoolMedical_DataAccess.Migrations
 
             modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Incidentrecord", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Account", "HandleByNavigation")
+                    b.HasOne("SchoolMedical_DataAccess.Entities.Nurse", "HandleByNavigation")
                         .WithMany("IncidentrecordHandleByNavigations")
                         .HasForeignKey("HandleBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_IncidentRecord_HandleBy");
 
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Account", "Student")
+                    b.HasOne("SchoolMedical_DataAccess.Entities.Student", "Student")
                         .WithMany("IncidentrecordStudents")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_IncidentRecord_Student");
 
@@ -597,7 +708,7 @@ namespace SchoolMedical_DataAccess.Migrations
 
             modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Medicalsupply", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Account", "CreatedByNavigation")
+                    b.HasOne("SchoolMedical_DataAccess.Entities.Nurse", "CreatedByNavigation")
                         .WithMany("Medicalsupplies")
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -609,7 +720,7 @@ namespace SchoolMedical_DataAccess.Migrations
 
             modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Medicine", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Account", "CreatedByNavigation")
+                    b.HasOne("SchoolMedical_DataAccess.Entities.Nurse", "CreatedByNavigation")
                         .WithMany("Medicines")
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -621,14 +732,14 @@ namespace SchoolMedical_DataAccess.Migrations
 
             modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Medicinerequest", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Account", "ForStudentNavigation")
+                    b.HasOne("SchoolMedical_DataAccess.Entities.Student", "ForStudentNavigation")
                         .WithMany("MedicinerequestForStudentNavigations")
                         .HasForeignKey("ForStudent")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_MedicineRequest_ForStudent");
 
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Account", "RequestByNavigation")
+                    b.HasOne("SchoolMedical_DataAccess.Entities.Parent", "RequestByNavigation")
                         .WithMany("MedicinerequestRequestByNavigations")
                         .HasForeignKey("RequestBy")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -642,14 +753,14 @@ namespace SchoolMedical_DataAccess.Migrations
 
             modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Meeting", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Account", "HandleByNavigation")
+                    b.HasOne("SchoolMedical_DataAccess.Entities.Nurse", "HandleByNavigation")
                         .WithMany("MeetingHandleByNavigations")
                         .HasForeignKey("HandleBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_Meeting_HandleBy");
 
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Account", "Student")
+                    b.HasOne("SchoolMedical_DataAccess.Entities.Student", "Student")
                         .WithMany("MeetingStudents")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -661,20 +772,65 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.Navigation("Student");
                 });
 
+            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Nurse", b =>
+                {
+                    b.HasOne("SchoolMedical_DataAccess.Entities.Account", "Account")
+                        .WithOne("Nurse")
+                        .HasForeignKey("SchoolMedical_DataAccess.Entities.Nurse", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_Nurse_Account");
+
+                    b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Parent", b =>
+                {
+                    b.HasOne("SchoolMedical_DataAccess.Entities.Account", "Account")
+                        .WithOne("Parent")
+                        .HasForeignKey("SchoolMedical_DataAccess.Entities.Parent", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_Parent_Account");
+
+                    b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Student", b =>
+                {
+                    b.HasOne("SchoolMedical_DataAccess.Entities.Account", "Account")
+                        .WithOne("Student")
+                        .HasForeignKey("SchoolMedical_DataAccess.Entities.Student", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_Student_Account");
+
+                    b.HasOne("SchoolMedical_DataAccess.Entities.Parent", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("FK_Student_Parent");
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Parent");
+                });
+
             modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Studenthealthrecord", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Account", "CreatedByNavigation")
+                    b.HasOne("SchoolMedical_DataAccess.Entities.Nurse", "CreatedByNavigation")
                         .WithMany("StudenthealthrecordCreatedByNavigations")
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_StudentHealthRecord_CreatedBy");
 
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Account", "Student")
+                    b.HasOne("SchoolMedical_DataAccess.Entities.Student", "Student")
                         .WithOne("StudentHealthRecord")
                         .HasForeignKey("SchoolMedical_DataAccess.Entities.Studenthealthrecord", "StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_FK_StudentHealthRecord_Student");
 
                     b.Navigation("CreatedByNavigation");
 
@@ -695,7 +851,7 @@ namespace SchoolMedical_DataAccess.Migrations
 
             modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Vaccineevent", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Account", "CreatedByNavigation")
+                    b.HasOne("SchoolMedical_DataAccess.Entities.Admin", "CreatedByNavigation")
                         .WithMany("VaccineeventCreatedByNavigations")
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -707,7 +863,7 @@ namespace SchoolMedical_DataAccess.Migrations
 
             modelBuilder.Entity("SchoolMedical_DataAccess.Entities.VaccineeventStudent", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Account", "Student")
+                    b.HasOne("SchoolMedical_DataAccess.Entities.Student", "Student")
                         .WithMany("VaccineeventStudents")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -740,40 +896,60 @@ namespace SchoolMedical_DataAccess.Migrations
 
             modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Account", b =>
                 {
+                    b.Navigation("Admin");
+
+                    b.Navigation("Nurse");
+
+                    b.Navigation("Parent");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Admin", b =>
+                {
                     b.Navigation("HealthcheckupeventCreatedByNavigations");
 
-                    b.Navigation("HealthcheckupeventStudents");
-
-                    b.Navigation("IncidentrecordHandleByNavigations");
-
-                    b.Navigation("IncidentrecordStudents");
-
-                    b.Navigation("InverseParent");
-
-                    b.Navigation("Medicalsupplies");
-
-                    b.Navigation("MedicinerequestForStudentNavigations");
-
-                    b.Navigation("MedicinerequestRequestByNavigations");
-
-                    b.Navigation("Medicines");
-
-                    b.Navigation("MeetingHandleByNavigations");
-
-                    b.Navigation("MeetingStudents");
-
-                    b.Navigation("StudentHealthRecord");
-
-                    b.Navigation("StudenthealthrecordCreatedByNavigations");
-
                     b.Navigation("VaccineeventCreatedByNavigations");
-
-                    b.Navigation("VaccineeventStudents");
                 });
 
             modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Healthcheckupevent", b =>
                 {
                     b.Navigation("HealthcheckupeventStudents");
+                });
+
+            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Nurse", b =>
+                {
+                    b.Navigation("IncidentrecordHandleByNavigations");
+
+                    b.Navigation("Medicalsupplies");
+
+                    b.Navigation("Medicines");
+
+                    b.Navigation("MeetingHandleByNavigations");
+
+                    b.Navigation("StudenthealthrecordCreatedByNavigations");
+                });
+
+            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Parent", b =>
+                {
+                    b.Navigation("Children");
+
+                    b.Navigation("MedicinerequestRequestByNavigations");
+                });
+
+            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Student", b =>
+                {
+                    b.Navigation("HealthcheckupeventStudents");
+
+                    b.Navigation("IncidentrecordStudents");
+
+                    b.Navigation("MedicinerequestForStudentNavigations");
+
+                    b.Navigation("MeetingStudents");
+
+                    b.Navigation("StudentHealthRecord");
+
+                    b.Navigation("VaccineeventStudents");
                 });
 
             modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Studenthealthrecord", b =>
