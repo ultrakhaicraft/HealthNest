@@ -53,6 +53,13 @@ public enum EventStatus
 	
 }
 
+public enum StudentHealthStatus
+{
+	Healthy,
+	Minor,
+	Critical
+}
+
 //Exclusive for IncidentRecord
 public enum IncidentStatus
 {

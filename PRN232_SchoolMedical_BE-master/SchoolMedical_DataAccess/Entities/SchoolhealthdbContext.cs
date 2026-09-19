@@ -404,16 +404,24 @@ public partial class SchoolhealthdbContext : DbContext
 
             //Property
             entity.Property(e => e.Id).HasMaxLength(50);
-            entity.Property(e => e.Height).HasColumnType("int");
-            entity.Property(e => e.Allergies).HasColumnType("text");
-            entity.Property(e => e.ChronicDiseases).HasColumnType("text");
-            entity.Property(e => e.CreatedBy).HasMaxLength(50); //Nurse Id
-            entity.Property(e => e.Hearing).HasColumnType("text");
-            entity.Property(e => e.Status).HasMaxLength(15);
-            entity.Property(e => e.StudentId).HasMaxLength(50);
-            entity.Property(e => e.Vision).HasColumnType("text");
+			entity.Property(e => e.StudentId).HasMaxLength(50);
+			entity.Property(e => e.CreatedBy).HasMaxLength(50); //Nurse Id
+			entity.Property(e => e.Height);
+			entity.Property(e => e.Weight);
+			entity.Property(e => e.Allergies).HasColumnType("text");
+            entity.Property(e => e.HealthHistory).HasColumnType("text");
+			entity.Property(e => e.Vision).HasColumnType("text");
+			entity.Property(e => e.EarNoseAndMouth).HasColumnType("text");
+			entity.Property(e => e.Teeth).HasColumnType("text");
+			entity.Property(e => e.BloodProfile).HasColumnType("text");
+			entity.Property(e => e.BloodPressure).HasColumnType("text");
+			entity.Property(e => e.Heart).HasColumnType("text");
+			entity.Property(e => e.Status).HasMaxLength(15);
+			entity.Property(e => e.CreatedDateTime).HasColumnType("datetime");
+			entity.Property(e => e.UpdatedDateTime).HasColumnType("datetime");
 
-            entity.HasOne(d => d.CreatedByNavigation)
+
+			entity.HasOne(d => d.CreatedByNavigation)
                 .WithMany(p => p.StudenthealthrecordCreatedByNavigations) //Nurse handle the creation
                 .HasForeignKey(d => d.CreatedBy)
                 .OnDelete(DeleteBehavior.Restrict)
