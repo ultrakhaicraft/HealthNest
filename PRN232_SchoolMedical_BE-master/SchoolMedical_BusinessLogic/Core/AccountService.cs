@@ -2,12 +2,14 @@
 using SchoolMedical_BusinessLogic.Interface;
 using SchoolMedical_BusinessLogic.Utility;
 using SchoolMedical_DataAccess.DTOModels;
+using SchoolMedical_DataAccess.DTOModels.Accounts;
 using SchoolMedical_DataAccess.Entities;
 using SchoolMedical_DataAccess.Enums;
 using SchoolMedical_DataAccess.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -18,12 +20,18 @@ namespace SchoolMedical_BusinessLogic.Core;
 public class AccountService : IAccountService
 {
 	private readonly IUnitOfWork _unitOfWork;
-	
+	private readonly Dictionary<string, Func<Account, Task<AccountDetailModel>>> _accountConverters;
 
 	public AccountService(IUnitOfWork unitOfWork)
 	{
 		_unitOfWork = unitOfWork;
-		
+		_accountConverters = new Dictionary<string, Func<Account, Task<AccountDetailModel>>>
+		{
+			[AccountRole.Student.ToString()] = ConvertToStudentModel,
+			[AccountRole.Parent.ToString()] = ConvertToParentModel,
+			[AccountRole.SchoolNurse.ToString()] = ConvertToNurseModel,
+			[AccountRole.Admin.ToString()] = ConvertToAdminModel,
+		};
 	}
 
 	public Task ChangeAccountStatus(string userId, AccountStatus status)
@@ -73,43 +81,25 @@ public class AccountService : IAccountService
 	public async Task<AccountDetailModel> GetAccountDetailById(string userId)
 	{
 		
-			var accounts= await  _unitOfWork.GetRepository<Account>().FindAsync(user => user.Id == userId);
-			if (accounts == null)
+			var account= await  _unitOfWork.GetRepository<Account>().FindAsync(user => user.Id == userId);
+			if (account == null)
 			{
 				throw new NotFoundException("Account not found with Id: "+userId);
 			}
-			if (accounts.Status == AccountStatus.Inactive.ToString())
+			if (account.Status == AccountStatus.Inactive.ToString())
 			{
 				throw new BadRequestException("Account is inactive with Id: "+userId);
 			}
 
-			var detail= new AccountDetailModel
-			{
-				Id = accounts.Id,
-				FullName = accounts.FullName,
-				Email = accounts.Email,
-				PhoneNumber = accounts.PhoneNumber,
-				Address = accounts.Address,
-				Role = accounts.Role,
-				Status = accounts.Status,
-				
-			};
+			AccountDetailModel detailModel = new AccountDetailModel();
 
 			//If the role is either parent or student, assign additional data depend on these 2 role. If not, skip and return detail
-			if (accounts.Role == AccountRole.Parent.ToString())
-			{
-				(string studentId, string studentName) studentData = await FindStudentByParentId(accounts.Id);
-				detail.StudentId=studentData.studentId;
-				detail.StudentName=studentData.studentName;
-			}
-			else if(accounts.Role==AccountRole.Student.ToString())
-			{
-				detail.ParentName = accounts.Parent != null ? accounts.FullName : null;
-			}
 
-			return detail;
+			if (!_accountConverters.TryGetValue(account.Role, out var convert))
+				throw new BadRequestException($"Unknown account role: {account.Role}");
 
-		
+			return await convert(account);
+
 	}
 
 	public async Task<PagingModel<AccountViewModel>> GetAllAccount(AccountQuery request)
@@ -203,6 +193,7 @@ public class AccountService : IAccountService
 			FullName = account.FullName,
 			Email = account.Email,
 			Role = account.Role,
+			Gender = account.Gender,
 			Status = account.Status,
 		});
 
@@ -277,6 +268,63 @@ public class AccountService : IAccountService
 
 
 	//private methods
+
+	private async Task<AccountDetailModel> ConvertToStudentModel(Account account)
+	{
+		var student =  await _unitOfWork.GetRepository<Student>().GetByIdAsync(account.Id);
+		if (student == null)
+		{
+			throw new NotFoundException("Student Info", account.Id);
+		}
+
+		var detailModel = MapBaseFields<StudentDetailModel>(account);
+		detailModel.Class = student.Class;
+		detailModel.CurrentHealthStatus = student.CurrentHealthStatus;
+		detailModel.ParentId = student.ParentId;
+
+		return detailModel;
+	}
+
+	private async Task<AccountDetailModel> ConvertToParentModel(Account account)
+	{
+		var parent = await _unitOfWork.GetRepository<Parent>().GetByIdAsync(account.Id);
+		if (parent == null)
+		{
+			throw new NotFoundException("Parent Info", account.Id);
+		}
+		var detailModel = MapBaseFields<ParentDetailModel>(account);
+		detailModel.IncomeLevel = parent.IncomeLevel;
+		detailModel.RelationshipStatus = parent.RelationshipStatus;
+
+		return detailModel;
+	}
+
+	private async Task<AccountDetailModel> ConvertToNurseModel(Account account)
+	{
+		var nurse = await _unitOfWork.GetRepository<Nurse>().GetByIdAsync(account.Id);
+		if (nurse == null)
+		{
+			throw new NotFoundException("Nurse Info", account.Id);
+		}
+		var detailModel = MapBaseFields<NurseDetailModel>(account);
+		detailModel.Description= nurse.Description;
+
+		return detailModel;
+	}
+
+	private async Task<AccountDetailModel> ConvertToAdminModel(Account account)
+	{
+		var admin = await _unitOfWork.GetRepository<Admin>().GetByIdAsync(account.Id);
+		if (admin == null)
+		{
+			throw new NotFoundException("Admin Info", account.Id);
+		}
+		var detailModel = MapBaseFields<AdminDetailModel>(account);
+		detailModel.Description = admin.Description;
+
+		return detailModel;
+	}
+
 	private bool IsValid(string password)
 	{
 		if (password.Length < 8) return false;
@@ -324,6 +372,24 @@ public class AccountService : IAccountService
 		}
 
 		return query;
+	}
+
+	private static T MapBaseFields<T>(Account account) where T : AccountDetailModel, new()
+	{
+		return new T
+		{
+			Id = account.Id,
+			FullName = account.FullName,
+			Email = account.Email,
+			PhoneNumber = account.PhoneNumber,
+			Address = account.Address,
+			Role = account.Role,
+			Status = account.Status,
+			Gender = account.Gender,
+			AvatarUrl = account.AvatarUrl,
+			DateOfBirth = account.DateOfBirth,
+			AccountCreationDateTime = account.AccountCreationDateTime,
+		};
 	}
 
 	private async Task<(string studentId, string studentName)> FindStudentByParentId(string parentId)

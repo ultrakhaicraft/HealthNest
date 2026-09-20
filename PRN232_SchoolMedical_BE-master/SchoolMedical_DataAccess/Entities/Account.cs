@@ -13,7 +13,7 @@ public partial class Account
 	public string? PhoneNumber { get; set; } //Optional, especially for Student
 	public string Role { get; set; } = null!;
 	public string? Address { get; set; }
-	public string? Status { get; set; }
+	public string Status { get; set; } = null!;
 	public string Gender { get; set; } = null!; //Male or Female
 	public string? AvatarUrl { get; set; } //Image Url (Optional)
 	public DateTime DateOfBirth { get; set; }   //Time should be default to 0 o'clock

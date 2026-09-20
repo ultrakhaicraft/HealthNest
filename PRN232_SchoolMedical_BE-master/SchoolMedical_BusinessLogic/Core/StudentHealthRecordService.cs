@@ -144,7 +144,7 @@ namespace SchoolMedical_BusinessLogic.Core
 					Hearing = record.Hearing,
 					Status = record.Status
 					/*
-					vaccineRecordViewModels = record.Vaccinerecords.Select(v => new VaccineRecordViewModel
+					VaccineRecordViewModels = record.Vaccinerecords.Select(v => new VaccineRecordViewModel
 					{
 						Id = v.Id,
 						StudentId = v.StudentId,
@@ -153,7 +153,7 @@ namespace SchoolMedical_BusinessLogic.Core
 						VaccineTitle = v.VaccineTitle,
 						Status = v.Status
 					}).ToList(),
-					treatmentRecordViewModels = record.Treatmentrecords.Select(t => new TreatmentRecordViewModel
+					TreatmentRecordViewModels = record.Treatmentrecords.Select(t => new TreatmentRecordViewModel
 					{
 						Id = t.Id,
 						StudentId = t.StudentId,
@@ -198,7 +198,7 @@ namespace SchoolMedical_BusinessLogic.Core
 					Hearing = record.Hearing,
 					Status = record.Status
 					/*
-					vaccineRecordViewModels = record.Vaccinerecords.Select(v => new VaccineRecordViewModel
+					VaccineRecordViewModels = record.Vaccinerecords.Select(v => new VaccineRecordViewModel
 					{
 						Id = v.Id,
 						StudentId = v.StudentId,
@@ -207,7 +207,7 @@ namespace SchoolMedical_BusinessLogic.Core
 						VaccineTitle = v.VaccineTitle,
 						Status = v.Status
 					}).ToList(),
-					treatmentRecordViewModels = record.Treatmentrecords.Select(t => new TreatmentRecordViewModel
+					TreatmentRecordViewModels = record.Treatmentrecords.Select(t => new TreatmentRecordViewModel
 					{
 						Id = t.Id,
 						StudentId = t.StudentId,
