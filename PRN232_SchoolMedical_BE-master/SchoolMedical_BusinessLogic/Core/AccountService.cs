@@ -131,18 +131,21 @@ public class AccountService : IAccountService
 		
 	}
 
-	public async Task SoftDeleteAccount(string userId)
+	public async Task SoftDeleteAccount(string accountId)
 	{
 		
 
-			var account = await _unitOfWork.GetRepository<Account>().FindAsync(user => user.Id == userId && user.Status != AccountStatus.Inactive.ToString());
+			var account = await _unitOfWork.GetRepository<Account>()
+				.FindAsync(user => user.Id == accountId && user.Status != AccountStatus.Inactive.ToString());
+
 			if (account == null)
 			{
-				throw new NotFoundException("Account not found or already inactive with Id: "+userId);
+				throw new NotFoundException("Account not found or already inactive with Id: "+ accountId);
 			}
+
 			account.Status = AccountStatus.Inactive.ToString();
-			_unitOfWork.GetRepository<Account>().Update(account);
-			_unitOfWork.Save();
+			await _unitOfWork.GetRepository<Account>().UpdateAsync(account);
+			await _unitOfWork.SaveAsync();
 			
 		
 	}
@@ -228,34 +231,45 @@ public class AccountService : IAccountService
 	public async Task<bool> AssignStudentToParent(string parentId, string studentId)
 	{
 		
-			//Get student Account
-			var account = await _unitOfWork.GetRepository<Account>()
-				.FindAsync(user => user.Id == studentId && user.Status != AccountStatus.Inactive.ToString());
+			//Get student data
+			var student = _unitOfWork.GetRepository<Student>()
+				.Include(a => a.Account)
+				.Where(user => user.Id == studentId && user.Account.Status != AccountStatus.Inactive.ToString())
+				.FirstOrDefault();
 
-			
 
-			if (account == null)
+			if (student == null)
 			{
-				throw new AppException("Account not found or already inactive.");
+				throw new NotFoundException("Student Account not found or already inactive.");
 			}
 
-			Console.WriteLine(account.FullName);
-
-			if (account.Role != AccountRole.Student.ToString())
-			{
-				throw new AppException("Account is not a student.");
-			}
 
 			//If student already assigned to parent 
-			/*if (!string.IsNullOrEmpty(account.ParentId))
+			if (!string.IsNullOrEmpty(student.ParentId))
 			{
-				throw new AppException("Account already linked");
-			}*/
+				throw new BadRequestException("Account already linked");
+			}
 
-			account.Status = AccountStatus.Active.ToString(); // Set status to Active since it's now linked to a parent
-			_unitOfWork.GetRepository<Account>().Update(account);
-			_unitOfWork.Save();
+		try
+		{
+			await _unitOfWork.BeginTransactionAsync();
+			// Update data, likes assign ParentId to Student and setting the Status from "NotLinked" to "Active"
+			student.ParentId = parentId;
+			student.Account.Status = AccountStatus.Active.ToString();
+
+			//_unitOfWork.GetRepository<Student>().Update(student);
+			//_unitOfWork.GetRepository<Account>().Update(student.Account);
+
+			await _unitOfWork.SaveAsync();
+			await _unitOfWork.CommitTransactionAsync();
+
 			return true;
+		}
+		catch (Exception)
+		{
+			await _unitOfWork.RollBackAsync();
+			throw;
+		}
 		
 	}
 
