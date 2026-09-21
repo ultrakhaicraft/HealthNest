@@ -1,4 +1,3 @@
-import { accountService } from "../../API/AccountService";
 
 //Hooks related to authentication and user role management
 export const useIsAuthenticated = () => {

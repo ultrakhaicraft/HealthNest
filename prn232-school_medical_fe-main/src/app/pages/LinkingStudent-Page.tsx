@@ -1,11 +1,13 @@
 import { FormEvent, useCallback, useEffect, useState } from "react";
-import { IconPlus, IconBack, IconLink, IconSearch, IconGroup } from "../../components/IconList";
+import { IconBack, IconLink } from "../../components/IconList";
 import { Link, useNavigate } from "react-router-dom";
 import { accountService, AccountView, GetAllAccountsParams } from "../../feature/API/AccountService";
 import '../CSS/LinkingWithStudent.css'; // Assuming you have a CSS file for styling
 import SearchForm from "../../components/User_Profile/Linking_Student/SearchForm";
 import StudentList from "../../components/User_Profile/Linking_Student/StudentList";
 import { ConfirmationModal } from "../../components/ConfirmationModal";
+import { useUserId } from "../../feature/Hooks/Account/AccountHooks";
+import { useAccountDetail } from "../../feature/Hooks/Account/useAccountDetail";
 
 
 const LinkStudentPage = () => {
@@ -67,7 +69,7 @@ const LinkStudentPage = () => {
 
             //Add Linking logic here
             console.log("Linking student...");
-            const parentId = localStorage.getItem("userId");
+            const parentId = useUserId();
 
             if (!parentId) {
                 console.warn("Parent ID not found in localStorage");
