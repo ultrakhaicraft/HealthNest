@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using SchoolMedical_BusinessLogic.Core;
 using SchoolMedical_BusinessLogic.Interface;
-using SchoolMedical_BusinessLogic.Mapper;
 using SchoolMedical_BusinessLogic.Utility;
 using SchoolMedical_DataAccess.Interfaces;
 using SchoolMedical_DataAccess.Repositories;
@@ -20,7 +19,7 @@ public static class BusinessLogicDI
 	public static void AddApplication(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddRepository();
-		services.AddAutoMapper(cfg => cfg.AddMaps(typeof(MapperProfile).Assembly)); 
+		//services.AddAutoMapper(cfg => cfg.AddMaps(typeof(MapperProfile).Assembly)); 
 		services.AddServices(configuration);
 	}
 
@@ -32,7 +31,13 @@ public static class BusinessLogicDI
 
 	}
 
-	
+	public static void AddFactories(this IServiceCollection services, IConfiguration configuration)
+	{
+		services.AddScoped<IAccountModelFactory, StudentModelFactory>();
+		services.AddScoped<IAccountModelFactory, ParentModelFactory>();
+		services.AddScoped<IAccountModelFactory, NurseModelFactory>();
+		services.AddScoped<IAccountModelFactory, AdminModelFactory>();
+	}
 
 	public static void AddServices(this IServiceCollection services, IConfiguration configuration)
 	{
