@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MySqlX.XDevAPI.Common;
 using PRN232_SchoolMedicalAPI.Helpers;
 using SchoolMedical_BusinessLogic.Core;
@@ -9,7 +10,7 @@ namespace PRN232_SchoolMedicalAPI.Controllers;
 
 [ApiController]
 [Route("api/health-checkup")]
-//[Authorize]
+[Authorize]
 public class HealthCheckupEventController : Controller
 {
 	private readonly IHealthCheckupEventService _healthCheckupEventService;

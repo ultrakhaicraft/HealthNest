@@ -15,19 +15,18 @@ public static class AppExtension
 	public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.ConfigSwagger();
-		services.ConfigureJWTToken(configuration.GetSection("JwtSettings").Get<JwtModel>());
+		services.AddAuthentication(configuration.GetSection("JwtSettings").Get<JwtModel>());
 		services.AddDatabase(new DBConnection
 		{
 			ConnectionString = configuration.GetConnectionString("DefaultConnection")
 		});
-		services.AddApplication(configuration);
 		services.ConfigCors();
 		//services.ConfigRoute();
 	}
 	public static void ConfigCors(this IServiceCollection services)
 	{
 		services.AddCors(options => options.AddPolicy("AllowFrontEndOrigins", builder =>
-				builder.WithOrigins("http://localhost:5173")
+				builder.WithOrigins("https://localhost:5173")
 					   .AllowAnyHeader()
 					   .AllowAnyMethod()
 					   .AllowCredentials()
@@ -48,7 +47,7 @@ public static class AppExtension
 				Description = "API for School Medical System"
 			});
 			c.CustomSchemaIds(type => type.FullName);
-			c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+			/*c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
 					{
 						In = ParameterLocation.Header,
 						Description = "Please enter a valid token",
@@ -71,6 +70,7 @@ public static class AppExtension
 							new string[]{}
 						}
 					});
+			*/
 			c.UseInlineDefinitionsForEnums(); 
 		});
 
@@ -89,7 +89,7 @@ public static class AppExtension
 		});
 	}
 
-	public static void ConfigureJWTToken(this IServiceCollection services, JwtModel? jwtModel)
+	public static void AddAuthentication(this IServiceCollection services, JwtModel? jwtModel)
 	{
 		if (jwtModel == null)
 		{
@@ -113,6 +113,18 @@ public static class AppExtension
 					ValidAudience = jwtModel?.ValidAudience,
 					ValidIssuer = jwtModel?.ValidIssuer,
 					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtModel?.SecretKey ?? ""))
+				};
+
+				options.Events = new JwtBearerEvents
+				{
+					OnMessageReceived = context =>
+					{
+						if (context.Request.Cookies.ContainsKey("access_token"))
+						{
+							context.Token = context.Request.Cookies["access_token"];
+						}
+						return Task.CompletedTask;
+					}
 				};
 			});
 			

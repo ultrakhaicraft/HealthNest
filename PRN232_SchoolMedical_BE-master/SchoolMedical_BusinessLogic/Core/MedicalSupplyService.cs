@@ -56,7 +56,7 @@ namespace SchoolMedical_BusinessLogic.Core
 
 
 			var supplies = _medicalSuppliesRepository.Include(m => m.CreatedByNavigation)
-			 .Where(m => !m.IsDeleted);
+			 .Where(m => m.IsDeleted);
 
 			//Apply filtering and sorting
 			supplies = ApplyFilter(supplies, request.Status, request.Name);

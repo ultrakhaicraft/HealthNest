@@ -14,7 +14,7 @@ namespace SchoolMedical_BusinessLogic.Interface;
 /// </summary>
 public interface IAuthService
 {
-	Task<LoginResponse> Login(LoginRequest request);
+	Task<(LoginResponse, JWTToken)> Login(LoginRequest request);
 	Task<string> RegisteAsync(RegisterRequest request, bool IsParent);
 	
 }

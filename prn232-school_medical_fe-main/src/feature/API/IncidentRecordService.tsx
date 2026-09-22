@@ -1,4 +1,5 @@
-import apiClient, { ApiResponseWrapper, PageinationParams, PaginatedResponse } from '../ApiClient';
+import { PageinationParams, PaginatedResponse, ApiResponseWrapper } from '../../models/ApiClientModel';
+import apiClient from '../ApiClient';
 
 export interface IncidentRecordView {
   id: string;

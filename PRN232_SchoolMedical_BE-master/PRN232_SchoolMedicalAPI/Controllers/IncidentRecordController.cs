@@ -11,7 +11,7 @@ namespace PRN232_SchoolMedicalAPI.Controllers;
 
 [ApiController]
 [Route("api/incident-record")]
-//[Authorize]
+[Authorize]
 public class IncidentRecordController : ControllerBase
 {
     private readonly IIncidentRecordService _incidentRecordService;

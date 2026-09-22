@@ -11,7 +11,7 @@ namespace PRN232_SchoolMedicalAPI.Controllers;
 
 [ApiController]
 [Route("api/medicine")]
-//[Authorize]
+[Authorize]
 public class MedicineController : ControllerBase
 {
     private readonly IMedicineService _medicineService;

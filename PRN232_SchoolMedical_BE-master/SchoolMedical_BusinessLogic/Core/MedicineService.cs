@@ -31,7 +31,7 @@ public class MedicineService : IMedicineService
     public async Task<PagingModel<MedicineDetailResponseDto>> GetAllMedicinesAsync(MedicineQueryDto request)
     {
 			var query = _medicineRepository.Include(m => m.CreatedByNavigation)
-			.Where(m => !m.IsDeleted);
+			.Where(m => m.IsDeleted);
 
         	//Apply filtering and sorting
             query = ApplyFilter(query, request.Status, request.Name);

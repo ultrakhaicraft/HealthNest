@@ -15,9 +15,9 @@ public partial class Medicine
 
     public int Amount { get; set; }
 
-    public bool? IsAvailable { get; set; } = true;
+    public bool IsAvailable { get; set; } = true;
 
-	public bool? IsDeleted { get; set; } = false;
+	public bool IsDeleted { get; set; } = false;
 
 	public virtual Nurse CreatedByNavigation { get; set; } = null!;
 }

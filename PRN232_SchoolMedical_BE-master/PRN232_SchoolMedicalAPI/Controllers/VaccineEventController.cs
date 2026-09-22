@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SchoolMedical_BusinessLogic.Core;
 using SchoolMedical_BusinessLogic.Interface;
 using SchoolMedical_DataAccess.DTOModels;
@@ -8,7 +9,7 @@ namespace PRN232_SchoolMedicalAPI.Controllers;
 
 [ApiController]
 [Route("api/vaccine-event")]
-//[Authorize]
+[Authorize]
 public class VaccineEventController : Controller
 {
 	private readonly IVaccineEventService _vaccineEventService;

@@ -1,4 +1,5 @@
-import apiClient, { PaginatedResponse, ApiResponseWrapper } from '../ApiClient';
+import { ApiResponseWrapper, PaginatedResponse } from '../../models/ApiClientModel';
+import apiClient from '../ApiClient';
 
 
 export interface ViewHealthCheckupEventDTO {

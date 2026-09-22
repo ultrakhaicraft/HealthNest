@@ -99,6 +99,7 @@ public class StudentHealthRecordUpdateModel
 	public string? BloodPressure { get; set; }
 	[Required(ErrorMessage = "Hearth Health info is required")]
 	public string? Heart { get; set; }
+	public string Status { get; set; } = null!;
 }
 
 

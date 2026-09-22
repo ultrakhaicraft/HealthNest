@@ -41,11 +41,17 @@ namespace SchoolMedical_BusinessLogic.Core
 					StudentId = record.StudentId,
 					Height = record.Height,
 					Allergies = record.Allergies,
-					ChronicDiseases = record.ChronicDiseases,
+					HealthHistory = record.HealthHistory,
 					Vision = record.Vision,
-					Hearing = record.Hearing,
+					EarNoseAndMouth = record.EarNoseAndMouth,
+					Teeth = record.Teeth,
+					BloodPressure = record.BloodPressure,
+					BloodProfile = record.BloodProfile,
+					Heart = record.Heart,
 					Status = RecordStatus.Active.ToString(),
 					CreatedBy = createdBy, // Assuming CreatedBy is a property in the create model
+					CreatedDateTime = DateTime.Now,
+					UpdatedDateTime = DateTime.Now,
 					
 				};
 
@@ -136,13 +142,20 @@ namespace SchoolMedical_BusinessLogic.Core
 					Id = record.Id,
 					StudentId = record.StudentId,
 					StudentName = record.Student.Account.FullName, // Assuming Student has a Name property
-					CreatedBy = record.CreatedByNavigation.Id, // Assuming CreatedByNavigation has a Name property
 					Height = record.Height,
 					Allergies = record.Allergies,
-					ChronicDiseases = record.ChronicDiseases,
+					HealthHistory = record.HealthHistory,
 					Vision = record.Vision,
-					Hearing = record.Hearing,
-					Status = record.Status
+					EarNoseAndMouth = record.EarNoseAndMouth,
+					Teeth = record.Teeth,
+					BloodPressure = record.BloodPressure,
+					BloodProfile = record.BloodProfile,
+					Heart = record.Heart,
+					Status = record.Status,
+					CreatedBy = record.CreatedByNavigation.Id, // Assuming CreatedBy is a property in the create model
+					CreatedDateTime = record.CreatedDateTime,
+					UpdatedDateTime = record.UpdatedDateTime,
+
 					/*
 					VaccineRecordViewModels = record.Vaccinerecords.Select(v => new VaccineRecordViewModel
 					{
@@ -190,13 +203,19 @@ namespace SchoolMedical_BusinessLogic.Core
 					Id = record.Id,
 					StudentId = record.StudentId,
 					StudentName = record.Student.Account.FullName, // Assuming Student has a Name property
-					CreatedBy = record.CreatedByNavigation.Id, // Assuming CreatedByNavigation has a Name property
 					Height = record.Height,
 					Allergies = record.Allergies,
-					ChronicDiseases = record.ChronicDiseases,
+					HealthHistory = record.HealthHistory,
 					Vision = record.Vision,
-					Hearing = record.Hearing,
-					Status = record.Status
+					EarNoseAndMouth = record.EarNoseAndMouth,
+					Teeth = record.Teeth,
+					BloodPressure = record.BloodPressure,
+					BloodProfile = record.BloodProfile,
+					Heart = record.Heart,
+					Status = record.Status,
+					CreatedBy = record.CreatedByNavigation.Id, // Assuming CreatedBy is a property in the create model
+					CreatedDateTime = record.CreatedDateTime,
+					UpdatedDateTime = record.UpdatedDateTime,
 					/*
 					VaccineRecordViewModels = record.Vaccinerecords.Select(v => new VaccineRecordViewModel
 					{
@@ -236,14 +255,19 @@ namespace SchoolMedical_BusinessLogic.Core
 					throw new NotFoundException("Student Health Record", recordId);
 				}
 
-				existingRecord!.StudentId = record.StudentId?? "";
 				existingRecord.Height = record.Height;
+				existingRecord.Weight = record.Weight;
 				existingRecord.Allergies = record.Allergies;
-				existingRecord.ChronicDiseases = record.ChronicDiseases;
+				existingRecord.HealthHistory = record.HealthHistory;
 				existingRecord.Vision = record.Vision;
-				existingRecord.Hearing = record.Hearing;
+				existingRecord.EarNoseAndMouth = record.EarNoseAndMouth;
+				existingRecord.Teeth = record.Teeth;
+				existingRecord.BloodPressure = record.BloodPressure;
+				existingRecord.BloodProfile = record.BloodProfile;
+				existingRecord.Heart = record.Heart;
 				existingRecord.Status = record.Status;
-				
+				existingRecord.UpdatedDateTime = DateTime.UtcNow;
+
 
 
 				await _unitOfWork.GetRepository<Studenthealthrecord>().UpdateAsync(existingRecord);

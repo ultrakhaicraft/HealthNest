@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MySqlX.XDevAPI.Common;
 using SchoolMedical_BusinessLogic.Core;
 using SchoolMedical_BusinessLogic.Interface;
@@ -11,6 +12,7 @@ namespace PRN232_SchoolMedicalAPI.Controllers;
 //Handle dashboard related feature
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class DashboardController : Controller
 {
 	private readonly IIncidentRecordService _incidentRecordService;

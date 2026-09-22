@@ -1,89 +1,91 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MySqlX.XDevAPI.Common;
 using SchoolMedical_BusinessLogic.Interface;
 using SchoolMedical_BusinessLogic.Utility;
 using SchoolMedical_DataAccess.DTOModels;
 using SchoolMedical_DataAccess.Entities;
 
-namespace PRN232_SchoolMedicalAPI.Controllers
+namespace PRN232_SchoolMedicalAPI.Controllers;
+
+[ApiController]
+[Route("api/medical-request")]
+[Authorize]
+public class MedicineRequestController : ControllerBase
 {
-    [ApiController]
-    [Route("api/medical-request")]
-    public class MedicineRequestController : ControllerBase
+    private readonly IMedicineRequestService _medicineRequestService;
+
+    public MedicineRequestController(IMedicineRequestService medicineRequestService)
     {
-        private readonly IMedicineRequestService _medicineRequestService;
+        _medicineRequestService = medicineRequestService;
+    }
 
-        public MedicineRequestController(IMedicineRequestService medicineRequestService)
-        {
-            _medicineRequestService = medicineRequestService;
-        }
-
-        /// <summary>
-        /// Get paginated list of medicine requests with filtering and sorting
-        /// </summary>
-        [HttpGet]
-        public async Task<IActionResult> GetMedicineRequests([FromQuery] MedicineRequestFilterRequestDto request)
-        {
-            var result = await _medicineRequestService.GetMedicineRequestsAsync(request);
+    /// <summary>
+    /// Get paginated list of medicine requests with filtering and sorting
+    /// </summary>
+    [HttpGet]
+    public async Task<IActionResult> GetMedicineRequests([FromQuery] MedicineRequestFilterRequestDto request)
+    {
+        var result = await _medicineRequestService.GetMedicineRequestsAsync(request);
 
 			ApiResponseWrapper<PagingModel<MedicineRequestResponseDto>> response = ApiResponseWrapper<PagingModel<MedicineRequestResponseDto>>
 			.Success(result, "Get all medicine requests success");
 			
-            return Ok(response);
-        }
+        return Ok(response);
+    }
 
-        /// <summary>
-        /// Get medicine request details by ID
-        /// </summary>
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetMedicineRequestById(string id)
-        {
-            var result = await _medicineRequestService.GetMedicineRequestByIdAsync(id);
-           
+    /// <summary>
+    /// Get medicine request details by ID
+    /// </summary>
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetMedicineRequestById(string id)
+    {
+        var result = await _medicineRequestService.GetMedicineRequestByIdAsync(id);
+       
 
 			ApiResponseWrapper<MedicineRequestResponseDto> response = ApiResponseWrapper<MedicineRequestResponseDto>
 			.Success(result, "Get medicine request success with Id: "+id);
 
 			return Ok(response);
-        }
+    }
 
-        /// <summary>
-        /// Get medicine requests by student ID
-        /// </summary>
-        [HttpGet("student/{studentId}")]
-        public async Task<IActionResult> GetMedicineRequestsByStudent(string studentId, [FromQuery] MedicineRequestFilterRequestDto request)
-        {
-            var result = await _medicineRequestService.GetMedicineRequestsByStudentAsync(studentId, request);
+    /// <summary>
+    /// Get medicine requests by student ID
+    /// </summary>
+    [HttpGet("student/{studentId}")]
+    public async Task<IActionResult> GetMedicineRequestsByStudent(string studentId, [FromQuery] MedicineRequestFilterRequestDto request)
+    {
+        var result = await _medicineRequestService.GetMedicineRequestsByStudentAsync(studentId, request);
 			ApiResponseWrapper<PagingModel<MedicineRequestResponseDto>> response = ApiResponseWrapper<PagingModel<MedicineRequestResponseDto>>
 						.Success(result, "Get all medicine requests success for student with Id: "+studentId);
 
 			return Ok(response);
-        }
+    }
 
-        /// <summary>
-        /// Get medicine requests by requester Id
-        /// </summary>
-        /// <param name="requesterId">Account Id</param>
-        /// <returns></returns>
-        [HttpGet("requester/{requesterId}")]
-        public async Task<IActionResult> GetMedicineRequestsByRequester(string requesterId, [FromQuery] MedicineRequestFilterRequestDto request)
-        {
-            var result = await _medicineRequestService.GetMedicineRequestsByRequesterAsync(requesterId, request);
+    /// <summary>
+    /// Get medicine requests by requester Id
+    /// </summary>
+    /// <param name="requesterId">Account Id</param>
+    /// <returns></returns>
+    [HttpGet("requester/{requesterId}")]
+    public async Task<IActionResult> GetMedicineRequestsByRequester(string requesterId, [FromQuery] MedicineRequestFilterRequestDto request)
+    {
+        var result = await _medicineRequestService.GetMedicineRequestsByRequesterAsync(requesterId, request);
 			ApiResponseWrapper<PagingModel<MedicineRequestResponseDto>> response = ApiResponseWrapper<PagingModel<MedicineRequestResponseDto>>
 						.Success(result, "Get all medicine requests success for requester with Id: " + requesterId);
 
 			return Ok(response);
-        }
+    }
 
-        /// <summary>
-        /// Create new medicine request
-        /// </summary>
-        [HttpPost]
-        public async Task<IActionResult> CreateMedicineRequest([FromBody] CreateMedicineRequestRequestDto request)
+    /// <summary>
+    /// Create new medicine request
+    /// </summary>
+    [HttpPost]
+    public async Task<IActionResult> CreateMedicineRequest([FromBody] CreateMedicineRequestRequestDto request)
+    {
+        // Validation is handled by ResultManipulator middleware
+        if (!ModelState.IsValid)
         {
-            // Validation is handled by ResultManipulator middleware
-            if (!ModelState.IsValid)
-            {
 				var errors = ModelState
 			     .Where(kvp => kvp.Value?.Errors.Count > 0)
 			     .ToDictionary(
@@ -94,7 +96,7 @@ namespace PRN232_SchoolMedicalAPI.Controllers
 				return BadRequest(ApiResponseWrapper<object>.ValidationError(errors));
 			}
 
-            var result = await _medicineRequestService.CreateMedicineRequestAsync(request);
+        var result = await _medicineRequestService.CreateMedicineRequestAsync(request);
 
 			ApiResponseWrapper<MedicineRequestResponseDto> response = ApiResponseWrapper<MedicineRequestResponseDto>
 						.Created(result, "Create medicine request Success");
@@ -102,17 +104,17 @@ namespace PRN232_SchoolMedicalAPI.Controllers
 			return StatusCode(201, response);
 		}
 
-        /// <summary>
-        /// Update existing medicine request
-        /// </summary>
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateMedicineRequest(string id, [FromBody] UpdateMedicineRequestRequestDto request)
-        {
-            
+    /// <summary>
+    /// Update existing medicine request
+    /// </summary>
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateMedicineRequest(string id, [FromBody] UpdateMedicineRequestRequestDto request)
+    {
+        
 
-            // Validation is handled by ResultManipulator middleware
-            if (!ModelState.IsValid)
-            {
+        // Validation is handled by ResultManipulator middleware
+        if (!ModelState.IsValid)
+        {
 				var errors = ModelState
 			    .Where(kvp => kvp.Value?.Errors.Count > 0)
 			    .ToDictionary(
@@ -123,26 +125,25 @@ namespace PRN232_SchoolMedicalAPI.Controllers
 				return BadRequest(ApiResponseWrapper<object>.ValidationError(errors));
 			}
 
-            var result = await _medicineRequestService.UpdateMedicineRequestAsync(request,id);
+        var result = await _medicineRequestService.UpdateMedicineRequestAsync(request,id);
 
 			ApiResponseWrapper<MedicineRequestResponseDto> response = ApiResponseWrapper<MedicineRequestResponseDto>
 						.Success(result, "Update medicine requests success with Id: " + id);
 
 			return Ok(response);
-        }
+    }
 
-        /// <summary>
-        /// Delete medicine request
-        /// </summary>
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMedicineRequest(string id)
-        {
-            await _medicineRequestService.DeleteMedicineRequestAsync(id);
+    /// <summary>
+    /// Delete medicine request
+    /// </summary>
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteMedicineRequest(string id)
+    {
+        await _medicineRequestService.DeleteMedicineRequestAsync(id);
 
 			ApiResponseWrapper<string> response = ApiResponseWrapper<string>
 			.Success(data: string.Empty, "Delete Medicine Request success with Id "+id);
 
-            return Ok(response);
-        }
+        return Ok(response);
     }
 }

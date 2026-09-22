@@ -259,11 +259,9 @@ public partial class SchoolhealthdbContext : DbContext
 			entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Amount);
 			entity.Property(e => e.IsAvailable)
-                .IsRequired()
-                .HasDefaultValueSql("'1'");
+				.IsRequired();
 			entity.Property(e => e.IsDeleted)
-				.IsRequired()
-				.HasDefaultValueSql("'0'");
+				.IsRequired();
 
 
 			entity.HasOne(d => d.CreatedByNavigation)
@@ -289,11 +287,9 @@ public partial class SchoolhealthdbContext : DbContext
 			entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Amount);
 			entity.Property(e => e.IsAvailable)
-				.IsRequired()
-				.HasDefaultValueSql("'1'");
+				.IsRequired();
 			entity.Property(e => e.IsDeleted)
-				.IsRequired()
-				.HasDefaultValueSql("'0'");
+				.IsRequired();
 
 
 			entity.HasOne(d => d.CreatedByNavigation)

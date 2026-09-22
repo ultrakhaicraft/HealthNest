@@ -29,7 +29,7 @@ public class AuthService : IAuthService
 		_jwtUtils = jwtUtils;
 		_configuration = configuration;
 	}
-	public async Task<LoginResponse> Login(LoginRequest request)
+	public async Task<(LoginResponse, JWTToken)> Login(LoginRequest request)
 	{
 		
 			var account = _unitOfWork.GetRepository<Account>().Find(user => user.Email == request.Email);
@@ -53,15 +53,15 @@ public class AuthService : IAuthService
 
 			var token = _jwtUtils.GenerateToken(authClaims, _configuration.GetSection("JwtSettings").Get<JwtModel>(), account);
 
-
-			return new LoginResponse
+			var responseModel = new LoginResponse
 			{
-				Token = token,
+
 				FullName = account.FullName,
 				Email = account.Email,
 				Id = account.Id.ToString(),
 				Role = account.Role
 			};
+			return (responseModel, token);
 		
 	}
 	public async Task<string> RegisteAsync(RegisterRequest request, bool IsParent)

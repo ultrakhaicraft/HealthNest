@@ -1,4 +1,5 @@
-import apiClient, { ApiResponseWrapper } from "../ApiClient";
+import { ApiResponseWrapper } from "../../models/ApiClientModel";
+import apiClient from "../ApiClient";
 
 
 export interface DashboardStatistic {

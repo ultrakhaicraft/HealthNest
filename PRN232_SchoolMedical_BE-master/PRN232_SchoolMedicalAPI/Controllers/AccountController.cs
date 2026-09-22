@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SchoolMedical_BusinessLogic.Interface;
 using SchoolMedical_DataAccess.DTOModels;
 using SchoolMedical_DataAccess.DTOModels.Accounts;
@@ -10,7 +11,7 @@ namespace PRN232_SchoolMedicalAPI.Controllers;
 
 [ApiController]
 [Route("api/account")]
-//[Authorize]
+[Authorize]
 public class AccountController : ControllerBase
 {
 	private readonly IAccountService _accountService;

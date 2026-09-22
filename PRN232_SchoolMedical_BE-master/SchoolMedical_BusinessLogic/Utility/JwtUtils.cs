@@ -21,7 +21,7 @@ public class JwtUtils  : IJwtUtils
 			throw new AppException("JWT model cannot be null");
 		}
 		var authSignKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtModel?.SecretKey ?? ""));
-		var expirationTime = DateTime.UtcNow.AddHours(2);
+		var expirationTime = DateTime.UtcNow.AddMinutes(20);
 		var tokenDescriptor = new SecurityTokenDescriptor
 		{
 			Issuer = jwtModel?.ValidIssuer,
