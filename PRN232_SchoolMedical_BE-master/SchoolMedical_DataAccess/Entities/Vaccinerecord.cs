@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SchoolMedical_DataAccess.Entities;
+namespace HealthNest_DAO.Entities;
 
 public partial class Vaccinerecord
 {
@@ -11,7 +11,7 @@ public partial class Vaccinerecord
 
     public DateTime RecordDate { get; set; }
 
-    public string? Vaccine { get; set; }
+    public string? VaccineTitle { get; set; }
 
     public string? Description { get; set; }
 

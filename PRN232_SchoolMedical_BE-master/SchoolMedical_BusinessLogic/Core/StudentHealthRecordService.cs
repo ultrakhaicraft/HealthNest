@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HealthNest_BusinessLogic.Interface;
+using HealthNest_BusinessLogic.Utility;
+using HealthNest_DAO.DTOModels;
+using HealthNest_DAO.Entities;
+using HealthNest_DAO.Enums;
+using HealthNest_DAO.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Asn1.Ocsp;
-using SchoolMedical_BusinessLogic.Interface;
 using SchoolMedical_BusinessLogic.Utility;
-using SchoolMedical_DataAccess.DTOModels;
-using SchoolMedical_DataAccess.Entities;
-using SchoolMedical_DataAccess.Enums;
-using SchoolMedical_DataAccess.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace SchoolMedical_BusinessLogic.Core
+namespace HealthNest_BusinessLogic.Core
 {
 	public class StudentHealthRecordService : IStudentHealthRecordService
 	{
@@ -41,11 +42,17 @@ namespace SchoolMedical_BusinessLogic.Core
 					StudentId = record.StudentId,
 					Height = record.Height,
 					Allergies = record.Allergies,
-					ChronicDiseases = record.ChronicDiseases,
+					HealthHistory = record.HealthHistory,
 					Vision = record.Vision,
-					Hearing = record.Hearing,
+					EarNoseAndMouth = record.EarNoseAndMouth,
+					Teeth = record.Teeth,
+					BloodPressure = record.BloodPressure,
+					BloodProfile = record.BloodProfile,
+					Heart = record.Heart,
 					Status = RecordStatus.Active.ToString(),
 					CreatedBy = createdBy, // Assuming CreatedBy is a property in the create model
+					CreatedDateTime = DateTime.Now,
+					UpdatedDateTime = DateTime.Now,
 					
 				};
 
@@ -78,9 +85,9 @@ namespace SchoolMedical_BusinessLogic.Core
 				
 
 				//Search by student name by accessing Student Object
-				if (!String.IsNullOrEmpty(recordQuery.StudentName))
+				if (!string.IsNullOrEmpty(recordQuery.StudentName))
 				{
-					records = records.Where(r => r.Student.FullName.Contains(recordQuery.StudentName, StringComparison.OrdinalIgnoreCase));
+					records = records.Where(r => r.Student.Account.FullName.Contains(recordQuery.StudentName, StringComparison.OrdinalIgnoreCase));
 				}
 
 				//Filter by status
@@ -102,12 +109,12 @@ namespace SchoolMedical_BusinessLogic.Core
 				{
 					Id = record.Id,
 					StudentId = record.StudentId,
-					StudentName = record.Student.FullName, // Assuming Student has a FullName property
-					CreatedBy = record.CreatedByNavigation.FullName, // Assuming CreatedByNavigation has a FullName property
+					StudentName = record.Student.Account.FullName, // Assuming Student has a FullName property
+					CreatedBy = record.CreatedByNavigation.Account.FullName, // Assuming CreatedByNavigation has a FullName property
 					Status = record.Status
 				});
 
-				var pagingModel = await PagingExtension.ToPagingModel<StudentHealthRecordViewModel>(recordResponse, recordQuery.PageNumber, recordQuery.PageNumber);
+				var pagingModel = await PagingExtension.ToPagingModel(recordResponse, recordQuery.PageNumber, recordQuery.PageNumber);
 
 				return new PagingModel<StudentHealthRecordViewModel>
 				{
@@ -135,31 +142,38 @@ namespace SchoolMedical_BusinessLogic.Core
 				{
 					Id = record.Id,
 					StudentId = record.StudentId,
-					StudentName = record.Student.FullName, // Assuming Student has a Name property
-					CreatedBy = record.CreatedByNavigation.Id, // Assuming CreatedByNavigation has a Name property
+					StudentName = record.Student.Account.FullName, // Assuming Student has a Name property
 					Height = record.Height,
 					Allergies = record.Allergies,
-					ChronicDiseases = record.ChronicDiseases,
+					HealthHistory = record.HealthHistory,
 					Vision = record.Vision,
-					Hearing = record.Hearing,
-					Status = record.Status
+					EarNoseAndMouth = record.EarNoseAndMouth,
+					Teeth = record.Teeth,
+					BloodPressure = record.BloodPressure,
+					BloodProfile = record.BloodProfile,
+					Heart = record.Heart,
+					Status = record.Status,
+					CreatedBy = record.CreatedByNavigation.Id, // Assuming CreatedBy is a property in the create model
+					CreatedDateTime = record.CreatedDateTime,
+					UpdatedDateTime = record.UpdatedDateTime,
+
 					/*
-					vaccineRecordViewModels = record.Vaccinerecords.Select(v => new VaccineRecordViewModel
+					VaccineRecordViewModels = record.Vaccinerecords.Select(v => new VaccineRecordViewModel
 					{
 						Id = v.Id,
 						StudentId = v.StudentId,
 						StudentName = v.Student.FullName, // Assuming Student has a FullName property
 						RecordDate = v.RecordDate,
-						Vaccine = v.Vaccine,
+						VaccineTitle = v.VaccineTitle,
 						Status = v.Status
 					}).ToList(),
-					treatmentRecordViewModels = record.Treatmentrecords.Select(t => new TreatmentRecordViewModel
+					TreatmentRecordViewModels = record.Treatmentrecords.Select(t => new TreatmentRecordViewModel
 					{
 						Id = t.Id,
 						StudentId = t.StudentId,
 						StudentName = t.Student.FullName, // Assuming Student has a FullName property
 						RecordDate = t.RecordDate,
-						Treatment = t.Treatment,
+						TreatmentTitle = t.TreatmentTitle,
 						Status = t.Status
 					}).ToList()
 					*/
@@ -189,31 +203,37 @@ namespace SchoolMedical_BusinessLogic.Core
 				{
 					Id = record.Id,
 					StudentId = record.StudentId,
-					StudentName = record.Student.FullName, // Assuming Student has a Name property
-					CreatedBy = record.CreatedByNavigation.Id, // Assuming CreatedByNavigation has a Name property
+					StudentName = record.Student.Account.FullName, // Assuming Student has a Name property
 					Height = record.Height,
 					Allergies = record.Allergies,
-					ChronicDiseases = record.ChronicDiseases,
+					HealthHistory = record.HealthHistory,
 					Vision = record.Vision,
-					Hearing = record.Hearing,
-					Status = record.Status
+					EarNoseAndMouth = record.EarNoseAndMouth,
+					Teeth = record.Teeth,
+					BloodPressure = record.BloodPressure,
+					BloodProfile = record.BloodProfile,
+					Heart = record.Heart,
+					Status = record.Status,
+					CreatedBy = record.CreatedByNavigation.Id, // Assuming CreatedBy is a property in the create model
+					CreatedDateTime = record.CreatedDateTime,
+					UpdatedDateTime = record.UpdatedDateTime,
 					/*
-					vaccineRecordViewModels = record.Vaccinerecords.Select(v => new VaccineRecordViewModel
+					VaccineRecordViewModels = record.Vaccinerecords.Select(v => new VaccineRecordViewModel
 					{
 						Id = v.Id,
 						StudentId = v.StudentId,
 						StudentName = v.Student.FullName, // Assuming Student has a FullName property
 						RecordDate = v.RecordDate,
-						Vaccine = v.Vaccine,
+						VaccineTitle = v.VaccineTitle,
 						Status = v.Status
 					}).ToList(),
-					treatmentRecordViewModels = record.Treatmentrecords.Select(t => new TreatmentRecordViewModel
+					TreatmentRecordViewModels = record.Treatmentrecords.Select(t => new TreatmentRecordViewModel
 					{
 						Id = t.Id,
 						StudentId = t.StudentId,
 						StudentName = t.Student.FullName, // Assuming Student has a FullName property
 						RecordDate = t.RecordDate,
-						Treatment = t.Treatment,
+						TreatmentTitle = t.TreatmentTitle,
 						Status = t.Status
 					}).ToList()
 					*/
@@ -236,14 +256,19 @@ namespace SchoolMedical_BusinessLogic.Core
 					throw new NotFoundException("Student Health Record", recordId);
 				}
 
-				existingRecord!.StudentId = record.StudentId?? "";
 				existingRecord.Height = record.Height;
+				existingRecord.Weight = record.Weight;
 				existingRecord.Allergies = record.Allergies;
-				existingRecord.ChronicDiseases = record.ChronicDiseases;
+				existingRecord.HealthHistory = record.HealthHistory;
 				existingRecord.Vision = record.Vision;
-				existingRecord.Hearing = record.Hearing;
+				existingRecord.EarNoseAndMouth = record.EarNoseAndMouth;
+				existingRecord.Teeth = record.Teeth;
+				existingRecord.BloodPressure = record.BloodPressure;
+				existingRecord.BloodProfile = record.BloodProfile;
+				existingRecord.Heart = record.Heart;
 				existingRecord.Status = record.Status;
-				
+				existingRecord.UpdatedDateTime = DateTime.UtcNow;
+
 
 
 				await _unitOfWork.GetRepository<Studenthealthrecord>().UpdateAsync(existingRecord);

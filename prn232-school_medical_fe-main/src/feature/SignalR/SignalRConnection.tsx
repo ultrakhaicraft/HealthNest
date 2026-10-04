@@ -1,18 +1,14 @@
 import * as signalR from "@microsoft/signalr";
 
+const ConnectionURL = 'https://localhost:7085';
+
 
 let connection: signalR.HubConnection | null = null;
 
 export const getSignalRConnection = (): signalR.HubConnection => {
     if (!connection) {
         connection = new signalR.HubConnectionBuilder()
-        .withUrl('https://localhost:7085/myHub',{
-            accessTokenFactory: () => {
-                // Retrieve the token from localStorage
-                const token = localStorage.getItem('authToken');
-                return token ? token : '';
-            }
-        })
+        .withUrl(`${ConnectionURL}/myHub`,{withCredentials: true})
         .withAutomaticReconnect()
         .configureLogging(signalR.LogLevel.Information)
         .build();

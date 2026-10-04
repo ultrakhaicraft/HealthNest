@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SchoolMedical_DataAccess.Entities;
+namespace HealthNest_DAO.Entities;
 
 public partial class Medicine
 {
     public string Id { get; set; } = null!;
 
-    public string CreatedBy { get; set; } = null!;
+    public string CreatedBy { get; set; } = null!; //Nurse Id
 
     public string Name { get; set; } = null!;
 
@@ -15,9 +15,9 @@ public partial class Medicine
 
     public int Amount { get; set; }
 
-    public bool? IsAvailable { get; set; } = true;
+    public bool IsAvailable { get; set; } = true;
 
 	public bool IsDeleted { get; set; } = false;
 
-	public virtual Account CreatedByNavigation { get; set; } = null!;
+	public virtual Nurse CreatedByNavigation { get; set; } = null!;
 }

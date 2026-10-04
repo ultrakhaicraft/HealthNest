@@ -1,61 +1,7 @@
 //The goal is to call CRUD operations on the user API
-import apiClient, { PaginatedResponse, ApiResponseWrapper } from '../ApiClient';
-
-// --- Type Definitions for an Account ---
-// This defines the data structure for an account, providing type safety.
-
-
-export interface GetAllAccountsParams {
-  FullName?: string;
-  Email?: string;
-  Role?: string;
-  Status?: string;
-  PageNumber: number;
-  PageSize: number;
-}
-
-export interface AccountView {
-  id: string;
-  fullName: string;
-  email: string;
-  role: string;
-  status: string | null;
-}
-
-export interface AccountDetail extends AccountView {
-  phoneNumber: string;
-  address: string;
-  studentId: string; //String but can be null or empty depend on the response
-  studentName: string;
-  parentId: string;
-  parentName: string;
-}
-
-
-export interface AccountCreationData {
-  fullName: string;
-  email: string;
-  password: string;
-  phoneNumber: string;
-  role: 'Student' | 'Parent' | 'SchoolNurse' | 'Manager' | 'Admin' | '';
-  address: string;
-  parentId: string;
-}
-
-
-
-
-export interface AccountUpdateData {
-  fullName: string;
-  email: string;
-  phoneNumber: string;
-  role: 'Student' | 'Parent' | 'SchoolNurse' | 'Manager' | 'Admin' | '';
-  address: string;
-  parentId: string;
-}
-
-
-
+import { GetAllAccountsParams, AccountView, AccountDetail, AccountCreationData, AccountUpdateData } from '../../models/AccountModel';
+import { PaginatedResponse, ApiResponseWrapper } from '../../models/ApiClientModel';
+import apiClient from '../ApiClient';
 
 // --- API Service Object ---
 

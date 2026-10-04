@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PRN232_SchoolMedicalAPI", "PRN232_SchoolMedicalAPI\PRN232_SchoolMedicalAPI.csproj", "{63EB8F05-8FF4-4D34-B7BD-31FF0863B453}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthNest_API", "PRN232_SchoolMedicalAPI\HealthNest_API.csproj", "{63EB8F05-8FF4-4D34-B7BD-31FF0863B453}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchoolMedical_DataAccess", "SchoolMedical_DataAccess\SchoolMedical_DataAccess.csproj", "{A0FB6FB9-E4D5-468D-8D26-D07A112BF8A7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthNest_DAO", "SchoolMedical_DataAccess\HealthNest_DAO.csproj", "{A0FB6FB9-E4D5-468D-8D26-D07A112BF8A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchoolMedical_BusinessLogic", "SchoolMedical_BusinessLogic\SchoolMedical_BusinessLogic.csproj", "{EADAA41E-6B62-4BA5-B88B-9A03ED94260F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthNest_BusinessLogic", "SchoolMedical_BusinessLogic\HealthNest_BusinessLogic.csproj", "{EADAA41E-6B62-4BA5-B88B-9A03ED94260F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,5 +30,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6ECA9FE5-20E4-42A1-B161-DF7F8072ADF3}
 	EndGlobalSection
 EndGlobal

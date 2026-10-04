@@ -10,11 +10,13 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { StudentHealthRecordCreationData, StudentHealthRecordService } from '../../../feature/API/StudentHealthRecordService';
 import { Toast } from '../../../components/Notification/Toast';
 import { AccountDetail } from '../../../feature/API/AccountService';
+import { useAccountDetail } from '../../../feature/Hooks/Account/useAccountDetail';
 
 // Create Student Health Record Component - This is the entry point
 export default function CreateStudentHealthRecordPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const {accountDetail} = useAccountDetail();
 
 
   const [error, setError] = useState<string | null>(null);
@@ -50,10 +52,10 @@ export default function CreateStudentHealthRecordPage() {
     setIsLoading(true)
     console.log("Start submitting");
     try {
-      const stored = localStorage.getItem('accountDetail');
-      let parentData: AccountDetail | null = null
+      const stored = accountDetail;
+      let parentData: AccountDetail 
       if (stored) {
-        parentData = JSON.parse(stored);
+        parentData = stored
       } else {
         console.warn('No account detail found in local storage')
         return;

@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HealthNest_BusinessLogic.Interface;
+using HealthNest_BusinessLogic.Utility;
+using HealthNest_DAO.DTOModels;
+using HealthNest_DAO.Entities;
+using HealthNest_DAO.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Asn1.Ocsp;
-using SchoolMedical_BusinessLogic.Interface;
-using SchoolMedical_BusinessLogic.Utility;
-using SchoolMedical_DataAccess.DTOModels;
-using SchoolMedical_DataAccess.Entities;
-using SchoolMedical_DataAccess.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchoolMedical_BusinessLogic.Core;
+namespace HealthNest_BusinessLogic.Core;
 
 
 public class MedicineService : IMedicineService
@@ -31,7 +31,7 @@ public class MedicineService : IMedicineService
     public async Task<PagingModel<MedicineDetailResponseDto>> GetAllMedicinesAsync(MedicineQueryDto request)
     {
 			var query = _medicineRepository.Include(m => m.CreatedByNavigation)
-			.Where(m => !m.IsDeleted);
+			.Where(m => m.IsDeleted);
 
         	//Apply filtering and sorting
             query = ApplyFilter(query, request.Status, request.Name);
@@ -50,12 +50,12 @@ public class MedicineService : IMedicineService
                     Amount = m.Amount,
                     IsAvailable = m.IsAvailable,
                     CreatedBy = m.CreatedBy,
-                    CreatedByName = m.CreatedByNavigation.FullName ?? "Unknown"
+                    CreatedByName = m.CreatedByNavigation.Account.FullName ?? "Unknown"
                 });
 
 
 			// Apply paging
-			var medicinePage = await PagingExtension.ToPagingModel<MedicineDetailResponseDto>(medicineResponseDto.AsQueryable(), request.PageIndex, request.PageSize);
+			var medicinePage = await PagingExtension.ToPagingModel(medicineResponseDto.AsQueryable(), request.PageIndex, request.PageSize);
 
 
 			return new PagingModel<MedicineDetailResponseDto>
@@ -83,7 +83,7 @@ public class MedicineService : IMedicineService
 				Amount = m.Amount,
 				IsAvailable = m.IsAvailable,
 				CreatedBy = m.CreatedBy,
-				CreatedByName = m.CreatedByNavigation.FullName ?? "Unknown"
+				CreatedByName = m.CreatedByNavigation.Account.FullName ?? "Unknown"
 			})
 			.FirstOrDefaultAsync();
 
@@ -125,7 +125,7 @@ public class MedicineService : IMedicineService
                 Amount = createdMedicine.Amount,
                 IsAvailable = createdMedicine.IsAvailable,
                 CreatedBy = createdMedicine.CreatedBy,
-                CreatedByName = createdMedicine.CreatedByNavigation?.FullName ?? "Unknown"
+                CreatedByName = createdMedicine.CreatedByNavigation?.Account.FullName ?? "Unknown"
             };
        
     }
@@ -143,7 +143,7 @@ public class MedicineService : IMedicineService
 			medicine.Name = request.Name;
             medicine.Description = request.Description;
             medicine.Amount = request.Amount;
-            medicine.IsAvailable = request.IsAvailable;
+            medicine.IsAvailable = request.IsAvailable.HasValue;
 
             await _medicineRepository.UpdateAsync(medicine);
             await _unitOfWork.SaveAsync();
@@ -162,7 +162,7 @@ public class MedicineService : IMedicineService
                 Amount = updatedMedicine.Amount,
                 IsAvailable = updatedMedicine.IsAvailable,
                 CreatedBy = updatedMedicine.CreatedBy,
-                CreatedByName = updatedMedicine.CreatedByNavigation?.FullName ?? "Unknown"
+                CreatedByName = updatedMedicine.CreatedByNavigation?.Account.FullName ?? "Unknown"
             };
        
     }

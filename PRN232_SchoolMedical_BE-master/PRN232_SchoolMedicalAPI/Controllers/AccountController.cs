@@ -1,15 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SchoolMedical_BusinessLogic.Interface;
-using SchoolMedical_DataAccess.DTOModels;
+﻿using HealthNest_BusinessLogic.Interface;
+using HealthNest_DAO.DTOModels;
+using HealthNest_DAO.DTOModels.Accounts;
+using HealthNest_DAO.Enums;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SchoolMedical_DataAccess.Entities;
-using SchoolMedical_DataAccess.Enums;
 using System.Security.Principal;
 
-namespace PRN232_SchoolMedicalAPI.Controllers;
+namespace HealthNest_API.Controllers;
 
 [ApiController]
 [Route("api/account")]
-//[Authorize]
+[Authorize]
 public class AccountController : ControllerBase
 {
 	private readonly IAccountService _accountService;

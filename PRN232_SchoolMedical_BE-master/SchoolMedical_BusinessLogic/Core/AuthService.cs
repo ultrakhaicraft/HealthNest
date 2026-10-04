@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
-using SchoolMedical_BusinessLogic.Interface;
-using SchoolMedical_BusinessLogic.Utility;
-using SchoolMedical_DataAccess.DTOModels;
-using SchoolMedical_DataAccess.Entities;
-using SchoolMedical_DataAccess.Enums;
-using SchoolMedical_DataAccess.Interfaces;
+﻿using HealthNest_BusinessLogic.Interface;
+using HealthNest_BusinessLogic.Utility;
+using HealthNest_DAO.DTOModels;
+using HealthNest_DAO.Entities;
+using HealthNest_DAO.Enums;
+using HealthNest_DAO.Interfaces;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,24 +15,22 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace SchoolMedical_BusinessLogic.Core;
+namespace HealthNest_BusinessLogic.Core;
 
 
 public class AuthService : IAuthService
 {
 	private readonly IUnitOfWork _unitOfWork;
-	private readonly IJwtUtils _jwtUtils;
-	private readonly IConfiguration _configuration;
-	public AuthService(IUnitOfWork unitOfWork, IJwtUtils jwtUtils, IConfiguration configuration)
+	private readonly ITokenUtils _tokenUtils;
+	public AuthService(IUnitOfWork unitOfWork, ITokenUtils jwtUtils)
 	{
 		_unitOfWork = unitOfWork;
-		_jwtUtils = jwtUtils;
-		_configuration = configuration;
+		_tokenUtils = jwtUtils;
 	}
-	public async Task<LoginResponse> Login(LoginRequest request)
+	public async Task<(LoginResponse, TokensDTO)> Login(LoginRequest request)
 	{
 		
-			var account = _unitOfWork.GetRepository<Account>().Find(user => user.Email == request.Email);
+			var account = await _unitOfWork.GetRepository<Account>().FindAsync(user => user.Email == request.Email);
 			if (account == null)
 			{
 				throw new UnauthorizedException(ErrorMessage.EmailNotFound);
@@ -42,36 +40,34 @@ public class AuthService : IAuthService
 				throw new UnauthorizedException(ErrorMessage.PasswordIncorrect);
 			}
 
-			var authClaims = new List<Claim>
+		
+			var tokens = await _tokenUtils.GenerateTokens(account);
+
+			var tokenDto = new TokensDTO
 			{
-				new Claim("id", account.Id),
-				new Claim(ClaimTypes.Name, account.FullName?? "N/A"),
-				new Claim(ClaimTypes.Email, account.Email ?? "N/A"),
-				new Claim(ClaimTypes.Role, account.Role ?? "N/A"),
-				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+				AccessTokenString = tokens.accessToken,
+				RefreshTokenString = tokens.refreshToken,
 			};
 
-			var token = _jwtUtils.GenerateToken(authClaims, _configuration.GetSection("JwtSettings").Get<JwtModel>(), account);
-
-
-			return new LoginResponse
+			var responseModel = new LoginResponse
 			{
-				Token = token,
+
 				FullName = account.FullName,
 				Email = account.Email,
 				Id = account.Id.ToString(),
 				Role = account.Role
 			};
+			return (responseModel, tokenDto);
 		
 	}
-	public async Task<string> RegisteAsync(RegisterRequest request, bool IsParent)
+	public async Task<string> RegisterAsync(RegisterRequest request, bool IsParent)
 	{
 		
 			var existingAccount = _unitOfWork.GetRepository<Account>().Find(user => user.Email == request.Email);
 			if (existingAccount != null)
 				throw new BadRequestException(ErrorMessage.EmailExist);
 
-			if (!IsValid(request.Password))
+			if (!IsValid(request.Password ?? string.Empty))
 				throw new BadRequestException(ErrorMessage.ValidatePassword);
 
 			if(request.Password!= request.ConfirmPassword)
@@ -80,8 +76,8 @@ public class AuthService : IAuthService
 			var account = new Account
 			{
 				Id = Guid.NewGuid().ToString(),
-				FullName = request.FullName,
-				Email = request.Email,
+				FullName = request.FullName ?? "N/A",
+				Email = request.Email ?? "N/A",
 				PhoneNumber = request.PhoneNumber,
 				Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
 				Role = IsParent ? AccountRole.Parent.ToString() : AccountRole.Student.ToString(),
@@ -101,6 +97,8 @@ public class AuthService : IAuthService
 	//private methods
 	public bool IsValid(string password)
 	{
+		if(string.IsNullOrEmpty(password)) return false;
+
 		if (password.Length < 8) return false;
 
 		if (!Regex.IsMatch(password, @"[a-zA-Z]")) return false;
@@ -110,6 +108,13 @@ public class AuthService : IAuthService
 		if (!Regex.IsMatch(password, @"[@#$%^&*!_]")) return false;
 
 		return true;
+	}
+
+	public Task<TokensDTO> RefreshToken(TokensDTO tokens)
+	{
+		var newTokenDtos = _tokenUtils.RefreshToken(tokens);
+
+		return newTokenDtos;
 	}
 }
 

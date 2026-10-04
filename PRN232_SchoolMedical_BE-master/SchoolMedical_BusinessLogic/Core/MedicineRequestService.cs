@@ -1,14 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HealthNest_BusinessLogic.Interface;
+using HealthNest_BusinessLogic.Utility;
+using HealthNest_DAO.DTOModels;
+using HealthNest_DAO.Entities;
+using HealthNest_DAO.Enums;
+using HealthNest_DAO.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Asn1.Ocsp;
-using SchoolMedical_BusinessLogic.Interface;
 using SchoolMedical_BusinessLogic.Utility;
-using SchoolMedical_DataAccess.DTOModels;
-using SchoolMedical_DataAccess.Entities;
-using SchoolMedical_DataAccess.Enums;
-using SchoolMedical_DataAccess.Interfaces;
 using System.Linq.Expressions;
 
-namespace SchoolMedical_BusinessLogic.Core
+namespace HealthNest_BusinessLogic.Core
 {
 	public class MedicineRequestService : IMedicineRequestService
 	{
@@ -40,9 +41,9 @@ namespace SchoolMedical_BusinessLogic.Core
 			{
 				Id = mr.Id,
 				RequestBy = mr.RequestBy,
-				RequestByName = mr.RequestByNavigation.FullName ?? "Unknown",
+				RequestByName = mr.RequestByNavigation.Account.FullName ?? "Unknown",
 				ForStudent = mr.ForStudent,
-				ForStudentName = mr.ForStudentNavigation.FullName ?? "Unknown",
+				ForStudentName = mr.ForStudentNavigation.Account.FullName ?? "Unknown",
 				Description = mr.Description,
 				DateSent = mr.DateSent,
 				Status= mr.Status
@@ -68,9 +69,9 @@ namespace SchoolMedical_BusinessLogic.Core
 				{
 					Id = mr.Id,
 					RequestBy = mr.RequestBy,
-					RequestByName = mr.RequestByNavigation.FullName ?? "Unknown",
+					RequestByName = mr.RequestByNavigation.Account.FullName ?? "Unknown",
 					ForStudent = mr.ForStudent,
-					ForStudentName = mr.ForStudentNavigation.FullName ?? "Unknown",
+					ForStudentName = mr.ForStudentNavigation.Account.FullName ?? "Unknown",
 					Description = mr.Description,
 					DateSent = mr.DateSent,
 					Status = mr.Status
@@ -103,7 +104,7 @@ namespace SchoolMedical_BusinessLogic.Core
 					throw new NotFoundException("Student not found");
 				}
 
-				if (student.ParentId != request.RequestBy || student.ParentId==null)
+				if (student.Student.ParentId != request.RequestBy || student.Student.ParentId == null)
 				{
 					throw new BadRequestException(
 						"This student isn't your children/kids, please pick the child that has parentId as your account id");
@@ -132,9 +133,9 @@ namespace SchoolMedical_BusinessLogic.Core
 				{
 					Id = createdRequest.Id,
 					RequestBy = createdRequest.RequestBy,
-					RequestByName = createdRequest.RequestByNavigation?.FullName ?? "Unknown",
+					RequestByName = createdRequest.RequestByNavigation?.Account.FullName ?? "Unknown",
 					ForStudent = createdRequest.ForStudent,
-					ForStudentName = createdRequest.ForStudentNavigation?.FullName ?? "Unknown",
+					ForStudentName = createdRequest.ForStudentNavigation?.Account.FullName ?? "Unknown",
 					Description = createdRequest.Description,
 					DateSent = createdRequest.DateSent,
 					Status = createdRequest.Status
@@ -167,7 +168,7 @@ namespace SchoolMedical_BusinessLogic.Core
 					throw new KeyNotFoundException("Student not found");
 				}
 
-				if (student.ParentId != request.RequestBy || student.ParentId == null)
+				if (student.Student.ParentId != request.RequestBy || student.Student.ParentId == null)
 				{
 					throw new BadRequestException(
 						"This student isn't your children/kids, please pick the child that has parentId as your account id");
@@ -197,9 +198,9 @@ namespace SchoolMedical_BusinessLogic.Core
 				{
 					Id = updatedRequest.Id,
 					RequestBy = updatedRequest.RequestBy,
-					RequestByName = updatedRequest.RequestByNavigation?.FullName ?? "Unknown",
+					RequestByName = updatedRequest.RequestByNavigation?.Account.FullName ?? "Unknown",
 					ForStudent = updatedRequest.ForStudent,
-					ForStudentName = updatedRequest.ForStudentNavigation?.FullName ?? "Unknown",
+					ForStudentName = updatedRequest.ForStudentNavigation?.Account.FullName ?? "Unknown",
 					Description = updatedRequest.Description,
 					DateSent = updatedRequest.DateSent,
 					Status = updatedRequest.Status
@@ -244,9 +245,9 @@ namespace SchoolMedical_BusinessLogic.Core
 			{
 				Id = mr.Id,
 				RequestBy = mr.RequestBy,
-				RequestByName = mr.RequestByNavigation.FullName ?? "Unknown",
+				RequestByName = mr.RequestByNavigation.Account.FullName ?? "Unknown",
 				ForStudent = mr.ForStudent,
-				ForStudentName = mr.ForStudentNavigation.FullName ?? "Unknown",
+				ForStudentName = mr.ForStudentNavigation.Account.FullName ?? "Unknown",
 				Description = mr.Description,
 				DateSent = mr.DateSent,
 				Status = mr.Status
@@ -287,9 +288,9 @@ namespace SchoolMedical_BusinessLogic.Core
 			{
 				Id = mr.Id,
 				RequestBy = mr.RequestBy,
-				RequestByName = mr.RequestByNavigation.FullName ?? "Unknown",
+				RequestByName = mr.RequestByNavigation.Account.FullName ?? "Unknown",
 				ForStudent = mr.ForStudent,
-				ForStudentName = mr.ForStudentNavigation.FullName ?? "Unknown",
+				ForStudentName = mr.ForStudentNavigation.Account.FullName ?? "Unknown",
 				Description = mr.Description,
 				DateSent = mr.DateSent,
 				Status = mr.Status

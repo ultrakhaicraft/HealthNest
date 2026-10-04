@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using SchoolMedical_DataAccess.DTOModels;
+﻿using HealthNest_DAO.DTOModels;
+using Microsoft.AspNetCore.SignalR;
 
 
 
-namespace SchoolMedical_BusinessLogic.SignalRHubs
+namespace HealthNest_BusinessLogic.SignalRHubs
 {
 	// This class represents a SignalR hub for handling incident records.
 	public class MyHub : Hub 

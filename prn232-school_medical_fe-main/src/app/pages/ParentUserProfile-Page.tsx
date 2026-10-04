@@ -8,6 +8,8 @@ import PersonalInfo from '../../components/User_Profile/PersonalInfo';
 import { AccountDetail, accountService, AccountUpdateData } from '../../feature/API/AccountService';
 import '../CSS/UserProfile.css'
 import { Link, useNavigate } from 'react-router-dom';
+import { useAccountDetail } from '../../feature/Hooks/Account/useAccountDetail';
+import { useUserId, useUserRole } from '../../feature/Hooks/Account/AccountHooks';
 
 export interface IPersonalInfo {
     fullName: string,
@@ -19,10 +21,12 @@ export interface IPersonalInfo {
 // --- User Profile Page Component ---
 export default function ParentUserProfile() {
     const navigate = useNavigate();
-    const [accountDetail, setAccountDetail] = useState<AccountDetail>(); //Hold account detail
+    const {accountDetail,isStudentExist} = useAccountDetail();
     const [role, setRole] = useState('');
     const [updatedPersonalInfo, setUpdatedPersonalInfo] = useState<AccountUpdateData | null>(null)
     const [isEditMode, setIsEditMode] = useState(false);
+    const AccountDetail= useAccountDetail();
+
 
     const [formData, setFormData] = useState<IPersonalInfo>({
         fullName: '',
@@ -31,18 +35,8 @@ export default function ParentUserProfile() {
         address: '',
     });
 
-    const getAccountDetail = useCallback(() => {
-        const stored = localStorage.getItem('accountDetail');
-        if (stored) {
-            const account = JSON.parse(stored);
-            setAccountDetail(account);
-        } else {
-            console.warn("account Detail is empty in localStorage");
-        }
-    }, []);
 
     useEffect(() => {
-        getAccountDetail();
         if (accountDetail) {
             setFormData({
                 fullName: accountDetail.fullName,
@@ -51,12 +45,13 @@ export default function ParentUserProfile() {
                 address: accountDetail.address,
             });
         }
-    }, [getAccountDetail]);
+    }, []);
 
     //This is where we call update API
     const handleAccountUpdate = async (PersonalInfo: IPersonalInfo) => {
 
-        const storedRole = localStorage.getItem('userRole') as AccountUpdateData['role'] | null;
+        const storedRole = useUserRole() as AccountUpdateData['role'] | null;
+        const storedId = useUserId()
 
         const newPersonalInfo: AccountUpdateData = {
             fullName: PersonalInfo.fullName,
@@ -64,7 +59,7 @@ export default function ParentUserProfile() {
             phoneNumber: PersonalInfo.phone,
             role: storedRole ?? '',
             address: PersonalInfo.address,
-            parentId: localStorage.getItem('userId') ?? ''
+            parentId: storedId ?? ''
         }
 
         const userId = accountDetail?.id ?? "Empty ID";
@@ -77,7 +72,7 @@ export default function ParentUserProfile() {
 
         // Step 3: Update localStorage and state
         localStorage.setItem('accountDetail', JSON.stringify(updatedDetail));
-        setAccountDetail(updatedDetail);
+        //setAccountDetail(updatedDetail);
 
         // Step 4: Exit edit mode
         setIsEditMode(false);

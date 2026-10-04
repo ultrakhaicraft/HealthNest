@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SchoolMedical_DataAccess.Entities;
+namespace HealthNest_DAO.Entities;
 
 public partial class Medicinerequest
 {
@@ -17,7 +17,7 @@ public partial class Medicinerequest
 
     public string? Status { get; set; }
 
-    public virtual Account ForStudentNavigation { get; set; } = null!;
+	public virtual Parent RequestByNavigation { get; set; } = null!;
 
-    public virtual Account RequestByNavigation { get; set; } = null!;
+	public virtual Student ForStudentNavigation { get; set; } = null!;
 }

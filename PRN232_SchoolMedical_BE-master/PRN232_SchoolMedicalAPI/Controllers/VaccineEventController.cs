@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HealthNest_BusinessLogic.Interface;
+using HealthNest_DAO.DTOModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SchoolMedical_BusinessLogic.Core;
-using SchoolMedical_BusinessLogic.Interface;
-using SchoolMedical_DataAccess.DTOModels;
 using SchoolMedical_DataAccess.Entities;
 
-namespace PRN232_SchoolMedicalAPI.Controllers;
+namespace HealthNest_API.Controllers;
 
 [ApiController]
 [Route("api/vaccine-event")]
-//[Authorize]
+[Authorize]
 public class VaccineEventController : Controller
 {
 	private readonly IVaccineEventService _vaccineEventService;
@@ -58,7 +59,7 @@ public class VaccineEventController : Controller
 		var result = await _vaccineEventService.CreateVaccineEventAsync(request);
 
 		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
-					.Created(result, "Vaccine event created successfully");
+					.Created(result, "VaccineTitle event created successfully");
 
 		return StatusCode(201, response);
 	}
@@ -82,7 +83,7 @@ public class VaccineEventController : Controller
 		var result = await _vaccineEventService.UpdateVaccineEvent(request, id);
 
 		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
-					.Success(result, "Vaccine event updated successfully with id: " + id);
+					.Success(result, "VaccineTitle event updated successfully with id: " + id);
 
 		return Ok(response);
 	}
@@ -95,7 +96,7 @@ public class VaccineEventController : Controller
 		await _vaccineEventService.DeleteVaccineEvent(id);
 
 		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
-					.Success(string.Empty,"Vaccine event deleted successfully");
+					.Success(string.Empty,"VaccineTitle event deleted successfully");
 
 		return Ok(response);
 	}

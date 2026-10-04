@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HealthNest_BusinessLogic.Interface;
+using HealthNest_BusinessLogic.Utility;
+using HealthNest_DAO.DTOModels;
+using HealthNest_DAO.Entities;
+using HealthNest_DAO.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
-using SchoolMedical_BusinessLogic.Interface;
 using SchoolMedical_BusinessLogic.Utility;
-using SchoolMedical_DataAccess.DTOModels;
-using SchoolMedical_DataAccess.Entities;
-using SchoolMedical_DataAccess.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace SchoolMedical_BusinessLogic.Core
+namespace HealthNest_BusinessLogic.Core
 {
     public class MedicalSupplyService : IMedicalSupplyService
     {
@@ -56,7 +57,7 @@ namespace SchoolMedical_BusinessLogic.Core
 
 
 			var supplies = _medicalSuppliesRepository.Include(m => m.CreatedByNavigation)
-			 .Where(m => !m.IsDeleted);
+			 .Where(m => m.IsDeleted);
 
 			//Apply filtering and sorting
 			supplies = ApplyFilter(supplies, request.Status, request.Name);
@@ -70,7 +71,7 @@ namespace SchoolMedical_BusinessLogic.Core
                 Amount = x.Amount,
                 IsAvailable = x.IsAvailable,
                 IsDeleted = x.IsDeleted,
-				CreatedByName = x.CreatedByNavigation.FullName
+				CreatedByName = x.CreatedByNavigation.Account.FullName
             }).ToList();
 
 
@@ -106,7 +107,7 @@ namespace SchoolMedical_BusinessLogic.Core
                 IsAvailable = entity.IsAvailable,
                 IsDeleted = entity.IsDeleted,
                 CreatedBy = entity.CreatedByNavigation.Id,
-                CreatedByName = entity.CreatedByNavigation.FullName
+                CreatedByName = entity.CreatedByNavigation.Account.FullName
             };
         }
 

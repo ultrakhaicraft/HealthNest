@@ -1,14 +1,15 @@
+using HealthNest_BusinessLogic.Interface;
+using HealthNest_BusinessLogic.SignalRHubs;
+using HealthNest_BusinessLogic.Utility;
+using HealthNest_DAO.DTOModels;
+using HealthNest_DAO.Entities;
+using HealthNest_DAO.Enums;
+using HealthNest_DAO.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Org.BouncyCastle.Asn1.Ocsp;
-using SchoolMedical_BusinessLogic.Interface;
-using SchoolMedical_BusinessLogic.SignalRHubs;
 using SchoolMedical_BusinessLogic.Utility;
-using SchoolMedical_DataAccess.DTOModels;
-using SchoolMedical_DataAccess.Entities;
-using SchoolMedical_DataAccess.Enums;
-using SchoolMedical_DataAccess.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace SchoolMedical_BusinessLogic.Core;
+namespace HealthNest_BusinessLogic.Core;
 
 public class IncidentRecordService : IIncidentRecordService
 {
@@ -53,7 +54,7 @@ public class IncidentRecordService : IIncidentRecordService
 			{
 				Id = i.Id,
 				StudentId = i.StudentId,
-				StudentName = i.Student.FullName,
+				StudentName = i.Student.Account.FullName,
 				IncidentType = i.IncidentType,
 				DateOccurred = i.DateOccurred,
 				Status = i.Status
@@ -84,9 +85,9 @@ public class IncidentRecordService : IIncidentRecordService
 		{
 			Id = incident.Id,
 			StudentId = incident.StudentId,
-			StudentName = incident.Student.FullName,
+			StudentName = incident.Student.Account.FullName,
 			HandleBy = incident.HandleBy,
-			HandleByName = incident.HandleByNavigation.FullName,
+			HandleByName = incident.HandleByNavigation.Account.FullName,
 			IncidentType = incident.IncidentType,
 			Description = incident.Description,
 			DateOccurred = incident.DateOccurred,
@@ -246,7 +247,7 @@ public class IncidentRecordService : IIncidentRecordService
 		query = query.Where(m => m.Status != IncidentStatus.Deleted.ToString());
 
 		if (!string.IsNullOrEmpty(StudentName))
-			query = query.Where(m => m.Student.FullName == StudentName);
+			query = query.Where(m => m.Student.Account.FullName == StudentName);
 
 		if (!string.IsNullOrEmpty(Status))
 			query = query.Where(m => m.Status == Status);

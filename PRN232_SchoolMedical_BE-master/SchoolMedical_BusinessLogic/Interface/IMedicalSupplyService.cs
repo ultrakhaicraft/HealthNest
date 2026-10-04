@@ -1,5 +1,6 @@
-﻿using SchoolMedical_DataAccess.DTOModels;
-namespace SchoolMedical_BusinessLogic.Interface
+﻿using HealthNest_DAO.DTOModels;
+
+namespace HealthNest_BusinessLogic.Interface
 {
     public interface IMedicalSupplyService
     {

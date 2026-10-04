@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchoolMedical_DataAccess.Enums;
+namespace HealthNest_DAO.Enums;
 
 public enum AccountRole
 {
@@ -43,7 +43,7 @@ public enum RequestStatus
 	Deleted, //Soft Delete
 }
 
-//Exclusive for HealthCheckup and Vaccine Event
+//Exclusive for HealthCheckup and VaccineTitle Event
 public enum EventStatus
 {
 	Upcoming,
@@ -51,6 +51,13 @@ public enum EventStatus
 	Completed,
 	Cancelled,
 	
+}
+
+public enum StudentHealthStatus
+{
+	Healthy,
+	Minor,
+	Critical
 }
 
 //Exclusive for IncidentRecord

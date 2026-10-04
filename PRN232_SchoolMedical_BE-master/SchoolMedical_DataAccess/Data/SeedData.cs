@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SchoolMedical_DataAccess.Data
+namespace HealthNest_DAO.Data
 {
     public static class SeedData
     {
@@ -455,7 +455,7 @@ namespace SchoolMedical_DataAccess.Data
                     StudentId = selectedHealthRecord.StudentId,
                     StudentHealthRecordId = selectedHealthRecord.Id,
                     RecordDate = DateTime.Now.AddDays(-_random.Next(0, 90)).AddHours(-_random.Next(0, 24)),
-                    Treatment = treatments[_random.Next(treatments.Length)],
+                    TreatmentTitle = treatments[_random.Next(treatments.Length)],
                     Description = treatmentDescriptions[_random.Next(treatmentDescriptions.Length)],
                     Status = RecordStatus.Active.ToString()
                 });
@@ -499,7 +499,7 @@ namespace SchoolMedical_DataAccess.Data
                     StudentId = selectedHealthRecord.StudentId,
                     StudentHealthRecordId = selectedHealthRecord.Id,
                     RecordDate = DateTime.Now.AddDays(-_random.Next(30, 365)).AddHours(-_random.Next(0, 24)),
-                    Vaccine = vaccines[_random.Next(vaccines.Length)],
+                    VaccineTitle = vaccines[_random.Next(vaccines.Length)],
                     Description = vaccineDescriptions[_random.Next(vaccineDescriptions.Length)],
                     Status = RecordStatus.Active.ToString()
                 });

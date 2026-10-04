@@ -1,29 +1,32 @@
-﻿using Org.BouncyCastle.Asn1.Ocsp;
-using SchoolMedical_BusinessLogic.Interface;
-using SchoolMedical_BusinessLogic.Utility;
-using SchoolMedical_DataAccess.DTOModels;
-using SchoolMedical_DataAccess.Entities;
-using SchoolMedical_DataAccess.Enums;
-using SchoolMedical_DataAccess.Interfaces;
+﻿using HealthNest_BusinessLogic.Interface;
+using HealthNest_BusinessLogic.Utility;
+using HealthNest_DAO.DTOModels;
+using HealthNest_DAO.DTOModels.Accounts;
+using HealthNest_DAO.Entities;
+using HealthNest_DAO.Enums;
+using HealthNest_DAO.Interfaces;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace SchoolMedical_BusinessLogic.Core;
+namespace HealthNest_BusinessLogic.Core;
 
 public class AccountService : IAccountService
 {
 	private readonly IUnitOfWork _unitOfWork;
-	
+	private readonly Dictionary<string, IAccountModelFactory> _factoriesByRole;
 
-	public AccountService(IUnitOfWork unitOfWork)
+	public AccountService(IUnitOfWork unitOfWork, IEnumerable<IAccountModelFactory> factories)
 	{
 		_unitOfWork = unitOfWork;
-		
+		_factoriesByRole = factories.ToDictionary(f => f.Role);
+
 	}
 
 	public Task ChangeAccountStatus(string userId, AccountStatus status)
@@ -61,7 +64,7 @@ public class AccountService : IAccountService
 				Address = request.Address,
 				Role = request.Role,
 				Status = AccountStatus.Active.ToString(),
-				ParentId = request.ParentId
+				
 			};
 			
 			await _unitOfWork.GetRepository<Account>().InsertAsync(account);
@@ -73,44 +76,25 @@ public class AccountService : IAccountService
 	public async Task<AccountDetailModel> GetAccountDetailById(string userId)
 	{
 		
-			var accounts= await  _unitOfWork.GetRepository<Account>().FindAsync(user => user.Id == userId);
-			if (accounts == null)
+			var account= await  _unitOfWork.GetRepository<Account>().FindAsync(user => user.Id == userId);
+			if (account == null)
 			{
 				throw new NotFoundException("Account not found with Id: "+userId);
 			}
-			if (accounts.Status == AccountStatus.Inactive.ToString())
+			if (account.Status == AccountStatus.Inactive.ToString())
 			{
 				throw new BadRequestException("Account is inactive with Id: "+userId);
 			}
 
-			var detail= new AccountDetailModel
-			{
-				Id = accounts.Id,
-				FullName = accounts.FullName,
-				Email = accounts.Email,
-				PhoneNumber = accounts.PhoneNumber,
-				Address = accounts.Address,
-				Role = accounts.Role,
-				Status = accounts.Status,
-				
-			};
+			AccountDetailModel detailModel = new AccountDetailModel();
 
-			//If the role is either parent or student, assign additional data depend on these 2 role. If not, skip and return detail
-			if (accounts.Role == AccountRole.Parent.ToString())
-			{
-				(string studentId, string studentName) studentData = await FindStudentByParentId(accounts.Id);
-				detail.StudentId=studentData.studentId;
-				detail.StudentName=studentData.studentName;
-			}
-			else if(accounts.Role==AccountRole.Student.ToString())
-			{
-				detail.ParentId = accounts.ParentId;
-				detail.ParentName = accounts.Parent != null ? accounts.Parent.FullName : null;
-			}
+			//If the role is either parent or student, assign additional data depend on these 2 role.
 
-			return detail;
+			if (!_factoriesByRole.TryGetValue(account.Role, out var factory))
+				throw new BadRequestException($"Unknown account role: {account.Role}");
 
-		
+			return await factory.CreateDetailModelAsync(account,_unitOfWork);
+
 	}
 
 	public async Task<PagingModel<AccountViewModel>> GetAllAccount(AccountQuery request)
@@ -134,7 +118,7 @@ public class AccountService : IAccountService
 				Status = account.Status,
 			});
 
-			var pagingModel = await PagingExtension.ToPagingModel<AccountViewModel>(accountViews, request.PageNumber, request.PageSize); // Default page index and size
+			var pagingModel = await PagingExtension.ToPagingModel(accountViews, request.PageNumber, request.PageSize); // Default page index and size
 
 			return new PagingModel<AccountViewModel>
 			{
@@ -147,18 +131,21 @@ public class AccountService : IAccountService
 		
 	}
 
-	public async Task SoftDeleteAccount(string userId)
+	public async Task SoftDeleteAccount(string accountId)
 	{
 		
 
-			var account = await _unitOfWork.GetRepository<Account>().FindAsync(user => user.Id == userId && user.Status != AccountStatus.Inactive.ToString());
+			var account = await _unitOfWork.GetRepository<Account>()
+				.FindAsync(user => user.Id == accountId && user.Status != AccountStatus.Inactive.ToString());
+
 			if (account == null)
 			{
-				throw new NotFoundException("Account not found or already inactive with Id: "+userId);
+				throw new NotFoundException("Account not found or already inactive with Id: "+ accountId);
 			}
+
 			account.Status = AccountStatus.Inactive.ToString();
-			_unitOfWork.GetRepository<Account>().Update(account);
-			_unitOfWork.Save();
+			await _unitOfWork.GetRepository<Account>().UpdateAsync(account);
+			await _unitOfWork.SaveAsync();
 			
 		
 	}
@@ -176,7 +163,6 @@ public class AccountService : IAccountService
 			account.PhoneNumber = request.PhoneNumber;
 			account.Address = request.Address;
 			account.Role = request.Role;
-			account.ParentId = request.ParentId;
 			_unitOfWork.GetRepository<Account>().Update(account);
 			_unitOfWork.Save();
 			
@@ -190,7 +176,7 @@ public class AccountService : IAccountService
 		var query = await _unitOfWork.GetRepository<Account>().GetQueryableAsync();
 
 
-		var accounts = query.Where(user => user.ParentId == parentId
+		var accounts = query.Where(user => user.Student.ParentId == parentId
 		&&user.Role== AccountRole.Student.ToString()
 		&&user.Status != AccountStatus.Inactive.ToString());
 
@@ -205,10 +191,11 @@ public class AccountService : IAccountService
 			FullName = account.FullName,
 			Email = account.Email,
 			Role = account.Role,
+			Gender = account.Gender,
 			Status = account.Status,
 		});
 
-		var pagingModel = await PagingExtension.ToPagingModel<AccountViewModel>(accountViews, request.PageNumber, request.PageSize); // Default page index and size
+		var pagingModel = await PagingExtension.ToPagingModel(accountViews, request.PageNumber, request.PageSize); // Default page index and size
 
 		return new PagingModel<AccountViewModel>
 		{
@@ -244,35 +231,45 @@ public class AccountService : IAccountService
 	public async Task<bool> AssignStudentToParent(string parentId, string studentId)
 	{
 		
-			//Get student Account
-			var account = await _unitOfWork.GetRepository<Account>()
-				.FindAsync(user => user.Id == studentId && user.Status != AccountStatus.Inactive.ToString());
+			//Get student data
+			var student = _unitOfWork.GetRepository<Student>()
+				.Include(a => a.Account)
+				.Where(user => user.Id == studentId && user.Account.Status != AccountStatus.Inactive.ToString())
+				.FirstOrDefault();
 
-			
 
-			if (account == null)
+			if (student == null)
 			{
-				throw new AppException("Account not found or already inactive.");
+				throw new NotFoundException("Student Account not found or already inactive.");
 			}
 
-			Console.WriteLine(account.FullName);
-
-			if (account.Role != AccountRole.Student.ToString())
-			{
-				throw new AppException("Account is not a student.");
-			}
 
 			//If student already assigned to parent 
-			if (!string.IsNullOrEmpty(account.ParentId))
+			if (!string.IsNullOrEmpty(student.ParentId))
 			{
-				throw new AppException("Account already linked");
+				throw new BadRequestException("Account already linked");
 			}
 
-			account.ParentId = parentId;
-			account.Status = AccountStatus.Active.ToString(); // Set status to Active since it's now linked to a parent
-			_unitOfWork.GetRepository<Account>().Update(account);
-			_unitOfWork.Save();
+		try
+		{
+			await _unitOfWork.BeginTransactionAsync();
+			// Update data, likes assign ParentId to Student and setting the Status from "NotLinked" to "Active"
+			student.ParentId = parentId;
+			student.Account.Status = AccountStatus.Active.ToString();
+
+			//_unitOfWork.GetRepository<Student>().Update(student);
+			//_unitOfWork.GetRepository<Account>().Update(student.Account);
+
+			await _unitOfWork.SaveAsync();
+			await _unitOfWork.CommitTransactionAsync();
+
 			return true;
+		}
+		catch (Exception)
+		{
+			await _unitOfWork.RollBackAsync();
+			throw;
+		}
 		
 	}
 
@@ -280,6 +277,8 @@ public class AccountService : IAccountService
 
 
 	//private methods
+
+	
 	private bool IsValid(string password)
 	{
 		if (password.Length < 8) return false;
@@ -329,9 +328,11 @@ public class AccountService : IAccountService
 		return query;
 	}
 
+	
+
 	private async Task<(string studentId, string studentName)> FindStudentByParentId(string parentId)
 	{
-		var student= await _unitOfWork.GetRepository<Account>().FindAsync(x=>x.ParentId.Equals(parentId));
+		var student= await _unitOfWork.GetRepository<Account>().FindAsync(x=>x.Student.ParentId.Equals(parentId));
 		if (student == null) { 
 			Console.WriteLine("No student found for this parent ID.");
 			return (string.Empty, string.Empty); // Return empty values if no student found

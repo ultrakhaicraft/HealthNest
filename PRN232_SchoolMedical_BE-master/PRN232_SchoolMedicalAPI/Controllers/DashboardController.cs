@@ -1,16 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HealthNest_BusinessLogic.Interface;
+using HealthNest_DAO.DTOModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MySqlX.XDevAPI.Common;
 using SchoolMedical_BusinessLogic.Core;
-using SchoolMedical_BusinessLogic.Interface;
-using SchoolMedical_DataAccess.DTOModels;
 using SchoolMedical_DataAccess.Entities;
 
-namespace PRN232_SchoolMedicalAPI.Controllers;
+namespace HealthNest_API.Controllers;
 
 
 //Handle dashboard related feature
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class DashboardController : Controller
 {
 	private readonly IIncidentRecordService _incidentRecordService;

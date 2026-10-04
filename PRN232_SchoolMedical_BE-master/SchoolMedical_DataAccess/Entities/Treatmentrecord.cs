@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SchoolMedical_DataAccess.Entities;
+namespace HealthNest_DAO.Entities;
 
 public partial class Treatmentrecord
 {
@@ -11,7 +11,7 @@ public partial class Treatmentrecord
 
     public DateTime RecordDate { get; set; }
 
-    public string? Treatment { get; set; }
+    public string? TreatmentTitle { get; set; }
 
     public string? Description { get; set; }
 

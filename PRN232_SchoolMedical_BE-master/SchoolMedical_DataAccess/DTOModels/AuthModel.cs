@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchoolMedical_DataAccess.DTOModels;
+namespace HealthNest_DAO.DTOModels;
 
 public class LoginRequest
 {
@@ -16,9 +16,7 @@ public class LoginRequest
 }
 
 public class LoginResponse
-{
-	public JWTToken? Token { get; set; }
-	public string? FullName { get; set; }
+{	public string? FullName { get; set; }
 	public string? Email { get; set; }
 	public string? Role { get; set; }
 	public string? Id { get; set; }

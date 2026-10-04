@@ -1,4 +1,4 @@
-﻿using SchoolMedical_DataAccess.Enums;
+﻿using HealthNest_DAO.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchoolMedical_DataAccess.DTOModels
+namespace HealthNest_DAO.DTOModels
 {
     public class CreateMedicineRequestRequestDto
     {
