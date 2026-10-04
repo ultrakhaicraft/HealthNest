@@ -1,13 +1,13 @@
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { IconBack, IconLink } from "../../components/IconList";
 import { Link, useNavigate } from "react-router-dom";
-import { accountService, AccountView, GetAllAccountsParams } from "../../feature/API/AccountService";
+import { accountService} from "../../feature/API/AccountService";
 import '../../CSS/Parent/LinkingWithStudent.css';
 import SearchForm from "../../components/User_Profile/Linking_Student/SearchForm";
 import StudentList from "../../components/User_Profile/Linking_Student/StudentList";
 import { ConfirmationModal } from "../../components/ConfirmationModal";
 import { useUserId } from "../../feature/Hooks/Account/AccountHooks";
-import { useAccountDetail } from "../../feature/Hooks/Account/useAccountDetail";
+import { AccountView, GetAllAccountsParams } from "../../models/AccountModel";
 
 
 const LinkStudentPage = () => {
