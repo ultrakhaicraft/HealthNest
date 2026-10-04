@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SchoolMedical_DataAccess.Entities;
-using SchoolMedical_DataAccess.Interfaces;
+﻿using HealthNest_DAO.Entities;
+using HealthNest_DAO.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchoolMedical_DataAccess.Repositories;
+namespace HealthNest_DAO.Repositories;
 
 
 public class GenericRepository <T> : IGenericRepository<T> where T : class

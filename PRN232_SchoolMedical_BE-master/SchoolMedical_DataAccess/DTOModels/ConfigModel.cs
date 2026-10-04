@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace SchoolMedical_DataAccess.DTOModels;
+namespace HealthNest_DAO.DTOModels;
 
 
 public class DBConnection
@@ -14,7 +14,7 @@ public class DBConnection
 }
 
 /// <summary>
-/// JWTToken is also used as login response, which only return token
+/// JWTToken is also used as login response, which only return the access token
 /// If you want to return user data, call user detail API instead.
 /// </summary>
 public class JWTToken
@@ -22,6 +22,13 @@ public class JWTToken
 	public string? TokenString { get; set; }
 	public long ExpiresInMilliseconds { get; set; }
 }
+
+public class TokensDTO
+{
+	public string AccessTokenString { get; set; } = null!;
+	public string RefreshTokenString { get; set; } = null!;
+}
+
 
 public class JwtModel
 {

@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace PRN232_SchoolMedicalAPI.Helpers
+namespace HealthNest_API.Helpers
 {
 	public static class UserClaims
 	{

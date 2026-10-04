@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchoolMedical_DataAccess.Entities;
+namespace HealthNest_DAO.Entities;
 
 //Very rely on Account Class, since it hold important detail like FullName, Password, Email
 public partial class Student

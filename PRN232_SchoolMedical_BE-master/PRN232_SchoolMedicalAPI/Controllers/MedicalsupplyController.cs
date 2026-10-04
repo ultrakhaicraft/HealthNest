@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using HealthNest_BusinessLogic.Interface;
+using HealthNest_DAO.DTOModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SchoolMedical_BusinessLogic.Interface;
-using SchoolMedical_DataAccess.DTOModels;
 using SchoolMedical_DataAccess.Enums;
 
-namespace PRN232_SchoolMedicalAPI.Controllers;
+namespace HealthNest_API.Controllers;
 
 [ApiController]
 [Route("api/medical-supply")]

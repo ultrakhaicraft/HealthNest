@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HealthNest_DAO.DTOModels;
 using Microsoft.EntityFrameworkCore;
-using SchoolMedical_DataAccess.DTOModels;
 
-namespace SchoolMedical_BusinessLogic.Utility;
+namespace HealthNest_BusinessLogic.Utility;
 
 public static class PagingExtension
 {

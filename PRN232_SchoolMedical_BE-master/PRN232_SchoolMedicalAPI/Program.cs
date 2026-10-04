@@ -1,12 +1,12 @@
-using PRN232_SchoolMedicalAPI;
 using SchoolMedical_DataAccess.DTOModels;
-using PRN232_SchoolMedicalAPI.Helpers;
-using SchoolMedical_BusinessLogic;
 using SchoolMedical_DataAccess.Entities;
 using System.Text.Json.Serialization;
 using SchoolMedical_DataAccess.Data;
-using SchoolMedical_BusinessLogic.SignalRHubs;
 using Microsoft.EntityFrameworkCore;
+using HealthNest_API.Helpers;
+using HealthNest_API;
+using HealthNest_BusinessLogic.SignalRHubs;
+using HealthNest_BusinessLogic;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,6 +35,7 @@ builder.Logging.SetMinimumLevel(LogLevel.Debug);
 
 builder.Services.AddSignalR();
 builder.Services.AddDistributedMemoryCache();
+builder.Services.AddHttpContextAccessor();
 
 
 var app = builder.Build();

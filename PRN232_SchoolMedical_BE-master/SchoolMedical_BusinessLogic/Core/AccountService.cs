@@ -1,11 +1,11 @@
-﻿using Org.BouncyCastle.Asn1.Ocsp;
-using SchoolMedical_BusinessLogic.Interface;
-using SchoolMedical_BusinessLogic.Utility;
-using SchoolMedical_DataAccess.DTOModels;
-using SchoolMedical_DataAccess.DTOModels.Accounts;
-using SchoolMedical_DataAccess.Entities;
-using SchoolMedical_DataAccess.Enums;
-using SchoolMedical_DataAccess.Interfaces;
+﻿using HealthNest_BusinessLogic.Interface;
+using HealthNest_BusinessLogic.Utility;
+using HealthNest_DAO.DTOModels;
+using HealthNest_DAO.DTOModels.Accounts;
+using HealthNest_DAO.Entities;
+using HealthNest_DAO.Enums;
+using HealthNest_DAO.Interfaces;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +15,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace SchoolMedical_BusinessLogic.Core;
+namespace HealthNest_BusinessLogic.Core;
 
 public class AccountService : IAccountService
 {
@@ -118,7 +118,7 @@ public class AccountService : IAccountService
 				Status = account.Status,
 			});
 
-			var pagingModel = await PagingExtension.ToPagingModel<AccountViewModel>(accountViews, request.PageNumber, request.PageSize); // Default page index and size
+			var pagingModel = await PagingExtension.ToPagingModel(accountViews, request.PageNumber, request.PageSize); // Default page index and size
 
 			return new PagingModel<AccountViewModel>
 			{
@@ -195,7 +195,7 @@ public class AccountService : IAccountService
 			Status = account.Status,
 		});
 
-		var pagingModel = await PagingExtension.ToPagingModel<AccountViewModel>(accountViews, request.PageNumber, request.PageSize); // Default page index and size
+		var pagingModel = await PagingExtension.ToPagingModel(accountViews, request.PageNumber, request.PageSize); // Default page index and size
 
 		return new PagingModel<AccountViewModel>
 		{

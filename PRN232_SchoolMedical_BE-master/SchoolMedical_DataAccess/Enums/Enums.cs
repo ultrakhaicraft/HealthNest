@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchoolMedical_DataAccess.Enums;
+namespace HealthNest_DAO.Enums;
 
 public enum AccountRole
 {

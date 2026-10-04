@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SchoolMedical_DataAccess.Data
+namespace HealthNest_DAO.Data
 {
     public static class SeedData
     {

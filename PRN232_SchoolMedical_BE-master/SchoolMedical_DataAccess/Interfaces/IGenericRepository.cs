@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchoolMedical_DataAccess.Interfaces;
+namespace HealthNest_DAO.Interfaces;
 
 public interface IGenericRepository<T> where T : class
 {

@@ -1,7 +1,7 @@
-﻿using SchoolMedical_BusinessLogic.Utility;
-using SchoolMedical_DataAccess.DTOModels;
+﻿using HealthNest_BusinessLogic.Utility;
+using HealthNest_DAO.DTOModels;
 
-namespace PRN232_SchoolMedicalAPI.Helpers
+namespace HealthNest_API.Helpers
 {
 	public class GlobalErrorExceptionHandlerMiddleware
 	{

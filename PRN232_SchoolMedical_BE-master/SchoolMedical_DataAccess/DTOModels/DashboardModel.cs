@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchoolMedical_DataAccess.DTOModels
+namespace HealthNest_DAO.DTOModels
 {
 	public record  DashboardStatistic
 	{
