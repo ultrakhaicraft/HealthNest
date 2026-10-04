@@ -2,7 +2,7 @@ import { FormEvent, useCallback, useEffect, useState } from "react";
 import { IconBack, IconLink } from "../../components/IconList";
 import { Link, useNavigate } from "react-router-dom";
 import { accountService, AccountView, GetAllAccountsParams } from "../../feature/API/AccountService";
-import '../CSS/LinkingWithStudent.css'; // Assuming you have a CSS file for styling
+import '../../CSS/Parent/LinkingWithStudent.css';
 import SearchForm from "../../components/User_Profile/Linking_Student/SearchForm";
 import StudentList from "../../components/User_Profile/Linking_Student/StudentList";
 import { ConfirmationModal } from "../../components/ConfirmationModal";
