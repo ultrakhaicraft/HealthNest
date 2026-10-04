@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchoolMedical_DataAccess.DTOModels.Accounts
+namespace HealthNest_DAO.DTOModels.Accounts
 {
 	public class ParentDetailModel : AccountDetailModel
 	{

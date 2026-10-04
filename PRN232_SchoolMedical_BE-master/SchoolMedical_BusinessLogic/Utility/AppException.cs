@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchoolMedical_BusinessLogic.Utility;
+namespace HealthNest_BusinessLogic.Utility;
 
 // Base exception — all your custom exceptions inherit from this
 public class AppException : Exception
@@ -56,4 +56,12 @@ public class ConflictException : AppException
 {
 	public ConflictException(string message)
 		: base(message, StatusCodes.Status409Conflict) { }
+}
+
+
+// 500
+public class InternalServerException : AppException
+{
+	public InternalServerException(string message)
+		: base(message, StatusCodes.Status500InternalServerError) { }
 }

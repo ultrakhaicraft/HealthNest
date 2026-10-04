@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchoolMedical_DataAccess.Interfaces;
+namespace HealthNest_DAO.Interfaces;
 
 public interface IUnitOfWork : IDisposable
 {

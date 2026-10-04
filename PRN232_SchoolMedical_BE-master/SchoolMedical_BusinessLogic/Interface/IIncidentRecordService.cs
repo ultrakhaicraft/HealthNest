@@ -1,6 +1,6 @@
-using SchoolMedical_DataAccess.DTOModels;
+using HealthNest_DAO.DTOModels;
 
-namespace SchoolMedical_BusinessLogic.Interface;
+namespace HealthNest_BusinessLogic.Interface;
 
 public interface IIncidentRecordService
 {

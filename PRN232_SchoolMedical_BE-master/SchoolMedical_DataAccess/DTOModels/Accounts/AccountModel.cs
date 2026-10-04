@@ -1,4 +1,4 @@
-﻿using SchoolMedical_DataAccess.Enums;
+﻿using HealthNest_DAO.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchoolMedical_DataAccess.DTOModels.Accounts;
+namespace HealthNest_DAO.DTOModels.Accounts;
 
 //Account section, Base class for Student, Parent, Nurse and Admin
 public class AccountDetailModel

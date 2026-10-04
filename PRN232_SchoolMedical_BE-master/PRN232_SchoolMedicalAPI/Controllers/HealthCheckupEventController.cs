@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using HealthNest_BusinessLogic.Interface;
+using HealthNest_DAO.DTOModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MySqlX.XDevAPI.Common;
 using PRN232_SchoolMedicalAPI.Helpers;
 using SchoolMedical_BusinessLogic.Core;
-using SchoolMedical_BusinessLogic.Interface;
-using SchoolMedical_DataAccess.DTOModels;
 
-namespace PRN232_SchoolMedicalAPI.Controllers;
+namespace HealthNest_API.Controllers;
 
 [ApiController]
 [Route("api/health-checkup")]

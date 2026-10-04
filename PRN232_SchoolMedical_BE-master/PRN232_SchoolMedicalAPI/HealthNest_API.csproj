@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SchoolMedical_BusinessLogic\SchoolMedical_BusinessLogic.csproj" />
+    <ProjectReference Include="..\SchoolMedical_BusinessLogic\HealthNest_BusinessLogic.csproj" />
   </ItemGroup>
 
 </Project>

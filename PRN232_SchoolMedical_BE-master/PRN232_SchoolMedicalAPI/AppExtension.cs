@@ -1,14 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SchoolMedical_BusinessLogic;
-using SchoolMedical_DataAccess.DTOModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using SchoolMedical_DataAccess.Entities;
 using System.Text;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.OpenApi.Models;
+using HealthNest_API;
+using HealthNest_DAO.DTOModels;
+using HealthNest_DAO.Entities;
 
-namespace PRN232_SchoolMedicalAPI;
+namespace HealthNest_API;
 
 public static class AppExtension
 {
@@ -112,6 +113,7 @@ public static class AppExtension
 					ValidateAudience = true,
 					ValidAudience = jwtModel?.ValidAudience,
 					ValidIssuer = jwtModel?.ValidIssuer,
+					ValidateIssuerSigningKey = true,
 					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtModel?.SecretKey ?? ""))
 				};
 

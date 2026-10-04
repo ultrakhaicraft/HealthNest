@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HealthNest_BusinessLogic.Interface;
+using HealthNest_BusinessLogic.Utility;
+using HealthNest_DAO.DTOModels;
+using HealthNest_DAO.Entities;
+using HealthNest_DAO.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Asn1.Ocsp;
-using SchoolMedical_BusinessLogic.Interface;
-using SchoolMedical_BusinessLogic.Utility;
-using SchoolMedical_DataAccess.DTOModels;
-using SchoolMedical_DataAccess.Entities;
-using SchoolMedical_DataAccess.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchoolMedical_BusinessLogic.Core;
+namespace HealthNest_BusinessLogic.Core;
 
 
 public class MedicineService : IMedicineService
@@ -55,7 +55,7 @@ public class MedicineService : IMedicineService
 
 
 			// Apply paging
-			var medicinePage = await PagingExtension.ToPagingModel<MedicineDetailResponseDto>(medicineResponseDto.AsQueryable(), request.PageIndex, request.PageSize);
+			var medicinePage = await PagingExtension.ToPagingModel(medicineResponseDto.AsQueryable(), request.PageIndex, request.PageSize);
 
 
 			return new PagingModel<MedicineDetailResponseDto>

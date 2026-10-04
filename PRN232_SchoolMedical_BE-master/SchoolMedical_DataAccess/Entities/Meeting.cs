@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchoolMedical_DataAccess.Entities
+namespace HealthNest_DAO.Entities
 {
 	public partial class Meeting
 	{

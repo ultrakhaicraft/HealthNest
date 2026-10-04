@@ -1,13 +1,14 @@
 ﻿
-using SchoolMedical_DataAccess.Entities;
-using SchoolMedical_DataAccess.Interfaces;
+using HealthNest_DAO.Entities;
+using HealthNest_DAO.Interfaces;
+using SchoolMedical_DataAccess.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchoolMedical_DataAccess.Repositories;
+namespace HealthNest_DAO.Repositories;
 
 
 public class UnitOfWork : IUnitOfWork

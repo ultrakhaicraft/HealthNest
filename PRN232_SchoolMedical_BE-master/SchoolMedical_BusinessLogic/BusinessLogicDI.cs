@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using HealthNest_BusinessLogic.Core;
+using HealthNest_BusinessLogic.Interface;
+using HealthNest_BusinessLogic.Utility;
+using HealthNest_DAO.Interfaces;
+using HealthNest_DAO.Repositories;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SchoolMedical_BusinessLogic.Core;
-using SchoolMedical_BusinessLogic.Interface;
-using SchoolMedical_BusinessLogic.Utility;
-using SchoolMedical_DataAccess.Interfaces;
-using SchoolMedical_DataAccess.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchoolMedical_BusinessLogic;
+namespace HealthNest_BusinessLogic;
 
 public static class BusinessLogicDI
 {
@@ -42,7 +42,7 @@ public static class BusinessLogicDI
 	public static void AddServices(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddLogging();
-		services.AddScoped<IJwtUtils, JwtUtils>();
+		services.AddScoped<ITokenUtils, TokenUtils>();
 		services.AddScoped<IAccountService, AccountService>();
 		services.AddScoped<IAuthService, AuthService>();
 		services.AddScoped<IHealthCheckupEventService, HealthCheckupEventService>();

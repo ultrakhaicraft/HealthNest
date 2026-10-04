@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SchoolMedical_DataAccess\SchoolMedical_DataAccess.csproj" />
+    <ProjectReference Include="..\SchoolMedical_DataAccess\HealthNest_DAO.csproj" />
   </ItemGroup>
 
 </Project>

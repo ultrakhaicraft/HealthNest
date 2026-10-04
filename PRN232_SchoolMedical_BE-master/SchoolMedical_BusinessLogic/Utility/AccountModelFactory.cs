@@ -1,15 +1,15 @@
-﻿using SchoolMedical_DataAccess.DTOModels;
-using SchoolMedical_DataAccess.DTOModels.Accounts;
-using SchoolMedical_DataAccess.Entities;
-using SchoolMedical_DataAccess.Enums;
-using SchoolMedical_DataAccess.Interfaces;
+﻿using HealthNest_DAO.DTOModels.Accounts;
+using HealthNest_DAO.Entities;
+using HealthNest_DAO.Enums;
+using HealthNest_DAO.Interfaces;
+using SchoolMedical_DataAccess.DTOModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchoolMedical_BusinessLogic.Utility;
+namespace HealthNest_BusinessLogic.Utility;
 
 //A factory of creating AccountDetailModel subclass
 public abstract class AccountModelFactory<TModel, TExtension> 
