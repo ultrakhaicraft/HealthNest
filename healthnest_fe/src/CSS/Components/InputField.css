@@ -1,5 +1,6 @@
 .input-group {
-   margin-top: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 20px;
  }
 
  .input-label {
@@ -49,3 +50,36 @@
    font-size: 0.875rem;
    color: #6b7280;
  }
+
+
+
+
+.input-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #555;
+}
+
+.input-group input[type='text'],
+.input-group input[type='password'],
+.input-group input[type='email'],
+.input-group input[type='tel'],
+.input-group input[type='number'] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1em;
+}
+
+.input-group input[type='text']:focus,
+.input-group input[type='password']:focus,
+.input-group input[type='email']:focus,
+.input-group input[type='tel']:focus,
+.input-group input[type='number']:focus {
+  outline: none;
+  border-color: #1c5db7;
+  /* Match left side color or use a primary color */
+  box-shadow: 0 0 0 2px rgba(58, 58, 118, 0.2);
+}
