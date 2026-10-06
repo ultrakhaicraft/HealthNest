@@ -1,0 +1,48 @@
+/* Confirmation Modal Styles */
+.confirmationModal {
+  background-color: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.confirmationBody {
+  padding: 1rem 0;
+}
+
+.confirmationMessage {
+  color: #374151;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.confirmationActions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+/* Responsive Styles */
+@media (min-width: 780px) {
+  
+  .confirmationModal {
+    width: 400px;
+  }
+}
+
+
+@media (max-width: 780px) {
+  
+  .confirmationModal {
+    width: 95%;
+    padding: 1rem;
+  }
+  
+  .confirmationActions {
+    flex-direction: column-reverse;
+  }
+}

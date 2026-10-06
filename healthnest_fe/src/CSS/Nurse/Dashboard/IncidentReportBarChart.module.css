@@ -1,0 +1,28 @@
+.chartTitle{
+  margin: 0 0 1.25rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color:#1e3a8a
+}
+
+.chartTooltip{
+  background-color: #ffffff;
+  border: 1px solid #dbeafe;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+}
+
+.chartTooltipLabel {
+  margin: 0 0 0.15rem 0;
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.chartTooltipValue {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #2563eb;
+  font-weight: 700;
+}

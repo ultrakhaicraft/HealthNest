@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import '../../app/CSS/Others/Toast.css';
+import styles from '../../app/CSS/Others/Toast.module.css';
 
 interface ToastProps {
   message: string;
@@ -20,13 +20,14 @@ export function Toast({ message, type, isVisible, onClose }: ToastProps) {
 
   if (!isVisible) return null;
 
-  const toastClass = type === 'success' ? 'success' : 'error';
+  const toastType = type === 'success' ? 'success' : 'error';
 
+  const toastClassName = `${styles.toast} ${styles[toastType]}`;
   return (
-    <div className={`toast ${toastClass}`}>
+    <div className={toastClassName}>
       <span>{type === 'success' ? '✓' : '✗'}</span>
       <span>{message}</span>
-      <button className='close-btn' onClick={onClose}>
+      <button className={styles.closeBtn} onClick={onClose}>
         ×
       </button>
     </div>

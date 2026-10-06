@@ -1,10 +1,8 @@
-/* Modal Styles */
-.modal-overlay {
+/* Global Modal Styles */
+.overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
+  z-index: 50;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
@@ -12,135 +10,94 @@
   z-index: 1000;
 }
 
-.modal-content {
-  background-color: white;
-  border-radius: 0.75rem;
-  padding: 2rem;
-  max-width: 800px;
-  width: 90%;
-  max-height: 80vh;
+.dialog {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 32rem;
+  max-height: 100%;
   overflow-y: auto;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background-color: #ffffff;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+              0 8px 10px -6px rgba(0, 0, 0, 0.1);
 }
 
-.modal-header {
+.modalHeader {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
+  gap: 1rem;
   border-bottom: 1px solid #e5e7eb;
 }
 
-.modal-title {
+.modalTitle {
   font-size: 1.5rem;
+  line-height: 2rem;
   font-weight: 700;
-  color: #1f2937;
+  color: #111827;
   margin: 0;
 }
 
-.modal-close {
-  background: none;
+
+.closeButton {
+  padding: 0 0.5rem;
   border: none;
+  border-radius: 0.25rem;
+  background: transparent;
   font-size: 1.5rem;
-  cursor: pointer;
+  line-height: 1;
   color: #6b7280;
-  padding: 0.25rem;
-  width: 2rem;
-  height: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.375rem;
+  cursor: pointer;
 }
 
-.modal-close:hover {
+.closeButton:hover {
   background-color: #f3f4f6;
-  color: #374151;
 }
 
-.modal-body {
+.closeButton:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+
+
+.modalBody {
   display: grid;
   grid-template-columns: 1fr ;
   gap: 2rem;
 }
 
-.modal-column {
+.modalColumn {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.modal-row {
+.modalRow {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
 
-.modal-row.full-width {
+.modalRow .fullWidth {
   grid-column: 1 / -1;
   margin-top: 1rem;
 }
 
 
-/* Confirmation Modal Styles */
-.confirmation-modal {
-  background-color: white;
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-  max-width: 400px;
-  width: 90%;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
-.confirmation-body {
-  padding: 1rem 0;
-}
-
-.confirmation-message {
-  color: #374151;
-  font-size: 1rem;
-  line-height: 1.5;
-  margin: 0;
-}
-
-.confirmation-actions {
-  display: flex;
-  gap: 0.75rem;
-  justify-content: flex-end;
-  margin-top: 1.5rem;
-}
-
 /* Responsive Styles */
-@media (min-width: 768px) {
 
-  
-  .modal-content {
-    width: 800px;
-  }
-  
-  .confirmation-modal {
-    width: 400px;
-  }
-}
-
-@media (max-width: 767px) {
+@media (max-width: 780px) {
   .modal-body {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
   
-  .modal-content {
+  .dialog {
     width: 95%;
     padding: 1.5rem;
   }
   
-  .confirmation-modal {
-    width: 95%;
-    padding: 1rem;
-  }
-  
-  .confirmation-actions {
-    flex-direction: column-reverse;
-  }
 }

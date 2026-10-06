@@ -1,4 +1,8 @@
-.side-nav {
+/* CSS styles for the Nurse Navigation Bar */
+/* Different from Parent Navigation bar, because it has different appearance and functionality */
+
+
+.nurseSideNav {
   width: 240px;
   background-color: white;
   padding: 1.5rem 1rem;
@@ -8,13 +12,13 @@
   border-right: 1px solid #e5e7eb;
 }
 
-.side-nav ul {
+.nurseSideNav ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.nav-item, .nav-item:focus, .nav-item:active {
+.navItem, .navItem:focus, .navItem:active {
   display: flex;
   align-items: center;
   padding: 0.75rem 1rem;
@@ -27,16 +31,24 @@
   font-size: large;
 }
 
-.nav-item:hover, .nav-item:focus {
+.navItem:hover, .navItem:focus {
   background-color: #f3f4f6;
 }
 
-.nav-item.active {
+.navItem .active {
   background-color: #eef2ff;
   color: #3730a3;
   font-weight: 600;
 }
 
-.nav-item svg {
+.navItem svg {
   margin-right: 0.75rem;
+}
+
+.navItemButton{
+    background: 'none';
+    border: 'none';
+    width: '100%'; 
+    text-align: 'left'; 
+    padding: 0 
 }

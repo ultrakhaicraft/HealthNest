@@ -1,32 +1,32 @@
 // src/components/Elements/Spinner/Spinner.tsx
-import React from 'react';
-import '../app/CSS/Others/Spinner.css'; // Import the CSS for the spinner
+import styles from '../CSS/Components/Spinner.module.css';
 
-// Define the types for the component props
+type SpinnerSize = 'small' | 'medium' | 'large';
+
 interface SpinnerProps {
-  size?: 'small' | 'medium' | 'large';
+  size?: SpinnerSize;
+  className?: string; // Optional className for additional styling
+  decorative?: boolean; // Set true when a parent already announces loading state to screen readers
 }
 
-export const Spinner = ({ size = 'medium' }: SpinnerProps) => {
-  // Combine the base spinner class with the size-specific class
-  const spinnerClass = `.spinner ${size}`;
+interface FullPageSpinnerProps {
+  message?: string;
+}
 
-  return <div className={spinnerClass}></div>;
+export const Spinner = ({ size = 'medium', className, decorative = false }: SpinnerProps) => {
+  const spinnerClass = [styles.spinner, styles[size], className].filter(Boolean).join(' ');
+
+  return decorative ? (
+    <div className={spinnerClass} aria-hidden="true" />
+  ) : (
+    <div className={spinnerClass} role="status" aria-label="Loading" />
+  );
 };
 
 
-export const FullPageSpinner =({ message = "Loading..." }: { message?: string }) => {
-  return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/50 backdrop-blur-sm">
-      {/* Animated Spinner Ring */}
-      <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
-      
-      {/* Optional Contextual Text */}
-      {message && (
-        <p className="mt-4 text-sm font-medium text-white tracking-wide animate-pulse">
-          {message}
-        </p>
-      )}
-    </div>
-  );
-}
+export const FullPageSpinner = ({ message = 'Loading...' }: FullPageSpinnerProps) => (
+  <div className={styles.fullPageSpinner} role="status" aria-live="polite">
+    <Spinner size="medium" decorative />
+    {message && <p className={styles.spinnerMessage}>{message}</p>}
+  </div>
+);

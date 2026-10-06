@@ -2,7 +2,7 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuthStatus, useUserRole } from '../feature/Hooks/Account/AccountHooks';
-import { FullPageSpinner } from '../components/spinner';
+import { FullPageSpinner } from '../components/Spinner';
 
 interface ProtectedRouteProps {
   children: React.ReactElement;

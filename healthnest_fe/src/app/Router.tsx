@@ -1,7 +1,7 @@
 
 import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { Spinner } from '../components/spinner';
+import { Spinner } from '../components/Spinner';
 import { ProtectedRoute } from './ProtectedRoute';
 import { UserRole } from '../feature/Constant';
 import { NurseDashboard } from './pages/nurse_area/NurseDashboard-page';

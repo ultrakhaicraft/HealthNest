@@ -1,6 +1,8 @@
 import React from 'react';
 import { IconClose } from './IconList';
-import '../app/CSS/Modal.css'; // Ensure you have appropriate styles for the modal
+import "../CSS/Components/Modal.css";
+import confirmationModalStyles from "../CSS/ConfirmationModal.module.css";
+
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -48,17 +50,17 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 
   return (
     <div className="modal-overlay" onClick={handleOverlayClick}>
-      <div className="confirmation-modal">
+      <div className={confirmationModalStyles.confirmationModal}>
         <div className="modal-header">
           <h2 className="modal-title">{title}</h2>
           <button className="modal-close" onClick={onClose} disabled={isLoading}>
             <IconClose />
           </button>
         </div>
-        <div className="confirmation-body">
-          <p className="confirmation-message">{message}</p>
+        <div className={confirmationModalStyles.confirmationBody}>
+          <p className={confirmationModalStyles.confirmationMessage}>{message}</p>
         </div>
-        <div className="confirmation-actions">
+        <div className={confirmationModalStyles.confirmationActions}>
           <button 
             className="button button-secondary" 
             onClick={onClose}

@@ -1,4 +1,5 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import styles from '../../CSS/Nurse/Dashboard/IncidentReportBarChart.module.css';
 
 interface IncidentReportsChartProps {
   data: { month: string; count: number }[];
@@ -7,9 +8,9 @@ interface IncidentReportsChartProps {
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="chart-tooltip">
-        <p className="chart-tooltip-label">{label}</p>
-        <p className="chart-tooltip-value">{payload[0].value} incidents</p>
+      <div className={styles.chartTooltip}>
+        <p className={styles.chartTooltipLabel}>{label}</p>
+        <p className={styles.chartTooltipValue}>{payload[0].value} incidents</p>
       </div>
     );
   }
@@ -19,7 +20,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 export const IncidentReportBarChart = ({ data }: IncidentReportsChartProps) => {
   return (
     <section className="incident-report-bar-chart">
-      <p className="chart-title">Incident Reports per Month in a Year</p>
+      <p className={styles.chartTitle}>Incident Reports per Month in a Year</p>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#eef2f9" vertical={false} />

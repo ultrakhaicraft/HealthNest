@@ -1,5 +1,6 @@
 import { ViewHealthCheckupEventDTO } from "../../feature/API/HealthCheckupEventService";
 import { ViewVaccineEventDTO } from "../../feature/API/VaccineCheckupEventService";
+import styles from "../../CSS/Nurse/Dashboard/DashboardTable.module.css";
 
 interface DashboardTablesProps {
     healthCheckupEvents: ViewHealthCheckupEventDTO[];
@@ -15,10 +16,10 @@ const formatDate = (date: string | null | undefined) => {
 export const DashboardTables = ({ healthCheckupEvents, vaccineCheckupEvents }: DashboardTablesProps) => {
 
     return(
-        <section className="dashboard-table-container">
-                <div className="dashboard-table-wrapper" id="health-checkup-table">
+        <section className={styles.dashboardTableContainer}>
+                <div className={styles.dashboardTableWrapper} id="health-checkup-table">
                     <p>Upcoming Health Checkups</p>
-                    <table className="dashboard-table">
+                    <table className={styles.dashboardTable}>
                         <thead>
                             <tr>
                                 <th>Title</th>
@@ -30,7 +31,7 @@ export const DashboardTables = ({ healthCheckupEvents, vaccineCheckupEvents }: D
                         <tbody>
                             {(!healthCheckupEvents || healthCheckupEvents.length === 0) ? (
                                 <tr>
-                                    <td colSpan={4} className="table-empty-state">No upcoming health checkups</td>
+                                    <td colSpan={4} className={styles.tableEmptyState}>No upcoming health checkups</td>
                                 </tr>
                             ):
                             (healthCheckupEvents.map((event)=>(
@@ -38,7 +39,7 @@ export const DashboardTables = ({ healthCheckupEvents, vaccineCheckupEvents }: D
                                 <td>{event.title}</td>
                                 <td>{formatDate(event.dateOccurred)}</td>
                                 <td>{formatDate(event.dateSignupStart)}</td>
-                                <td><span className="table-status-badge">{event.status ?? '—'}</span></td>
+                                <td><span className={styles.tableStatusBadge}>{event.status ?? '—'}</span></td>
                                 </tr>
                                 ))
                             
@@ -46,9 +47,9 @@ export const DashboardTables = ({ healthCheckupEvents, vaccineCheckupEvents }: D
                         </tbody>
                     </table>
                 </div>
-                <div className="dashboard-table-wrapper" id="health-vaccine-table">
+                <div className={styles.dashboardTableWrapper} id="health-vaccine-table">
                     <p>Upcoming Health Vaccine</p>
-                    <table className="dashboard-table">
+                    <table className={styles.dashboardTable}>
                         <thead>
                             <tr>
                                 <th>Title</th>
@@ -60,7 +61,7 @@ export const DashboardTables = ({ healthCheckupEvents, vaccineCheckupEvents }: D
                         <tbody>
                             {vaccineCheckupEvents.length === 0 ? (
                                 <tr>
-                                    <td colSpan={4} className="table-empty-state">No upcoming health vaccines</td>
+                                    <td colSpan={4} className={styles.tableEmptyState}>No upcoming health vaccines</td>
                                 </tr>
                             ):(
                                 vaccineCheckupEvents.map((event) => (
@@ -68,7 +69,7 @@ export const DashboardTables = ({ healthCheckupEvents, vaccineCheckupEvents }: D
                                         <td>{event.title}</td>
                                         <td>{formatDate(event.dateOccurred)}</td>
                                         <td>{formatDate(event.dateSignupStart)}</td>
-                                        <td><span className="table-status-badge">{event.status ?? '—'}</span></td>
+                                        <td><span className={styles.tableStatusBadge}>{event.status ?? '—'}</span></td>
                                     </tr>
                                 ))
                             )}

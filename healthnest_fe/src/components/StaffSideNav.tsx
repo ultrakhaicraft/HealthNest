@@ -1,6 +1,6 @@
 import { useAuth } from "../feature/API/LoginService";
 import { IconHealthCheckup, IconHome, IconIncidentReport, IconMedical, IconMedicine, IconStudentRecord, IconVaccine } from "./IconList";
-
+import styles from '../CSS/Nurse/NurseNavBar.module.css';
 
 interface SideNavProps {
   activeItem: string;
@@ -23,7 +23,7 @@ const NurseSideNav = ({ activeItem, onSelect }: SideNavProps) => {
  const { logout } = useAuth();
 
   return (
-    <aside className="side-nav">
+    <aside className={styles.nurseSideNav}>
       <div className="logo-container">
         <div className="logo-icon">
           <svg xmlns="http://www.w3.org/2000/svg" className="icon-large" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L14.47 8.53L21.5 9.53L16.5 14.24L17.94 21.02L12 17.77L6.06 21.02L7.5 14.24L2.5 9.53L9.53 8.53L12 2Z" /></svg>
@@ -36,9 +36,9 @@ const NurseSideNav = ({ activeItem, onSelect }: SideNavProps) => {
             <li key={item.label}>
               <button
                 type="button"
-                className={activeItem === item.label ? 'nav-item active' : 'nav-item'}
+                className={activeItem === item.label ?
+                   `${styles.navItem} ${styles.active} ${styles.navItemButton}` : `${styles.navItem} ${styles.navItemButton}`}
                 onClick={() => onSelect(item.label)}
-                style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', padding: 0 }}
               >
                 {item.icon}
                 <span>{item.label}</span>
@@ -48,9 +48,8 @@ const NurseSideNav = ({ activeItem, onSelect }: SideNavProps) => {
           <li>
             <button
               type="button"
-              className="nav-item"
+              className={`${styles.navItem} ${styles.navItemButton}`}
               onClick={logout}
-              style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', padding: 0 }}
             >
               <IconHome className="icon-small" />
               <span>Logout</span>

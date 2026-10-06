@@ -1,4 +1,4 @@
-import styles from "../app/CSS/CRUDStatusBadge.module.css";
+import styles from "../CSS/Components/StatusBadge.module.css";
 
 interface StatusBadgeProps {
   status: string;
