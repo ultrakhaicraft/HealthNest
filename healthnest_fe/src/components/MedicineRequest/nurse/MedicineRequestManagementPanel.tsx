@@ -3,6 +3,7 @@ import { IconEdit, IconFilter, IconView } from "../../IconList";
 import { PaginationControls } from "../../PaginationControls";
 import { StatusBadge } from "../../StatusBadge";
 import { MedicineRequestFilter } from "./MedicineRequestFilter";
+import styles from "../../../CSS/Nurse/NurseCRUDPanel.module.css"
 
 export interface PaginationState {
   currentPage: number;
@@ -37,13 +38,15 @@ export default function MedicineRequestCRUDPanel({
     onView, onEdit
 }: MedicineRequestCRUDPanelProps) {
   return (
-    <div className="crud-container">
-      <div className="crud-header">
+    <div className={styles.crudContainer}>
+      <div className={styles.crudHeader}>
         <div>
-          <h2 className="crud-title">Medicine Request Management Panel</h2>
-          <p className="crud-subtitle">Processing medicine requests from parents like View or Change Status</p>
+          <h2 className={styles.crudTitle}>Medicine Request Management Panel</h2>
+          <p className={styles.crudSubtitle}>Processing medicine requests from parents like View or Change Status</p>
         </div>
-        <div style={{ display: 'flex', gap: '8px' }}>
+        {/* .crudActions is display:flex + gap:0.5rem, same as the old inline style */}
+        <div className={styles.crudActions}>
+          {/* button classes are not in the module, so they stay global */}
           <button className="button button-secondary button-small" onClick={filterState.onToggle}>
             <IconFilter />
             {filterState.show ? 'Hide Filters' : 'Show Filters'}
@@ -60,12 +63,12 @@ export default function MedicineRequestCRUDPanel({
         />
       )}
       
-      <div className="crud-table-wrapper">
-        <div className="crud-table-info">
+      <div className={styles.crudTableWrapper}>
+        <div className={styles.crudTableInfo}>
           <span>Total: {pagination.totalItems} items</span>
           <span>Page {filterState.value.PageIndex || 1} of {pagination.totalPages}</span>
         </div>
-        <table className="crud-table">
+        <table className={styles.crudTable}>
           <thead>
             <tr>
               <th>ID</th>
@@ -79,14 +82,14 @@ export default function MedicineRequestCRUDPanel({
           <tbody>
             {loading && (
               <tr>
-                <td colSpan={6} style={{textAlign: 'center', padding: '2rem'}}>
+                <td colSpan={6} className={styles.loadingBox}>
                   Loading medicine requests...
                 </td>
               </tr>
             )}
             {medicineRequestData.length === 0 && !loading && (
               <tr>
-                <td colSpan={6} style={{textAlign: 'center', padding: '2rem'}}>
+                <td colSpan={6} className={styles.loadingBox}>
                   No medicine requests found
                 </td>
               </tr>
@@ -99,11 +102,11 @@ export default function MedicineRequestCRUDPanel({
                 <td>{new Date(request.dateSent).toLocaleDateString()}</td>
                 <td><StatusBadge status={request.status} /></td>
                 <td>
-                  <div className="action-buttons">
-                    <button className="action-button" onClick={() => onView(request.id)} disabled={loading}>
+                  <div className={styles.actionButtons}>
+                    <button className={styles.actionButton} onClick={() => onView(request.id)} disabled={loading}>
                       <IconView />
                     </button>
-                    <button className="action-button" onClick={() => onEdit(request)} disabled={loading}>
+                    <button className={styles.actionButton} onClick={() => onEdit(request)} disabled={loading}>
                       <IconEdit />
                     </button>
                   </div>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { MedicineRequestQueryParams } from "../../../feature/API/MedicineRequestService";
 import { UserRole } from "../../../feature/Constant";
+import filterStyles from "../../../CSS/Nurse/NurseCRUDPanel.module.css"
 
 
 interface MedicineRequestFilterProps {
@@ -34,10 +35,10 @@ export const MedicineRequestFilter = ({ filters, onApplyFilters, onClearFilters,
   };
 
   return (
-    <div className="filter-section">
-      <div className="filter-row">
+    <div className={filterStyles.filterSection}>
+      <div className={filterStyles.filterRow}>
         {/*If user role is school nurse, they can see request by filter. Otherwise, hide it */}
-        {toggleRequestByFilter && (<div className="filter-group">
+        {toggleRequestByFilter && (<div className={filterStyles.filterGroup}>
           <label>Request By:</label>
           <input
             type="text"
@@ -47,7 +48,7 @@ export const MedicineRequestFilter = ({ filters, onApplyFilters, onClearFilters,
           />
         </div>)}
         
-        <div className="filter-group">
+        <div className={filterStyles.filterGroup}>
           <label>For Student:</label>
           <input
             type="text"
@@ -57,7 +58,7 @@ export const MedicineRequestFilter = ({ filters, onApplyFilters, onClearFilters,
           />
         </div>
         
-        <div className="filter-group">
+        <div className={filterStyles.filterGroup}>
           <label>Status:</label>
           <select
             value={filterSettings.status || ''}
@@ -72,8 +73,8 @@ export const MedicineRequestFilter = ({ filters, onApplyFilters, onClearFilters,
         </div>
       </div>
       
-      <div className="filter-row">
-        <div className="filter-group">
+      <div className={filterStyles.filterRow}>
+        <div className={filterStyles.filterGroup}>
           <label>Date From:</label>
           <input
             type="date"
@@ -82,7 +83,7 @@ export const MedicineRequestFilter = ({ filters, onApplyFilters, onClearFilters,
           />
         </div>
         
-        <div className="filter-group">
+        <div className={filterStyles.filterGroup}>
           <label>Date To:</label>
           <input
             type="date"
@@ -91,7 +92,7 @@ export const MedicineRequestFilter = ({ filters, onApplyFilters, onClearFilters,
           />
         </div>
         
-        <div className="filter-group">
+        <div className={filterStyles.filterGroup}>
           <label>Sort By:</label>
           <select
             value={filterSettings.sortByLatestDate ? 'true' : 'false'}
@@ -105,7 +106,7 @@ export const MedicineRequestFilter = ({ filters, onApplyFilters, onClearFilters,
         
       </div>
       
-      <div className="filter-actions">
+      <div className={filterStyles.filterActions}>
         <button className="button button-primary button-small" onClick={() => onApplyFilters(filterSettings)}>
           Apply Filters
         </button>

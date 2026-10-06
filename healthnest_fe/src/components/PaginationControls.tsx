@@ -1,3 +1,6 @@
+import styles from "../CSS/Components/Pagination.module.css";
+
+
 interface PaginationControlsProps {
   currentPage: number;
   totalPages: number;
@@ -17,9 +20,9 @@ export const PaginationControls = ({ currentPage, totalPages, onPageChange }: Pa
   };
 
   return (
-    <div className="pagination-controls">
+    <div className={styles.paginationControls}>
       <button 
-        className="pagination-button"
+        className={styles.paginationButton}
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
       >
@@ -29,7 +32,7 @@ export const PaginationControls = ({ currentPage, totalPages, onPageChange }: Pa
       {getPageNumbers().map(pageNum => (
         <button
           key={pageNum}
-          className={`pagination-button ${pageNum === currentPage ? 'active' : ''}`}
+          className={`${styles.paginationButton} ${pageNum === currentPage ? styles.active : ''}`}
           onClick={() => onPageChange(pageNum)}
         >
           {pageNum}
@@ -37,7 +40,7 @@ export const PaginationControls = ({ currentPage, totalPages, onPageChange }: Pa
       ))}
       
       <button
-        className="pagination-button"
+        className={styles.paginationButton}
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
       >
