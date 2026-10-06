@@ -5,6 +5,8 @@ import { IconFilter, IconPlus, IconView, IconEdit, IconDelete } from "../IconLis
 import { PaginationControls } from "../PaginationControls";
 import { StatusBadge } from "../StatusBadge";
 import { IncidentRecordFilter } from "./IncidentRecordFilter";
+import styles from "../../../CSS/Nurse/NurseCRUDPanel.module.css"
+
 
 
 interface PaginationState {
@@ -38,13 +40,13 @@ export const IncidentRecordCRUDPanel = ({
   incidentData = [], loading, pagination, filterState,
   onView, onEdit, onDelete, onCreate }: IncidentRecordCRUDPanelProps) => {
   return (
-    <div className="crud-container">
-      <div className="crud-header">
+    <div className={styles.crudContainer}>
+      <div className={styles.crudHeader}>
         <div>
-          <h2 className="crud-title">Incident Record Management Panel</h2>
-          <p className="crud-subtitle">Manage student incident records and reports such as create, update, and delete</p>
+          <h2 className={styles.crudTitle}>Incident Record Management Panel</h2>
+          <p className={styles.crudSubtitle}>Manage student incident records and reports such as create, update, and delete</p>
         </div>
-        <div className="crud-actions">
+        <div className={styles.crudActions}>
           <button className="button button-secondary button-small" onClick={filterState.onToggle}>
                       <IconFilter />
                       {filterState.show ? 'Hide Filters' : 'Show Filters'}
@@ -64,12 +66,12 @@ export const IncidentRecordCRUDPanel = ({
               />
       )}
       
-      <div className="crud-table-wrapper">
-        <div className="crud-table-info">
+      <div className={styles.crudTableWrapper}>
+        <div className={styles.crudTableInfo}>
           <span>Total: {pagination.totalItems} items</span>
           <span>Page {pagination.currentPage} of {pagination.totalPages}</span>
         </div>
-        <table className="crud-table">
+        <table className={styles.crudTable}>
           <thead>
             <tr>
               <th>Record ID</th>
@@ -83,14 +85,14 @@ export const IncidentRecordCRUDPanel = ({
           <tbody>
             {loading && (
               <tr>
-                <td colSpan={6} style={{textAlign: 'center', padding: '2rem'}}>
+                <td colSpan={6} className={styles.loadingBox}>
                   Loading incident records...
                 </td>
               </tr>
             )}
             {incidentData.length === 0 && !loading && (
               <tr>
-                <td colSpan={6} style={{textAlign: 'center', padding: '2rem'}}>
+                <td colSpan={6} className={styles.loadingBox}>
                   No incident records found
                 </td>
               </tr>
@@ -103,14 +105,15 @@ export const IncidentRecordCRUDPanel = ({
                 <td>{new Date(incident.dateOccurred).toLocaleDateString()}</td>
                 <td><StatusBadge status={incident.status} /></td>
                 <td>
-                  <div className="action-buttons">
-                    <button className="action-button" onClick={() => onView(incident.id)} disabled={loading}>
+                  <div className={styles.actionButtons}>
+                    <button className={styles.actionButton} onClick={() => onView(incident.id)} disabled={loading}>
                       <IconView />
                     </button>
-                    <button className="action-button" onClick={() => onEdit(incident)} disabled={loading}>
+                    <button className={styles.actionButton} onClick={() => onEdit(incident)} disabled={loading}>
                       <IconEdit />
                     </button>
-                    <button className="action-button action-delete" onClick={() => onDelete(incident.id)} disabled={loading}>
+                    <button className={`${styles.actionButton} ${styles.actionDelete}`} 
+                      onClick={() => onDelete(incident.id)} disabled={loading}>
                       <IconDelete />
                     </button>
                   </div>

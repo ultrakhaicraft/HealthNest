@@ -11,7 +11,6 @@ import UpdateIncidentRecordModal from '../../../components/IncidentRecord/Update
 import { IncidentRecordCRUDPanel } from '../../../components/IncidentRecord/IncidentRecordManagementPanel';
 import { useIncidentRecords } from '../../../feature/Hooks/IncidentRecord/useIncidentRecords';
 import { useIncidentRecordModals } from '../../../feature/Hooks/IncidentRecord/useIncidentRecordModals';
-import { useUserId } from '../../../feature/Hooks/Account/AccountHooks';
 
 
 const DEFAULT_FILTER: IncidentRecordQueryParams = {

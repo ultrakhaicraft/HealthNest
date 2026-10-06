@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { IncidentRecordQueryParams } from "../../feature/API/IncidentRecordService";
+import filterStyles from "../../../CSS/Nurse/NurseCRUDPanel.module.css"
+
 
 interface IncidentRecordFilterProps {
   filters: IncidentRecordQueryParams;
@@ -23,10 +25,10 @@ export const IncidentRecordFilter = ({ filters, onApplyFilters, onClearFilters }
     };
   
   return (
-    <div className="filter-section">
-      <div className="filter-row">
+    <div className={filterStyles.filterSection}>
+      <div className={filterStyles.filterRow}>
         
-        <div className="filter-group">
+        <div className={filterStyles.filterGroup}>
           <label htmlFor="StudentName">Student name:</label>
           <input
             id="StudentName"
@@ -37,7 +39,7 @@ export const IncidentRecordFilter = ({ filters, onApplyFilters, onClearFilters }
           />
         </div>
         
-        <div className="filter-group">
+        <div className={filterStyles.filterGroup}>
           <label>Status:</label>
           <select
             value={filterDraft.Status || ''}
@@ -53,8 +55,8 @@ export const IncidentRecordFilter = ({ filters, onApplyFilters, onClearFilters }
         </div>
       </div>
       
-      <div className="filter-row">
-        <div className="filter-group">
+      <div className={filterStyles.filterRow}>
+        <div className={filterStyles.filterGroup}>
           <label>Date From:</label>
           <input
             type="date"
@@ -63,7 +65,7 @@ export const IncidentRecordFilter = ({ filters, onApplyFilters, onClearFilters }
           />
         </div>
         
-        <div className="filter-group">
+        <div className={filterStyles.filterGroup}>
           <label>Date To:</label>
           <input
             type="date"
@@ -73,7 +75,7 @@ export const IncidentRecordFilter = ({ filters, onApplyFilters, onClearFilters }
         </div>
         
         
-        <div className="filter-group">
+        <div className={filterStyles.filterGroup}>
           <label>Sort By Latest:</label>
           <select
             value={filterDraft.SortByLatest ? 'true' : 'false'}
@@ -85,7 +87,7 @@ export const IncidentRecordFilter = ({ filters, onApplyFilters, onClearFilters }
         </div>
       </div>
       
-      <div className="filter-actions">
+      <div className={filterStyles.filterActions}>
         <button className="button button-primary button-small" onClick={() => onApplyFilters(filterDraft)}>
           Apply Filters
         </button>

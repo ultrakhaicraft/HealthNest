@@ -1,4 +1,4 @@
-import "../../CSS/Nurse/NurseDashboard.css";
+
 import { HealthCheckupEventService, ViewHealthCheckupEventDTO } from "../../../feature/API/HealthCheckupEventService";
 import { VaccineCheckupEventService, ViewVaccineEventDTO } from "../../../feature/API/VaccineCheckupEventService";
 import { DashboardTables } from "../../../components/Nurse_Dashboard/DashboardTables";
@@ -6,6 +6,7 @@ import { IncidentReportBarChart } from "../../../components/Nurse_Dashboard/Inci
 import { useEffect, useState } from "react";
 import { DashboardService, DashboardStatistic, IncidentRecordCountPerYear } from "../../../feature/API/DashboardService";
 import { useUserName } from "../../../feature/Hooks/Account/AccountHooks";
+import style from "../../../CSS/Nurse/Dashboard/DashboardSection.module.css"
 
 
 interface NurseDashboardProps {
@@ -92,28 +93,28 @@ export const NurseDashboard = ({ username }: NurseDashboardProps) => {
 
 
   return (
-    <main className="dashboard-container">
-      <section className="dashboard-header">
+    <main className={style.dashboardContainer}>
+      <section className={style.dashboardHeader}>
         <h1>Nurse Dashboard</h1>
         <h2>Welcome nurse, {username}!</h2>
       </section>
-      {error && <p className="dashboard-error">{error}</p>}
-      <section className="dashboard-number-cards">
-        <div className="dashboard-card">
-          <p className="card-label">Active Incident Reports</p>
-          <p className="card-value">{stat?.activeIncidentRecord ?? 0}</p>
+      {error && <p className={style.dashboardError}>{error}</p>}
+      <section className={style.dashboardNumberCards}>
+        <div className={style.dashboardCard}>
+          <p className={style.cardLabel}>Active Incident Reports</p>
+          <p className={style.cardValue}>{stat?.activeIncidentRecord ?? 0}</p>
         </div>
-        <div className="dashboard-card">
-          <p className="card-label">Pending Medicine Requests</p>
-          <p className="card-value">{stat?.pendingMedicineRequest ?? 0}</p>
+        <div className={style.dashboardCard}>
+          <p className={style.cardLabel}>Pending Medicine Requests</p>
+          <p className={style.cardValue}>{stat?.pendingMedicineRequest ?? 0}</p>
         </div>
-        <div className="dashboard-card">
-          <p className="card-label">Upcoming Vaccine Appointments</p>
-          <p className="card-value">{stat?.upcomingVaccineEvent ?? 0}</p>
+        <div className={style.dashboardCard}>
+          <p className={style.cardLabel}>Upcoming Vaccine Appointments</p>
+          <p className={style.cardValue}>{stat?.upcomingVaccineEvent ?? 0}</p>
         </div>
-        <div className="dashboard-card">
-          <p className="card-label">Upcoming Health Checkups</p>
-          <p className="card-value">{stat?.upcomingHealthCheckup ?? 0}</p>
+        <div className={style.dashboardCard}>
+          <p className={style.cardLabel}>Upcoming Health Checkups</p>
+          <p className={style.cardValue}>{stat?.upcomingHealthCheckup ?? 0}</p>
         </div>
       </section>
       <IncidentReportBarChart data={toChartData(incidentData)} />

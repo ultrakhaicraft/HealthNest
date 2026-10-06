@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { MedicalSupplyQuery } from "../../feature/API/MedicalSupplyService";
+import filterStyles from "../../../CSS/Nurse/NurseCRUDPanel.module.css"
+
 
 interface MedicalSupplyFilterProps {
   filters: MedicalSupplyQuery;
@@ -20,10 +22,10 @@ export const MedicalSupplyFilter = ({ filters, onApplyFilters, onClearFilters }:
   }
 
   return (
-    <div className="filter-section">
-      <div className="filter-row">
+    <div className={filterStyles.filterSection}>
+      <div className={filterStyles.filterRow}>
         
-        <div className="filter-group">
+        <div className={filterStyles.filterGroup}>
           <label htmlFor="MedicineId">Medical Supply Name:</label>
           <input
             id="MedicineId"
@@ -34,7 +36,7 @@ export const MedicalSupplyFilter = ({ filters, onApplyFilters, onClearFilters }:
           />
         </div>
         
-        <div className="filter-group">
+        <div className={filterStyles.filterGroup}>
           <label htmlFor="IsAvailable">Status:</label>
           <select
             id="IsAvailable"
@@ -47,8 +49,8 @@ export const MedicalSupplyFilter = ({ filters, onApplyFilters, onClearFilters }:
         </div>
       </div>
       
-      <div className="filter-row">
-        <div className="filter-group">
+      <div className={filterStyles.filterRow}>
+        <div className={filterStyles.filterGroup}>
           <label htmlFor="SortByNameByDescending">Sort By Name (Descending):</label>
           <select
             id="SortByNameByDescending"
@@ -61,7 +63,7 @@ export const MedicalSupplyFilter = ({ filters, onApplyFilters, onClearFilters }:
         </div>
       </div>
       
-      <div className="filter-actions">
+      <div className={filterStyles.filterActions}>
         <button className="button button-primary button-small" onClick={() => onApplyFilters(filterSettings)}>
           Apply Filters
         </button>
