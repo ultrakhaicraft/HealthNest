@@ -107,6 +107,11 @@ body {
   color: var(--color-text-warning);
 }
 
+.main-page-container {
+  min-width: 100vw;
+  min-height: 100vh;
+}
+
 
 
 

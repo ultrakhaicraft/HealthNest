@@ -1,0 +1,107 @@
+
+
+.hero {
+  background-color: #eef2fb;
+  padding: 3rem 1rem;
+}
+
+.heroContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.heroText {
+  flex: 1;
+}
+
+.heroText h1 {
+  font-size: 2.5rem;
+  color: #2b50ec;
+  margin-bottom: 0.5rem;
+}
+
+.heroText h2 {
+  font-size: 1.2rem;
+  color: #4a90e2;
+  margin-bottom: 1rem;
+}
+
+.heroText p {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.heroImage {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.imagePlaceholder {
+  width: 300px;
+  height: 200px;
+  background-color: #d9e2f3;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-style: italic;
+}
+
+.about {
+  width: 100%;
+  padding: 2rem 1rem;
+  background-color: white;
+}
+
+.aboutContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  border-radius: 12px;
+  background-color: #f0f4ff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.aboutContainer h3 {
+  font-size: 1.4rem;
+  color: #2b50ec;
+  margin-bottom: 1rem;
+}
+
+.services {
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.services h2 {
+  font-size: 1.8rem;
+  color: #2b50ec;
+  margin-bottom: 2rem;
+}
+
+.servicesGrid {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.serviceCard {
+  background-color: #eef2fb;
+  padding: 1.5rem;
+  border-radius: 12px;
+  width: 300px;
+  box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
