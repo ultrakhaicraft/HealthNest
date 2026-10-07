@@ -1,7 +1,5 @@
-using SchoolMedical_DataAccess.DTOModels;
-using SchoolMedical_DataAccess.Entities;
+
 using System.Text.Json.Serialization;
-using SchoolMedical_DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using HealthNest_API.Helpers;
 using HealthNest_API;

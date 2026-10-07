@@ -1,6 +1,4 @@
 ﻿using HealthNest_DAO.DTOModels;
-using SchoolMedical_DataAccess.Entities;
-using SchoolMedical_DataAccess.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,5 +1,5 @@
 // src/components/Elements/Spinner/Spinner.tsx
-import styles from '../CSS/Components/Spinner.module.css';
+import styles from '../CSS/Components/Spinner.module.css'
 
 type SpinnerSize = 'small' | 'medium' | 'large';
 

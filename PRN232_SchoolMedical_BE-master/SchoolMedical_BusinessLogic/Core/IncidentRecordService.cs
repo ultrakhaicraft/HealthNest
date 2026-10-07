@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Org.BouncyCastle.Asn1.Ocsp;
-using SchoolMedical_BusinessLogic.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;

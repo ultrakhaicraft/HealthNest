@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SchoolMedical_BusinessLogic;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;

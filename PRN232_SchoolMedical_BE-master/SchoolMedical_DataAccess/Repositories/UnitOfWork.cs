@@ -1,7 +1,6 @@
 ﻿
 using HealthNest_DAO.Entities;
 using HealthNest_DAO.Interfaces;
-using SchoolMedical_DataAccess.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -6,7 +6,6 @@ using HealthNest_DAO.Enums;
 using HealthNest_DAO.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Asn1.Ocsp;
-using SchoolMedical_BusinessLogic.Utility;
 using System.Linq.Expressions;
 
 namespace HealthNest_BusinessLogic.Core
