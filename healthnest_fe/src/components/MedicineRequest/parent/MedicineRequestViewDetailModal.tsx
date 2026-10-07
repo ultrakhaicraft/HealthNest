@@ -12,14 +12,10 @@ interface MedicineRequestViewProps {
 export const MedicineRequestViewDetail: React.FC<MedicineRequestViewProps> = ({ medicineRequest, isOpen, onClose }) => {
   if (!isOpen) return null;
 
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
+ 
 
   return (
-    <Modal title="Update Medicine Request Status" onClose={onClose} isBusy={false}>
+    <Modal title="Medicine Request Detail" onClose={onClose} isBusy={false}>
           <div className="modal-group modal-row full-width">
               <p><strong>Medicine Request ID:</strong> {medicineRequest.id}</p>
               <p><strong>Requester ID:</strong> {medicineRequest.requestBy}</p>
@@ -33,19 +29,4 @@ export const MedicineRequestViewDetail: React.FC<MedicineRequestViewProps> = ({ 
           </div>
     </Modal>
   );
-};
-
-const getStatusClass = (status: string) => {
-  switch (status) {
-    case 'Pending':
-      return 'status-badge-pending';
-    case 'Approved':
-      return 'status-badge-active';
-    case 'Rejected':
-      return 'status-badge-inactive';
-    case 'Completed':
-      return 'status-badge-resolved';
-    default:
-      return 'status-badge-pending';
-  }
 };

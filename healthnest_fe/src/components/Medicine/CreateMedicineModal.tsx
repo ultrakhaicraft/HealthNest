@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+  import React, { useState } from 'react';
 import { MedicineCreateModel, MedicineService } from '../../feature/API/MedicineService';
 import { IconClose } from '../IconList';
 import { useUserId } from '../../feature/Hooks/Account/AccountHooks';
+import Modal, { ModalForm, ModalGrid, ModalField, ModalReadOnly, ModalFooter } from '../GenericModal';
+import inputStyles from '../../../CSS/InputField.module.css';
+
 
 interface CreateMedicineModalProps {
   isOpen: boolean;
@@ -82,89 +85,82 @@ const CreateMedicineModal: React.FC<CreateMedicineModalProps> = ({ isOpen, onClo
   };
 
   return (
-    <div className="modal-overlay" onClick={handleOverlayClick}>
-      <div className="modal-content">
-        <div className="modal-header">
-          <h2 className="modal-title">Create Medicine</h2>
-          <button className="modal-close" onClick={onClose} disabled={isSubmitting}>
-            <IconClose />
-          </button>
-        </div>
-        <form className="modal-body" onSubmit={handleSubmit}>
-          <div className="modal-column">
-            <div className="detail-row">
-              <label htmlFor="MedicineName" className="detail-label">Name</label>
-              <input
-                id="MedicineName"
-                className="input-field"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                disabled={isSubmitting}
-                maxLength={100}
-                placeholder="Enter medicine name"
-                required
-              />
-              {errors.name && <div className="error-message">{errors.name}</div>}
-            </div>
-            <div className="detail-row">
-              <label htmlFor="MedicineAmount" className="detail-label">Amount</label>
-              <input
-                id="MedicineAmount"
-                className="input-field"
-                name="amount"
-                type="number"
-                min="1"
-                value={form.amount}
-                onChange={handleChange}
-                disabled={isSubmitting}
-                placeholder="Enter amount in stock"
-                required
-              />
-              {errors.amount && <div className="error-message">{errors.amount}</div>}
-            </div>
-            <div className="detail-row full-width">
-              <label htmlFor="createdById" className="detail-label">Created By Id</label>
-              <input
-                id="createdById"
-                className="input-field"
-                name="createdById"
-                type="text"
-                value={userId ?? ''}
-                readOnly
-                required
-              />
-            </div>
-            <div className="detail-row full-width">
-            <label htmlFor="MedicineDescription" className="detail-label">Description</label>
-            <textarea
-              id="MedicineDescription"
-              className="input-field detail-description"
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              maxLength={500}
-              disabled={isSubmitting}
-              required
-              placeholder="Enter medicine description"
-            />
-            {errors.description && <div className="error-message">{errors.description}</div>}
-          </div>
+    <Modal title="Create Medicine" onClose={onClose} isBusy={isSubmitting}>
+  <ModalForm onSubmit={handleSubmit}>
+    <ModalGrid>
+      <ModalField label="Name" htmlFor="MedicineName" error={errors.name}>
+        <input
+          id="MedicineName"
+          className={inputStyles.inputField}
+          name="name"
+          value={form.name}
+          onChange={handleChange}
+          disabled={isSubmitting}
+          maxLength={100}
+          placeholder="Enter medicine name"
+          required
+        />
+      </ModalField>
 
-          <div className="detail-row full-width">
-            <div className="modal-footer button-row-right">
-              <button type="button" className="button button-secondary" onClick={handleClear} disabled={isSubmitting} style={{ marginRight: '12px' }}>
-                Clear
-              </button>
-              <button type="submit" className="button button-primary" disabled={isSubmitting}>
-                {isSubmitting ? 'Submitting...' : 'Submit'}
-              </button>
-            </div>
-          </div>
-          </div>
-        </form>
-      </div>
-    </div>
+      <ModalField label="Amount" htmlFor="MedicineAmount" error={errors.amount}>
+        <input
+          id="MedicineAmount"
+          className={inputStyles.inputField}
+          name="amount"
+          type="number"
+          min="1"
+          value={form.amount}
+          onChange={handleChange}
+          disabled={isSubmitting}
+          placeholder="Enter amount in stock"
+          required
+        />
+      </ModalField>
+
+      <ModalReadOnly label="Created By Id" fullWidth>
+        {userId ?? ''}
+      </ModalReadOnly>
+
+      <ModalField
+        label="Description"
+        htmlFor="MedicineDescription"
+        error={errors.description}
+        fullWidth
+      >
+        <textarea
+          id="MedicineDescription"
+          className={inputStyles.inputField}
+          name="description"
+          value={form.description}
+          onChange={handleChange}
+          maxLength={500}
+          disabled={isSubmitting}
+          required
+          placeholder="Enter medicine description"
+          rows={4}
+        />
+      </ModalField>
+    </ModalGrid>
+
+    <ModalFooter>
+      <button
+        type="button"
+        className="button button-secondary"
+        onClick={handleClear}
+        disabled={isSubmitting}
+      >
+        Clear
+      </button>
+      <button
+        type="submit"
+        className="button button-primary"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? 'Submitting...' : 'Submit'}
+      </button>
+    </ModalFooter>
+  </ModalForm>
+</Modal>
   );
 };
 

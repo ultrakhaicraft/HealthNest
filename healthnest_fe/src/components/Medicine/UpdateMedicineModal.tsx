@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { MedicineDetailsViewModel, MedicineService, MedicineUpdateModel } from '../../feature/API/MedicineService';
-import { IconClose } from '../IconList';
 import { useUserId } from '../../feature/Hooks/Account/AccountHooks';
+import Modal, { ModalField, ModalFooter, ModalForm, ModalGrid } from '../GenericModal';
+import inputStyles from '../../../CSS/InputField.module.css';
+
 
 interface UpdateMedicineModalProps {
   isOpen: boolean;
@@ -84,104 +86,85 @@ const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medic
     setIsSubmitting(false);
   };
 
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget && !isSubmitting) {
-      onClose();
-    }
-  };
+  
 
   return (
-    <div className="modal-overlay" onClick={handleOverlayClick}>
-      <div className="modal-content">
-        <div className="modal-header">
-          <h2 className="modal-title">Update Medicine</h2>
-          <button className="modal-close" onClick={onClose} disabled={isSubmitting}>
-            <IconClose />
-          </button>
-        </div>
-        <form className="modal-body" onSubmit={handleSubmit}>
-          <div className="modal-column">
-            <div className="detail-row">
-              <label htmlFor="medicine-id" className="detail-label">ID</label>
-              <input
-                id="medicine-id"
-                className="input-field"
-                value={medicine.id}
-                disabled
-                style={{ background: '#f3f4f6', color: '#6b7280' }}
-              />
-              {errors.id && <div className="error-message">{errors.id}</div>}
-            </div>
-            <div className="detail-row">
-              <label htmlFor="medicine-name" className="detail-label">Name</label>
-              <input
-                id="medicine-name"
-                className="input-field"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                disabled={isSubmitting}
-                maxLength={100}
-                required
-              />
-              {errors.name && <div className="error-message">{errors.name}</div>}
-            </div>
-            <div className="detail-row">
-              <label htmlFor="medicine-amount" className="detail-label">Amount</label>
-              <input
-                id="medicine-amount"
-                className="input-field"
-                name="amount"
-                type="number"
-                min="1"
-                value={form.amount}
-                onChange={handleChange}
-                disabled={isSubmitting}
-                required
-              />
-              {errors.amount && <div className="error-message">{errors.amount}</div>}
-            </div>
+      <Modal title="Update Medicine" onClose={onClose} isBusy={isSubmitting}>
+        <ModalForm onSubmit={handleSubmit}>
+           <ModalGrid>
+              <ModalField label="Medicine Id" htmlFor="medicine-id" error={errors.id}>
+                <input
+                  id="medicine-id"
+                  className="input-field"
+                  value={medicine.id}
+                  disabled
+                  style={{ background: '#f3f4f6', color: '#6b7280' }}
+                />
+              </ModalField>
+             
+              <ModalField label="Medicine Name" htmlFor="medicine-name" error={errors.name}>
+                <input
+                  id="medicine-name"
+                  className="input-field"
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  disabled={isSubmitting}
+                  maxLength={100}
+                  required
+                />
+              </ModalField>
+
+              <ModalField label="Medicine Amount" htmlFor="medicine-amount" error={errors.amount}>
+               <input
+                  id="medicine-amount"
+                  className="input-field"
+                  name="amount"
+                  type="number"
+                  min="1"
+                  value={form.amount}
+                  onChange={handleChange}
+                  disabled={isSubmitting}
+                  required
+                />
+              </ModalField>
+
+              <ModalField label="Status" htmlFor="availability-select" error={errors.isAvailable}>
+                 <select
+                  id="availability-select"
+                  className="input-field"
+                  name="isAvailable"
+                  value={form.isAvailable ? 'true' : 'false'}
+                  onChange={e => setForm(prev => ({ ...prev, isAvailable: e.target.value === 'true' }))}
+                  disabled={isSubmitting}
+                >
+                  <option value="true" >Available</option>
+                  <option value="false" >Unavailable</option>
+                </select>
+              </ModalField>
+              
           
-         
-            <div className="detail-row">
-              <label htmlFor="availability-select" className="detail-label full-width">Availability</label>
-              <select
-                id="availability-select"
-                className="input-field"
-                name="isAvailable"
-                value={form.isAvailable ? 'true' : 'false'}
-                onChange={e => setForm(prev => ({ ...prev, isAvailable: e.target.value === 'true' }))}
+
+              <ModalField label="Medicine Description" htmlFor="medicine-description" error={errors.description}>
+                <textarea
+                id="medicine-description"
+                className="input-field detail-description"
+                name="description"
+                value={form.description}
+                onChange={handleChange}
+                maxLength={500}
                 disabled={isSubmitting}
-              >
-                <option value="true" >Available</option>
-                <option value="false" >Unavailable</option>
-              </select>
-            </div>
-          
-          <div className="detail-row full-width">
-            <label htmlFor="medicine-description" className="detail-label">Description</label>
-            <textarea
-              id="medicine-description"
-              className="input-field detail-description"
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              maxLength={500}
-              disabled={isSubmitting}
-            />
-            {errors.description && <div className="error-message">{errors.description}</div>}
-          </div>
-          <div className="detail-row full-width">
-            <div className="modal-footer button-row-right">
-              <button type="submit" className="button button-primary" disabled={isSubmitting}>
-                {isSubmitting ? 'Updating...' : 'Update'}
-              </button>
-            </div>
-          </div>
-          </div>
-        </form>
-      </div>
-    </div>
+              />
+              </ModalField>
+
+          </ModalGrid>
+          <ModalFooter>
+            <button type="submit" className="button button-primary" disabled={isSubmitting}>
+                  {isSubmitting ? 'Updating...' : 'Update'}
+                </button>
+          </ModalFooter>
+        </ModalForm>
+      </Modal>
   );
 };
 
