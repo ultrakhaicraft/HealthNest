@@ -1,7 +1,7 @@
 import React from 'react';
 import { MedicineRequestDetailsModel } from '../../../feature/API/MedicineRequestService';
-import { IconClose } from '../../IconList';
 import { StatusBadge } from '../../StatusBadge';
+import Modal from '../../GenericModal';
 
 interface MedicineRequestViewProps {
   medicineRequest: MedicineRequestDetailsModel;
@@ -19,15 +19,7 @@ export const MedicineRequestViewDetail: React.FC<MedicineRequestViewProps> = ({ 
   };
 
   return (
-    <div className="modal-overlay" onClick={handleOverlayClick}>
-      <div className="modal-content">
-        <div className="modal-header">
-          <h2 className="modal-title">Medicine Request Details</h2>
-          <button className="modal-close" onClick={onClose}>
-            <IconClose />
-          </button>
-        </div>
-        <div id="medicine-request-detail" className="modal-body">
+    <Modal title="Update Medicine Request Status" onClose={onClose} isBusy={false}>
           <div className="modal-group modal-row full-width">
               <p><strong>Medicine Request ID:</strong> {medicineRequest.id}</p>
               <p><strong>Requester ID:</strong> {medicineRequest.requestBy}</p>
@@ -39,10 +31,7 @@ export const MedicineRequestViewDetail: React.FC<MedicineRequestViewProps> = ({ 
               <p><strong>Description:</strong></p>
               <div className="detail-value detail-description">{medicineRequest.description}</div>            
           </div>
-          
-        </div>
-      </div>
-    </div>
+    </Modal>
   );
 };
 

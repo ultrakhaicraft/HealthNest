@@ -25,7 +25,7 @@ public partial class Account
 	public virtual Admin? Admin { get; set; }
 	public virtual Nurse? Nurse { get; set; }
 
-
+	public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 
 
 	//public virtual ICollection<Healthcheckupevent> HealthcheckupeventCreatedByNavigations { get; set; } = new List<Healthcheckupevent>(); //Admin class since they create the event

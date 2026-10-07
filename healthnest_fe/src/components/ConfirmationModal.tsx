@@ -1,7 +1,7 @@
 import React from 'react';
 import { IconClose } from './IconList';
-import "../CSS/Components/Modal.css";
-import confirmationModalStyles from "../CSS/ConfirmationModal.module.css";
+import modalStyles from "../CSS/Components/Modal.module.css";
+import confirmationModalStyles from '../CSS/Components/ConfirmationModal.module.css'
 
 
 interface ConfirmationModalProps {
@@ -49,11 +49,11 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   };
 
   return (
-    <div className="modal-overlay" onClick={handleOverlayClick}>
+    <div className={modalStyles.overlay} onClick={handleOverlayClick}>
       <div className={confirmationModalStyles.confirmationModal}>
-        <div className="modal-header">
-          <h2 className="modal-title">{title}</h2>
-          <button className="modal-close" onClick={onClose} disabled={isLoading}>
+        <div className={modalStyles.modalHeader} >
+          <h2 className={modalStyles.modalTitle} >{title}</h2>
+          <button className={modalStyles.modalClose}  onClick={onClose} disabled={isLoading}>
             <IconClose />
           </button>
         </div>

@@ -13,7 +13,7 @@ interface ProtectedRouteProps {
 export const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
   const { user, isAuthenticated, isLoading } = useAuthStatus();
   const userRole = useUserRole();
-
+  
   if(isLoading) return <FullPageSpinner/>
 
   if (!isAuthenticated) {
@@ -24,6 +24,7 @@ export const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) 
     return <Navigate to="/unauthorized" replace
     state={{allowedRoles,attemptedRole: userRole}} />;
   }
+    
 
   return children;
 };

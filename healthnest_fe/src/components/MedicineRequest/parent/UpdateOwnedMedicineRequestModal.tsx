@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { MedicineRequestDetailsModel, MedicineRequestUpdateModel } from "../../../feature/API/MedicineRequestService";
-import { IconClose } from "../../IconList";
+import inputStyles from '../../../CSS/InputField.module.css';
+import Modal, { ModalForm, ModalGrid, ModalReadOnly, ModalField, ModalFooter } from "../../GenericModal";
 
 const initialForm = {
   requestBy: '', //Id
@@ -63,14 +64,16 @@ const UpdateOwnedMedicineRequestModal = ({
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
     setIsSubmitting(true);
-
-    onSubmit(medicineRequest.id, {
+    try{
+      onSubmit(medicineRequest.id, {
       requestBy: form.requestBy,
       forStudent: form.forStudent,
       description: form.description,
     });
+    }finally{
+      setIsSubmitting(false);
+    }
 
-    setIsSubmitting(false);
   };
 
 
@@ -83,73 +86,46 @@ const UpdateOwnedMedicineRequestModal = ({
     }
   };
 
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget && !isSubmitting) {
-      onClose();
-    }
-  };
-
+  
 
   return (
-      <div className="modal-overlay" onClick={handleOverlayClick}>
-        <div className="modal-content">
-          <div className="modal-header">
-            <h2 className="modal-title">Update Medicine Request</h2>
-            <button className="modal-close" onClick={onClose} disabled={isSubmitting}>
-              <IconClose />
-            </button>
-          </div>
-          <form className="modal-body" onSubmit={handleSubmit}>
-            <div className="modal-column">
-              <div className="detail-row">
-                <label htmlFor="requester-id" className="detail-label">{'Requester ID (Your Id as a parent)'}</label>
-                <input
-                  id="requester-id"
-                  className="input-field"
-                  value={medicineRequest.requestBy}
-                  disabled
-                  readOnly
-                  style={{ background: '#f3f4f6', color: '#6b7280' }}
-                />
-                {errors.requesterBy && <div className="error-message">{errors.requesterBy}</div>}
-              </div>
-              <div className="detail-row">
-                <label htmlFor="student-id" className="detail-label">{'Student Id (Your children Id as the school student)'}</label>
-                <input
-                  id="student-id"
-                  className="input-field"
-                  value={medicineRequest.forStudent}
-                  disabled
-                  readOnly
-                  style={{ background: '#f3f4f6', color: '#6b7280' }}
-                />
-                {errors.forStudent && <div className="error-message">{errors.forStudent}</div>}
-              </div>
-            
-            <div className="detail-row full-width">
-              <label htmlFor="medicine-description" className="detail-label">Description</label>
-              <textarea
-                id="medicine-description"
-                className="input-field detail-description"
-                name="description"
-                value={form.description}
-                onChange={handleChange}
-                maxLength={500}
-                disabled={isSubmitting}
-              />
-              {errors.description && <div className="error-message">{errors.description}</div>}
-            </div>
-            <div className="detail-row full-width">
-              <div className="modal-footer button-row-right">
-                <button type="submit" className="button button-primary" disabled={isSubmitting}>
-                  {isSubmitting ? 'Updating...' : 'Update'}
-                </button>
-              </div>
-            </div>
-            </div>
-          </form>
-        </div>
-      </div>
+      <Modal title="Update Medicine Request" onClose={onClose} isBusy={isSubmitting}>
+      <ModalForm onSubmit={handleSubmit}>
+        <ModalGrid>
+          <ModalReadOnly label="Requester ID (Your Id as a parent)">
+            {medicineRequest.requestBy}
+          </ModalReadOnly>
+
+          <ModalReadOnly label="Student Id (Your children Id as the school student)">
+            {medicineRequest.forStudent}
+          </ModalReadOnly>
+
+          <ModalField
+            label="Description"
+            htmlFor="medicine-description"
+            error={errors.description}
+            fullWidth
+          >
+            <textarea
+              id="medicine-description"
+              className={inputStyles.inputField}
+              name="description"
+              value={form.description}
+              onChange={handleChange}
+              maxLength={500}
+              disabled={isSubmitting}
+              rows={4}
+            />
+          </ModalField>
+        </ModalGrid>
+
+        <ModalFooter>
+          <button type="submit" className="button button-primary" disabled={isSubmitting}>
+            {isSubmitting ? 'Updating...' : 'Update'}
+          </button>
+        </ModalFooter>
+      </ModalForm>
+    </Modal>
   )
 };
 

@@ -87,6 +87,33 @@
 }
 
 
+/* ---------- Multi-column layout ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.fullRow {
+  grid-column: 1 / -1;
+}
+
+/* ---------- Read-only values ---------- */
+.readOnlyValue {
+  font-size: 1rem;
+  color: #1f2937;
+  overflow-wrap: anywhere;
+}
+
+.readOnlyBlock {
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background-color: #f9fafb;
+  white-space: pre-wrap; /* keeps the line breaks the parent typed */
+}
+
+
 /* Responsive Styles */
 
 @media (max-width: 780px) {
@@ -99,5 +126,8 @@
     width: 95%;
     padding: 1.5rem;
   }
+
+    .grid { grid-template-columns: 1fr; }
+
   
 }

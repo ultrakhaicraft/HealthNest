@@ -1,9 +1,4 @@
 import Footer from '../../../components/Landing_Page/footer';
-import '../../CSS/Parent/ParentHomepage.css'; // Importing the CSS for the parent homepage
-import "../../CSS/Nurse/NurseModal.css"
-import "../../CSS/Nurse/NurseCRUDPanel.css"
-import "../../CSS/InputField.css"
-import "../../CSS/Nurse/MedicineCRUD.css"
 import { UserRole } from '../../../feature/Constant';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { getActiveItemFromPath, userouteForLabel } from '../../../feature/Hooks/Other/RouterHooks';
@@ -20,7 +15,7 @@ export default function ParentContainerPage() {
     const activeItem = getActiveItemFromPath(location.pathname, userType);
 
     const handleSelect = (label: string) => {
-        navigate(userouteForLabel(label,userType)); // e.g. 'Medicine' -> '/nurseHomepage/medicines'
+        navigate(userouteForLabel(label,userType)); 
     };
 
     return (

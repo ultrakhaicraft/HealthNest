@@ -76,11 +76,7 @@ const CreateMedicineRequestModal: React.FC<CreateMedicineRequestModalProps> = ({
     }
   };
 
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget && !isSubmitting) {
-      onClose();
-    }
-  };
+  
 
   return (
     <Modal title="Create Medicine Request" onClose={onClose} isBusy={isSubmitting}>

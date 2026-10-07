@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "../../app/CSS/Parent/ParentStudentNavBar.module.css"
+import styles from "../../CSS/Parent/ParentHomePageNavBar.module.css"
 
 interface UserHomeNavBarProps {
   activeItem: string;

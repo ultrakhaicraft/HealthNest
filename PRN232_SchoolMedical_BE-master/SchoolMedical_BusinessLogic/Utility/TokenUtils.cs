@@ -42,6 +42,7 @@ public class TokenUtils  : ITokenUtils
 
 		var storedRefreshTOken = new RefreshToken
 		{
+			Id =  Guid.NewGuid().ToString(),
 			AccountId = account.Id,
 			CreatedAt = DateTime.UtcNow,
 			ExpiresAt = DateTime.UtcNow.AddDays(Convert.ToDouble(jwtSettings["RefreshTokenExpiryDays"])),

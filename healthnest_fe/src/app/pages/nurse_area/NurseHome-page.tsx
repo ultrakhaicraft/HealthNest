@@ -1,9 +1,5 @@
 import NurseSideNav from '../../../components/StaffSideNav';
-import '../../CSS/Nurse/NurseSideNav.css';
-import '../../CSS/Nurse/NurseTopHeader.css';
-import "../../CSS/Nurse/NurseCRUDPanel.css"
-import "../../CSS/Nurse/NurseModal.css"
-import "../../CSS/InputField.css"
+
 import { useUserName } from '../../../feature/Hooks/Account/AccountHooks';
 import { NurseHeader } from '../../../components/NurseHeader';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';

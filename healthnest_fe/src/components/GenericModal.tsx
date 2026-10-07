@@ -1,5 +1,5 @@
 import { FormHTMLAttributes, ReactNode, useEffect, useId } from "react";
-import styles from "../CSS/Components/GenericModal.module.css";
+import styles from '../CSS/Components/Modal.module.css';
 import { IconClose } from "./IconList";
 
 type ModalSize = 'sm' | 'md' | 'lg';
@@ -70,17 +70,39 @@ interface ModalFieldProps {
   htmlFor: string;
   error?: string;
   children: ReactNode;
+  fullWidth?: boolean;
+
 }
 
-export const ModalField = ({ label, htmlFor, error, children }: ModalFieldProps) => (
-  <div className={styles.field}>
+export const ModalField = ({ label, htmlFor, error, fullWidth, children }: ModalFieldProps) => (
+  <div className={`${styles.field} ${fullWidth ? styles.fullRow : ''}`}>
     <label htmlFor={htmlFor} className={styles.label}>{label}</label>
     {children}
     {error && <div role="alert" className={styles.fieldError}>{error}</div>}
   </div>
 );
 
+/** Two columns on desktop, one on mobile. Put ModalField / ModalReadOnly inside it. */
+export const ModalGrid = ({ children }: { children: ReactNode }) => (
+  <div className={styles.grid}>{children}</div>
+);
+
 export const ModalFooter = ({ children }: { children: ReactNode }) => (
   <div className={styles.modalFooter}>{children}</div>
 );
 
+
+interface ModalReadOnlyProps {
+  label: string;
+  children: ReactNode;
+  fullWidth?: boolean;
+  /** Grey box, for long text such as descriptions */
+  block?: boolean;
+}
+
+export const ModalReadOnly = ({ label, children, fullWidth, block }: ModalReadOnlyProps) => (
+  <div className={`${styles.field} ${fullWidth ? styles.fullRow : ''}`}>
+    <span className={styles.label}>{label}</span>
+    <div className={`${styles.readOnlyValue} ${block ? styles.readOnlyBlock : ''}`}>{children}</div>
+  </div>
+);
