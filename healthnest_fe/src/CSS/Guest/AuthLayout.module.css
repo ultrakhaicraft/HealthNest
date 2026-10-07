@@ -1,0 +1,111 @@
+/* ---------- Split-screen layout ---------- */
+.authPage { 
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.leftSide {
+  flex: 0.4;
+  background-color: #3c70b9;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+}
+
+.leftSide .logo {
+  color: #ffffff;
+  font-size: 2.5em;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.leftSide .tagline {
+  color: #ffffff;
+  font-size: 1.2em;
+}
+
+.rightSide {
+  flex: 1;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* ---------- Shared form card ---------- */
+.loginForm,
+.registerForm {
+  background-color: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.loginForm h1,
+.registerForm h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.loginForm .errorMessage,
+.registerForm .errorMessage {
+  color: #dc3545;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* ---------- Register: user type selection ---------- */
+.userTypeSelection .selectionButtons button {
+  margin-top: 20px;
+}
+
+.userTypeSelection .textGroup p {
+  margin: 0;
+  padding: 0;
+  color: #080808;
+  font-size: 1.2em;
+  text-align: center;
+}
+
+.backBtn {
+  width: 30% !important;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .authPage {
+    flex-direction: column;
+  }
+
+  .leftSide,
+  .rightSide {
+    flex: none;
+    width: 100%;
+  }
+
+  .leftSide {
+    min-height: 30vh;
+  }
+
+  .rightSide {
+    min-height: 70vh;
+  }
+
+  .loginForm,
+  .registerForm {
+    max-width: 90%;
+    margin: 0 auto;
+  }
+}

@@ -1,0 +1,83 @@
+.inputGroup {
+  margin-top: 1rem;
+  margin-bottom: 20px;
+}
+
+.inputGroup label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #555;
+}
+
+.inputGroup input[type='text'],
+.inputGroup input[type='password'],
+.inputGroup input[type='email'],
+.inputGroup input[type='tel'],
+.inputGroup input[type='number'] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1em;
+}
+
+.inputGroup input[type='text']:focus,
+.inputGroup input[type='password']:focus,
+.inputGroup input[type='email']:focus,
+.inputGroup input[type='tel']:focus,
+.inputGroup input[type='number']:focus {
+  outline: none;
+  border-color: #1c5db7;
+  box-shadow: 0 0 0 2px rgba(58, 58, 118, 0.2);
+}
+
+.inputLabel {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.25rem;
+}
+
+.inputField,
+.textareaField {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.2s;
+  box-sizing: border-box; /* important for width calculation */
+}
+
+
+.inputField:focus,
+.textareaField:focus {
+  outline: none;
+  border-color: transparent;
+  box-shadow: 0 0 0 2px #3b82f6;
+}
+.inputWithUnit {
+  position: relative;
+}
+
+.inputWithUnit .inputField {
+  padding-right: 3rem; /* space for unit */
+}
+
+
+.inputUnit {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  padding-right: 0.75rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+
+

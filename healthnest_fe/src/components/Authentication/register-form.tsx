@@ -1,4 +1,5 @@
-
+import registerStyles from '../../CSS/Guest/AuthLayout.module.css';
+import inputStyles from '../../CSS/InputField.module.css';
 
 interface RegisterFormProps {
     onBack: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -13,7 +14,7 @@ export const RegisterForm = ({ onBack, handleInputChange, handleSubmit, isLoadin
     
 
     return(
-    <div className='register-form'>
+    <div className={registerStyles.registerForm}>
             <div className='form-header'>
                 <button type='button' className='primary-btn back-btn' onClick={onBack}>
                     ← Back
@@ -22,10 +23,10 @@ export const RegisterForm = ({ onBack, handleInputChange, handleSubmit, isLoadin
                 {userType === 'parent' ? <h1>Parent Registration</h1> : <h1>Student Registration</h1>}
                 
             </div>
-            {error && <div className="error-message">{error}</div>}      
+            {error && <div className={registerStyles.errorMessage}>{error}</div>}      
 
             <form onSubmit={handleSubmit}>
-                <div className='input-group'>
+                <div className={inputStyles.inputGroup}>
                     <label htmlFor='fullName'>Full Name</label>
                     <input 
                     type='text' 
@@ -36,7 +37,7 @@ export const RegisterForm = ({ onBack, handleInputChange, handleSubmit, isLoadin
                     disabled={isLoading}                  
                     required />
                 </div>
-                <div className='input-group'>
+                <div className={inputStyles.inputGroup}>
                     <label htmlFor='email'>Email</label>
                     <input 
                     type='email' 
@@ -47,7 +48,7 @@ export const RegisterForm = ({ onBack, handleInputChange, handleSubmit, isLoadin
                     disabled={isLoading}                  
                     required />
                 </div>
-                <div className='input-group'>
+                <div className={inputStyles.inputGroup}>
                     <label htmlFor='password'>Password</label>
                     <input 
                     type='password' 
@@ -58,7 +59,7 @@ export const RegisterForm = ({ onBack, handleInputChange, handleSubmit, isLoadin
                     disabled={isLoading}                  
                     required />
                 </div>
-                <div className='input-group'>
+                <div className={inputStyles.inputGroup}>
                     <label htmlFor='confirmPassword'>Confirm Password</label>
                     <input 
                     type='password' 
@@ -69,7 +70,7 @@ export const RegisterForm = ({ onBack, handleInputChange, handleSubmit, isLoadin
                     disabled={isLoading}                  
                     required />
                 </div>
-                <div className='input-group'>
+                <div className={inputStyles.inputGroup}>
                     <label htmlFor='phoneNumber'>Phone Number</label>
                     <input 
                     type='tel' 
@@ -80,7 +81,7 @@ export const RegisterForm = ({ onBack, handleInputChange, handleSubmit, isLoadin
                     disabled={isLoading}                  
                     required/>
                 </div>
-                <div className='input-group'>
+                <div className={inputStyles.inputGroup}>
                     <label htmlFor='address'>Address</label>
                     <input type='text' 
                     id='address' 

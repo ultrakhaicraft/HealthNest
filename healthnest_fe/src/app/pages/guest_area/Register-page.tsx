@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../../feature/API/RegisterService';
 import { RegisterForm } from '../../../components/Authentication/register-form';
-import { AuthLayout } from '../../../components/Authentication/auth-spilt-screen-layout';
+import { AuthLayout } from '../../../components/Authentication/auth-layout';
 import { Toast } from '../../../components/Notification/Toast';
 import { UserTypeSelection } from '../../../components/Authentication/user-type-selection';
 import '../../../app/CSS/Register.css'; 

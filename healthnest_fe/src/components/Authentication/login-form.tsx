@@ -1,5 +1,6 @@
 import React from 'react';
-
+import loginStyles from '../../CSS/Guest/AuthLayout.module.css';
+import inputStyles from '../../CSS/InputField.module.css';
 
 interface LoginFormProps {
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -10,12 +11,12 @@ interface LoginFormProps {
 
 export const LoginForm = ({ handleInputChange, handleSubmit, isLoading, error }: LoginFormProps) => {
   return (
-    <div className='login-form'>
+    <div className={loginStyles.loginForm}>
       <h1>Login</h1>
       <form onSubmit={handleSubmit}>
-        {error && <div className='error-message'>{error}</div>}
+        {error && <div className={loginStyles.errorMessage}>{error}</div>}
         
-        <div className='input-group'>
+        <div className={inputStyles.inputGroup}>
           <label htmlFor='email'>Email</label>
           <input
             type='email'
@@ -28,7 +29,7 @@ export const LoginForm = ({ handleInputChange, handleSubmit, isLoading, error }:
           />
         </div>
         
-        <div className='input-group'>
+        <div className={inputStyles.inputGroup}>
           <label htmlFor='password'>Password</label>
           <input
             type='password'
