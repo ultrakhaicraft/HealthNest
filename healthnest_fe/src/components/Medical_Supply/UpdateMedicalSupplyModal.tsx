@@ -3,6 +3,8 @@ import { MedicineService } from '../../feature/API/MedicineService';
 import { IconClose } from '../IconList';
 import { useUserId } from '../../feature/Hooks/Account/AccountHooks';
 import { MedicalSupplyDetailsViewModel, MedicalSupplyService, MedicalSupplyUpdateModel } from '../../feature/API/MedicalSupplyService';
+import inputStyles from '../../CSS/InputField.module.css'
+import Modal, { ModalForm, ModalGrid, ModalReadOnly, ModalField, ModalFooter } from '../GenericModal';
 
 interface UpdateMedicalSupplyModalProps {
   isOpen: boolean;
@@ -23,8 +25,8 @@ const UpdateMedicalSupplyModal: React.FC<UpdateMedicalSupplyModalProps> = ({ isO
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const userId= useUserId(); // Custom hook to get the current user's ID
-  
+  const userId = useUserId(); // Custom hook to get the current user's ID
+
   useEffect(() => {
     if (medicalSupply) {
       setForm({
@@ -41,8 +43,8 @@ const UpdateMedicalSupplyModal: React.FC<UpdateMedicalSupplyModalProps> = ({ isO
 
   const validate = () => {
     const errs: { [key: string]: string } = {};
-    if(userId===null){
-      errs.name='Unable to get userId';
+    if (userId === null) {
+      errs.name = 'Unable to get userId';
     }
     if (!form.name.trim()) {
       errs.name = 'Medicine name is required.';
@@ -73,16 +75,20 @@ const UpdateMedicalSupplyModal: React.FC<UpdateMedicalSupplyModalProps> = ({ isO
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
     setIsSubmitting(true);
-    
-    onSubmit(medicalSupply.id, {
-      name: form.name.trim(),
-      description: form.description.trim(),
-      amount: Number(form.amount),
-      isAvailable: form.isAvailable,
-      createdBy: userId || '', // Use the userId from the custom hook
-    });
 
-    setIsSubmitting(false);
+    try {
+      onSubmit(medicalSupply.id, {
+        name: form.name.trim(),
+        description: form.description.trim(),
+        amount: Number(form.amount),
+        isAvailable: form.isAvailable,
+        createdBy: userId || '', // Use the userId from the custom hook
+      });
+    } finally {
+      setIsSubmitting(false);
+
+    }
+
   };
 
   const handleOverlayClick = (e: React.MouseEvent) => {
@@ -92,95 +98,84 @@ const UpdateMedicalSupplyModal: React.FC<UpdateMedicalSupplyModalProps> = ({ isO
   };
 
   return (
-    <div className="modal-overlay" onClick={handleOverlayClick}>
-      <div className="modal-content">
-        <div className="modal-header">
-          <h2 className="modal-title">Update Medical Supply</h2>
-          <button className="modal-close" onClick={onClose} disabled={isSubmitting}>
-            <IconClose />
-          </button>
-        </div>
-        <form className="modal-body" onSubmit={handleSubmit}>
-          <div className="modal-column">
-            <div className="detail-row">
-              <label htmlFor="medical-supply-id" className="detail-label">ID</label>
-              <input
-                id="medical-supply-id"
-                className="input-field"
-                value={medicalSupply.id}
-                disabled
-                style={{ background: '#f3f4f6', color: '#6b7280' }}
-              />
-            </div>
-            <div className="detail-row">
-              <label htmlFor="medical-supply-name" className="detail-label">Name</label>
-              <input
-                id="medical-supply-name"
-                className="input-field"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                disabled={isSubmitting}
-                maxLength={100}
-                required
-              />
-              {errors.name && <div className="error-message">{errors.name}</div>}
-            </div>
-            <div className="detail-row">
-              <label htmlFor="medical-supply-amount" className="detail-label">Amount</label>
-              <input
-                id="medical-supply-amount"
-                className="input-field"
-                name="amount"
-                type="number"
-                min="1"
-                value={form.amount}
-                onChange={handleChange}
-                disabled={isSubmitting}
-                required
-              />
-              {errors.amount && <div className="error-message">{errors.amount}</div>}
-            </div>
-          
-         
-            <div className="detail-row">
-              <label htmlFor="availability-select" className="detail-label full-width">Availability</label>
-              <select
-                id="availability-select"
-                className="input-field"
-                name="isAvailable"
-                value={form.isAvailable ? 'true' : 'false'}
-                onChange={e => setForm(prev => ({ ...prev, isAvailable: e.target.value === 'true' }))}
-                disabled={isSubmitting}
-              >
-                <option value="true" >Available</option>
-                <option value="false" >Unavailable</option>
-              </select>
-            </div>
-          
-          <div className="detail-row full-width">
-            <span className="detail-label">Description</span>
+    <Modal title="Update Medical Supply" onClose={onClose} isBusy={isSubmitting}>
+      <ModalForm onSubmit={handleSubmit}>
+        <ModalGrid>
+          <ModalReadOnly label="ID">
+            {medicalSupply.id}
+          </ModalReadOnly>
+          <ModalField label="Name" htmlFor="medical-supply-name" error={errors.name}>
+            <input
+              id="medical-supply-name"
+              className={inputStyles.inputField}
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              disabled={isSubmitting}
+              maxLength={100}
+              required
+            />
+          </ModalField>
+
+          <ModalField label="Amount" htmlFor="medical-supply-amount" error={errors.amount}>
+            <input
+              id="medical-supply-amount"
+              className={inputStyles.inputField}
+              name="amount"
+              type="number"
+              min="1"
+              value={form.amount}
+              onChange={handleChange}
+              disabled={isSubmitting}
+              required
+            />
+          </ModalField>
+
+          <ModalField label="Availability" htmlFor="availability-select">
+            <select
+              id="availability-select"
+              className={inputStyles.inputField}
+              name="isAvailable"
+              value={form.isAvailable ? 'true' : 'false'}
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, isAvailable: e.target.value === 'true' }))
+              }
+              disabled={isSubmitting}
+            >
+              <option value="true">Available</option>
+              <option value="false">Unavailable</option>
+            </select>
+          </ModalField>
+
+
+          <ModalField
+            label="Description"
+            htmlFor="medical-supply-description"
+            error={errors.description}
+            fullWidth
+          >
             <textarea
-              className="input-field detail-description"
+              id="medical-supply-description"
+              className={`${inputStyles.inputField} ${inputStyles.detailDescription}`}
               name="description"
               value={form.description}
               onChange={handleChange}
               maxLength={500}
               disabled={isSubmitting}
+              rows={4}
             />
-            {errors.description && <div className="error-message">{errors.description}</div>}
-          </div>
-          <div className="detail-row full-width">
-            <div className="modal-footer button-row-right">
-              <button type="submit" className="button button-primary" disabled={isSubmitting}>
-                {isSubmitting ? 'Updating...' : 'Update'}
-              </button>
-            </div>
-          </div>
-          </div>
-        </form>
-      </div>
-    </div>
+          </ModalField>
+
+        </ModalGrid>
+        <ModalFooter>
+          <button type="submit" className="button button-primary" disabled={isSubmitting}>
+            {isSubmitting ? 'Updating...' : 'Update'}
+          </button>
+        </ModalFooter>
+
+      </ModalForm>
+    </Modal>
+
   );
 };
 

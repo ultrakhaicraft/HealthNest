@@ -15,8 +15,8 @@ export const RegisterForm = ({ onBack, handleInputChange, handleSubmit, isLoadin
 
     return(
     <div className={registerStyles.registerForm}>
-            <div className='form-header'>
-                <button type='button' className='primary-btn back-btn' onClick={onBack}>
+            <div className='form-header' >
+                <button type='button' className={`button-secondary button ${registerStyles.backBtn}`}  onClick={onBack}>
                     ← Back
                 </button>
 
@@ -91,7 +91,7 @@ export const RegisterForm = ({ onBack, handleInputChange, handleSubmit, isLoadin
                     disabled={isLoading}                  
                     required />
                 </div>
-                <button className='primary-btn' type='submit' disabled={isLoading}>
+                <button className='button-primary button' type='submit' disabled={isLoading}>
                     {isLoading ? 'Registering...' : 'Register'}
                 </button>
             </form>

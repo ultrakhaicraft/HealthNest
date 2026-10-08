@@ -75,15 +75,19 @@ const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medic
     if (Object.keys(errs).length > 0) return;
     setIsSubmitting(true);
     
-    onSubmit(medicine.id, {
+   try {
+     onSubmit(medicine.id, {
       name: form.name,
       description: form.description,
       amount: Number(form.amount),
       isAvailable: form.isAvailable,
       createdBy: userId || '', // Use the userId from the custom hook
     });
+   } finally {
+        setIsSubmitting(false);
+
+   }
     
-    setIsSubmitting(false);
   };
 
   

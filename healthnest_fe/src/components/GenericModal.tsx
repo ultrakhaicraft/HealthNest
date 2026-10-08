@@ -12,8 +12,8 @@ interface ModalProps {
   isBusy?: boolean; /** True while a request is send to backend: blocks Esc, backdrop click and the X button */
 }
 
-export default function Modal  ({ title, onClose, children, size = 'md', isBusy = false }: ModalProps) {
-  const titleId= useId();
+export default function Modal({ title, onClose, children, size = 'md', isBusy = false }: ModalProps) {
+  const titleId = useId();
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -23,12 +23,12 @@ export default function Modal  ({ title, onClose, children, size = 'md', isBusy 
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [onClose, isBusy]);
 
-  
+
   return (
     <div
       className={styles.overlay}
       onMouseDown={(e) => {
-      if (e.target === e.currentTarget && !isBusy) onClose(); // click on the backdrop
+        if (e.target === e.currentTarget && !isBusy) onClose(); // click on the backdrop
       }}
     >
       <div

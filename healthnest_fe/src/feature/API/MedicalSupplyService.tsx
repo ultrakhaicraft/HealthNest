@@ -1,4 +1,5 @@
-import apiClient, { PaginatedResponse, ApiResponseWrapper, PageinationParams } from '../ApiClient';
+import { PageinationParams, PaginatedResponse, ApiResponseWrapper } from "../../models/ApiClientModel";
+import apiClient from "../ApiClient";
 
 export interface MedicalSupplyViewModel {
   id: string;

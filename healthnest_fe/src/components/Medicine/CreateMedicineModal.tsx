@@ -68,21 +68,21 @@ const CreateMedicineModal: React.FC<CreateMedicineModalProps> = ({ isOpen, onClo
     if (Object.keys(errs).length > 0) return;
     setIsSubmitting(true);
     
-    onSubmit({
+    try {
+       onSubmit({
       name: form.name.trim(),
       description: form.description.trim(),
       amount: Number(form.amount),
       createdBy: userId || '', // Use the userId from the custom hook
-    });
+      });
+    } finally{
+          setIsSubmitting(false);
 
-    setIsSubmitting(false);
-  };
-
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget && !isSubmitting) {
-      onClose();
     }
+
   };
+
+ 
 
   return (
     <Modal title="Create Medicine" onClose={onClose} isBusy={isSubmitting}>

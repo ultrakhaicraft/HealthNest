@@ -1,3 +1,5 @@
+import registerStyles from '../../CSS/Guest/AuthLayout.module.css';
+import inputStyles from '../../CSS/InputField.module.css';
 
 interface UserTypeSelectionProps {
     onSelectUserType: (userType: string) => void;
@@ -12,27 +14,27 @@ export const UserTypeSelection =({onSelectUserType, navigate}: UserTypeSelection
     }
 
     return (
-        <div className='user-type-selection'>
+        <div className={registerStyles.userTypeSelection}>
             <div className='header'>
-                <button type='button' className='primary-btn back-btn' onClick={onBack}>
+                <button type='button' className={`button-secondary button ${registerStyles.backBtn}`} onClick={onBack}>
                     ← Back
                 </button>            
             </div>
-            <div className="text-group">
+            <div className={registerStyles.textGroup}>
                 <h1>Choose Registration Type</h1>
                 <p>Are you a parent or a student?</p>
             </div>
-            <div className='selection-buttons'>
+            <div className={registerStyles.selectionButtons}>
                 <button 
                     type='button' 
-                    className='primary-btn parent-btn'
+                    className='button-primary button parent-btn'
                     onClick={() => onSelectUserType('parent')}
                 >
                     Register as Parent
                 </button>
                 <button 
                     type='button' 
-                    className='primary-btn student-btn'
+                    className='button-primary button student-btn'
                     onClick={() => onSelectUserType('student')}
                 >
                     Register as Student

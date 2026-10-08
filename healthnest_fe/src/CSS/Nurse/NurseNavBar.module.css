@@ -12,6 +12,7 @@
   border-right: 1px solid #e5e7eb;
 }
 
+
 .nurseSideNav ul {
   list-style: none;
   padding: 0;
@@ -24,20 +25,21 @@
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
   text-decoration: none;
-  color: #374151;
+  color: var(--color-accent-dark);
   font-weight: 500;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   transition: background-color 0.2s, color 0.2s;
   font-size: large;
 }
 
 .navItem:hover, .navItem:focus {
-  background-color: #f3f4f6;
+  background-color: var(--color-accent-dark);
+  color: var(--color-text-light);
 }
 
 .navItem .active {
-  background-color: #eef2ff;
-  color: #3730a3;
+  background-color: var(--color-accent-dark);
+  color: var(--color-text-ligh);
   font-weight: 600;
 }
 
@@ -46,9 +48,33 @@
 }
 
 .navItemButton{
-    background: 'none';
-    border: 'none';
-    width: '100%'; 
-    text-align: 'left'; 
-    padding: 0 
+    background: none;
+    border: none;
+    width: 100%; 
+    text-align: left; 
+    /*padding: 0 */
 }
+
+.iconSmall{
+  width: 20px;
+}
+
+.menuIcon{
+  width: 24px;
+  font-size:24px;
+  margin-right: 14px;
+  color: var(--color-accent-dark);
+}
+
+.logoTitle{
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--color-accent-dark);
+}
+
+.logoContainer{
+  display: flex;
+  align-items: center;
+  margin: 0 25px 24px;
+}
+

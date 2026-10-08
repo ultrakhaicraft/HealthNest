@@ -79,5 +79,10 @@
   color: #6b7280;
 }
 
-
+.detailDescription{
+  background-color: #f9fafb;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+}
 

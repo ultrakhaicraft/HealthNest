@@ -2,6 +2,9 @@ import { useState } from "react";
 import { MedicalSupplyCreateModel, MedicalSupplyService } from "../../feature/API/MedicalSupplyService";
 import { useUserId } from "../../feature/Hooks/Account/AccountHooks";
 import { IconClose } from "../IconList";
+import inputStyles from '../../CSS/InputField.module.css'
+import Modal, { ModalForm, ModalGrid, ModalField, ModalReadOnly, ModalFooter } from "../GenericModal";
+
 
 interface CreateMedicalSupplyModalProps {
   isOpen: boolean;
@@ -18,152 +21,141 @@ const initialForm = {
 };
 
 export const CreateMedicalSupplyModal = ({ isOpen, onClose, onSubmit, onError }: CreateMedicalSupplyModalProps) => {
-    const [form, setForm] = useState(initialForm);
-    const [errors, setErrors] = useState<{ [key: string]: string }>({});
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const userId= useUserId(); // Custom hook to get the current user's ID
+  const [form, setForm] = useState(initialForm);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const userId = useUserId(); // Custom hook to get the current user's ID
 
-    if (!isOpen) return null;
+  if (!isOpen) return null;
 
-    const validate = () => {
+  const validate = () => {
     const errs: { [key: string]: string } = {};
-        if(userId===null){
-        errs.name='Unable to get userId';
-        }
-        if (!form.name.trim()) {
-        errs.name = 'Medical supply item name is required.';
-        } else if (form.name.length < 2 || form.name.length > 100) {
-        errs.name = 'Name must be between 2 and 100 characters.';
-        }
-        if (form.description.length > 500) {
-        errs.description = 'Description cannot exceed 500 characters.';
-        }
-        if (!form.amount || isNaN(Number(form.amount)) || Number(form.amount) <= 0) {
-        errs.amount = 'Amount must be a positive number.';
-        }
-        return errs;
-    };
+    if (userId === null) {
+      errs.name = 'Unable to get userId';
+    }
+    if (!form.name.trim()) {
+      errs.name = 'Medical supply item name is required.';
+    } else if (form.name.length < 2 || form.name.length > 100) {
+      errs.name = 'Name must be between 2 and 100 characters.';
+    }
+    if (form.description.length > 500) {
+      errs.description = 'Description cannot exceed 500 characters.';
+    }
+    if (!form.amount || isNaN(Number(form.amount)) || Number(form.amount) <= 0) {
+      errs.amount = 'Amount must be a positive number.';
+    }
+    return errs;
+  };
 
-    const handleClear = () => {
-        setForm(initialForm);
-        setErrors({});
-    };
+  const handleClear = () => {
+    setForm(initialForm);
+    setErrors({});
+  };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value, type } = e.target;
-        if (type === 'checkbox' && e.target instanceof HTMLInputElement) {
-          setForm((prev) => ({ ...prev, [name]: (e.target as HTMLInputElement).checked }));
-        } else {
-          setForm((prev) => ({ ...prev, [name]: value }));
-        }
-    };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target;
+    if (type === 'checkbox' && e.target instanceof HTMLInputElement) {
+      setForm((prev) => ({ ...prev, [name]: (e.target as HTMLInputElement).checked }));
+    } else {
+      setForm((prev) => ({ ...prev, [name]: value }));
+    }
+  };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const errs = validate();
-        setErrors(errs);
-        if (Object.keys(errs).length > 0) return;
-        setIsSubmitting(true);
-        
-        onSubmit({
-          name: form.name.trim(),
-          description: form.description.trim(),
-          amount: Number(form.amount),
-          createdBy: userId ?? '',
-        });
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const errs = validate();
+    setErrors(errs);
+    if (Object.keys(errs).length > 0) return;
+    setIsSubmitting(true);
 
-        setIsSubmitting(false);
-      };
-    
-      const handleOverlayClick = (e: React.MouseEvent) => {
-        if (e.target === e.currentTarget && !isSubmitting) {
-          onClose();
-        }
-      };
-  
-    return (
-        <div className="modal-overlay" onClick={handleOverlayClick}>
-          <div className="modal-content">
-            <div className="modal-header">
-              <h2 className="modal-title">Create Medical Supply</h2>
-              <button className="modal-close" onClick={onClose} disabled={isSubmitting}>
-                <IconClose />
-              </button>
-            </div>
-            <form className="modal-body" onSubmit={handleSubmit}>
-              <div className="modal-column">
-                <div className="detail-row">
-                  <label htmlFor="MedicalSupplyName" className="detail-label">Name</label>
-                  <input
-                    id="MedicalSupplyName"
-                    className="input-field"
-                    name="name"
-                    value={form.name}
-                    onChange={handleChange}
-                    disabled={isSubmitting}
-                    maxLength={100}
-                    placeholder="Enter medical supply name"
-                    required
-                  />
-                  {errors.name && <div className="error-message">{errors.name}</div>}
-                </div>
-                <div className="detail-row">
-                  <label htmlFor="MedicalSupplyAmount" className="detail-label">Amount</label>
-                  <input
-                    id="MedicalSupplyAmount"
-                    className="input-field"
-                    name="amount"
-                    type="number"
-                    min="1"
-                    value={form.amount}
-                    onChange={handleChange}
-                    disabled={isSubmitting}
-                    placeholder="Enter amount in stock"
-                    required
-                  />
-                  {errors.amount && <div className="error-message">{errors.amount}</div>}
-                </div>
-                <div className="detail-row full-width">
-                  <label htmlFor="createdById" className="detail-label">Created By Id</label>
-                  <input
-                    id="createdById"
-                    className="input-field"
-                    name="createdById"
-                    type="text"
-                    value={userId ?? ''}
-                    readOnly
-                    required
-                  />
-                </div>
-                <div className="detail-row full-width">
-                <label htmlFor="MedicalSupplyDescription" className="detail-label">Description</label>
-                <textarea
-                  id="MedicalSupplyDescription"
-                  className="input-field detail-description"
-                  name="description"
-                  value={form.description}
-                  onChange={handleChange}
-                  maxLength={500}
-                  disabled={isSubmitting}
-                  required
-                  placeholder="Enter medical supply description"
-                />
-                {errors.description && <div className="error-message">{errors.description}</div>}
-              </div>
-    
-              <div className="detail-row full-width">
-                <div className="modal-footer button-row-right">
-                  <button type="button" className="button button-secondary" onClick={handleClear} disabled={isSubmitting} style={{ marginRight: '12px' }}>
-                    Clear
-                  </button>
-                  <button type="submit" className="button button-primary" disabled={isSubmitting}>
-                    {isSubmitting ? 'Submitting...' : 'Submit'}
-                  </button>
-                </div>
-              </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      );
+    onSubmit({
+      name: form.name.trim(),
+      description: form.description.trim(),
+      amount: Number(form.amount),
+      createdBy: userId ?? '',
+    });
+
+    setIsSubmitting(false);
+  };
+
+  const handleOverlayClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget && !isSubmitting) {
+      onClose();
+    }
+  };
+
+  return (
+    <Modal title="Create Medical Supply" onClose={onClose} isBusy={isSubmitting}>
+      <ModalForm onSubmit={handleSubmit}>
+        <ModalGrid>
+          <ModalField label="Name" htmlFor="MedicalSupplyName" error={errors.name}>
+            <input
+              id="MedicalSupplyName"
+              className={inputStyles.inputField}
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              disabled={isSubmitting}
+              maxLength={100}
+              placeholder="Enter medical supply name"
+              required
+            />
+          </ModalField>
+
+          <ModalField label="Amount" htmlFor="MedicalSupplyAmount" error={errors.amount}>
+            <input
+              id="MedicalSupplyAmount"
+              className={inputStyles.inputField}
+              name="amount"
+              type="number"
+              min="1"
+              value={form.amount}
+              onChange={handleChange}
+              disabled={isSubmitting}
+              placeholder="Enter amount in stock"
+              required
+            />
+          </ModalField>
+
+          <ModalReadOnly label="Created By Id" fullWidth>
+            {userId ?? ''}
+          </ModalReadOnly>
+
+          <ModalField
+            label="Description"
+            htmlFor="MedicalSupplyDescription"
+            error={errors.description}
+            fullWidth
+          >
+            <textarea
+              id="MedicalSupplyDescription"
+              className={`${inputStyles.inputField} ${inputStyles.detailDescription}`}
+              name="description"
+              value={form.description}
+              onChange={handleChange}
+              maxLength={500}
+              disabled={isSubmitting}
+              required
+              placeholder="Enter medical supply description"
+              rows={4}
+            />
+          </ModalField>
+        </ModalGrid>
+
+        <ModalFooter>
+          <button
+            type="button"
+            className="button button-secondary"
+            onClick={handleClear}
+            disabled={isSubmitting}
+          >
+            Clear
+          </button>
+          <button type="submit" className="button button-primary" disabled={isSubmitting}>
+            {isSubmitting ? 'Submitting...' : 'Submit'}
+          </button>
+        </ModalFooter>
+      </ModalForm>
+    </Modal>
+  );
 }

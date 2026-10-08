@@ -1,7 +1,7 @@
 import React from 'react';
 import { MedicineDetailsViewModel } from '../../feature/API/MedicineService';
-import { IconClose } from '../IconList';
 import { StatusBadge } from '../StatusBadge';
+import Modal from '../GenericModal';
 
 interface MedicalSupplyViewDetailModalProps {
   medicalSupply: MedicineDetailsViewModel;
@@ -12,22 +12,11 @@ interface MedicalSupplyViewDetailModalProps {
 export const MedicalSupplyViewDetailModal: React.FC<MedicalSupplyViewDetailModalProps> = ({ medicalSupply, isOpen, onClose }) => {
   if (!isOpen) return null;
 
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
+ 
 
   return (
-    <div className="modal-overlay" onClick={handleOverlayClick}>
-      <div className="modal-content">
-        <div className="modal-header">
-          <h2 className="modal-title">Medical Supply Details</h2>
-          <button className="modal-close" onClick={onClose}>
-            <IconClose />
-          </button>
-        </div>
-        <div id="medical-supply-detail" className="modal-body">
+        <Modal title="Medical Supply Detail" onClose={onClose} isBusy={false}>
+    
           <div className="modal-group modal-row full-width">
             <p><strong>Name:</strong> {medicalSupply.name}</p>
             <p><strong>ID:</strong> {medicalSupply.id}</p>
@@ -39,8 +28,7 @@ export const MedicalSupplyViewDetailModal: React.FC<MedicalSupplyViewDetailModal
             <p><strong>Description:</strong></p>
             <div className="detail-value detail-description">{medicalSupply.description}</div>
           </div>         
-        </div>
-      </div>
-    </div>
+        </Modal>
+     
   );
 };

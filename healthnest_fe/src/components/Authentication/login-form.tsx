@@ -42,7 +42,7 @@ export const LoginForm = ({ handleInputChange, handleSubmit, isLoading, error }:
           />
         </div>
         
-        <button className='primary-btn' type='submit' disabled={isLoading}>
+        <button className={`button-primary button ${loginStyles.fullWidthBtn}`} type='submit' disabled={isLoading}>
           {isLoading ? 'Logging in...' : 'Login'}
         </button>
       </form>

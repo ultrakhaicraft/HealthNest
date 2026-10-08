@@ -3,7 +3,7 @@ import { IconFilter, IconPlus, IconView, IconEdit, IconDelete } from "../IconLis
 import { PaginationControls } from "../PaginationControls";
 import { StatusBadge } from "../StatusBadge";
 import { MedicalSupplyFilter } from "./MedicalSupplyFilter";
-import styles from "../../../CSS/Nurse/NurseCRUDPanel.module.css"
+import styles from "../../CSS/Nurse/NurseCRUDPanel.module.css"
 
 
 interface PaginationState {

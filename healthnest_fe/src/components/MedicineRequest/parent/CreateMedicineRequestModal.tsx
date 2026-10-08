@@ -66,7 +66,7 @@ const CreateMedicineRequestModal: React.FC<CreateMedicineRequestModalProps> = ({
 
     setIsSubmitting(true);
     try {
-      await onSubmit({
+      onSubmit({
         forStudent: form.forStudent.trim(),
         description: form.description.trim(),
         requestBy: requesterId,

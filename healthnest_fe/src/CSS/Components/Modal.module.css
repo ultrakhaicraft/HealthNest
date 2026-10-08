@@ -113,6 +113,13 @@
   white-space: pre-wrap; /* keeps the line breaks the parent typed */
 }
 
+/* Custom row for right-aligned modal footer buttons with gap */
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 1.5rem;
+}
 
 /* Responsive Styles */
 
