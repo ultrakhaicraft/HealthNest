@@ -164,4 +164,10 @@
   display: flex;
   justify-content: flex-end;
   margin-top: 1rem;
+  gap: 10px;
 }
+
+   .loadingBox {
+     text-align: center;
+     padding: 2rem;
+   }

@@ -15,7 +15,7 @@ const apiClient = axios.create({
 });
 
 
-// Global 401 handling: session expired -> clear local UI state, go to login
+// Handle session expired -> clear local UI state, go to login
 apiClient.interceptors.response.use(
   (res) => res,
   (error) => {

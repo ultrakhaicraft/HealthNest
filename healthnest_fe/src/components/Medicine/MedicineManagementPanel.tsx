@@ -3,6 +3,7 @@ import { IconPlus, IconView, IconEdit, IconDelete, IconFilter } from "../IconLis
 import { PaginationControls } from "../PaginationControls";
 import { StatusBadge } from "../StatusBadge";
 import { MedicineFilter } from "./MedicineFilter";
+import styles from "../../CSS/Nurse/NurseCRUDPanel.module.css"
 
 interface PaginationState {
   currentPage: number;
@@ -35,41 +36,44 @@ export const MedicineCRUDPanel = ({
   onView, onEdit, onDelete, onCreate }: 
   MedicineCRUDPanelProps) => {
   return (
-    <div className="crud-container">
-      <div className="crud-header">
+    <div className={styles.crudContainer}>
+      <div className={styles.crudHeader}>
         <div>
-          <h2 className="crud-title">Medicine Management Panel</h2>
-          <p className="crud-subtitle">Manage medicine inventory and records</p>
+          <h2 className={styles.crudTitle}>Medicine Management Panel</h2>
+          <p className={styles.crudSubtitle}>Manage medicine inventory and records</p>
         </div>
-        <div className="crud-actions">
-            <button className="button button-secondary button-small" onClick={filterState.onToggle}>
-              <IconFilter />
-              {filterState.show ? 'Hide Filters' : 'Show Filters'}
-            </button>
-            <button className="button button-primary button-small" onClick={onCreate}>
+        <div className={styles.crudActions}>
+          <button className="button button-secondary button-large" onClick={filterState.onToggle}>
+            <IconFilter />
+            {filterState.show ? 'Hide Filters' : 'Show Filters'}
+          </button>
+          <button className="button button-primary button-large" onClick={onCreate}>
             <IconPlus />
             Create Medicine
-            </button>
+          </button>
         </div>
       </div>
+
       {filterState.show && (
-        <MedicineFilter 
-        filters={filterState.value}
-        onClearFilters={filterState.onClear} 
-        onApplyFilters={filterState.onApply} />
+        <MedicineFilter
+          filters={filterState.value}
+          onClearFilters={filterState.onClear}
+          onApplyFilters={filterState.onApply}
+        />
       )}
-      <div className="crud-table-wrapper">
-        <div className="crud-table-info">
+
+      <div className={styles.crudTableWrapper}>
+        <div className={styles.crudTableInfo}>
           <span>Total: {pagination.totalItems} items</span>
           <span>Page {filterState.value.PageIndex || 1} of {pagination.totalPages}</span>
         </div>
-        <table className="crud-table">
+        <table className={styles.crudTable}>
           <thead>
             <tr>
               <th>ID</th>
               <th>Name</th>
               <th>Amount</th>
-              <th>Status</th> 
+              <th>Status</th>
               <th>Created By</th>
               <th>Action</th>
             </tr>
@@ -77,14 +81,14 @@ export const MedicineCRUDPanel = ({
           <tbody>
             {loading && (
               <tr>
-                <td colSpan={6} style={{textAlign: 'center', padding: '2rem'}}>
+                <td colSpan={6} className={styles.loadingBox}>
                   Loading medicines data...
                 </td>
               </tr>
             )}
             {medicineData.length === 0 && !loading && (
               <tr>
-                <td colSpan={6} style={{textAlign: 'center', padding: '2rem'}}>
+                <td colSpan={6} className={styles.loadingBox}>
                   No medicine data found
                 </td>
               </tr>
@@ -96,21 +100,30 @@ export const MedicineCRUDPanel = ({
                 <td>{medicine.amount}</td>
                 <td><StatusBadge status={medicine.isAvailable ? 'Available' : 'Unavailable'} /></td>
                 <td>{medicine.createdByName}</td>
-                <td><div className="action-buttons">
-                    <button className="action-button" onClick={() => onView(medicine.id)} disabled={loading}>
+                <td>
+                  <div className={styles.actionButtons}>
+                    <button className={styles.actionButton} onClick={() => onView(medicine.id)} disabled={loading}>
                       <IconView />
                     </button>
-                    <button className="action-button" onClick={() => onEdit(medicine)} disabled={loading}><IconEdit /></button>
-                    <button className="action-button action-delete" onClick={() => onDelete(medicine.id)} disabled={loading}>
+                    <button className={styles.actionButton} onClick={() => onEdit(medicine)} disabled={loading}>
+                      <IconEdit />
+                    </button>
+                    <button
+                      className={`${styles.actionButton} ${styles.actionDelete}`}
+                      onClick={() => onDelete(medicine.id)}
+                      disabled={loading}
+                    >
                       <IconDelete />
                     </button>
-                  </div></td>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <PaginationControls 
+
+      <PaginationControls
         currentPage={pagination.currentPage}
         totalPages={pagination.totalPages}
         onPageChange={pagination.onPageChange}

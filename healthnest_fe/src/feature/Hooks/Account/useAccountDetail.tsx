@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { AccountDetail, accountService, GetAllAccountsParams } from '../../API/AccountService';
+import { AccountDetail, GetAllAccountsParams } from '../../../models/AccountModel';
+import { accountService } from '../../API/AccountService';
 
 export const  useAccountDetail =()=> {
   const [accountDetail, setAccountDetail] = useState<AccountDetail | null>(null);

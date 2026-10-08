@@ -3,7 +3,7 @@ import { MedicineCreateModel, MedicineService } from '../../feature/API/Medicine
 import { IconClose } from '../IconList';
 import { useUserId } from '../../feature/Hooks/Account/AccountHooks';
 import Modal, { ModalForm, ModalGrid, ModalField, ModalReadOnly, ModalFooter } from '../GenericModal';
-import inputStyles from '../../../CSS/InputField.module.css';
+import inputStyles from '../../CSS/InputField.module.css';
 
 
 interface CreateMedicineModalProps {

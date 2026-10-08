@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { IncidentRecordCreate } from '../../feature/API/IncidentRecordService';
 import { IconClose } from '../IconList';
 import { useUserId } from '../../feature/Hooks/Account/AccountHooks';
+import Modal, { ModalForm, ModalField, ModalFooter } from '../GenericModal';
+import inputStyles from '../../CSS/InputField.module.css';
 
 interface CreateIncidentRecordModalProps {
   isOpen: boolean;
@@ -19,7 +21,7 @@ const initialForm = {
   status: '',
 };
 
-const CreateIncidentRecordModal: React.FC<CreateIncidentRecordModalProps> = ({ isOpen, onClose, onSubmit, onError }) => {
+const CreateIncidentRecordModal: React.FC<CreateIncidentRecordModalProps> = ({ isOpen, onClose, onSubmit }) => {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -43,7 +45,7 @@ const CreateIncidentRecordModal: React.FC<CreateIncidentRecordModalProps> = ({ i
     if (!form.dateOccurred) {
       errs.dateOccurred = 'Date occurred is required.';
     }
-    
+
     return errs;
   };
 
@@ -63,110 +65,92 @@ const CreateIncidentRecordModal: React.FC<CreateIncidentRecordModalProps> = ({ i
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
     setIsSubmitting(true);
-    
-     onSubmit({
-      studentId: form.studentId.trim(),
-      incidentType: form.incidentType.trim(),
-      description: form.description.trim(),
-      dateOccurred: form.dateOccurred,
-      status: "Active",
-      handleBy: userId || '', //Temporarily make the creator will be the handler of the incident record
-    });
 
-    setIsSubmitting(false);
-  };
+    try {
+      onSubmit({
+        studentId: form.studentId.trim(),
+        incidentType: form.incidentType.trim(),
+        description: form.description.trim(),
+        dateOccurred: form.dateOccurred,
+        status: "Active",
+        handleBy: userId || '', //Temporarily make the creator will be the handler of the incident record
+      });
 
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget && !isSubmitting) {
-      onClose();
+    } finally {
+      setIsSubmitting(false);
     }
+    
   };
+
+ 
 
   return (
-    <div className="modal-overlay" onClick={handleOverlayClick}>
-      <div className="modal-content">
-        <div className="modal-header">
-          <h2 className="modal-title">Create Incident Record</h2>
-          <button className="modal-close" onClick={onClose} disabled={isSubmitting}>
-            <IconClose />
+     <Modal title="Create Incident Record" onClose={onClose} isBusy={isSubmitting}>
+      <ModalForm onSubmit={handleSubmit}>
+        <ModalField label="Student ID" htmlFor="student-id" error={errors.studentId}>
+          <input
+            id="student-id"
+            className={inputStyles.inputField}
+            name="studentId"
+            value={form.studentId}
+            onChange={handleChange}
+            disabled={isSubmitting}
+            placeholder="Enter Student ID"
+            required
+          />
+        </ModalField>
+
+        <ModalField label="Incident" htmlFor="incident-type" error={errors.incidentType}>
+          <input
+            id="incident-type"
+            className={inputStyles.inputField}
+            name="incidentType"
+            value={form.incidentType}
+            onChange={handleChange}
+            disabled={isSubmitting}
+            placeholder="Enter injury or incident type"
+            required
+          />
+        </ModalField>
+
+        <ModalField label="Date Occurred" htmlFor="date-occurred" error={errors.dateOccurred}>
+          <input
+            id="date-occurred"
+            className={inputStyles.inputField}
+            name="dateOccurred"
+            type="datetime-local"
+            value={form.dateOccurred}
+            onChange={handleChange}
+            disabled={isSubmitting}
+            required
+          />
+        </ModalField>
+
+        <ModalField label="Description" htmlFor="incident-description" error={errors.description}>
+          <textarea
+            id="incident-description"
+            className={inputStyles.textareaField}
+            name="description"
+            rows={5}
+            value={form.description}
+            onChange={handleChange}
+            maxLength={500}
+            disabled={isSubmitting}
+            placeholder="Enter a detailed description of the incident (what happened, how it happened, and any other relevant details)."
+            required
+          />
+        </ModalField>
+
+        <ModalFooter>
+          <button type="button" className="button button-secondary" onClick={handleClear} disabled={isSubmitting}>
+            Clear
           </button>
-        </div>
-        <form className="modal-body" onSubmit={handleSubmit}>
-          <div className="modal-column">
-            <div className="detail-row">
-              <label htmlFor="studentId" className="detail-label">Student ID</label>
-              <input
-                id="studentId"
-                className="input-field"
-                name="studentId"
-                value={form.studentId}
-                onChange={handleChange}
-                disabled={isSubmitting}
-                placeholder="Enter Student ID"
-                required
-              />
-              {errors.studentId && <div className="error-message">{errors.studentId}</div>}
-            </div>
-            <div className="detail-row">
-              <label htmlFor="incidentType" className="detail-label">Incident</label>
-              <input
-                id="incidentType"
-                className="input-field"
-                name="incidentType"
-                value={form.incidentType}
-                onChange={handleChange}
-                disabled={isSubmitting}
-                placeholder="Enter injury or incident type"
-                required
-              />
-              {errors.incidentType && <div className="error-message">{errors.incidentType}</div>}
-            </div>
-
-            <div className="detail-row">
-              <label htmlFor="dateOccurred" className="detail-label">Date Occurred</label>
-              <input
-                id="dateOccurred"
-                className="input-field"
-                name="dateOccurred"
-                type="datetime-local"
-                value={form.dateOccurred}
-                onChange={handleChange}
-                disabled={isSubmitting}
-                required
-              />
-              {errors.dateOccurred && <div className="error-message">{errors.dateOccurred}</div>}
-            </div>
-
-          
-          <div className="detail-row full-width">
-            <label htmlFor="description" className="detail-label">Description</label>
-            <textarea
-              id="description"
-              className="input-field detail-description"
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              maxLength={500}
-              disabled={isSubmitting}
-              placeholder="Enter a detailed description of the incident (What happened, how it happened, and any other relevant details)."
-              required
-            />
-            {errors.description && <div className="error-message">{errors.description}</div>}
-          </div>
-          <div className="detail-row full-width">
-            <div className="modal-footer button-row-right">
-              <button type="button" className="button button-secondary" onClick={handleClear} disabled={isSubmitting} style={{ marginRight: '12px' }}>
-                Clear
-              </button>
-              <button type="submit" className="button button-primary" disabled={isSubmitting}>
-                {isSubmitting ? 'Submitting...' : 'Submit'}
-              </button>
-            </div>
-          </div>
-          </div>
-        </form>
-      </div>
-    </div>
+          <button type="submit" className="button button-primary" disabled={isSubmitting}>
+            {isSubmitting ? 'Submitting...' : 'Submit'}
+          </button>
+        </ModalFooter>
+      </ModalForm>
+    </Modal>
   );
 };
 

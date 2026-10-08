@@ -1,5 +1,6 @@
-import { AccountView } from "../../../feature/API/AccountService";
+import { AccountView } from "../../../models/AccountModel";
 import { IconPlus } from "../../IconList";
+import styles from '../../../CSS/Parent/LinkingWithStudent.module.css'
 
 interface StudentListItemProps {
     student: AccountView;
@@ -9,12 +10,12 @@ const StudentListItem = ({ student, handleLink }: StudentListItemProps) => {
 
 
     return (
-        <div className="student-list-item">
-            <div className="student-info">
-                <img src="/assets/PRN_Avatar.svg" alt={student.fullName} className="student-avatar" />
+        <div className={styles.studentListItem}>
+            <div className={styles.studentInfo}>
+                <img src="/assets/PRN_Avatar.svg" alt={student.fullName} className={styles.studentAvatar} />
                 <div>
-                    <div className="student-name">{student.fullName}</div>
-                    <div className="student-email">{student.email}</div>
+                    <div className={styles.studentName}>{student.fullName}</div>
+                    <div className={styles.studentEmail}>{student.email}</div>
                 </div>
             </div>
             <button className="button button-primary" onClick={() => handleLink(student)}>

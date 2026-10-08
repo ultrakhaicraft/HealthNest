@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import apiClient from "../../ApiClient";
 import { AuthUser } from "../../../models/AccountModel";
 import { useAuth } from "../../API/LoginService";
 

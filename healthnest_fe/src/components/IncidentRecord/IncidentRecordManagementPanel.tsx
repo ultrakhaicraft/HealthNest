@@ -5,7 +5,7 @@ import { IconFilter, IconPlus, IconView, IconEdit, IconDelete } from "../IconLis
 import { PaginationControls } from "../PaginationControls";
 import { StatusBadge } from "../StatusBadge";
 import { IncidentRecordFilter } from "./IncidentRecordFilter";
-import styles from "../../../CSS/Nurse/NurseCRUDPanel.module.css"
+import styles from '../../CSS/Nurse/NurseCRUDPanel.module.css';
 
 
 
@@ -47,11 +47,11 @@ export const IncidentRecordCRUDPanel = ({
           <p className={styles.crudSubtitle}>Manage student incident records and reports such as create, update, and delete</p>
         </div>
         <div className={styles.crudActions}>
-          <button className="button button-secondary button-small" onClick={filterState.onToggle}>
+          <button className="button button-secondary button-large" onClick={filterState.onToggle}>
                       <IconFilter />
                       {filterState.show ? 'Hide Filters' : 'Show Filters'}
           </button>
-          <button className="button button-primary button-small" onClick={onCreate}>
+          <button className="button button-primary button-large" onClick={onCreate}>
             <IconPlus />
             Create Incident Record
           </button>

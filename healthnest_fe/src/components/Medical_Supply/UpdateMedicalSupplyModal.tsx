@@ -91,11 +91,7 @@ const UpdateMedicalSupplyModal: React.FC<UpdateMedicalSupplyModalProps> = ({ isO
 
   };
 
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget && !isSubmitting) {
-      onClose();
-    }
-  };
+
 
   return (
     <Modal title="Update Medical Supply" onClose={onClose} isBusy={isSubmitting}>

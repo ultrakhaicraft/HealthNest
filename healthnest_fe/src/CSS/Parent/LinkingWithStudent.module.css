@@ -1,0 +1,124 @@
+/* Search Form */
+.searchFormContainer {
+    display: flex;
+    gap: 1rem;
+    background-color: white;
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    margin-bottom: 2rem;
+}
+
+.searchInputWrapper {
+    position: relative;
+    flex-grow: 1;
+}
+
+.searchInput {
+    width: 100%;
+    height: 100%;
+    border: none;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    font-size: 1rem;
+    box-sizing: border-box;
+    background-color: transparent;
+}
+
+.searchInput:focus {
+    outline: none;
+}
+
+.searchInputIcon {
+    position: absolute;
+    top: 50%;
+    left: 0.75rem;
+    transform: translateY(-50%);
+    color: #9ca3af;
+}
+
+/* Student List */
+.studentListContainer {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+}
+
+.studentListHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.studentListHeader h2 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.studentListHeader p {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.875rem;
+}
+
+.studentListHeader .icon {
+    color: #4f46e5;
+}
+
+.studentList {
+    display: flex;
+    flex-direction: column;
+}
+
+.studentListItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.studentListItem:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.studentListItem:first-child {
+    padding-top: 0;
+}
+
+.studentInfo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.studentAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 9999px;
+    object-fit: cover;
+}
+
+.studentName {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.studentEmail {
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.button .icon {
+    margin-right: 0.5rem;
+}
+
+.noStudentFound {
+    padding: 1rem;
+    color: #666;
+    font-style: italic;
+    text-align: center;
+}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { MedicalSupplyQuery } from "../../feature/API/MedicalSupplyService";
-import filterStyles from "../../../CSS/Nurse/NurseCRUDPanel.module.css"
+import filterStyles from '../../CSS/Nurse/NurseCRUDPanel.module.css';
 
 
 interface MedicalSupplyFilterProps {
@@ -64,10 +64,10 @@ export const MedicalSupplyFilter = ({ filters, onApplyFilters, onClearFilters }:
       </div>
       
       <div className={filterStyles.filterActions}>
-        <button className="button button-primary button-small" onClick={() => onApplyFilters(filterSettings)}>
+        <button className="button button-primary button-large" onClick={() => onApplyFilters(filterSettings)}>
           Apply Filters
         </button>
-        <button className="button button-secondary button-small" onClick={onClearFilters}>
+        <button className="button button-secondary button-large" onClick={onClearFilters}>
           Clear Filters
         </button>
       </div>

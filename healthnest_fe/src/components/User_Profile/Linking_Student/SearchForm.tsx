@@ -1,4 +1,5 @@
 import { IconSearch } from "../../IconList";
+import styles from '../../../CSS/Parent/LinkingWithStudent.module.css'
 
 interface SearchFormProps {
     searchTerm: string;
@@ -7,9 +8,9 @@ interface SearchFormProps {
 }
 
 const SearchForm = ({ searchTerm, setSearchTerm, onSearch }: SearchFormProps) => (
-    <form className="search-form-container" onSubmit={onSearch}>
-        <div className="search-input-wrapper">
-            <div className="search-input-icon">
+    <form className={styles.searchFormContainer} onSubmit={onSearch}>
+        <div className={styles.searchInputWrapper}>
+            <div className={styles.searchInputIcon}>
                 <IconSearch />
             </div>
             <input
@@ -21,7 +22,7 @@ const SearchForm = ({ searchTerm, setSearchTerm, onSearch }: SearchFormProps) =>
             />
         </div>
         <button type="submit" className="button button-primary">
-            <IconSearch className="icon" />
+            <IconSearch className={styles.icon} />
             Search
         </button>
     </form>

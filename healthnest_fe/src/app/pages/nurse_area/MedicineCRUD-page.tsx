@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import "../../CSS/Nurse/MedicineCRUD.css"
 import {  MedicineCreateModel, MedicineQueryParams, MedicineUpdateModel } from '../../../feature/API/MedicineService';
 import { MedicineViewDetailModal } from '../../../components/Medicine/MedicineViewModal';
 import CreateMedicineModal from '../../../components/Medicine/CreateMedicineModal';

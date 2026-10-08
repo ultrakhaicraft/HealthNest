@@ -44,11 +44,11 @@ export const MedicalSupplyCRUDPanel = ({
               <p className={styles.crudSubtitle}>Manage medical supply inventory and records</p>
             </div>
             <div className={styles.crudActions}>
-                <button className="button button-secondary button-small" onClick={filterState.onToggle}>
+                <button className="button button-secondary button-large" onClick={filterState.onToggle}>
                   <IconFilter />
                   {filterState.show ? 'Hide Filters' : 'Show Filters'}
                 </button>
-                <button className="button button-primary button-small" onClick={onCreate}>
+                <button className="button button-primary button-large" onClick={onCreate}>
                 <IconPlus />
                 Create a Medical Supply item
                 </button>

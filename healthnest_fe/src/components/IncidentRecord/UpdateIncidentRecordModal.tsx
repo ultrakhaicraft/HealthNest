@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { IncidentRecordUpdate, IncidentRecordViewDetail } from '../../feature/API/IncidentRecordService';
 import { IconClose } from '../IconList';
+import inputStyles from '../../CSS/InputField.module.css';
+import Modal, { ModalForm, ModalReadOnly, ModalField, ModalFooter } from '../GenericModal';
 
 interface UpdateIncidentRecordModalProps {
   isOpen: boolean;
@@ -9,16 +11,16 @@ interface UpdateIncidentRecordModalProps {
   onSubmit: (id: string, payload: IncidentRecordUpdate) => void;
   onError: (msg: string) => void;
 }
-const statuses: string[] =["Active","Inactive","Resolved","Hospitalized"];
+const statuses: string[] = ["Active", "Inactive", "Resolved", "Hospitalized"];
 
 const initialForm = {
-    studentId: '',
-    handleBy: '',
-    handleByName:'',
-    incidentType: '',
-    description: '',
-    dateOccurred: '',
-    status: '',
+  studentId: '',
+  handleBy: '',
+  handleByName: '',
+  incidentType: '',
+  description: '',
+  dateOccurred: '',
+  status: '',
 }
 
 const UpdateIncidentRecordModal: React.FC<UpdateIncidentRecordModalProps> = ({ isOpen, incidentRecord, onClose, onSubmit, onError }) => {
@@ -80,135 +82,117 @@ const UpdateIncidentRecordModal: React.FC<UpdateIncidentRecordModalProps> = ({ i
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
     setIsSubmitting(true);
-    
-    onSubmit(incidentRecord.id,{
-      studentId: form.studentId,
-      incidentType: form.incidentType,
-      description: form.description,
-      dateOccurred: form.dateOccurred,
-      status: form.status,
-      handleBy: form.handleBy,
-    });
 
-    setIsSubmitting(false);
-  };
-
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget && !isSubmitting) {
-      onClose();
+    try {
+      onSubmit(incidentRecord.id, {
+        studentId: form.studentId,
+        incidentType: form.incidentType,
+        description: form.description,
+        dateOccurred: form.dateOccurred,
+        status: form.status,
+        handleBy: form.handleBy,
+      });
+    } finally {
+      setIsSubmitting(false);
     }
+
   };
+
+
 
   return (
-    <div className="modal-overlay" onClick={handleOverlayClick}>
-      <div className="modal-content">
-        <div className="modal-header">
-          <h2 className="modal-title">Update Incident Record</h2>
-          <button className="modal-close" onClick={onClose} disabled={isSubmitting}>
-            <IconClose />
-          </button>
-        </div>
-        <form className="modal-body" onSubmit={handleSubmit}>
-          <div className="modal-column">
-            <div className="detail-row">
-              <span className="detail-label">ID</span>
-              <input
-                className="input-field"
-                value={incidentRecord.id}
-                disabled
-                style={{ background: '#f3f4f6', color: '#6b7280' }}
-              />
-            </div>
-            <div className="detail-row">
-              <label htmlFor="handleBy" className="detail-label">Nurse Id</label>
-              <input
-                id="handleBy"
-                className="input-field"
-                name="handleBy"
-                value={form.handleBy}
-                onChange={handleChange}
-                disabled={isSubmitting}
-                placeholder="Enter Nurse Id"
-                required
-              />
-              {errors.handleBy && <div className="error-message">{errors.handleBy}</div>}
-            </div>
-            <div className="detail-row">
-              <label htmlFor="incidentType" className="detail-label">Incident</label>
-              <input
-                id="incidentType"
-                className="input-field"
-                name="incidentType"
-                value={form.incidentType}
-                onChange={handleChange}
-                disabled={isSubmitting}
-                placeholder="Enter injury or incident type"
-                required
-              />
-              {errors.incidentType && <div className="error-message">{errors.incidentType}</div>}
-            </div>
-          </div>
-          <div className="modal-column">
-            <div className="detail-row">
-              <label htmlFor="status" className="detail-label">Status</label>
-              <select
-                id="status"
-                className="input-field"
-                name="status"
-                value={form.status}
-                onChange={handleChange}
-                disabled={isSubmitting}
-                required
-              >
-                <option value="">Select a status...</option>
-                {statuses.map((status) => (
-                  <option key={status} value={status}>
-                    {status}
-                  </option>
-                ))}
-              </select>
-              {errors.status && <div className="error-message">{errors.status}</div>}
-            </div>
-            <div className="detail-row">
-              <label htmlFor="dateOccurred" className="detail-label">Date Occurred</label>
-              <input
-                id="dateOccurred"
-                className="input-field"
-                name="dateOccurred"
-                type="datetime-local"
-                value={form.dateOccurred}
-                onChange={handleChange}
-                disabled={isSubmitting}
-                required
-              />
-              {errors.dateOccurred && <div className="error-message">{errors.dateOccurred}</div>}
-            </div>
-          </div>
-          <div className="detail-row full-width">
-            <label htmlFor="description" className="detail-label">Description</label>
-            <textarea
-              id="description"
-              className="input-field detail-description"
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              maxLength={500}
-              disabled={isSubmitting}
-              placeholder="Enter a detailed description of the incident (What happened, how it happened, and any other relevant details)."
-              required
-            />
-            {errors.description && <div className="error-message">{errors.description}</div>}
-          </div>
-          <div className="detail-row full-width">
-            <div className="modal-footer button-row-right">
-              <button type="submit" className="button button-primary" disabled={isSubmitting}>
-                {isSubmitting ? 'Updating...' : 'Update'}
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
+    <Modal title="Create Incident Record" onClose={onClose} isBusy={isSubmitting}>
+      <ModalForm onSubmit={handleSubmit}>
+
+        <ModalReadOnly label="ID">
+          {incidentRecord.id}
+        </ModalReadOnly>
+
+
+        <ModalField label="Nurse Id" htmlFor="handleBy" error={errors.handleBy}>
+          <input
+            id="handleBy"
+            className={inputStyles.inputField}
+            name="handleBy"
+            value={form.handleBy}
+            onChange={handleChange}
+            disabled={isSubmitting}
+            placeholder="Enter Nurse Id"
+            required
+          />
+        </ModalField>
+
+        <ModalField label="Incident Type" htmlFor="incidentType" error={errors.incidentType}>
+          <input
+            id="incidentType"
+            className={inputStyles.inputField}
+            name="incidentType"
+            value={form.incidentType}
+            onChange={handleChange}
+            disabled={isSubmitting}
+            placeholder="Enter injury or incident type"
+            required
+          />
+        </ModalField>
+
+        <ModalField label="Incident Status" htmlFor="status" error={errors.status}>
+          <select
+            id="status"
+            className={inputStyles.inputField}
+            name="status"
+            value={form.status}
+            onChange={handleChange}
+            disabled={isSubmitting}
+            required
+          >
+            <option value="">Select a status...</option>
+            {statuses.map((status) => (
+              <option key={status} value={status}>
+                {status}
+              </option>
+            ))}
+          </select>
+        </ModalField>
+
+
+        <ModalField label="Date Occurred" htmlFor="dateOccurred" error={errors.dateOccurred}>
+          <input
+            id="dateOccurred"
+            className={inputStyles.inputField}
+            name="dateOccurred"
+            type="datetime-local"
+            value={form.dateOccurred}
+            onChange={handleChange}
+            disabled={isSubmitting}
+            required
+          />
+        </ModalField>
+
+
+        <ModalField label="Description" htmlFor="description" error={errors.description}>
+          <label htmlFor="description" className="detail-label">Description</label>
+          <textarea
+            id="description"
+              className={`${inputStyles.inputField} ${inputStyles.detailDescription}`}
+            name="description"
+            value={form.description}
+            onChange={handleChange}
+            maxLength={500}
+            disabled={isSubmitting}
+            placeholder="Enter a detailed description of the incident (What happened, how it happened, and any other relevant details)."
+            required
+          />
+        </ModalField>
+
+
+          <ModalFooter>
+            <button type="submit" className="button button-primary" disabled={isSubmitting}>
+              {isSubmitting ? 'Updating...' : 'Update'}
+            </button>
+          </ModalFooter>
+        
+      </ModalForm>
+    </Modal>
   );
 };
 

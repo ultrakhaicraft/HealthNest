@@ -53,7 +53,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
       <div className={confirmationModalStyles.confirmationModal}>
         <div className={modalStyles.modalHeader} >
           <h2 className={modalStyles.modalTitle} >{title}</h2>
-          <button className={modalStyles.modalClose}  onClick={onClose} disabled={isLoading}>
+          <button className={modalStyles.closeButton}  onClick={onClose} disabled={isLoading}>
             <IconClose />
           </button>
         </div>

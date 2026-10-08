@@ -1,7 +1,4 @@
 import { useState } from 'react';
-
-import "../../CSS/Nurse/IncidentRecordCRUD.css"
-
 import { IncidentRecordCreate, IncidentRecordQueryParams, IncidentRecordUpdate } from '../../../feature/API/IncidentRecordService';
 import { IncidentRecordViewDetailModal } from '../../../components/IncidentRecord/IncidentRecordViewDetailModal';
 import { ConfirmationModal } from '../../../components/ConfirmationModal';
