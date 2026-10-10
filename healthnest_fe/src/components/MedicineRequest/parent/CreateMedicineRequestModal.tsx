@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { MedicineRequestCreateModel } from '../../../feature/API/MedicineRequestService';
 import { useUserId } from '../../../feature/Hooks/Account/AccountHooks';
-import { AccountView } from '../../../models/AccountModel';
+import { AccountViewModel } from '../../../models/AccountModel';
 import inputStyles from '../../../CSS/InputField.module.css';
 import Modal, { ModalForm, ModalField, ModalFooter } from '../../GenericModal';
 
@@ -23,7 +23,7 @@ const CreateMedicineRequestModal: React.FC<CreateMedicineRequestModalProps> = ({
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [students, setStudents] = useState<AccountView[]>([]); //Keep this useState
+  const [students, setStudents] = useState<AccountViewModel[]>([]); //Keep this useState
   const [isLoadingData, setIsLoadingData] = useState(false); //Keep this useState
   const requesterId = useUserId() ?? '';
 

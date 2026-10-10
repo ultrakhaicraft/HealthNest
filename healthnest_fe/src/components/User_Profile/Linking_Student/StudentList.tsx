@@ -1,12 +1,12 @@
 import { IconGroup } from "../../IconList";
 import StudentListItem from "./StudentListItem";
 import styles from '../../../CSS/Parent/LinkingWithStudent.module.css'
-import { AccountView } from "../../../models/AccountModel";
+import { AccountViewModel } from "../../../models/AccountModel";
 
 
 interface StudentListProps {
-    students: AccountView[];
-    handleLink: (student: AccountView) => void;
+    students: AccountViewModel[];
+    handleLink: (student: AccountViewModel) => void;
 
 }
 

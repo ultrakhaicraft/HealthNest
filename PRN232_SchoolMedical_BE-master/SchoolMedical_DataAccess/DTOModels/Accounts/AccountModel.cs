@@ -42,6 +42,7 @@ public class AccountCreateRequest
 	public string Address { get; set; } = null!;
 	[Required]
 	public string Gender { get; set; } = null!;
+
 	[Required]
 	public DateTime DateOfBirth { get; set; }
 }
@@ -53,8 +54,6 @@ public class AccountUpdateRequest
 	[Required]
 	public string Email { get; set; } = null!;
 	[Required]
-	public string Password { get; set; } = null!;
-	[Required]
 	public string PhoneNumber { get; set; } = null!;
 	[Required]
 	public string Role { get; set; } = null!;
@@ -62,6 +61,7 @@ public class AccountUpdateRequest
 	public string Address { get; set; } = null!;
 	[Required]
 	public string Gender { get; set; } = null!;
+	public string AvatarUrl { get; set; } = null!;
 	[Required]
 	public DateTime DateOfBirth { get; set; }
 }

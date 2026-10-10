@@ -7,7 +7,7 @@ import { accountService } from '../../feature/API/AccountService';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAccountDetail } from '../../feature/Hooks/Account/useAccountDetail';
 import { useUserId, useUserRole } from '../../feature/Hooks/Account/AccountHooks';
-import { AccountUpdateData } from '../../models/AccountModel';
+import { AccountUpdateRequest } from '../../models/AccountModel';
 import styles from '../../CSS/Components/UserProfile.module.css';
 
 export interface IPersonalInfo {
@@ -22,7 +22,7 @@ export default function ParentUserProfile() {
     const navigate = useNavigate();
     const {accountDetail,isStudentExist} = useAccountDetail();
     const [role, setRole] = useState('');
-    const [updatedPersonalInfo, setUpdatedPersonalInfo] = useState<AccountUpdateData | null>(null)
+    const [updatedPersonalInfo, setUpdatedPersonalInfo] = useState<AccountUpdateRequest | null>(null)
     const [isEditMode, setIsEditMode] = useState(false);
     const AccountDetail= useAccountDetail();
 
@@ -49,10 +49,10 @@ export default function ParentUserProfile() {
     //This is where we call update API
     const handleAccountUpdate = async (PersonalInfo: IPersonalInfo) => {
 
-        const storedRole = useUserRole() as AccountUpdateData['role'] | null;
+        const storedRole = useUserRole() as AccountUpdateRequest['role'] | null;
         const storedId = useUserId()
 
-        const newPersonalInfo: AccountUpdateData = {
+        const newPersonalInfo: AccountUpdateRequest = {
             fullName: PersonalInfo.fullName,
             email: PersonalInfo.email,
             phoneNumber: PersonalInfo.phone,

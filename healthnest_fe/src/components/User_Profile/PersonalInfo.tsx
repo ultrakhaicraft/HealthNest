@@ -2,12 +2,12 @@
 import { useState } from 'react';
 import { IconEdit,IconPerson} from '../../components/IconList';
 import { IPersonalInfo } from '../../app/pages/ParentUserProfile-Page';
-import { AccountDetail } from '../../models/AccountModel';
+import { AccountDetailModel } from '../../models/AccountModel';
 import styles from '../../CSS/Components/UserProfile.module.css';
 
 
 interface PersonalInfoProp{
-    account: AccountDetail;
+    account: AccountDetailModel;
     onUpdate:(PersonalInfo:IPersonalInfo) => void;
     isEditMode: boolean;
     setIsEditMode:React.Dispatch<React.SetStateAction<boolean>>;

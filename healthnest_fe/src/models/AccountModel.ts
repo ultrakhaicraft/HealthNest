@@ -4,51 +4,71 @@ export interface AuthUser {
   fullName: string;
 }
 
-export interface GetAllAccountsParams {
-  FullName?: string;
-  Email?: string;
-  Role?: string;
-  Status?: string;
-  PageNumber: number;
-  PageSize: number;
+export interface AccountQuery {
+  email?: string;
+  fullName?: string;
+  role?: string;
+  status?: string;
+  pageNumber: number;
+  pageSize: number;
 }
 
-export interface AccountView {
+
+export interface AccountViewModel {
   id: string;
   fullName: string;
   email: string;
+  gender: string;
   role: string;
-  status: string | null;
-}
-
-export interface AccountDetail extends AccountView {
-  phoneNumber: string;
-  address: string;
-  studentId: string; //String but can be null or empty depend on the response
-  studentName: string;
-  parentId: string;
-  parentName: string;
+  status: string;
 }
 
 
-export interface AccountCreationData {
+
+export interface AccountDetailModel {
+  id: string;
+  fullName?: string;
+  email?: string;
+  phoneNumber?: string;
+  role?: string;
+  address?: string;
+  status?: string;
+  gender?: string;
+  avatarUrl?: string;
+  dateOfBirth: string; // ISO date string or Date object depending on API parsing
+  accountCreationDateTime: string;
+
+  // Frontend properties (kept optional to support existing UI mappings like student/parent links)
+  studentId?: string;
+  studentName?: string;
+  parentId?: string;
+  parentName?: string;
+}
+
+
+
+export interface AccountCreateRequest {
   fullName: string;
   email: string;
   password: string;
   phoneNumber: string;
-  role: 'Student' | 'Parent' | 'SchoolNurse' | 'Manager' | 'Admin' | '';
+  role: string;
   address: string;
-  parentId: string;
+  gender: string;
+  dateOfBirth: string; // or Date
 }
 
 
 
-
-export interface AccountUpdateData {
+export interface AccountUpdateRequest {
   fullName: string;
   email: string;
   phoneNumber: string;
-  role: 'Student' | 'Parent' | 'SchoolNurse' | 'Manager' | 'Admin' | '';
+  role: string;
   address: string;
-  parentId: string;
+  gender: string;
+  avatarUrl: string;
+  dateOfBirth: string; // or Date
 }
+
+

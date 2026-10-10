@@ -1,27 +1,27 @@
 import { useState, useEffect, useCallback } from 'react';
-import { AccountDetail, GetAllAccountsParams } from '../../../models/AccountModel';
+import { AccountDetailModel, AccountQuery } from '../../../models/AccountModel';
 import { accountService } from '../../API/AccountService';
 
-export const  useAccountDetail =()=> {
-  const [accountDetail, setAccountDetail] = useState<AccountDetail | null>(null);
+export const  useAccountDetailModel =()=> {
+  const [AccountDetailModel, setAccountDetailModel] = useState<AccountDetailModel | null>(null);
   const [isStudentExist, setIsStudentExist] = useState<boolean>(true);
-  const defaultQuery: GetAllAccountsParams = {
-    FullName: '',
-    Email: '',
-    Role: '',
-    Status: '',
-    PageNumber: 1,
-    PageSize: 5
+  const defaultQuery: AccountQuery = {
+    fullName: '',
+    email: '',
+    role: '',
+    status: '',
+    pageNumber: 1,
+    pageSize: 5
   };
 
-  const getAccountDetail = useCallback(async () => {
+  const getAccountDetailModel = useCallback(async () => {
     const userId = localStorage.getItem('userId');
     if (!userId) {
       console.warn('User ID not found in localStorage');
       return;
     }
 
-    let result: AccountDetail;
+    let result: AccountDetailModel;
     try {
       result = await accountService.getDetailById(userId); // assignment, no `const`/`let` here
     } catch (error) {
@@ -54,14 +54,14 @@ export const  useAccountDetail =()=> {
       result.studentName = "";
     }
 
-    setAccountDetail(result);
-    localStorage.setItem("accountDetail", JSON.stringify(result));
+    setAccountDetailModel(result);
+    localStorage.setItem("AccountDetailModel", JSON.stringify(result));
 
   }, []);
 
   useEffect(() => {
-    getAccountDetail();
-  }, [getAccountDetail]);
+    getAccountDetailModel();
+  }, [getAccountDetailModel]);
 
-  return { accountDetail, isStudentExist, refetch: getAccountDetail };
+  return { AccountDetailModel, isStudentExist, refetch: getAccountDetailModel };
 }

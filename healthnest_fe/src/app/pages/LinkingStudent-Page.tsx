@@ -7,27 +7,27 @@ import SearchForm from "../../components/User_Profile/Linking_Student/SearchForm
 import StudentList from "../../components/User_Profile/Linking_Student/StudentList";
 import { ConfirmationModal } from "../../components/ConfirmationModal";
 import { useUserId } from "../../feature/Hooks/Account/AccountHooks";
-import { AccountView, GetAllAccountsParams } from "../../models/AccountModel";
+import { AccountQuery, AccountViewModel } from "../../models/AccountModel";
 
 
 const LinkStudentPage = () => {
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
-    const [filteredStudents, setFilteredStudents] = useState<AccountView[]>([]);
-    const [selectedStudent, setSelectedStudent] = useState<AccountView | null>(null);
+    const [filteredStudents, setFilteredStudents] = useState<AccountViewModel[]>([]);
+    const [selectedStudent, setSelectedStudent] = useState<AccountViewModel | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
 
     const getAllStudents = useCallback(async (fullName: string, email: string, pageNumber: number) => {
         try {
             // Create GetAllAccountsParams
-            const queryParam: GetAllAccountsParams = {
-                FullName: fullName,
-                Email: email,
-                Role: 'Student',
-                Status: 'NotLinked',
-                PageNumber: pageNumber,
-                PageSize: 5
+            const queryParam: AccountQuery = {
+                fullName: fullName,
+                email: email,
+                role: 'Student',
+                status: 'NotLinked',
+                pageNumber: pageNumber,
+                pageSize: 5
             };
 
             //Response contain students list
@@ -57,7 +57,7 @@ const LinkStudentPage = () => {
         InItStudents();
     }, [getAllStudents]); // Load students on component mount
 
-    const openConfirmation = (student: AccountView) => {
+    const openConfirmation = (student: AccountViewModel) => {
         setSelectedStudent(student);
         setIsModalOpen(true);
     };

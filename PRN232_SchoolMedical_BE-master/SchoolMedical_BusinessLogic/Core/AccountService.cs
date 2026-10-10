@@ -163,6 +163,13 @@ public class AccountService : IAccountService
 			{
 				throw new NotFoundException("Account not found or already inactive with Id: " + userId);
 			}
+
+			//Only update AvatarUrl if the image file is different or AvatarUrl is null
+			if (account.AvatarUrl==null && account.AvatarUrl!.Equals(request.AvatarUrl))
+			{
+				account.AvatarUrl = request.AvatarUrl;
+			}
+
 			account.FullName = request.FullName;
 			account.Email = request.Email;
 			account.PhoneNumber = request.PhoneNumber;
