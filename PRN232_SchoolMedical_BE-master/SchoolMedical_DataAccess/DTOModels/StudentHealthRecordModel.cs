@@ -1,5 +1,4 @@
 ﻿using HealthNest_DAO.Enums;
-using SchoolMedical_DataAccess.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

@@ -1,0 +1,149 @@
+/* Global Modal Styles */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.label {
+  font-weight: 700;
+  color: #070d16;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dialog {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 32rem;
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background-color: #ffffff;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+              0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+
+.closeButton {
+  padding: 0 0.5rem;
+  border: none;
+  border-radius: 0.25rem;
+  background: transparent;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.closeButton:hover {
+  background-color: #f3f4f6;
+}
+
+.closeButton:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+
+
+.modalBody {
+  display: grid;
+  grid-template-columns: 1fr ;
+  gap: 2rem;
+}
+
+.modalColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 20px;
+}
+
+.field .fullWidth {
+  grid-column: 1 / -1;
+  margin-top: 1rem;
+}
+
+
+/* ---------- Multi-column layout ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.fullRow {
+  grid-column: 1 / -1;
+}
+
+/* ---------- Read-only values ---------- */
+.readOnlyValue {
+  font-size: 1rem;
+  color: #1f2937;
+  overflow-wrap: anywhere;
+}
+
+.readOnlyBlock {
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background-color: #f9fafb;
+  white-space: pre-wrap; /* keeps the line breaks the parent typed */
+}
+
+/* Custom row for right-aligned modal footer buttons with gap */
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 1.5rem;
+}
+
+/* Responsive Styles */
+
+@media (max-width: 780px) {
+  .modal-body {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .dialog {
+    width: 95%;
+    padding: 1.5rem;
+  }
+
+    .grid { grid-template-columns: 1fr; }
+
+  
+}

@@ -25,27 +25,9 @@ public partial class Account
 	public virtual Admin? Admin { get; set; }
 	public virtual Nurse? Nurse { get; set; }
 
+	public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 
 
-
-	//public virtual ICollection<Healthcheckupevent> HealthcheckupeventCreatedByNavigations { get; set; } = new List<Healthcheckupevent>(); //Admin class since they create the event
-	//public virtual ICollection<HealthcheckupeventStudent> HealthcheckupeventStudents { get; set; } = new List<HealthcheckupeventStudent>();  //Most likely related to Student
-	//public virtual ICollection<Vaccineevent> VaccineeventCreatedByNavigations { get; set; } = new List<Vaccineevent>(); //Admin class
-	//public virtual ICollection<VaccineeventStudent> VaccineeventStudents { get; set; } = new List<VaccineeventStudent>(); //Most likely related to Student
-
-	//public virtual ICollection<Incidentrecord> IncidentrecordHandleByNavigations { get; set; } = new List<Incidentrecord>(); //Nurse class
-	//public virtual ICollection<Incidentrecord> IncidentrecordStudents { get; set; } = new List<Incidentrecord>(); //Most likely related to Student
-	// public virtual ICollection<Account> InverseParent { get; set; } = new List<Account>();
-	// public virtual Account? Parent { get; set; } Only Student class make use of Parent data
-	// public virtual ICollection<Medicalsupply> Medicalsupplies { get; set; } = new List<Medicalsupply>(); Only for Nurse class
-	// public virtual ICollection<Medicine> Medicines { get; set; } = new List<Medicine>(); Only for Nurse class
-	//public virtual ICollection<Medicinerequest> MedicinerequestForStudentNavigations { get; set; } = new List<Medicinerequest>(); //Student class
-	//public virtual ICollection<Medicinerequest> MedicinerequestRequestByNavigations { get; set; } = new List<Medicinerequest>(); //Parent class
-
-	//public virtual ICollection<Studenthealthrecord> StudenthealthrecordCreatedByNavigations { get; set; } = new List<Studenthealthrecord>(); // Nurse who authored records — stays a collection
-	//public virtual Studenthealthrecord? StudentHealthRecord { get; set; } // Attach to Student Class
-
-	//public virtual ICollection<Meeting> MeetingStudents { get; set; } = new List<Meeting>(); //Unsure
-	//public virtual ICollection<Meeting> MeetingHandleByNavigations { get; set; } = new List<Meeting>(); //Unsure
+	
 
 }

@@ -8,7 +8,6 @@ using HealthNest_DAO.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
-using SchoolMedical_BusinessLogic.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;

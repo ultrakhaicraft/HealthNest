@@ -33,9 +33,9 @@ public partial class SchoolhealthdbContext : DbContext
 	public virtual DbSet<Vaccinerecord> Vaccinerecords { get; set; }
     public virtual DbSet<Meeting> Meetings { get; set; }
 
+	public virtual DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
 
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Account>(entity =>
         {
@@ -97,8 +97,47 @@ public partial class SchoolhealthdbContext : DbContext
             entity.HasIndex(e => e.Role).HasDatabaseName("IX_Accounts_Role"); // Index for role-based queries
         });
 
+		modelBuilder.Entity<RefreshToken>(entity =>
+		{
+			entity.ToTable("refresh_tokens");
 
-        modelBuilder.Entity<Student>(entity =>
+			entity.HasKey(e => e.Id);
+
+			entity.Property(e => e.Id)
+				.HasMaxLength(36);
+
+			entity.Property(e => e.AccountId)
+				.IsRequired()
+				.HasMaxLength(36);
+
+			entity.Property(e => e.TokenHash)
+				.IsRequired()
+				.HasMaxLength(256);
+
+			entity.Property(e => e.CreatedByIp)
+				.HasMaxLength(45); // Accommodates IPv6 addresses
+
+			entity.Property(e => e.CreatedAt)
+				.HasColumnType("datetime");
+
+			entity.Property(e => e.ExpiresAt)
+				.HasColumnType("datetime");
+
+			entity.Property(e => e.RevokeAt)
+				.HasColumnType("datetime");
+
+			entity.HasOne(a => a.Account)
+			  .WithMany(s => s.RefreshTokens)
+			  .HasForeignKey(s => s.AccountId)
+			  .OnDelete(DeleteBehavior.Cascade)
+			  .HasConstraintName("FK_Account_RefreshTokens");
+
+			// Optional: Index on AccountId for fast lookup during token verification/revocation
+			entity.HasIndex(e => e.AccountId);
+		});
+
+
+		modelBuilder.Entity<Student>(entity =>
         {
 			entity.HasKey(e => e.Id).HasName("PRIMARY"); //Share the same value as Account.Id, basically shared primary key
 

@@ -5,7 +5,6 @@ using HealthNest_DAO.Entities;
 using HealthNest_DAO.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
-using SchoolMedical_BusinessLogic.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,13 +50,13 @@ namespace HealthNest_BusinessLogic.Core
 			return newSupply.Id;
 		}
 		
-
+		//TODO: Perform Pagination in Database itself
 		public async Task<PagingModel<MedicalSupplyViewModel>> GetAllMedicalSupplyAsync(MedicalSupplyQuery request)
         {
 
 
 			var supplies = _medicalSuppliesRepository.Include(m => m.CreatedByNavigation)
-			 .Where(m => m.IsDeleted);
+			 .Where(m => m.IsDeleted==false);
 
 			//Apply filtering and sorting
 			supplies = ApplyFilter(supplies, request.Status, request.Name);
@@ -92,6 +91,7 @@ namespace HealthNest_BusinessLogic.Core
         {
             var entity = await _medicalSuppliesRepository
                 .Include(x => x.CreatedByNavigation)
+				.Include(x => x.CreatedByNavigation.Account)
                 .Where(x => x.Id == id && !x.IsDeleted)
                 .FirstOrDefaultAsync();
 

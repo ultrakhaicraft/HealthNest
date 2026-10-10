@@ -1,0 +1,74 @@
+.dashboardTableContainer {
+  display: flex;
+  gap: 1.5rem;
+  width: 100%;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.dashboardTableWrapper {
+  flex: 1 1 400px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.dashboardTableWrapper > p {
+  margin: 0 0 1.1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e3a8a;
+}
+
+
+.dashboardTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+
+.dashboardTable thead th {
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid #686d75;
+}
+
+.dashboardTable tbody td {
+  font-size: 0.88rem;
+  color: #1e293b;
+  padding: 0.85rem 0.75rem;
+  border-bottom: 1px solid #d0d6db;
+}
+
+.dashboardTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.dashboardTable tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.dashboardTable tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.dashboardTable td:first-child {
+  font-weight: 500;
+}
+
+/* Status badge, reused pattern from status-badge elsewhere in the app */
+.tableStatusBadge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}

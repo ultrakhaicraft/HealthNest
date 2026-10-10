@@ -21,6 +21,7 @@ public static class BusinessLogicDI
 		services.AddRepository();
 		//services.AddAutoMapper(cfg => cfg.AddMaps(typeof(MapperProfile).Assembly)); 
 		services.AddServices(configuration);
+		services.AddFactories();
 	}
 
 	public static void AddRepository(this IServiceCollection services)
@@ -31,7 +32,7 @@ public static class BusinessLogicDI
 
 	}
 
-	public static void AddFactories(this IServiceCollection services, IConfiguration configuration)
+	public static void AddFactories(this IServiceCollection services)
 	{
 		services.AddScoped<IAccountModelFactory, StudentModelFactory>();
 		services.AddScoped<IAccountModelFactory, ParentModelFactory>();

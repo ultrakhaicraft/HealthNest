@@ -3,8 +3,7 @@ using HealthNest_DAO.DTOModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MySqlX.XDevAPI.Common;
-using SchoolMedical_BusinessLogic.Utility;
-using SchoolMedical_DataAccess.Entities;
+
 
 namespace HealthNest_API.Controllers;
 

@@ -1,0 +1,80 @@
+/* CSS styles for the Nurse Navigation Bar */
+/* Different from Parent Navigation bar, because it has different appearance and functionality */
+
+
+.nurseSideNav {
+  width: 240px;
+  background-color: white;
+  padding: 1.5rem 1rem;
+  height: 100vh;
+  position: sticky;
+  top: 0; /* Stick below header */
+  border-right: 1px solid #e5e7eb;
+}
+
+
+.nurseSideNav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navItem, .navItem:focus, .navItem:active {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  color: var(--color-accent-dark);
+  font-weight: 500;
+  margin-bottom: 1rem;
+  transition: background-color 0.2s, color 0.2s;
+  font-size: large;
+}
+
+.navItem:hover, .navItem:focus {
+  background-color: var(--color-accent-dark);
+  color: var(--color-text-light);
+}
+
+.navItem .active {
+  background-color: var(--color-accent-dark);
+  color: var(--color-text-ligh);
+  font-weight: 600;
+}
+
+.navItem svg {
+  margin-right: 0.75rem;
+}
+
+.navItemButton{
+    background: none;
+    border: none;
+    width: 100%; 
+    text-align: left; 
+    /*padding: 0 */
+}
+
+.iconSmall{
+  width: 20px;
+}
+
+.menuIcon{
+  width: 24px;
+  font-size:24px;
+  margin-right: 14px;
+  color: var(--color-accent-dark);
+}
+
+.logoTitle{
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--color-accent-dark);
+}
+
+.logoContainer{
+  display: flex;
+  align-items: center;
+  margin: 0 25px 24px;
+}
+

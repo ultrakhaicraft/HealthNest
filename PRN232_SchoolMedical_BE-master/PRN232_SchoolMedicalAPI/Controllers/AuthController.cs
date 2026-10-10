@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MySqlX.XDevAPI.Common;
 using Org.BouncyCastle.Asn1.Ocsp;
-using PRN232_SchoolMedicalAPI.Helpers;
-using SchoolMedical_DataAccess.Entities;
 using System.Security.Claims;
 
 

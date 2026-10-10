@@ -4,7 +4,6 @@ using HealthNest_DAO.DTOModels.Accounts;
 using HealthNest_DAO.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SchoolMedical_DataAccess.Entities;
 using System.Security.Principal;
 
 namespace HealthNest_API.Controllers;

@@ -19,7 +19,7 @@ namespace SchoolMedical_DataAccess.Migrations
                 .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Account", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Account", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
@@ -88,7 +88,7 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.ToTable("accounts", (string)null);
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Admin", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Admin", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
@@ -104,7 +104,7 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.ToTable("admins", (string)null);
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Healthcheckupevent", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Healthcheckupevent", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
@@ -150,7 +150,7 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.ToTable("healthcheckupevents", (string)null);
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.HealthcheckupeventStudent", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.HealthcheckupeventStudent", b =>
                 {
                     b.Property<string>("HealthcheckupeventId")
                         .HasMaxLength(50)
@@ -177,7 +177,7 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.ToTable("healthcheckupevent_student", (string)null);
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Incidentrecord", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Incidentrecord", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
@@ -219,7 +219,7 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.ToTable("incidentrecords", (string)null);
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Medicalsupply", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Medicalsupply", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
@@ -255,7 +255,7 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.ToTable("medicalsupplies", (string)null);
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Medicine", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Medicine", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
@@ -293,7 +293,7 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.ToTable("medicines", (string)null);
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Medicinerequest", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Medicinerequest", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
@@ -329,7 +329,7 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.ToTable("medicinerequests", (string)null);
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Meeting", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Meeting", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
@@ -374,7 +374,7 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.ToTable("meeting", (string)null);
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Nurse", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Nurse", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
@@ -390,7 +390,7 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.ToTable("nurses", (string)null);
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Parent", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Parent", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
@@ -412,7 +412,43 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.ToTable("parents", (string)null);
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Student", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.RefreshToken", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(36)
+                        .HasColumnType("varchar(36)");
+
+                    b.Property<string>("AccountId")
+                        .IsRequired()
+                        .HasMaxLength(36)
+                        .HasColumnType("varchar(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("CreatedByIp")
+                        .HasMaxLength(45)
+                        .HasColumnType("varchar(45)");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("RevokeAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("refresh_tokens", (string)null);
+                });
+
+            modelBuilder.Entity("HealthNest_DAO.Entities.Student", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
@@ -441,7 +477,7 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.ToTable("students", (string)null);
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Studenthealthrecord", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Studenthealthrecord", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
@@ -509,7 +545,7 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.ToTable("studenthealthrecords", (string)null);
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Treatmentrecord", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Treatmentrecord", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
@@ -542,7 +578,7 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.ToTable("treatmentrecords", (string)null);
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Vaccineevent", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Vaccineevent", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
@@ -588,7 +624,7 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.ToTable("vaccineevents", (string)null);
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.VaccineeventStudent", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.VaccineeventStudent", b =>
                 {
                     b.Property<string>("VaccineeventId")
                         .HasMaxLength(50)
@@ -615,7 +651,7 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.ToTable("vaccineevent_student", (string)null);
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Vaccinerecord", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Vaccinerecord", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
@@ -648,11 +684,11 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.ToTable("vaccinerecords", (string)null);
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Admin", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Admin", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Account", "Account")
+                    b.HasOne("HealthNest_DAO.Entities.Account", "Account")
                         .WithOne("Admin")
-                        .HasForeignKey("SchoolMedical_DataAccess.Entities.Admin", "Id")
+                        .HasForeignKey("HealthNest_DAO.Entities.Admin", "Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_Admin_Account");
@@ -660,9 +696,9 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.Navigation("Account");
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Healthcheckupevent", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Healthcheckupevent", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Admin", "CreatedByNavigation")
+                    b.HasOne("HealthNest_DAO.Entities.Admin", "CreatedByNavigation")
                         .WithMany("HealthcheckupeventCreatedByNavigations")
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -672,16 +708,16 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.Navigation("CreatedByNavigation");
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.HealthcheckupeventStudent", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.HealthcheckupeventStudent", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Healthcheckupevent", "Healthcheckupevent")
+                    b.HasOne("HealthNest_DAO.Entities.Healthcheckupevent", "Healthcheckupevent")
                         .WithMany("HealthcheckupeventStudents")
                         .HasForeignKey("HealthcheckupeventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_HealthcheckupeventStudent_Event");
 
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Student", "Student")
+                    b.HasOne("HealthNest_DAO.Entities.Student", "Student")
                         .WithMany("HealthcheckupeventStudents")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -693,16 +729,16 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Incidentrecord", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Incidentrecord", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Nurse", "HandleByNavigation")
+                    b.HasOne("HealthNest_DAO.Entities.Nurse", "HandleByNavigation")
                         .WithMany("IncidentrecordHandleByNavigations")
                         .HasForeignKey("HandleBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_IncidentRecord_HandleBy");
 
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Student", "Student")
+                    b.HasOne("HealthNest_DAO.Entities.Student", "Student")
                         .WithMany("IncidentrecordStudents")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -714,9 +750,9 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Medicalsupply", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Medicalsupply", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Nurse", "CreatedByNavigation")
+                    b.HasOne("HealthNest_DAO.Entities.Nurse", "CreatedByNavigation")
                         .WithMany("Medicalsupplies")
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -726,9 +762,9 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.Navigation("CreatedByNavigation");
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Medicine", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Medicine", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Nurse", "CreatedByNavigation")
+                    b.HasOne("HealthNest_DAO.Entities.Nurse", "CreatedByNavigation")
                         .WithMany("Medicines")
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -738,16 +774,16 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.Navigation("CreatedByNavigation");
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Medicinerequest", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Medicinerequest", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Student", "ForStudentNavigation")
+                    b.HasOne("HealthNest_DAO.Entities.Student", "ForStudentNavigation")
                         .WithMany("MedicinerequestForStudentNavigations")
                         .HasForeignKey("ForStudent")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_MedicineRequest_ForStudent");
 
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Parent", "RequestByNavigation")
+                    b.HasOne("HealthNest_DAO.Entities.Parent", "RequestByNavigation")
                         .WithMany("MedicinerequestRequestByNavigations")
                         .HasForeignKey("RequestBy")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -759,16 +795,16 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.Navigation("RequestByNavigation");
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Meeting", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Meeting", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Nurse", "HandleByNavigation")
+                    b.HasOne("HealthNest_DAO.Entities.Nurse", "HandleByNavigation")
                         .WithMany("MeetingHandleByNavigations")
                         .HasForeignKey("HandleBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_Meeting_HandleBy");
 
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Student", "Student")
+                    b.HasOne("HealthNest_DAO.Entities.Student", "Student")
                         .WithMany("MeetingStudents")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -780,11 +816,11 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Nurse", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Nurse", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Account", "Account")
+                    b.HasOne("HealthNest_DAO.Entities.Account", "Account")
                         .WithOne("Nurse")
-                        .HasForeignKey("SchoolMedical_DataAccess.Entities.Nurse", "Id")
+                        .HasForeignKey("HealthNest_DAO.Entities.Nurse", "Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_Nurse_Account");
@@ -792,11 +828,11 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.Navigation("Account");
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Parent", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Parent", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Account", "Account")
+                    b.HasOne("HealthNest_DAO.Entities.Account", "Account")
                         .WithOne("Parent")
-                        .HasForeignKey("SchoolMedical_DataAccess.Entities.Parent", "Id")
+                        .HasForeignKey("HealthNest_DAO.Entities.Parent", "Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_Parent_Account");
@@ -804,16 +840,28 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.Navigation("Account");
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Student", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.RefreshToken", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Account", "Account")
+                    b.HasOne("HealthNest_DAO.Entities.Account", "Account")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_Account_RefreshTokens");
+
+                    b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("HealthNest_DAO.Entities.Student", b =>
+                {
+                    b.HasOne("HealthNest_DAO.Entities.Account", "Account")
                         .WithOne("Student")
-                        .HasForeignKey("SchoolMedical_DataAccess.Entities.Student", "Id")
+                        .HasForeignKey("HealthNest_DAO.Entities.Student", "Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_Student_Account");
 
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Parent", "Parent")
+                    b.HasOne("HealthNest_DAO.Entities.Parent", "Parent")
                         .WithMany("Children")
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -824,18 +872,18 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Studenthealthrecord", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Studenthealthrecord", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Nurse", "CreatedByNavigation")
+                    b.HasOne("HealthNest_DAO.Entities.Nurse", "CreatedByNavigation")
                         .WithMany("StudenthealthrecordCreatedByNavigations")
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_StudentHealthRecord_CreatedBy");
 
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Student", "Student")
+                    b.HasOne("HealthNest_DAO.Entities.Student", "Student")
                         .WithOne("StudentHealthRecord")
-                        .HasForeignKey("SchoolMedical_DataAccess.Entities.Studenthealthrecord", "StudentId")
+                        .HasForeignKey("HealthNest_DAO.Entities.Studenthealthrecord", "StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_FK_StudentHealthRecord_Student");
@@ -845,9 +893,9 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Treatmentrecord", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Treatmentrecord", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Studenthealthrecord", "StudentHealthRecord")
+                    b.HasOne("HealthNest_DAO.Entities.Studenthealthrecord", "StudentHealthRecord")
                         .WithMany("Treatmentrecords")
                         .HasForeignKey("StudentHealthRecordId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -857,9 +905,9 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.Navigation("StudentHealthRecord");
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Vaccineevent", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Vaccineevent", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Admin", "CreatedByNavigation")
+                    b.HasOne("HealthNest_DAO.Entities.Admin", "CreatedByNavigation")
                         .WithMany("VaccineeventCreatedByNavigations")
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -869,16 +917,16 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.Navigation("CreatedByNavigation");
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.VaccineeventStudent", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.VaccineeventStudent", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Student", "Student")
+                    b.HasOne("HealthNest_DAO.Entities.Student", "Student")
                         .WithMany("VaccineeventStudents")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_VaccineeventStudent_Student");
 
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Vaccineevent", "Vaccineevent")
+                    b.HasOne("HealthNest_DAO.Entities.Vaccineevent", "Vaccineevent")
                         .WithMany("VaccineeventStudents")
                         .HasForeignKey("VaccineeventId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -890,9 +938,9 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.Navigation("Vaccineevent");
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Vaccinerecord", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Vaccinerecord", b =>
                 {
-                    b.HasOne("SchoolMedical_DataAccess.Entities.Studenthealthrecord", "StudentHealthRecord")
+                    b.HasOne("HealthNest_DAO.Entities.Studenthealthrecord", "StudentHealthRecord")
                         .WithMany("Vaccinerecords")
                         .HasForeignKey("StudentHealthRecordId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -902,7 +950,7 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.Navigation("StudentHealthRecord");
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Account", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Account", b =>
                 {
                     b.Navigation("Admin");
 
@@ -910,22 +958,24 @@ namespace SchoolMedical_DataAccess.Migrations
 
                     b.Navigation("Parent");
 
+                    b.Navigation("RefreshTokens");
+
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Admin", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Admin", b =>
                 {
                     b.Navigation("HealthcheckupeventCreatedByNavigations");
 
                     b.Navigation("VaccineeventCreatedByNavigations");
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Healthcheckupevent", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Healthcheckupevent", b =>
                 {
                     b.Navigation("HealthcheckupeventStudents");
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Nurse", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Nurse", b =>
                 {
                     b.Navigation("IncidentrecordHandleByNavigations");
 
@@ -938,14 +988,14 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.Navigation("StudenthealthrecordCreatedByNavigations");
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Parent", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Parent", b =>
                 {
                     b.Navigation("Children");
 
                     b.Navigation("MedicinerequestRequestByNavigations");
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Student", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Student", b =>
                 {
                     b.Navigation("HealthcheckupeventStudents");
 
@@ -960,14 +1010,14 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.Navigation("VaccineeventStudents");
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Studenthealthrecord", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Studenthealthrecord", b =>
                 {
                     b.Navigation("Treatmentrecords");
 
                     b.Navigation("Vaccinerecords");
                 });
 
-            modelBuilder.Entity("SchoolMedical_DataAccess.Entities.Vaccineevent", b =>
+            modelBuilder.Entity("HealthNest_DAO.Entities.Vaccineevent", b =>
                 {
                     b.Navigation("VaccineeventStudents");
                 });

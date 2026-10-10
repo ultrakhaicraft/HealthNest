@@ -1,0 +1,82 @@
+/* ---------- Base spinner ---------- */
+.spinner {
+  --spinner-track: rgba(0, 123, 255, 0.2);
+  --spinner-color: #007bff;
+
+  border-radius: 50%;
+  border: 4px solid var(--spinner-track);
+  border-top-color: var(--spinner-color);
+  animation: spin 1s linear infinite;
+}
+
+/* ---------- Sizes ---------- */
+.small {
+  width: 24px;
+  height: 24px;
+  border-width: 3px;
+}
+
+.medium {
+  width: 48px;
+  height: 48px;
+  border-width: 5px;
+}
+
+.large {
+  width: 64px;
+  height: 64px;
+  border-width: 6px;
+}
+
+/* ---------- Full page overlay ---------- */
+.fullPageSpinner {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+/* Lighter track so the ring is visible on the dark overlay */
+.fullPageSpinner .spinner {
+  --spinner-track: #d1d5db;
+  --spinner-color: #2563eb;
+}
+
+.spinnerMessage {
+  margin: 1rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  color: #ffffff;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ---------- Animations ---------- */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Slow the motion down for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 2s;
+  }
+  .spinnerMessage {
+    animation: none;
+  }
+}

@@ -1,0 +1,21 @@
+/* Footer */
+.footer {
+  background-color: #eef2fb;
+  padding: 1rem 5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #000000;
+  display: flex;
+  justify-content: space-between;
+  height: 70px;
+}
+
+.footer p {
+  margin: 0 1rem 0 0;
+}
+
+.socialIcons a {
+  margin: 0 0 0 rem;
+  text-decoration: none;
+  font-size: 1.2rem;
+}

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Utilities.Collections;
-using SchoolMedical_BusinessLogic.Utility;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -43,6 +42,7 @@ public class TokenUtils  : ITokenUtils
 
 		var storedRefreshTOken = new RefreshToken
 		{
+			Id =  Guid.NewGuid().ToString(),
 			AccountId = account.Id,
 			CreatedAt = DateTime.UtcNow,
 			ExpiresAt = DateTime.UtcNow.AddDays(Convert.ToDouble(jwtSettings["RefreshTokenExpiryDays"])),
