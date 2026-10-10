@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { IconEdit,IconPerson} from '../../components/IconList';
-import { IPersonalInfo } from '../../app/pages/ParentUserProfile-Page';
+import { IPersonalInfo } from '../../app/pages/parent_area/ParentUserProfile-Page';
 import { AccountDetailModel } from '../../models/AccountModel';
 import styles from '../../CSS/Components/UserProfile.module.css';
 

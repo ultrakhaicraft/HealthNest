@@ -2,9 +2,9 @@ import { useOutletContext } from "react-router-dom";
 import HealthStatus from "../../../components/ParentStudentHomepage/health-status-box";
 import HealthAnnouncements from "../../../components/ParentStudentHomepage/news-box";
 import WelcomeBox from "../../../components/ParentStudentHomepage/welcome-box";
-import { useAccountDetail } from "../../../feature/Hooks/Account/useAccountDetail";
 import { ParentOutletContext } from "./ParentContainerPage";
 import styles from '../../../CSS/Parent/ParentHomepage.module.css'
+import { useAccountDetailModel } from "../../../feature/Hooks/Account/useAccountDetail";
 
 
 
@@ -12,7 +12,7 @@ import styles from '../../../CSS/Parent/ParentHomepage.module.css'
 // Act as first thing to show when parent login, it will show the welcome box, health status and health announcement
 // Kinda like a dashboard for parent, but not really a dashboard, just a homepage for parent
 export default function ParentHomePage(){
-    const {accountDetail,isStudentExist} = useAccountDetail();
+    const {AccountDetailModel: accountDetail,isStudentExist} = useAccountDetailModel();
     const {userType} = useOutletContext<ParentOutletContext>();
 
 
@@ -21,7 +21,6 @@ export default function ParentHomePage(){
             <WelcomeBox
             userType={userType}
             name={accountDetail?.fullName}
-            childName={accountDetail?.studentName}
             avatarSrc="/assets/PRN_Avatar.svg" 
              />
 

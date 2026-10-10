@@ -9,14 +9,15 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { StudentHealthRecordCreationData, StudentHealthRecordService } from '../../../feature/API/StudentHealthRecordService';
 import { Toast } from '../../../components/Notification/Toast';
-import { AccountDetail } from '../../../feature/API/AccountService';
-import { useAccountDetail } from '../../../feature/Hooks/Account/useAccountDetail';
+import { useAccountDetailModel } from '../../../feature/Hooks/Account/useAccountDetail';
+import { AccountDetailModel } from '../../../models/AccountModel';
+
 
 // Create Student Health Record Component - This is the entry point
 export default function CreateStudentHealthRecordPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const {accountDetail} = useAccountDetail();
+  const {AccountDetailModel: accountDetail} = useAccountDetailModel();
 
 
   const [error, setError] = useState<string | null>(null);
@@ -53,7 +54,7 @@ export default function CreateStudentHealthRecordPage() {
     console.log("Start submitting");
     try {
       const stored = accountDetail;
-      let parentData: AccountDetail 
+      let parentData: AccountDetailModel 
       if (stored) {
         parentData = stored
       } else {

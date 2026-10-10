@@ -25,7 +25,7 @@ const ParentHomepage = React.lazy(() => import('./pages/parent_area/ParentHomePa
 const CreateStudentHealthRecordForm = React.lazy(() => import('../app/pages/parent_area/CreateStudentHealthRecord-page'));
 const ViewStudentHealthRecordPage = React.lazy(() => import('../app/pages/parent_area/ViewStudentHealthRecord-page'));
 const ParentMedicineRequestCRUDPage = React.lazy(() => import('./pages/parent_area/ParentMedicineRequestCRUD-page'));
-const ParentUserProfile = React.lazy(() => import('../app/pages/ParentUserProfile-Page'));
+const ParentUserProfile = React.lazy(() => import('./pages/parent_area/ParentUserProfile-Page'));
 const LinkStudentPage = React.lazy(() => import('../app/pages/LinkingStudent-Page'));
 
 //Nurse

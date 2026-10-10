@@ -1,15 +1,13 @@
-import React from 'react';
 import styles from '../../CSS/Parent/ParentHomepage.module.css'
 import { UserRole } from '../../feature/Constant';
 
 interface WelcomeProps {
   name: string|undefined;
-  childName: string|undefined;
   avatarSrc: string;
   userType:string;
 }
 
-function Welcome({ name, childName, avatarSrc, userType }: WelcomeProps) {
+function Welcome({ name, avatarSrc, userType }: WelcomeProps) {
   return (
     <section className={styles.welcomeCard}>
       <img src={avatarSrc} alt="User" className={styles.welcomeAvatar} />
@@ -23,7 +21,6 @@ function Welcome({ name, childName, avatarSrc, userType }: WelcomeProps) {
             <span className={styles.parentIcon} role="img" aria-label="parent icon">👩‍👧</span>
           )}
           {userType === UserRole.Student && 'Class of 10A'}
-          {userType === UserRole.Parent && <> Parent of: <span className={styles.childName}>{childName}</span></>}
         </p>
       </div>
     </section>

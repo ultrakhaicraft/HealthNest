@@ -1,64 +1,62 @@
 import { useState, useEffect } from 'react';
-import {IconUser} from '../../components/IconList';
-import ProfileHeader from '../../components/User_Profile/ProfileHeader';
-import StudentInfo from '../../components/User_Profile/StudentInfo';
-import PersonalInfo from '../../components/User_Profile/PersonalInfo';
-import { accountService } from '../../feature/API/AccountService';
+import {IconUser} from '../../../components/IconList';
+import ProfileHeader from '../../../components/User_Profile/ProfileHeader';
+import StudentInfo from '../../../components/User_Profile/StudentInfo';
+import PersonalInfo from '../../../components/User_Profile/PersonalInfo';
+import { accountService } from '../../../feature/API/AccountService';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAccountDetail } from '../../feature/Hooks/Account/useAccountDetail';
-import { useUserId, useUserRole } from '../../feature/Hooks/Account/AccountHooks';
-import { AccountUpdateRequest } from '../../models/AccountModel';
+import { useUserId, useUserRole } from '../../../feature/Hooks/Account/AccountHooks';
+import { AccountDetailModel, AccountUpdateRequest } from '../../../models/AccountModel';
 import styles from '../../CSS/Components/UserProfile.module.css';
+import { useAccountDetailModel } from '../../../feature/Hooks/Account/useAccountDetail';
+import { ParentDetailModel, UpdateParentModel } from '../../../models/AccountSubclassModels/ParentModel';
+import { StudentViewModel } from '../../../models/AccountSubclassModels/StudentModel';
 
-export interface IPersonalInfo {
-    fullName: string,
-    email: string,
-    phone: string,
-    address: string,
-}
+
 
 // --- User Profile Page Component ---
 export default function ParentUserProfile() {
     const navigate = useNavigate();
-    const {accountDetail,isStudentExist} = useAccountDetail();
+    const { AccountDetailModel: accountDetail, isStudentExist } = useAccountDetailModel();
     const [role, setRole] = useState('');
-    const [updatedPersonalInfo, setUpdatedPersonalInfo] = useState<AccountUpdateRequest | null>(null)
+    const [updatedPersonalInfo, setUpdatedPersonalInfo] = useState<UpdateParentModel | null>(null)
+    const [childList,setChildList] = useState<StudentViewModel[]>([]); //Load parent child list here
     const [isEditMode, setIsEditMode] = useState(false);
-    const AccountDetail= useAccountDetail();
 
 
-    const [formData, setFormData] = useState<IPersonalInfo>({
-        fullName: '',
-        email: '',
-        phone: '',
-        address: '',
-    });
+    const [formData, setFormData] = useState<ParentDetailModel>();
 
-
+    //Load parent account detail and their childrens
     useEffect(() => {
         if (accountDetail) {
             setFormData({
-                fullName: accountDetail.fullName,
-                email: accountDetail.email,
-                phone: accountDetail.phoneNumber,
-                address: accountDetail.address,
+                id: accountDetail.id,
+                fullName: accountDetail.fullName ?? "N/A",
+                email: accountDetail.email ?? "N/A",
+                phoneNumber: accountDetail.phoneNumber ?? "N/A",
+                address: accountDetail.address ?? "N/A",
+                dateOfBirth: accountDetail.dateOfBirth ?? "N/A",
+                accountCreationDateTime: accountDetail.accountCreationDateTime 
             });
         }
     }, []);
 
-    //This is where we call update API
-    const handleAccountUpdate = async (PersonalInfo: IPersonalInfo) => {
+    //Update Parent User Profile
+    const handleAccountUpdate = async (PersonalInfo: ParentDetailModel) => {
 
         const storedRole = useUserRole() as AccountUpdateRequest['role'] | null;
         const storedId = useUserId()
 
         const newPersonalInfo: AccountUpdateRequest = {
-            fullName: PersonalInfo.fullName,
-            email: PersonalInfo.email,
-            phoneNumber: PersonalInfo.phone,
+            fullName: PersonalInfo.fullName!,
+            email: PersonalInfo.email!,
+            phoneNumber: PersonalInfo.phoneNumber!,
             role: storedRole ?? '',
-            address: PersonalInfo.address,
-            parentId: storedId ?? ''
+            address: PersonalInfo.address!,
+            gender: PersonalInfo.gender!,
+            avatarUrl: PersonalInfo.avatarUrl!,
+            dateOfBirth: PersonalInfo.dateOfBirth
+            
         }
 
         const userId = accountDetail?.id ?? "Empty ID";

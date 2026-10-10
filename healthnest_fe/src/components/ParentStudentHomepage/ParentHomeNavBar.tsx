@@ -4,12 +4,12 @@ import styles from "../../CSS/Parent/ParentHomePageNavBar.module.css"
 import { userouteForLabel } from "../../feature/Hooks/Other/RouterHooks";
 import { UserRole } from "../../feature/Constant";
 
-interface UserHomeNavBarProps {
+export interface UserHomeNavBarProps {
   activeItem: string;
   onSelect: (label: string) => void;
 }
 
-const ParentnavItems = [
+const parentNavItems = [
   { label: 'Home' },
   { label: 'Student Health Record' },
   { label: 'Medicine Request' },
@@ -19,10 +19,10 @@ export default function ParentHomeNavBar({ activeItem, onSelect }: UserHomeNavBa
   return (
     <header className={styles.header}>
       <div className={styles.headerContainer}>
-        <div className={styles.logo}>🎓 Starlight Academy</div>
+        <div className={styles.logo}>HealthNest</div>
         <nav className={styles.nav}>
           <ul>
-            {ParentnavItems.map(item => (
+            {parentNavItems.map(item => (
               <li key={item.label}>
                 <button
                   type="button"
@@ -45,7 +45,7 @@ interface ProfileDropdown{
     onSelect: (label: string) => void;
 }
 
-const ProfileDropdown = (onSelect: ProfileDropdown) => {
+export const ProfileDropdown = (onSelect: ProfileDropdown) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
