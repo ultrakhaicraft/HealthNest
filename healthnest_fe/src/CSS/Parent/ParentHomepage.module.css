@@ -1,0 +1,324 @@
+
+
+/*
+.mainContent {
+  flex-grow: 1;
+  width: 100%;
+  max-width: 1200px; 
+  margin: 0 auto; 
+  padding: 20px;
+}*/
+
+
+
+/* Utility for icon placeholders if not using img/svg */
+.iconPlaceholder {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+  font-size: 1.2em;
+}
+
+/* ---------- Site header ---------- */
+.siteHeader {
+  background-color: #ffffff;
+  padding: 15px 0;
+  border-bottom: 1px solid #e5e7eb;
+  width: 100%;
+}
+
+.logoIcon {
+  font-size: 1.8rem;
+  color: #4f46e5;
+  margin-right: 8px;
+}
+
+.logoText {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #4f46e5;
+}
+
+.userProfile .userAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* ---------- Welcome card ---------- */
+.welcomeCard {
+  background-color: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 80%;
+  margin: 40px auto;
+}
+
+.welcomeAvatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.boxWarning {
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  color: #b91c1c;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.welcomeText {
+  flex-grow: 1;
+}
+
+.welcomeGreeting {
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+.welcomeName {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #4f46e5;
+  margin: 4px 0;
+}
+
+.welcomeInfo {
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+.parentIcon {
+  color: #4f46e5;
+  font-size: 1.2em;
+  margin-right: 4px;
+  vertical-align: text-bottom;
+}
+
+.childName {
+  color: #4f46e5;
+  font-weight: 500;
+}
+
+/* ---------- Health status card ---------- */
+.healthStatusCard {
+  background-color: #f0fdf4;
+  border-radius: 12px;
+  padding: 25px;
+  display: flex;
+  gap: 25px;
+  align-items: flex-start;
+  height: fit-content;
+  width: 80%;
+  margin: 40px auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.healthStatusIconArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 120px;
+}
+
+.statusIconWrapper {
+  background-color: #10b981;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.statusIcon {
+  font-size: 2.5rem;
+  color: #ffffff;
+}
+
+.statusText {
+  font-size: 0.9rem;
+  color: #059669;
+  font-weight: 500;
+}
+
+.healthStatusDetails {
+  flex-grow: 1;
+}
+
+.healthStatusTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #047857;
+  margin-bottom: 8px;
+}
+
+.healthCheckupInfo {
+  font-size: 0.95rem;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.checkupDate {
+  font-weight: bold;
+}
+
+.healthDescription {
+  font-size: 0.95rem;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+.healthStatusActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 180px;
+}
+
+.buttonViewReport {
+  background-color: #4f46e5;
+  color: white;
+}
+
+.buttonViewReport:hover {
+  background-color: #4338ca;
+}
+
+.buttonMessageNurse {
+  background-color: #d1fae5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.buttonMessageNurse:hover {
+  background-color: #a7f3d0;
+}
+
+.buttonViewReport .iconPlaceholder,
+.buttonMessageNurse .iconPlaceholder {
+  font-size: 1em;
+}
+
+/* ---------- Health announcements ---------- */
+.healthAnnouncementsSection {
+  margin: 40px auto;
+  width: 80%;
+}
+
+.announcementsHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.announcementsIcon {
+  font-size: 1.8rem;
+  color: #f97316;
+}
+
+.announcementsTitle {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+.announcementsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.announcementCard {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.cardIconWrapper {
+  font-size: 1.5rem;
+}
+
+.cardTitle {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #111827;
+  flex-grow: 1;
+}
+
+.cardTag {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+}
+
+.cardTagUpcoming {
+  background-color: #e0e7ff;
+  color: #4f46e5;
+}
+
+.cardTagAttention {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.cardBody {
+  margin-bottom: 15px;
+  flex-grow: 1;
+}
+
+.cardEventDate {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.cardDescription {
+  font-size: 0.9rem;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-top: 1px solid #f3f4f6;
+  padding-top: 10px;
+  margin-top: auto;
+}
+
+.postedIcon {
+  font-size: 0.9rem;
+  color: #9ca3af;
+}
+
+.cardPostedDate {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}

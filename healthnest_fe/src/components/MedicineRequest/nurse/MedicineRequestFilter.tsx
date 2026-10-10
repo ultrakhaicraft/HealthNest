@@ -107,10 +107,10 @@ export const MedicineRequestFilter = ({ filters, onApplyFilters, onClearFilters,
       </div>
       
       <div className={filterStyles.filterActions}>
-        <button className="button button-primary button-small" onClick={() => onApplyFilters(filterSettings)}>
+        <button className="button button-primary button-large" onClick={() => onApplyFilters(filterSettings)}>
           Apply Filters
         </button>
-        <button className="button button-secondary button-small" onClick={onClearFilters}>
+        <button className="button button-secondary button-large" onClick={onClearFilters}>
           Clear Filters
         </button>
       </div>

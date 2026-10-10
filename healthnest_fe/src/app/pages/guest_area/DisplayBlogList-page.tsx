@@ -2,7 +2,7 @@ import { useState } from "react";
 import Footer from "../../../components/Landing_Page/footer";
 import HomepageNavBar from "../../../components/Landing_Page/homepage-nav-bar";
 import { IconCalendar, IconFilter, IconPageBack, IconPageNext, IconSearch } from "../../../components/IconList";
-import "../../CSS/ViewBlogs.css";
+import styles from '../../../CSS/Guest/Blog/ViewBlog.module.css'
 
 // --- Types ---
 interface Author {
@@ -72,15 +72,15 @@ const BlogListPage = () => {
     const totalPages = 3;
 
     return (
-        <div className="page-container">
-            <header className="page-header">
+        <div className={styles.pageContainer}>
+            <header className= {styles.pageHeader} >
                 <h1>Medical Blog</h1>
                 <p>Stay informed with the latest health tips, medical insights, and wellness advice from our certified medical professionals.</p>
             </header>
             <SearchFilterBar />
-            <div className="latest-articles-header">
+            <div className= {styles.latestArticlesHeader} >
                 <h2>Latest Articles</h2>
-                <span className="results-count">24 articles found</span>
+                <span className={styles.resultsCount} >24 articles found</span>
             </div>
             <ArticleGrid articles={articlesData} />
             <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
@@ -89,15 +89,15 @@ const BlogListPage = () => {
 };
 
 const SearchFilterBar = () => (
-    <div className="filter-bar">
-        <div className="search-input-wrapper">
-            <div className="search-input-icon">
+    <div className= {styles.filterBar} >
+        <div className= {styles.searchInputWrapper} >
+            <div className= {styles.searchInputIcon} >
                 <IconSearch />
             </div>
-            <input type="text" className="search-input" placeholder="Search articles..." />
+            <input type="text" className={styles.searchInput} placeholder="Search articles..." />
         </div>
-        <div className="filter-controls">
-            <select className="category-select">
+        <div className={styles.filterControls}>
+            <select className={styles.categorySelect}>
                 <option>All Categories</option>
                 <option>Nutrition</option>
                 <option>First Aid</option>
@@ -113,7 +113,7 @@ const SearchFilterBar = () => (
 );
 
 const ArticleGrid = ({ articles }: ArticleGridProps) => (
-    <div className="article-grid">
+    <div className= {styles.articleGrid}>
         {articles.map((article) => (
             <ArticleCard key={article.id} article={article} />
         ))}
@@ -121,18 +121,18 @@ const ArticleGrid = ({ articles }: ArticleGridProps) => (
 );
 
 const ArticleCard = ({ article }: ArticleCardProps) => (
-    <a href="#" className="article-card">
-        <img src={article.imageUrl} alt={article.title} className="article-image" />
-        <div className="article-content">
-            <p className="article-category">{article.category}</p>
-            <h3 className="article-title">{article.title}</h3>
-            <p className="article-excerpt">{article.excerpt}</p>
-            <div className="article-meta">
-                <div className="meta-item">
+    <a href="#" className={styles.articleCard} >
+        <img src={article.imageUrl} alt={article.title} className= {styles.articleImage} />
+        <div className={styles.articleContent} >
+            <p className={styles.articleCategory} >{article.category}</p>
+            <h3 className={styles.articleTitle}>{article.title}</h3>
+            <p className={styles.articleExcerpt}>{article.excerpt}</p>
+            <div className={styles.articleMeta}>
+                <div className={styles.metaItem}>
                     <img src={article.author.avatarUrl} alt={article.author.name} className="author-avatar-small" />
                     <span>{article.author.name}</span>
                 </div>
-                <div className="meta-item">
+                <div className={styles.metaItem}>
                     <IconCalendar />
                     <span>{article.date}</span>
                 </div>
@@ -143,20 +143,20 @@ const ArticleCard = ({ article }: ArticleCardProps) => (
 
 const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) => {
     return (
-        <nav className="pagination-container">
-            <button className="pagination-arrow" onClick={() => onPageChange(p => Math.max(1, typeof p === 'function' ? p(currentPage) : p - 1))} disabled={currentPage === 1}>
+        <nav className= {styles.paginationContainer} >
+            <button className= {styles.paginationArrow} onClick={() => onPageChange(p => Math.max(1, typeof p === 'function' ? (currentPage) : p - 1))} disabled={currentPage === 1}>
                 <IconPageBack />
             </button>
             {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                 <button
                     key={page}
-                    className={`pagination-number ${currentPage === page ? 'active' : ''}`}
+                    className={`${styles.paginationNumber} ${currentPage === page ? `${styles.active}` : ''}`}
                     onClick={() => onPageChange(page)}
                 >
                     {page}
                 </button>
             ))}
-            <button className="pagination-arrow" onClick={() => onPageChange(p => Math.min(totalPages, typeof p === 'function' ? p(currentPage) : p + 1))} disabled={currentPage === totalPages}>
+            <button className={styles.paginationArrow} onClick={() => onPageChange(p => Math.min(totalPages, typeof p === 'function' ? (currentPage) : p + 1))} disabled={currentPage === totalPages}>
                 <IconPageNext />
             </button>
         </nav>

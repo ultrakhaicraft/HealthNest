@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { MedicineQueryParams } from "../../feature/API/MedicineService";
+import filterStyles from '../../CSS/Nurse/NurseCRUDPanel.module.css';
 
 interface MedicineFilterProps {
   filters: MedicineQueryParams;
@@ -21,10 +22,10 @@ export const MedicineFilter = ({ filters, onApplyFilters, onClearFilters }: Medi
   };
 
   return (
-    <div className="filter-section">
-      <div className="filter-row">
+    <div className={filterStyles.filterSection}>
+      <div className={filterStyles.filterRow}>
         
-        <div className="filter-group">
+        <div className={filterStyles.filterGroup}>
           <label htmlFor="MedicineId">Medicine Name:</label>
           <input
             id="MedicineId"
@@ -35,7 +36,7 @@ export const MedicineFilter = ({ filters, onApplyFilters, onClearFilters }: Medi
           />
         </div>
         
-        <div className="filter-group">
+        <div className={filterStyles.filterGroup}>
           <label htmlFor="Status">Status:</label>
           <select
             id="Status"
@@ -50,8 +51,8 @@ export const MedicineFilter = ({ filters, onApplyFilters, onClearFilters }: Medi
         </div>
       </div>
       
-      <div className="filter-row">
-        <div className="filter-group">
+       <div className={filterStyles.filterRow}>
+        <div className={filterStyles.filterGroup}>
           <label htmlFor="SortNameByDescending">Sort By Name (Descending):</label>
           <select
             id="SortNameByDescending"
@@ -64,7 +65,7 @@ export const MedicineFilter = ({ filters, onApplyFilters, onClearFilters }: Medi
         </div>
       </div>
       
-      <div className="filter-actions">
+      <div className={filterStyles.filterActions}>
         <button className="button button-primary button-large" onClick={() => onApplyFilters(filterDraft)}>
           Apply Filters
         </button>

@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from '../../CSS/Parent/ParentHomepage.module.css'
 
 
 
@@ -25,16 +26,20 @@ const announcementsData = [
   },
 ];
 
+const tagClassByType: Record<string, string> = {
+  upcoming: styles.cardTagUpcoming,
+  attention: styles.cardTagAttention,
+};
+
 
 function HealthAnnouncements() {
   return (
-    <section className="health-announcements-section">
-      <div className="announcements-header">
-        {/* Replace with <img src="/assets/megaphone-icon.svg" alt="Announcements" className="announcements-icon" /> */}
-        <span className="announcements-icon" role="img" aria-label="announcements">📢</span>
-        <h2 className="announcements-title">Health Announcements</h2>
+    <section className={styles.healthAnnouncementsSection}>
+      <div className={styles.announcementsHeader}>
+        <span className={styles.announcementsIcon} role="img" aria-label="announcements">📢</span>
+        <h2 className={styles.announcementsTitle}>Health Announcements</h2>
       </div>
-      <div className="announcements-grid">
+      <div className={styles.announcementsGrid}>
         {announcementsData.map((announcement) => (
           <AnnouncementCard key={announcement.id} {...announcement} />
         ))}
@@ -63,23 +68,21 @@ function AnnouncementCard({ iconType, title, tag, tagType, date, description, po
   :{ iconType: string; title: string; tag: string; tagType: string; date: string; description: string; postedDate: string; }
 ){
   return (
-    <div className="announcement-card">
-      <div className="card-header">
-        <div className="card-icon-wrapper">
-          {/* Replace with <img src={iconSrc} alt="" className="card-icon-svg" /> */}
-          {getIcon({iconType})}
+    <div className={styles.announcementCard}>
+      <div className={styles.cardHeader}>
+        <div className={styles.cardIconWrapper}>
+          {getIcon({ iconType })}
         </div>
-        <h3 className="card-title">{title}</h3>
-        <span className={`card-tag card-tag-${tagType}`}>{tag}</span>
+        <h3 className={styles.cardTitle}>{title}</h3>
+        <span className={`${styles.cardTag} ${tagClassByType[tagType] ?? ''}`}>{tag}</span>
       </div>
-      <div className="card-body">
-        <p className="card-event-date">Date: {date}</p>
-        <p className="card-description">{description}</p>
+      <div className={styles.cardBody}>
+        <p className={styles.cardEventDate}>Date: {date}</p>
+        <p className={styles.cardDescription}>{description}</p>
       </div>
-      <div className="card-footer">
-        {/* Replace with <img src="/assets/clock-icon.svg" alt="Posted" className="posted-icon" /> */}
-        <span className="posted-icon" role="img" aria-label="posted">🕒</span>
-        <p className="card-posted-date">Posted {postedDate}</p>
+      <div className={styles.cardFooter}>
+        <span className={styles.postedIcon} role="img" aria-label="posted">🕒</span>
+        <p className={styles.cardPostedDate}>Posted {postedDate}</p>
       </div>
     </div>
   );

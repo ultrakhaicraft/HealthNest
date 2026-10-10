@@ -96,7 +96,6 @@ const UpdateMedicalSupplyModal: React.FC<UpdateMedicalSupplyModalProps> = ({ isO
   return (
     <Modal title="Update Medical Supply" onClose={onClose} isBusy={isSubmitting}>
       <ModalForm onSubmit={handleSubmit}>
-        <ModalGrid>
           <ModalReadOnly label="ID">
             {medicalSupply.id}
           </ModalReadOnly>
@@ -162,7 +161,6 @@ const UpdateMedicalSupplyModal: React.FC<UpdateMedicalSupplyModalProps> = ({ isO
             />
           </ModalField>
 
-        </ModalGrid>
         <ModalFooter>
           <button type="submit" className="button button-primary" disabled={isSubmitting}>
             {isSubmitting ? 'Updating...' : 'Update'}

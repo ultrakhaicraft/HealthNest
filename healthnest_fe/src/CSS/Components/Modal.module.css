@@ -10,6 +10,14 @@
   z-index: 1000;
 }
 
+.label {
+  font-weight: 700;
+  color: #070d16;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 .dialog {
   box-sizing: border-box;
   width: 100%;
@@ -75,13 +83,14 @@
   gap: 1rem;
 }
 
-.modalRow {
+.field {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  margin-bottom: 20px;
 }
 
-.modalRow .fullWidth {
+.field .fullWidth {
   grid-column: 1 / -1;
   margin-top: 1rem;
 }

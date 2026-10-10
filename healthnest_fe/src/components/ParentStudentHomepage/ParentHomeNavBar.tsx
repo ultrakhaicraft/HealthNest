@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../../CSS/Parent/ParentHomePageNavBar.module.css"
+import { userouteForLabel } from "../../feature/Hooks/Other/RouterHooks";
+import { UserRole } from "../../feature/Constant";
 
 interface UserHomeNavBarProps {
   activeItem: string;
@@ -33,13 +35,17 @@ export default function ParentHomeNavBar({ activeItem, onSelect }: UserHomeNavBa
             ))}
           </ul>
         </nav>
-        <ProfileDropdown />
+        <ProfileDropdown onSelect={onSelect} />
       </div>
     </header>
   );
 }
 
-const ProfileDropdown = () => {
+interface ProfileDropdown{
+    onSelect: (label: string) => void;
+}
+
+const ProfileDropdown = (onSelect: ProfileDropdown) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -55,7 +61,7 @@ const ProfileDropdown = () => {
   }, []);
 
   const handleNavigateProfile = () => {
-    navigate('/parentUserProfile');
+    navigate(userouteForLabel('User Profile',UserRole.Parent));
   };
 
   const handleLogout = () => {

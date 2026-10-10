@@ -72,7 +72,9 @@ public class IncidentRecordService : IIncidentRecordService
 		var incident = await repository
 			.GetQueryable()
 			.Include(i => i.HandleByNavigation)
-			.Include(i=>i.Student)	
+			.Include(i => i.HandleByNavigation.Account)
+			.Include(i=>i.Student)
+			.Include(i => i.Student.Account)
 			.FirstOrDefaultAsync(i => i.Id == incidentId);
 
 		if (incident == null)

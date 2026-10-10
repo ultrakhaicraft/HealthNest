@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import {
-    IconUser
-} from '../../components/IconList';
+import { useState, useEffect } from 'react';
+import {IconUser} from '../../components/IconList';
 import ProfileHeader from '../../components/User_Profile/ProfileHeader';
 import StudentInfo from '../../components/User_Profile/StudentInfo';
 import PersonalInfo from '../../components/User_Profile/PersonalInfo';
-import { AccountDetail, accountService, AccountUpdateData } from '../../feature/API/AccountService';
-import '../CSS/UserProfile.css'
+import { accountService } from '../../feature/API/AccountService';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAccountDetail } from '../../feature/Hooks/Account/useAccountDetail';
 import { useUserId, useUserRole } from '../../feature/Hooks/Account/AccountHooks';
+import { AccountUpdateData } from '../../models/AccountModel';
+import styles from '../../CSS/Components/UserProfile.module.css';
 
 export interface IPersonalInfo {
     fullName: string,
@@ -84,10 +83,10 @@ export default function ParentUserProfile() {
 
     return (
         <div className="container">
-            <Link className='back-link' to="/parentHomepage">
+            <Link className={styles.backLink} to="/parentHomepage">
                 Return
             </Link>
-            <header className="page-header">
+            <header className={styles.pageHeader}>
                 <IconUser className='icon' /> User Profile
             </header>
 
@@ -98,7 +97,7 @@ export default function ParentUserProfile() {
                 avatarUrl='/assets/PRN_Avatar.svg'
             />
 
-            <div className="profile-content-grid">
+            <div className={styles.profileContentGrid}>
                 {accountDetail && (<PersonalInfo account={accountDetail} onUpdate={handleAccountUpdate}
                     isEditMode={isEditMode} setIsEditMode={setIsEditMode} formData={formData} setFormData={setFormData} />)}
                 <StudentInfo studentName={accountDetail?.studentName ?? ""} studentId={accountDetail?.studentId ?? ""} />

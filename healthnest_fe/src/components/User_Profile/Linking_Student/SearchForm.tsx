@@ -15,7 +15,7 @@ const SearchForm = ({ searchTerm, setSearchTerm, onSearch }: SearchFormProps) =>
             </div>
             <input
                 type="text"
-                className="search-input"
+                className={styles.searchInput}
                 placeholder="Search by student name or email..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}

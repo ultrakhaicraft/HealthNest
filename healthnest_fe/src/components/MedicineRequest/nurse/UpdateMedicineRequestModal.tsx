@@ -62,13 +62,11 @@ const UpdateMedicineRequestModal: React.FC<UpdateMedicineRequestModalProps> =
   return (
     <Modal title="Update Medicine Request Status" onClose={onClose} isBusy={isSubmitting}>
       <ModalForm onSubmit={handleSubmit}>
-        <ModalGrid>
           <ModalReadOnly label="ID">{medicineRequest.id}</ModalReadOnly>
-          <ModalReadOnly label="Date Sent">
-            {new Date(medicineRequest.dateSent).toLocaleString()}
-          </ModalReadOnly>
-
           <ModalReadOnly label="Request By">{medicineRequest.requestByName}</ModalReadOnly>
+          <ModalReadOnly label="For Student">{medicineRequest.forStudentName}</ModalReadOnly>
+
+
           <ModalField label="Status" htmlFor="status-select" error={errors ?? undefined}>
             <select
               id="status-select"
@@ -86,12 +84,7 @@ const UpdateMedicineRequestModal: React.FC<UpdateMedicineRequestModalProps> =
             </select>
           </ModalField>
 
-          <ModalReadOnly label="For Student">{medicineRequest.forStudentName}</ModalReadOnly>
 
-          <ModalReadOnly label="Description" fullWidth block>
-            {medicineRequest.description}
-          </ModalReadOnly>
-        </ModalGrid>
 
         <ModalFooter>
           <button type="submit" className="button button-primary" disabled={isSubmitting}>

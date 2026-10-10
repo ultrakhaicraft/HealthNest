@@ -47,7 +47,7 @@ export default function MedicineRequestCRUDPanel({
         {/* .crudActions is display:flex + gap:0.5rem, same as the old inline style */}
         <div className={styles.crudActions}>
           {/* button classes are not in the module, so they stay global */}
-          <button className="button button-secondary button-small" onClick={filterState.onToggle}>
+          <button className="button button-secondary button-large" onClick={filterState.onToggle}>
             <IconFilter />
             {filterState.show ? 'Hide Filters' : 'Show Filters'}
           </button>

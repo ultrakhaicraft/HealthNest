@@ -87,7 +87,6 @@ const CreateMedicineModal: React.FC<CreateMedicineModalProps> = ({ isOpen, onClo
   return (
     <Modal title="Create Medicine" onClose={onClose} isBusy={isSubmitting}>
   <ModalForm onSubmit={handleSubmit}>
-    <ModalGrid>
       <ModalField label="Name" htmlFor="MedicineName" error={errors.name}>
         <input
           id="MedicineName"
@@ -140,7 +139,6 @@ const CreateMedicineModal: React.FC<CreateMedicineModalProps> = ({ isOpen, onClo
           rows={4}
         />
       </ModalField>
-    </ModalGrid>
 
     <ModalFooter>
       <button

@@ -91,7 +91,6 @@ const UpdateOwnedMedicineRequestModal = ({
   return (
       <Modal title="Update Medicine Request" onClose={onClose} isBusy={isSubmitting}>
       <ModalForm onSubmit={handleSubmit}>
-        <ModalGrid>
           <ModalReadOnly label="Requester ID (Your Id as a parent)">
             {medicineRequest.requestBy}
           </ModalReadOnly>
@@ -117,7 +116,6 @@ const UpdateOwnedMedicineRequestModal = ({
               rows={4}
             />
           </ModalField>
-        </ModalGrid>
 
         <ModalFooter>
           <button type="submit" className="button button-primary" disabled={isSubmitting}>

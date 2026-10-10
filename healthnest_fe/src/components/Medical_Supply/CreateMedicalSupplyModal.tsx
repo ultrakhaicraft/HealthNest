@@ -87,7 +87,6 @@ export const CreateMedicalSupplyModal = ({ isOpen, onClose, onSubmit, onError }:
   return (
     <Modal title="Create Medical Supply" onClose={onClose} isBusy={isSubmitting}>
       <ModalForm onSubmit={handleSubmit}>
-        <ModalGrid>
           <ModalField label="Name" htmlFor="MedicalSupplyName" error={errors.name}>
             <input
               id="MedicalSupplyName"
@@ -140,7 +139,6 @@ export const CreateMedicalSupplyModal = ({ isOpen, onClose, onSubmit, onError }:
               rows={4}
             />
           </ModalField>
-        </ModalGrid>
 
         <ModalFooter>
           <button

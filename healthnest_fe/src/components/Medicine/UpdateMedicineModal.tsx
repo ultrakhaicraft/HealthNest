@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { MedicineDetailsViewModel, MedicineService, MedicineUpdateModel } from '../../feature/API/MedicineService';
 import { useUserId } from '../../feature/Hooks/Account/AccountHooks';
 import Modal, { ModalField, ModalFooter, ModalForm, ModalGrid } from '../GenericModal';
-import inputStyles from '../../../CSS/InputField.module.css';
+import inputStyles from '../../CSS/InputField.module.css';
 
 
 interface UpdateMedicineModalProps {
@@ -95,11 +95,10 @@ const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medic
   return (
       <Modal title="Update Medicine" onClose={onClose} isBusy={isSubmitting}>
         <ModalForm onSubmit={handleSubmit}>
-           <ModalGrid>
               <ModalField label="Medicine Id" htmlFor="medicine-id" error={errors.id}>
                 <input
                   id="medicine-id"
-                  className="input-field"
+                  className={inputStyles.inputField}
                   value={medicine.id}
                   disabled
                   style={{ background: '#f3f4f6', color: '#6b7280' }}
@@ -109,7 +108,7 @@ const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medic
               <ModalField label="Medicine Name" htmlFor="medicine-name" error={errors.name}>
                 <input
                   id="medicine-name"
-                  className="input-field"
+                  className={inputStyles.inputField}
                   name="name"
                   value={form.name}
                   onChange={handleChange}
@@ -122,7 +121,7 @@ const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medic
               <ModalField label="Medicine Amount" htmlFor="medicine-amount" error={errors.amount}>
                <input
                   id="medicine-amount"
-                  className="input-field"
+                  className={inputStyles.inputField}
                   name="amount"
                   type="number"
                   min="1"
@@ -136,7 +135,7 @@ const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medic
               <ModalField label="Status" htmlFor="availability-select" error={errors.isAvailable}>
                  <select
                   id="availability-select"
-                  className="input-field"
+                  className={inputStyles.inputField}
                   name="isAvailable"
                   value={form.isAvailable ? 'true' : 'false'}
                   onChange={e => setForm(prev => ({ ...prev, isAvailable: e.target.value === 'true' }))}
@@ -152,7 +151,7 @@ const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medic
               <ModalField label="Medicine Description" htmlFor="medicine-description" error={errors.description}>
                 <textarea
                 id="medicine-description"
-                className="input-field detail-description"
+                className={`${inputStyles.inputField} ${inputStyles.detailDescription}`}
                 name="description"
                 value={form.description}
                 onChange={handleChange}
@@ -161,7 +160,6 @@ const UpdateMedicineModal: React.FC<UpdateMedicineModalProps> = ({ isOpen, medic
               />
               </ModalField>
 
-          </ModalGrid>
           <ModalFooter>
             <button type="submit" className="button button-primary" disabled={isSubmitting}>
                   {isSubmitting ? 'Updating...' : 'Update'}

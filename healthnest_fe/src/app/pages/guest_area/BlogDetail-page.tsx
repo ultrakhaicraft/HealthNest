@@ -1,7 +1,6 @@
 import Footer from "../../../components/Landing_Page/footer";
 import HomepageNavBar from "../../../components/Landing_Page/homepage-nav-bar";
-import "../../CSS/BlogDetail.css";
-
+import styles from '../../../CSS/Guest/Blog/BlogDetail.module.css'
 
 
 interface Author {
@@ -69,10 +68,10 @@ export default function BogDetailPage() {
 // --- Page & Layout Components ---
 const BlogPage = ({ post }: { post: BlogPost }) => {
     return (
-        <div className="page-container">
+        <div className={styles.pageContainer}>
             <Breadcrumb title={post.title} />
-            <div className="blog-post-container">
-                <img src={post.imageUrl} alt={post.title} className="blog-image" />
+            <div className={styles.blogPostContainer}>
+                <img src={post.imageUrl} alt={post.title} className={styles.blogImage} />
                 <BlogHeader title={post.title} synopsis={post.synopsis} />
                 <BlogContent content={post.content} author={post.author} publishDate={post.publishDate} />
             </div>
@@ -82,7 +81,7 @@ const BlogPage = ({ post }: { post: BlogPost }) => {
 };
 
 const Breadcrumb = ({ title }: { title: string }) => (
-            <nav className="breadcrumb">
+            <nav className={styles.breadcrumb}>
                 <a href="#">Medical Blog</a>
                 <span>&gt;</span>
                 <span>{title}</span>
@@ -90,7 +89,7 @@ const Breadcrumb = ({ title }: { title: string }) => (
         );
 
 const BlogHeader = ({ title, synopsis }: { title: string; synopsis: string }) => (
-    <header className="blog-header">
+    <header className={styles.blogHeader}>
         <h1>{title}</h1>
         <p>{synopsis}</p>
     </header>
@@ -105,12 +104,12 @@ const BlogContent = ({
   author: Author;
   publishDate: string;
 }) => (
-  <article className="blog-content">
+  <article className={styles.blogContent}>
     {content.map((paragraph, index) => (
       <p key={index}>{paragraph}</p>
     ))}
 
-    <div className="highlight-box">
+    <div className={styles.highlightBox}>
       <strong>Remember:</strong> Creating a supportive environment at home is just as important. Healthy habits, open communication, and professional support are key pillars for a child's mental well-being.
     </div>
 
@@ -119,11 +118,11 @@ const BlogContent = ({
 );
 
 const BlogMeta = ({ author, publishDate }: { author: Author; publishDate: string }) => (
-  <footer className="blog-meta">
-    <img src={author.avatarUrl} alt={author.name} className="author-avatar" />
-    <div className="author-info">
-      <div className="author-name">{author.name}</div>
-      <div className="publish-date">
+  <footer className={styles.blogMeta}>
+    <img src={author.avatarUrl} alt={author.name} className={styles.authorAvatar}/>
+    <div className={styles.authorInfo}>
+      <div className={styles.authorName}>{author.name}</div>
+      <div className={styles.publishDate}>
         Published on{" "}
         {new Date(publishDate).toLocaleDateString("en-US", {
           year: "numeric",
@@ -136,14 +135,14 @@ const BlogMeta = ({ author, publishDate }: { author: Author; publishDate: string
 );
 
 const RelatedArticles = ({ articles }: { articles: RelatedArticle[] }) => (
-  <section className="related-articles-section">
+  <section className={styles.relatedArticlesSection}>
     <h2>Related Articles</h2>
-    <div className="related-articles-grid">
+    <div className={styles.relatedArticlesGrid} >
       {articles.map((article) => (
-        <a href="#" key={article.id} className="related-article-card">
-          <img src={article.imageUrl} alt={article.title} className="related-article-image" />
+        <a href="#" key={article.id} className={styles.relatedArticleCard}>
+          <img src={article.imageUrl} alt={article.title} className={styles.relatedArticleImage} />
           <div>
-            <h3 className="related-article-title">{article.title}</h3>
+            <h3 className={styles.relatedArticleTitle}>{article.title}</h3>
           </div>
         </a>
       ))}

@@ -25,7 +25,7 @@ public class AccountService : IAccountService
 	public AccountService(IUnitOfWork unitOfWork, IEnumerable<IAccountModelFactory> factories)
 	{
 		_unitOfWork = unitOfWork;
-		_factoriesByRole = factories.ToDictionary(f => f.Role);
+		_factoriesByRole = factories.ToDictionary(f => f.Role, StringComparer.OrdinalIgnoreCase);
 
 	}
 
@@ -91,7 +91,12 @@ public class AccountService : IAccountService
 			//If the role is either parent or student, assign additional data depend on these 2 role.
 
 			if (!_factoriesByRole.TryGetValue(account.Role, out var factory))
-				throw new BadRequestException($"Unknown account role: {account.Role}");
+			{
+				var registered = string.Join(", ", _factoriesByRole.Keys.Select(k => $"'{k}'"));
+				throw new BadRequestException(
+					$"Unknown account role: '{account.Role}'. Registered roles: [{registered}]");
+			}
+			
 
 			return await factory.CreateDetailModelAsync(account,_unitOfWork);
 

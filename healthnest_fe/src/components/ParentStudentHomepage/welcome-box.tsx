@@ -1,4 +1,6 @@
 import React from 'react';
+import styles from '../../CSS/Parent/ParentHomepage.module.css'
+import { UserRole } from '../../feature/Constant';
 
 interface WelcomeProps {
   name: string|undefined;
@@ -9,22 +11,19 @@ interface WelcomeProps {
 
 function Welcome({ name, childName, avatarSrc, userType }: WelcomeProps) {
   return (
-    <section className="welcome-card">
-      <img src={avatarSrc} alt="User" className="welcome-avatar" />
-      <div className="welcome-text">
-        <p className="welcome-greeting">Welcome back,</p>
-        <h1 className="welcome-name">{name}</h1>
-        <p className="welcome-info">
-          {userType === 'student' ? (
-            <span className="student-icon" role="img" aria-label="student icon">👨‍🎓</span>
-          ) : userType === 'nurse' ? (
-            <span className="nurse-icon" role="img" aria-label="nurse icon">🩺</span>
+    <section className={styles.welcomeCard}>
+      <img src={avatarSrc} alt="User" className={styles.welcomeAvatar} />
+      <div className={styles.welcomeText}>
+        <p className={styles.welcomeGreeting}>Welcome back,</p>
+        <h1 className={styles.welcomeName}>{name}</h1>
+        <p className={styles.welcomeInfo}>
+          {userType === UserRole.Parent ? (
+            <span className={styles.studentIcon} role="img" aria-label="student icon">👨‍🎓</span>
           ) : (
-            <span className="parent-icon" role="img" aria-label="parent icon">👩‍👧</span>
+            <span className={styles.parentIcon} role="img" aria-label="parent icon">👩‍👧</span>
           )}
-          {userType === 'student' && 'Class of 10A'}
-          {userType === 'parent' && <> Parent of: <span className="child-name">{childName}</span></>}
-          {userType === 'nurse' && <span>School Nurse</span>}
+          {userType === UserRole.Student && 'Class of 10A'}
+          {userType === UserRole.Parent && <> Parent of: <span className={styles.childName}>{childName}</span></>}
         </p>
       </div>
     </section>

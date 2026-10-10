@@ -4,6 +4,7 @@ import HealthAnnouncements from "../../../components/ParentStudentHomepage/news-
 import WelcomeBox from "../../../components/ParentStudentHomepage/welcome-box";
 import { useAccountDetail } from "../../../feature/Hooks/Account/useAccountDetail";
 import { ParentOutletContext } from "./ParentContainerPage";
+import styles from '../../../CSS/Parent/ParentHomepage.module.css'
 
 
 
@@ -39,7 +40,7 @@ export default function ParentHomePage(){
 function NoStudentAlertBox(){
 
     return(
-        <div className='box-warning welcome-card'>
+        <div className={`${styles.boxWarning} ${styles.welcomeCard}`}>
                 <p>!!! You don't have student assigned, please head over your profile to assign your student !!!</p>
         </div>
     );
