@@ -7,6 +7,7 @@ export enum UserRole {
 }
 
 export const MedicineRequestStatuses: string[] = ["Pending", "Approved", "Rejected", "Deleted"];
+export type RecordStatus = 'Active' | 'Inactive' | '';
 
 export const NURSE_NAV_ROUTES: { label: string; path: string }[] = [
   { label: 'Home', path: '/nurse' },

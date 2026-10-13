@@ -1,0 +1,340 @@
+/* StudentHealthRecordDetail.css */
+.recordDetailPage {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.recordDetailLoading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.recordDetailTopbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.backLinkButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 50px;
+  background: none;
+  cursor: pointer;
+  color: #4683e5; 
+  background-color: white;
+  border: rgb(133, 133, 133) 1px solid;
+  border-radius: 20%;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 0.5rem 0.5rem;
+}
+
+.backLinkButton:hover {
+  text-decoration: underline;
+  color: white; 
+  background-color: #4683e5;
+}
+
+.recordDetailActions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* Summary Card */
+.recordSummaryCard {
+  background: linear-gradient(135deg, #2563eb, #4338ca);
+  border-radius: 1rem;
+  padding: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.recordSummaryLeft {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.recordSummaryIcon {
+  width: 56px;
+  height: 56px;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.recordSummaryId {
+  font-size: 0.8rem;
+  opacity: 0.85;
+  margin: 0 0 0.25rem 0;
+}
+
+.recordSummaryName {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.recordSummaryStudentid {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin: 0.25rem 0 0 0;
+}
+
+.recordSummaryRight {
+  display: flex;
+  gap: 2.5rem;
+}
+
+.recordSummaryMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.recordSummaryLabel {
+  font-size: 0.7rem;
+  opacity: 0.8;
+  letter-spacing: 0.05em;
+}
+
+.recordSummaryValue {
+  font-weight: 600;
+}
+
+.statusPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.statusPillActive {
+  background-color: rgba(255, 255, 255);
+  color: #0f652d;
+}
+
+.statusPillInactive {
+  background-color: rgba(255, 255, 255);
+  color: #791313;
+}
+
+/* Tab Nav */
+.detailTabNav {
+  display: flex;
+  gap: 0.5rem;
+  background-color: white;
+  padding: 0.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  margin: 1.5rem 0;
+}
+
+.detailTab {
+  flex: 1;
+  padding: 0.625rem 1rem;
+  border: none;
+  background: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.detailTab:hover {
+  background-color: #f1f5f9;
+}
+
+.detailTab.active {
+  background-color: #2563eb;
+  color: white;
+}
+
+.recordDetailGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.recordDetailGrid .icon{
+  width: 25px;
+  height: 25px;
+}
+.recordDetailMain,
+.recordDetailSide {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.detailSectionCard {
+  background-color: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.detailSectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.detailSectionHeader h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #104eb2;
+  margin: 0;
+}
+
+.measurementGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.measurementBox {
+  background-color: #f1f5f9;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+.measurementBoxHighlight {
+  background-color: #fef2f2;
+}
+
+.measurementLabel {
+  display: block;
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-bottom: 0.4rem;
+}
+
+.measurementValue {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.measurementUnit {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #060708;
+}
+
+.examinationRow {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.examinationRow:last-child { border-bottom: none; }
+
+.examinationLabel {
+  font-weight: 600;
+  margin: 0 0.25rem 0.25rem 0;
+  color: #1e293b;
+}
+
+.examinationValue {
+  margin: 0;
+  color: #16191e;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.allergyBanner {
+  background-color: #fff7ed;
+  border-left: 4px solid #f59e0b;
+  border-radius: 0 0.5rem 0.5rem 0;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.allergyBanner strong { color: #c2410c; }
+
+.historyBanner {
+  background-color: #f8fafc;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.allergyBanner p,
+.historyBanner p {
+  margin: 0.35rem 0 0 0;
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+.sideStudentName {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.75rem 0;
+}
+
+.sideInfoRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.875rem;
+}
+
+.sideInfoRow:last-child { border-bottom: none; }
+.sideInfoRow span { color: #64748b; }
+
+
+.vaccineRecordTab{
+  display: flex;
+  flex-direction: column;
+  gap:1.5rem;
+}
+
+.vaccineRecordItem{
+  background-color: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+
+.treatmentRecordTab{
+  display: flex;
+  flex-direction: column;
+  gap:1.5rem;
+}
+
+.treatmentRecordItem{
+  background-color: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 900px) {
+  .recordDetailGrid { grid-template-columns: 1fr; }
+}

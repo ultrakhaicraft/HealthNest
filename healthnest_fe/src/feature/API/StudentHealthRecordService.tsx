@@ -1,65 +1,23 @@
-//The goal is to call CRUD operations on the user API
-import apiClient, { PaginatedResponse, ApiResponseWrapper } from '../ApiClient';
-
-// --- Type Definitions for an Account ---
-// This defines the data structure for an account, providing type safety.
 
 
 
-export interface GetAllStudentHealthRecordsParams {
-    StudentName : string;
-    PageNumber: number;
-    PageSize: number;
-    Status: 'Active' | 'Inactive' | '';
-}
-
-export interface StudentHealthRecordView {
-    id: string;
-    studentName: string;
-    studentId: string;
-    createdBy: string;
-    status: string | null;
-}
-
-export interface StudentHealthRecordDetail extends StudentHealthRecordView {
-    height: number;
-    allergies: string;
-    chronicDiseases: string;
-    vision: string;
-    hearing: string;
-
-}
-
-
-export interface StudentHealthRecordCreationData{
-    studentName: string;
-    studentId: string;   
-    createdBy: string;
-    height: number;
-    allergies: string;
-    chronicDiseases : string;
-    vision: string;
-    hearing: string;
-    
-}
-
-
-export interface StudentHealthRecordUpdate extends StudentHealthRecordCreationData {
-    status: string | null;
-}
 
 
 
 
 // --- API Service Object ---
 
+import { PaginatedResponse, ApiResponseWrapper } from "../../models/ApiClientModel";
+import { StudentHealthRecordQuery, StudentHealthRecordViewModel, StudentHealthRecordDetailModel, StudentHealthRecordCreateModel, StudentHealthRecordUpdateModel } from "../../models/StudentHealthRecordModel";
+import apiClient from "../ApiClient";
+
 
 export const StudentHealthRecordService = {
 
 
-  getAll: async (params: GetAllStudentHealthRecordsParams): Promise<PaginatedResponse<StudentHealthRecordView>> => {
+  getAll: async (params: StudentHealthRecordQuery): Promise<PaginatedResponse<StudentHealthRecordViewModel>> => {
     
-    const response = await apiClient.get<ApiResponseWrapper<PaginatedResponse<StudentHealthRecordView>>>('/account', {
+    const response = await apiClient.get<ApiResponseWrapper<PaginatedResponse<StudentHealthRecordViewModel>>>('/student-health-record', {
       params: params,
     });
     
@@ -68,22 +26,16 @@ export const StudentHealthRecordService = {
   },
 
  
-  getDetailById: async (studentHealthRecordId: string): Promise<StudentHealthRecordDetail> => {
-    const response = await apiClient.get<ApiResponseWrapper<StudentHealthRecordDetail>>
+  getDetailById: async (studentHealthRecordId: string): Promise<StudentHealthRecordDetailModel> => {
+    const response = await apiClient.get<ApiResponseWrapper<StudentHealthRecordDetailModel>>
     (`/student-health-record/${studentHealthRecordId}`);
 
     return response.data.data;
   },
 
-  getDetailByStudentId: async (studentId: string): Promise<StudentHealthRecordDetail>=>{
-    const response = await apiClient.get<ApiResponseWrapper<StudentHealthRecordDetail>>
-    (`/student-health-record/from-student/${studentId}`)
-
-    return response.data.data;
-  },
   
 
-  create: async (accountData: StudentHealthRecordCreationData): Promise<string> => {
+  create: async (accountData: StudentHealthRecordCreateModel): Promise<string> => {
 
     const response = await apiClient.post<ApiResponseWrapper<string>>('/student-health-record',accountData);
 
@@ -91,7 +43,7 @@ export const StudentHealthRecordService = {
   },
 
   
-  update: async (studentHealthRecordId: string, updateData: StudentHealthRecordUpdate): Promise<string> => {
+  update: async (studentHealthRecordId: string, updateData: StudentHealthRecordUpdateModel): Promise<string> => {
     // We use PUT here, but PATCH is also common for partial updates.
     const response = await apiClient.put<ApiResponseWrapper<string>>(`/student-health-record/${studentHealthRecordId}`,
      updateData,
