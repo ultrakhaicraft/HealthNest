@@ -15,6 +15,7 @@ export const NURSE_NAV_ROUTES: { label: string; path: string }[] = [
   { label: 'Incident Report', path: '/nurse/incidents' },
   { label: 'Medicine Request', path: '/nurse/medicine-requests' },
   { label: 'Medical Supply', path: '/nurse/medical-supplies' },
+  { label: 'Student Health Record', path: '/nurse/student-health-record'}
 ];
 
 export const PARENT_NAV_ROUTES: { label: string; path: string }[] = [

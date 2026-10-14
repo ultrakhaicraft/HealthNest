@@ -43,6 +43,7 @@ const VaccineTabView = React.lazy(() => import('../components/Student_Health_Rec
 const HealthRecordTabView = React.lazy(() => import('../components/Student_Health_Record/HealthRecordTabView'));
 const TreatmentTabView = React.lazy(() => import('../components/Student_Health_Record/TreatmentTabView'));
 const StudentHealthRecordViewPage = React.lazy(() => import('../app/pages/parent_area/ViewStudentHealthRecord-page'));
+const StudentHealthRecordCRUDPage = React.lazy(()=> import ('../app/pages/nurse_area/StudentHealthRecordCRUD-page'))
 
 
 
@@ -88,6 +89,7 @@ export const AppRouter = () => {
           <Route path="incidents" element={<IncidentRecordCRUDPage />} />
           <Route path="medicine-requests" element={<MedicineRequestCRUDPage />} />
           <Route path="medical-supplies" element={<MedicalSupplyCRUDPage />} />
+          <Route path="student-health-record" element={<StudentHealthRecordCRUDPage/>} />
         </Route>
 
         <Route path="/parent" element={

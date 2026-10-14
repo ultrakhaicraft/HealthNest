@@ -22,16 +22,21 @@ public class VaccineRecordViewModel
 
 public class VaccineRecordCreateModel
 {
-	public string StudentId { get; set; } = null!;
-	public string StudentHealthRecordId { get; set; } = null!;
 	public string? VaccineTitle { get; set; }
 	public string? Description { get; set; }
 }
 
 public class VaccineRecordUpdateModel
 {
-	public string StudentId { get; set; } = null!;
 	public string? VaccineTitle { get; set; }
 	public string? Description { get; set; }
 	public string? Status { get; set; }
+}
+
+public class VaccineRecordQuery
+{
+	public string? VaccineTitle { get; set; } = string.Empty;
+	public string? Status { get; set; } = string.Empty;
+	public int PageIndex { get; set; } = 1; // Default to first page
+	public int PageSize { get; set; } = 10; // Default to 10 items per page
 }

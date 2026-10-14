@@ -3,11 +3,12 @@ import { Link } from "react-router-dom";
 import { StudentHealthRecordService } from "../../feature/API/StudentHealthRecordService";
 import { StudentHealthRecordQuery, StudentHealthRecordViewModel } from "../../models/StudentHealthRecordModel";
 import styles from "../../CSS/Nurse/NurseCRUDPanel.module.css";
-import { IconFilter, IconView } from "../IconList";
+import { IconDelete, IconEdit, IconFilter, IconPlus, IconView } from "../IconList";
 import { MedicineRequestFilter } from "../MedicineRequest/nurse/MedicineRequestFilter";
 import { PaginationControls } from "../PaginationControls";
 import { StatusBadge } from "../StatusBadge";
 import { StudentHealthRecordFilter } from "./StudentHealthRecordFilter";
+import { UserRole } from "../../feature/Constant";
 
 export interface PaginationState {
   currentPage: number;
@@ -30,15 +31,15 @@ export interface StudentHealthRecordCRUDPanelProps {
   pagination: PaginationState;
   filterState: FilterState;
   onView: (id: string) => void;
-  onEdit?: (studentHealthRecord: StudentHealthRecordViewModel) => void;
+  onEdit: (studentHealthRecord: StudentHealthRecordViewModel) => void;
   userRole: string;
-  onCreate?: () => void;
-  onDelete?: (studentHealthRecordId: string) => void;
+  onCreate: () => void;
+  onDelete: (studentHealthRecordId: string) => void;
 }
 
-const ParentStudentHealthRecordViewPanel = ({ 
+const StudentHealthRecordViewPanel = ({ 
     studentHealthRecordData = [], loading, pagination, filterState, userRole,
-    onView, onEdit
+    onView, onEdit, onCreate, onDelete
 }: StudentHealthRecordCRUDPanelProps) => {
  
 
@@ -51,11 +52,21 @@ const ParentStudentHealthRecordViewPanel = ({
         </div>
         {/* .crudActions is display:flex + gap:0.5rem, same as the old inline style */}
         <div className={styles.crudActions}>
+
+          
+
           {/* button classes are not in the module, so they stay global */}
           <button className="button button-secondary button-large" onClick={filterState.onToggle}>
             <IconFilter />
             {filterState.show ? 'Hide Filters' : 'Show Filters'}
           </button>
+
+          {userRole==UserRole.Nurse && (
+            <button className="button button-primary button-large" onClick={onCreate}>
+              <IconPlus />
+              Create Medicine
+            </button>
+          )}
         </div>
       </div>
       
@@ -111,6 +122,19 @@ const ParentStudentHealthRecordViewPanel = ({
                     <button className={styles.actionButton} onClick={() => onView(request.id)} disabled={loading}>
                       <IconView />
                     </button>
+                    {userRole== UserRole.Nurse &&(
+                      <>
+                      <button className={styles.actionButton} onClick={() => onEdit(request)} disabled={loading}>
+                      <IconEdit />
+                    </button>
+                    <button
+                      className={`${styles.actionButton} ${styles.actionDelete}`}
+                      onClick={() => onDelete(request.id)}
+                      disabled={loading}
+                    >
+                      <IconDelete />
+                    </button></>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -128,4 +152,4 @@ const ParentStudentHealthRecordViewPanel = ({
   );
 };
 
-export default ParentStudentHealthRecordViewPanel;
+export default StudentHealthRecordViewPanel;

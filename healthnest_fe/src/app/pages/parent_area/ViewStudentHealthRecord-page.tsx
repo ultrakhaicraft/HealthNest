@@ -1,16 +1,9 @@
-import UserHomeNavBar from '../../../components/ParentStudentHomepage/ParentHomeNavBar';
-import Footer from '../../../components/Landing_Page/footer';
-import RecordEmptyView from '../../../components/Student_Health_Record/EmptyRecordView'
 
-import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Toast } from '../../../components/Notification/Toast';
-import MedicalRecordView from '../../../components/Student_Health_Record/MedicalRecordView';
-import { StudentHealthRecordDetail, StudentHealthRecordService } from '../../../feature/API/StudentHealthRecordService';
-import { AccountDetailModel } from '../../../models/AccountModel';
-import ParentHomeNavBar from '../../../components/ParentStudentHomepage/ParentHomeNavBar';
 import { useUserRole } from '../../../feature/Hooks/Account/AccountHooks';
-import ParentStudentHealthRecordViewPanel from '../../../components/Student_Health_Record/StudentHealthRecordCRUDPanel';
+import StudentHealthRecordViewPanel from '../../../components/Student_Health_Record/StudentHealthRecordCRUDPanel';
 import { UserRole } from '../../../feature/Constant';
 import { StudentHealthRecordQuery } from '../../../models/StudentHealthRecordModel';
 import { useStudentHealthRecord } from '../../../feature/Hooks/StudentHealthRecord/useStudentHealthRecord';
@@ -60,7 +53,7 @@ export default function ViewStudentHealthRecordPage() {
   };
   return (
     <>
-      <ParentStudentHealthRecordViewPanel
+      <StudentHealthRecordViewPanel
         studentHealthRecordData={studentHealthRecords.data}
         loading={studentHealthRecords.loading}
         pagination={{
@@ -77,6 +70,9 @@ export default function ViewStudentHealthRecordPage() {
           onClear: handleClearFilters,
         }}
         onView={handleView}
+        onEdit={()=>{}}
+        onDelete={()=>{}}
+        onCreate={()=>{}}
         userRole={userRole ?? UserRole.Parent}
       />
 
