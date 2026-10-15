@@ -13,8 +13,8 @@ export function useStudentHealthRecord(filters: StudentHealthRecordQuery) {
     const refetch = useCallback(() => {
         setLoading(true);
         setError(null);
+        console.log(filters);
         const request = StudentHealthRecordService.getAll(filters)
-        console.log("request return: ", request);
 
 
         return request

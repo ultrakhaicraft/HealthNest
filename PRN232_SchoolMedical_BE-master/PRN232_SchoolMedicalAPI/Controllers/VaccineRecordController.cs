@@ -41,7 +41,7 @@ public class VaccineRecordController : Controller
 
 	[HttpPost("{studentHealthRecordId}")]
 	//[Authorize(Roles = "Admin")]
-	public async Task<IActionResult> CreateHealthCheckup([FromRoute] string studentHealthRecordId,[FromBody] List<VaccineRecordCreateModel request)
+	public async Task<IActionResult> CreateVaccineRecord([FromRoute] string studentHealthRecordId,[FromBody] List<VaccineRecordCreateModel> request)
 	{
 		if (!ModelState.IsValid)
 		{

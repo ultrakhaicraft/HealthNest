@@ -148,14 +148,6 @@ public class VaccineRecordService : IVaccineRecordService
 		await _unitOfWork.SaveAsync();
 	}
 
-	private IQueryable<Vaccinerecord> ApplySorting(IQueryable<Vaccinerecord> query, bool SortByNameIsDescending)
-	{
-
-		return SortByNameIsDescending
-			? query.OrderByDescending(m => m.VaccineTitle)
-			: query.OrderBy(m => m.VaccineTitle);
-	}
-
 	private IQueryable<Vaccinerecord> ApplyFilter(IQueryable<Vaccinerecord> query, string status, string VaccineTitle)
 	{
 

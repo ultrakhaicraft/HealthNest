@@ -41,6 +41,7 @@ public class StudentHealthRecordService : IStudentHealthRecordService
 				Id = Guid.NewGuid().ToString(),
 				StudentId = record.StudentId,
 				Height = record.Height,
+				Weight = record.Weight,
 				Allergies = record.Allergies,
 				HealthHistory = record.HealthHistory,
 				Vision = record.Vision,
@@ -111,10 +112,12 @@ public class StudentHealthRecordService : IStudentHealthRecordService
 				StudentId = record.StudentId,
 				StudentName = record.Student.Account.FullName, // Assuming Student has a FullName property
 				CreatedBy = record.CreatedByNavigation.Account.FullName, // Assuming CreatedByNavigation has a FullName property
+				CreatedDateTime = record.CreatedDateTime,
+				UpdatedDateTime = record.UpdatedDateTime,
 				Status = record.Status
 			});
 
-			var pagingModel = await PagingExtension.ToPagingModel(recordResponse, recordQuery.PageNumber, recordQuery.PageNumber);
+			var pagingModel = await PagingExtension.ToPagingModel(recordResponse, recordQuery.PageNumber, recordQuery.PageSize);
 
 			return new PagingModel<StudentHealthRecordViewModel>
 			{
@@ -253,6 +256,7 @@ public class StudentHealthRecordService : IStudentHealthRecordService
 			StudentId = studenthealthrecord.StudentId,
 			StudentName = studenthealthrecord.Student.Account.FullName, // Assuming Student has a Name property
 			Height = studenthealthrecord.Height,
+			Weight = studenthealthrecord.Weight,
 			Allergies = studenthealthrecord.Allergies,
 			HealthHistory = studenthealthrecord.HealthHistory,
 			Vision = studenthealthrecord.Vision,

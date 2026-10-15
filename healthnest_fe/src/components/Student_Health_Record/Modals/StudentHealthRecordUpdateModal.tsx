@@ -3,6 +3,7 @@ import { useUserId } from "../../../feature/Hooks/Account/AccountHooks";
 import { StudentHealthRecordCreateModel, StudentHealthRecordDetailModel, StudentHealthRecordUpdateModel } from "../../../models/StudentHealthRecordModel";
 import Modal, { ModalForm, ModalField, ModalReadOnly, ModalFooter } from "../../GenericModal";
 import inputStyles from '../../../CSS/InputField.module.css';
+import { RecordStatuses } from "../../../feature/Constant";
 
 
 interface StudentHealthRecordUpdateModalProps {
@@ -25,6 +26,7 @@ const initialForm = {
     bloodProfile: '',
     bloodPressure: '',
     heart: '',
+    status:'',
 }
 
 const StudentHealthRecordUpdateModal: React.FC<StudentHealthRecordUpdateModalProps> = ({ isOpen,studentHealthRecord, onClose, onSubmit, onError }) => {
@@ -49,6 +51,7 @@ const StudentHealthRecordUpdateModal: React.FC<StudentHealthRecordUpdateModalPro
             bloodProfile: studentHealthRecord.bloodProfile || '',
             bloodPressure: studentHealthRecord.bloodPressure || '',
             heart: studentHealthRecord.heart || '',
+            status: studentHealthRecord.status || '',
         });
           setErrors({});
         }
@@ -69,7 +72,7 @@ const StudentHealthRecordUpdateModal: React.FC<StudentHealthRecordUpdateModalPro
             errs.height = 'Height must be a positive number.';
         }
 
-        if (Number(form.height) <= 300) {
+        if (Number(form.height) > 300) {
             errs.height = 'Height must be below 300cm.';
         }
 
@@ -77,7 +80,7 @@ const StudentHealthRecordUpdateModal: React.FC<StudentHealthRecordUpdateModalPro
             errs.weight = 'Weight must be a positive number.';
         }
 
-        if (Number(form.weight) <= 300) {
+        if (Number(form.weight) > 300) {
             errs.weight = 'Weight must be below 300kg.';
         }
 
@@ -133,7 +136,7 @@ const StudentHealthRecordUpdateModal: React.FC<StudentHealthRecordUpdateModalPro
         return errs;
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
         if (type === 'checkbox' && e.target instanceof HTMLInputElement) {
             setForm((prev) => ({ ...prev, [name]: (e.target as HTMLInputElement).checked }));
@@ -155,6 +158,7 @@ const StudentHealthRecordUpdateModal: React.FC<StudentHealthRecordUpdateModalPro
             bloodProfile: '',
             bloodPressure: '',
             heart: '',
+            status:''
         });
         setErrors({});
     };
@@ -168,10 +172,8 @@ const StudentHealthRecordUpdateModal: React.FC<StudentHealthRecordUpdateModalPro
 
         try {
             onSubmit(studentHealthRecord.id,{
-                studentId: form.studentId.trim(),
                 height: Number(form.height),
                 weight: Number(form.weight),
-                createdBy: userId || '', // Use the userId from the custom hook
                 allergies: form.allergies.trim(),
                 healthHistory: form.healthHistory.trim(),
                 vision: form.vision.trim(),
@@ -179,7 +181,8 @@ const StudentHealthRecordUpdateModal: React.FC<StudentHealthRecordUpdateModalPro
                 teeth: form.teeth.trim(),
                 bloodProfile: form.bloodProfile.trim(),
                 bloodPressure: form.bloodPressure.trim(),
-                heart: form.heart.trim()
+                heart: form.heart.trim(),
+                status: form.status,
             });
         } finally {
             setIsSubmitting(false);
@@ -350,6 +353,23 @@ const StudentHealthRecordUpdateModal: React.FC<StudentHealthRecordUpdateModalPro
                         placeholder="e.g. Mild asthma diagnosed at age 6, well controlled with inhaler."
                         required
                     />
+                </ModalField>
+
+                 <ModalField label="Status" htmlFor="status-select" error={errors.status}>
+                    <select
+                    id="status-select"
+                    className={inputStyles.inputField}
+                    name="status"
+                    value={form.status}
+                    onChange={handleChange}
+                    disabled={isSubmitting}
+                    required
+                    >
+                    <option value="">Select status...</option>
+                    {RecordStatuses.map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                    ))}
+                    </select>
                 </ModalField>
 
                 <ModalFooter>

@@ -41,7 +41,7 @@ const StudentHealthRecordViewPanel = ({
     studentHealthRecordData = [], loading, pagination, filterState, userRole,
     onView, onEdit, onCreate, onDelete
 }: StudentHealthRecordCRUDPanelProps) => {
- 
+  console.log(studentHealthRecordData);
 
   return (
     <div className={styles.crudContainer}>

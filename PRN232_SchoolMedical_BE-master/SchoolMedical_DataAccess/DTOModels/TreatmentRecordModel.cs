@@ -31,7 +31,15 @@ public class TreatmentRecordCreateModel
 public class TreatmentRecordUpdateModel
 {
 	public string StudentId { get; set; } = null!;
-	public string? VaccineTitle { get; set; }
+	public string? Description { get; set; }
 	public string? TreatmentTitle { get; set; }
 	public string? Status { get; set; }
+}
+
+public class TreatmentRecordQuery
+{
+	public string? TreatmentTitle { get; set; } = string.Empty;
+	public string? Status { get; set; } = string.Empty;
+	public int PageIndex { get; set; } = 1; // Default to first page
+	public int PageSize { get; set; } = 10; // Default to 10 items per page
 }

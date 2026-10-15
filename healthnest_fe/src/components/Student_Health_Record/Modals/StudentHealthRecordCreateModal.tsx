@@ -47,7 +47,7 @@ const StudentHealthRecordCreateModal: React.FC<StudentHealthRecordCreateModalPro
             errs.height = 'Height must be a positive number.';
         }
 
-        if (Number(form.height) <= 300) {
+        if (Number(form.height) > 300) {
             errs.height = 'Height must be below 300cm.';
         }
 
@@ -55,7 +55,7 @@ const StudentHealthRecordCreateModal: React.FC<StudentHealthRecordCreateModalPro
             errs.weight = 'Weight must be a positive number.';
         }
 
-        if (Number(form.weight) <= 300) {
+        if (Number(form.weight) > 300) {
             errs.weight = 'Weight must be below 300kg.';
         }
 
@@ -138,8 +138,10 @@ const StudentHealthRecordCreateModal: React.FC<StudentHealthRecordCreateModalPro
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
+        console.log("Handle submit trigger");
         e.preventDefault();
         const errs = validate();
+        console.log('Validation errors:', errs);   // <-- add this
         setErrors(errs);
         if (Object.keys(errs).length > 0) return;
         setIsSubmitting(true);
