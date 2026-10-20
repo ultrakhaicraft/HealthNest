@@ -1,0 +1,66 @@
+.recordList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* <fieldset> has browser default border/padding/min-width, so reset them */
+.recordCard {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background-color: #f9fafb;
+}
+
+.recordHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.recordTitle {
+  padding: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.removeButton {
+  padding: 0.25rem 0.5rem;
+  border: none;
+  border-radius: 0.375rem;
+  background: none;
+  font-size: 0.875rem;
+  color: #b91c1c;
+  cursor: pointer;
+}
+
+.removeButton:hover {
+  background-color: #fee2e2;
+}
+
+.addRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.counter {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.formError {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #f5c6cb;
+  border-radius: 0.375rem;
+  background-color: #f8d7da;
+  font-size: 0.875rem;
+  color: #dc3545;
+}

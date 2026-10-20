@@ -69,7 +69,9 @@
   outline-offset: 2px;
 }
 
-
+.fieldError{
+  color:red;
+}
 
 .modalBody {
   display: grid;

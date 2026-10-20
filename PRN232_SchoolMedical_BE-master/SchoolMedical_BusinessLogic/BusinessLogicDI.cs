@@ -53,5 +53,7 @@ public static class BusinessLogicDI
 		services.AddScoped<IMedicineService, MedicineService>();
 		services.AddScoped<IStudentHealthRecordService, StudentHealthRecordService>();
 		services.AddScoped<IVaccineEventService, VaccineEventService>();
+		services.AddScoped<IVaccineRecordService, VaccineRecordService>();
+		services.AddScoped<ITreatmentRecordService, TreatmentRecordService>();	
     }
 }

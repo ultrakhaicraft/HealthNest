@@ -39,7 +39,7 @@ public class StudentHealthRecordController : ControllerBase
 	[HttpGet("{id}")]
 	public async Task<IActionResult> GetStudentHealthRecordById(string id)
 	{
-		var result = await _studentHealthRecordService.GetRecordByIdAsync(id);
+		var result = await _studentHealthRecordService.GetRecordDetailByIdAsync(id);
 		
 		ApiResponseWrapper<StudentHealthRecordDetailModel> response = ApiResponseWrapper<StudentHealthRecordDetailModel>
 			.Success(result, "Get student health records successful with Id: "+id);
@@ -47,19 +47,7 @@ public class StudentHealthRecordController : ControllerBase
 		return Ok(response);
 	}
 
-	/// <summary>
-	/// Get student health record details by ID
-	/// </summary>
-	[HttpGet("from-student/{studentId}")]
-	public async Task<IActionResult> GetStudentHealthRecordFromStudentId(string studentId)
-	{
-		var result = await _studentHealthRecordService.GetRecordFromStudentIdAsync(studentId);
-
-		ApiResponseWrapper<StudentHealthRecordDetailModel> response = ApiResponseWrapper<StudentHealthRecordDetailModel>
-			.Success(result, "Get student health records successful with student Id: "+studentId);
-
-		return Ok(response);
-	}
+	
 
 	/// <summary>
 	/// Create new student health record

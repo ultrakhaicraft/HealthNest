@@ -3,10 +3,12 @@ import styles from "../CSS/Nurse/NurseTopHeader.module.css"
 interface NurseHeaderProps {
   username: string;
   role: string;
+  onSelect: (label: string) => void;
+
 }
 
-export const NurseHeader = ({ username, role }: NurseHeaderProps) => {
-    return (
+export const NurseHeader = ({ username, role, onSelect }: NurseHeaderProps) => {
+  return (
     <header className={styles.nurseHeader}>
       <div className={styles.nurseHeaderSearch}>
         <svg className={styles.searchIcon} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -57,6 +59,10 @@ export const NurseHeader = ({ username, role }: NurseHeaderProps) => {
           <svg className={styles.dropdownChevron} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <polyline points="6 9 12 15 18 9" />
           </svg>
+
+          <div className={styles.dropdownMenu}>
+          <button onClick={()=> {onSelect('User Profile')}} className={styles.dropdownItem}>👤 View Profile</button>
+        </div>
         </div>
       </div>
     </header>

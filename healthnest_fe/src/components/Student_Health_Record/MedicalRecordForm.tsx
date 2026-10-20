@@ -6,7 +6,7 @@ import {
   IconInfo, 
   IconPaperPlane
 } from '../../components/IconList';
-import { AccountDetail } from '../../feature/API/AccountService';
+import { AccountDetailModel } from '../../models/AccountModel';
 
 interface MedicalRecordFormProps {
   formData: {
@@ -23,8 +23,8 @@ interface MedicalRecordFormProps {
 }
 
 const MedicalRecordForm = ({ handleInputChange, handleSubmit, isLoading, error, formData }: MedicalRecordFormProps) => {
-  const stored = localStorage.getItem('accountDetail');
-  let parentData: AccountDetail | null = null;
+  const stored = localStorage.getItem('AccountDetailModel');
+  let parentData: AccountDetailModel | null = null;
   if (stored) {
     parentData = JSON.parse(stored);
   } else {

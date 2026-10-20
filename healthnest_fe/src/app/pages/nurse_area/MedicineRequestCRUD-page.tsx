@@ -123,7 +123,6 @@ export default function MedicineRequestCRUDPage() {
           medicineRequest={modal.state.medicineRequest}
           onClose={modal.close}
           onSubmit={handleUpdateSubmit}
-          onError={(msg)=> handleShowToast(msg, 'error')}
         />
       )}
       <Toast
