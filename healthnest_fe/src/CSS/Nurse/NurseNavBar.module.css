@@ -95,7 +95,7 @@
   top: 0;
   left: calc(100% + 0.5rem);
   z-index: 20;
-  min-width: 13rem;
+  min-width: 10rem;
   margin: 0;
   padding: 0.5rem;
   list-style: none;

@@ -19,18 +19,19 @@ export default function NurseHomePage() {
     const location = useLocation();
 
     // Derive the active nav item from the URL instead of local state
-    const activeItem = getActiveItemFromPath(location.pathname,userRole);
+    const activeItem = getActiveItemFromPath(location.pathname, userRole);
 
     const handleSelect = (label: string) => {
-        navigate(userouteForLabel(label,userRole)); // e.g. 'Medicine' -> '/nurseHomepage/medicines'
+        navigate(userouteForLabel(label, userRole)); // e.g. 'Medicine' -> '/nurseHomepage/medicines'
     };
 
+   
 
     return (
         <div style={{ display: 'flex', minHeight: '100vh' }}>
             <NurseSideNav activeItem={activeItem} onSelect={handleSelect} />
             <div style={{ flex: 1, padding: '2rem', backgroundColor: '#e8effa' }}>
-                <NurseHeader username={username} role="Nurse" />
+                <NurseHeader username={username} role="Nurse" onSelect={handleSelect}/>
                 <Outlet /> {/* renders whichever nested route matched */}
             </div>
 

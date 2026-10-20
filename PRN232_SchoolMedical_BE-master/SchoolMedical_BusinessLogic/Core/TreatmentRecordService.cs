@@ -24,7 +24,10 @@ public class TreatmentRecordService : ITreatmentRecordService
 
 	public async Task AddTreatmentRecordsByStudentHealthRecordIdAsync(List<TreatmentRecordCreateModel> requests, string studentHealthRecordId)
 	{
-		var studentHealthRecord = await _unitOfWork.GetRepository<Studenthealthrecord>().GetByIdAsync(studentHealthRecordId);
+		var studentHealthRecord = await _unitOfWork.GetRepository<Studenthealthrecord>().GetQueryable()
+			.Where(x => x.Id.Equals(studentHealthRecordId))
+			.FirstOrDefaultAsync();
+
 
 		if (studentHealthRecord == null)
 		{
@@ -55,6 +58,8 @@ public class TreatmentRecordService : ITreatmentRecordService
 
 		//Perform Pagination in Database itself
 		var query = _unitOfWork.GetRepository<Treatmentrecord>().GetQueryable();
+		var totalCount = query.Count();
+
 
 		//Apply filtering and sorting
 		query = ApplyFilter(query, request.Status, request.TreatmentTitle);
@@ -66,7 +71,6 @@ public class TreatmentRecordService : ITreatmentRecordService
 				.Take(request.PageSize)
 				.ToList();
 
-		var totalCount = entity.Count();
 
 		List<TreatmentRecordViewModel> viewData = entity.Select(x => new TreatmentRecordViewModel
 		{
@@ -82,7 +86,7 @@ public class TreatmentRecordService : ITreatmentRecordService
 
 
 
-		var pagedResult = await PagingExtension.ToPagingModel(viewData, request.PageIndex, request.PageSize, totalCount);
+		var pagedResult = await PagingExtension.ToPagingModel(viewData, totalCount: totalCount, pageIndex: request.PageIndex, request.PageSize);
 
 		return pagedResult;
 	}

@@ -1,7 +1,7 @@
 import { useAuth } from "../feature/API/LoginService";
 import { IconHealthCheckup, IconHome, IconIncidentReport, IconLogout, IconMedical, IconMedicine, IconStudentRecord, IconVaccine } from "./IconList";
 import styles from '../CSS/Nurse/NurseNavBar.module.css';
-import { Children, useEffect, useRef, useState } from "react";
+import { Children, ReactNode, useEffect, useRef, useState } from "react";
 
 interface SideNavProps {
   activeItem: string;
@@ -56,7 +56,7 @@ const NurseSideNav = ({ activeItem, onSelect }: SideNavProps) => {
   }, []);
 
   const handleSelect = (label: string) => {
-    setOpenMenu(null);
+    setOpenSubMenu  (null);
     onSelect(label);
   };
 
@@ -86,12 +86,14 @@ const NurseSideNav = ({ activeItem, onSelect }: SideNavProps) => {
               activeItem === item.label || !!item.children?.some((c) => c.label === activeItem);
             const isOpen = openSubMenu === item.label;
             return (
-              <li key={item.label}>
+              <li key={item.label}
+              className={[
+                  hasChildren ? styles.hasSubmenu : '',
+                  isOpen ? styles.submenuOpen : '',
+                ].filter(Boolean).join(' ')}>
                 <button
                   type="button"
-                  className={activeItem === item.label ?
-                    ` ${styles.navItem} ${styles.active} ${styles.navItemButton}` :
-                    ` ${styles.navItem} ${styles.navItemButton}`}
+                  className={itemClass(isActive)}
                   onClick={() => onSelect(item.label)}
                 >
                   {item.icon}

@@ -9,12 +9,12 @@ namespace HealthNest_API.Controllers;
 [ApiController]
 [Route("api/treatment-record")]
 [Authorize]
-public class TreatmentController : Controller
+public class TreatmentRecordController : Controller
 {
 
 	private readonly ITreatmentRecordService _treatmentRecordService;
 
-	public TreatmentController(ITreatmentRecordService treatmentRecordService)
+	public TreatmentRecordController(ITreatmentRecordService treatmentRecordService)
 	{
 		_treatmentRecordService = treatmentRecordService;
 	}

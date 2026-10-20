@@ -57,6 +57,8 @@ public class VaccineRecordService : IVaccineRecordService
 
 		//Perform Pagination in Database itself
 		var query = _unitOfWork.GetRepository<Vaccinerecord>().GetQueryable();
+		var totalCount = query.Count();
+
 
 		//Apply filtering and sorting
 		query = ApplyFilter(query, request.Status, request.VaccineTitle);
@@ -68,7 +70,6 @@ public class VaccineRecordService : IVaccineRecordService
 				.Take(request.PageSize)
 				.ToList();
 
-		var totalCount=entity.Count();
 
 		List<VaccineRecordViewModel> viewData = entity.Select(x => new VaccineRecordViewModel
 		{
@@ -84,7 +85,7 @@ public class VaccineRecordService : IVaccineRecordService
 
 
 
-		var pagedResult = await PagingExtension.ToPagingModel(viewData, request.PageIndex, request.PageSize, totalCount);
+		var pagedResult = await PagingExtension.ToPagingModel(viewData, totalCount: totalCount, pageIndex: request.PageIndex, request.PageSize);
 
 		return pagedResult;
 	}

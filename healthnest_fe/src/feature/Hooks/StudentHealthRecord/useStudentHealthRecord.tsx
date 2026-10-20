@@ -36,9 +36,9 @@ export function useStudentHealthRecord(filters: StudentHealthRecordQuery) {
 
 
     const getById = useCallback((id: string): Promise<StudentHealthRecordDetailModel> => {
-        const medicineRequest = StudentHealthRecordService.getDetailById(id);
-        console.log('Fetched medicine request details:', medicineRequest);
-        return medicineRequest;
+        const studentHealthRecord = StudentHealthRecordService.getDetailById(id);
+        console.log('Fetched student health record details:', studentHealthRecord);
+        return studentHealthRecord;
     }, []);
 
     const create = useCallback(

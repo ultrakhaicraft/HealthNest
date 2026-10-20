@@ -22,15 +22,13 @@ public class TreatmentRecordViewModel
 }
 public class TreatmentRecordCreateModel
 {
-	public string StudentId { get; set; } = null!;
-	public string StudentHealthRecordId { get; set; } = null!;
+	
 	public string? TreatmentTitle { get; set; }
 	public string? Description { get; set; }
 }
 
 public class TreatmentRecordUpdateModel
 {
-	public string StudentId { get; set; } = null!;
 	public string? Description { get; set; }
 	public string? TreatmentTitle { get; set; }
 	public string? Status { get; set; }

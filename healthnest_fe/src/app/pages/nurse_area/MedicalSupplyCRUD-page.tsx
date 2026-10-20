@@ -10,46 +10,46 @@ import { MedicalSupplyViewDetailModal } from "../../../components/Medical_Supply
 import { MedicalSupplyCRUDPanel } from "../../../components/Medical_Supply/MedicalSupplyManagementPanel";
 
 const DEFAULT_FILTER: MedicalSupplyQuery = {
-    PageIndex: 1,
-    PageSize: 10,
-    SortByNameByDescending: true,
-    Status: '',
-    Name: ''
+  PageIndex: 1,
+  PageSize: 10,
+  SortByNameByDescending: true,
+  Status: '',
+  Name: ''
 };
 
 export default function MedicalSupplyCRUDPage() {
-   const [showFilters, setShowFilters] = useState(false);
-    const [filters, setFilters] = useState<MedicalSupplyQuery>(DEFAULT_FILTER);
-    const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' as 'success' | 'error' });
-    const [actionLoading, setActionLoading] = useState(false);
-   
-    const medicalSupplies = useMedicalSupplies(filters);
-    const modal = useMedicalSupplyModals();
-    
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState<MedicalSupplyQuery>(DEFAULT_FILTER);
+  const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' as 'success' | 'error' });
+  const [actionLoading, setActionLoading] = useState(false);
 
-    const handleShowToast = (message: string, type: 'success' | 'error') => {
-        setToast({ isVisible: true, message, type });
-      };
-    
-      const handleCloseToast = () => {
-        setToast({ ...toast, isVisible: false });
-      };
-    
-      const handleApplyFilters = (newFilters: MedicalSupplyQuery) => {
-          console.log('Applying filters:', newFilters);
-          setFilters({...newFilters,PageIndex: 1}); // Reset to first page when filters change
-        }
-      
-        const handlePageChange = (page: number) => {
-          setFilters((prev) => ({ ...prev, PageIndex: page }));
-        };
-      
-      const handleClearFilters = () => {
-          setFilters(DEFAULT_FILTER);
-      };
+  const medicalSupplies = useMedicalSupplies(filters);
+  const modal = useMedicalSupplyModals();
 
 
-      // --- View ---
+  const handleShowToast = (message: string, type: 'success' | 'error') => {
+    setToast({ isVisible: true, message, type });
+  };
+
+  const handleCloseToast = () => {
+    setToast({ ...toast, isVisible: false });
+  };
+
+  const handleApplyFilters = (newFilters: MedicalSupplyQuery) => {
+    console.log('Applying filters:', newFilters);
+    setFilters({ ...newFilters, PageIndex: 1 }); // Reset to first page when filters change
+  }
+
+  const handlePageChange = (page: number) => {
+    setFilters((prev) => ({ ...prev, PageIndex: page }));
+  };
+
+  const handleClearFilters = () => {
+    setFilters(DEFAULT_FILTER);
+  };
+
+
+  // --- View ---
   const handleView = async (id: string) => {
     try {
       const medicalSupply = await medicalSupplies.getById(id);
@@ -110,11 +110,11 @@ export default function MedicalSupplyCRUDPage() {
     }
   };
 
- 
 
-    return (
-        <>
-        <MedicalSupplyCRUDPanel 
+
+  return (
+    <>
+      <MedicalSupplyCRUDPanel
         medicalSupplyData={medicalSupplies.data}
         loading={medicalSupplies.loading}
         pagination={{
@@ -136,10 +136,10 @@ export default function MedicalSupplyCRUDPage() {
         onCreate={modal.openCreate}
       />
       {modal.state.type === 'view' && (
-        <MedicalSupplyViewDetailModal    
-          medicalSupply={modal.state.medicalSupply} 
+        <MedicalSupplyViewDetailModal
+          medicalSupply={modal.state.medicalSupply}
           isOpen={true}
-          onClose={modal.close} 
+          onClose={modal.close}
         />
       )}
       {modal.state.type === 'create' && (
@@ -147,30 +147,30 @@ export default function MedicalSupplyCRUDPage() {
           isOpen={true}
           onClose={modal.close}
           onSubmit={handleCreateSubmit}
-          onError={(msg)=> handleShowToast(msg, 'error')}
+          onError={(msg) => handleShowToast(msg, 'error')}
         />
       )}
-      {modal.state.type === 'edit' &&  (
+      {modal.state.type === 'edit' && (
         <UpdateMedicalSupplyModal
           isOpen={true}
           medicalSupply={modal.state.medicalSupply}
           onClose={modal.close}
           onSubmit={handleUpdateSubmit}
-          onError={(msg)=> handleShowToast(msg, 'error')}
+          onError={(msg) => handleShowToast(msg, 'error')}
         />
       )}
       {modal.state.type === 'delete' && (
-      <ConfirmationModal
-        isOpen={true}
-        onClose={modal.close}
-        onConfirm={() => handleDeleteConfirm(modal.state.type === 'delete' ? modal.state.medicalSupplyId : '')}
-        title="Delete Medical Supply"
-        message={`Are you sure you want to delete this medical supply ? This action cannot be undone.`}
-        confirmText="Delete"
-        cancelText="Cancel"
-        isLoading={actionLoading}
-        type="danger"
-      />
+        <ConfirmationModal
+          isOpen={true}
+          onClose={modal.close}
+          onConfirm={() => handleDeleteConfirm(modal.state.type === 'delete' ? modal.state.medicalSupplyId : '')}
+          title="Delete Medical Supply"
+          message={`Are you sure you want to delete this medical supply ? This action cannot be undone.`}
+          confirmText="Delete"
+          cancelText="Cancel"
+          isLoading={actionLoading}
+          type="danger"
+        />
       )}
 
       <Toast
@@ -179,6 +179,6 @@ export default function MedicalSupplyCRUDPage() {
         isVisible={toast.isVisible}
         onClose={handleCloseToast}
       />
-        </>
-    )
+    </>
+  )
 }
