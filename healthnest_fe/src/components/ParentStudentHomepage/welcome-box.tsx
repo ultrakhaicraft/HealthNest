@@ -12,13 +12,13 @@ function Welcome({ name, avatarSrc, userType }: WelcomeProps) {
     <section className={styles.welcomeCard}>
       <img src={avatarSrc} alt="User" className={styles.welcomeAvatar} />
       <div className={styles.welcomeText}>
-        <p className={styles.welcomeGreeting}>Welcome back,</p>
-        <h1 className={styles.welcomeName}>{name}</h1>
+        <p className={styles.welcomeGreeting}>Welcome back, {name}</p>
+        <h1 className={styles.welcomeName}>This is your dashboard page</h1>
         <p className={styles.welcomeInfo}>
-          {userType === UserRole.Parent ? (
-            <span className={styles.studentIcon} role="img" aria-label="student icon">👨‍🎓</span>
+          {userType === UserRole.Student ? (
+            <span className={styles.studentIcon} role="img" aria-label="student icon">You are currently logged in as Student, 👨‍🎓</span>
           ) : (
-            <span className={styles.parentIcon} role="img" aria-label="parent icon">👩‍👧</span>
+            <span className={styles.parentIcon} role="img" aria-label="parent icon">You are currently logged in as Parent, 👩‍👧</span>
           )}
           {userType === UserRole.Student && 'Class of 10A'}
         </p>

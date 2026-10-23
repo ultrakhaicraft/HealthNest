@@ -1,7 +1,9 @@
+import { UserRole } from "../../feature/Constant";
 import { AccountDetailModel, AccountCreateRequest, AccountUpdateRequest } from "../AccountModel";
 
 // --- Admin Models ---
 export interface AdminDetailModel extends AccountDetailModel {
+  role: UserRole.Admin;
   description?: string;
 }
 

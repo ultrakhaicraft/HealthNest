@@ -109,6 +109,53 @@
   color: #d00;
 }
 
+/* Button wrapper: reset browser button styles */
+.profileTrigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem 0.25rem 0.25rem;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  background: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.profileTrigger:hover,
+.profileTrigger[aria-expanded='true'] {
+  background-color: #eef2fb;
+  border-color: #dbe3f5;
+}
+
+.profileTrigger:focus-visible {
+  outline: 2px solid #2b50ec;
+  outline-offset: 2px;
+}
+
+/* The avatar no longer needs its own pointer cursor */
+.profileAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ccc;
+}
+
+.chevron {
+  width: 1rem;
+  height: 1rem;
+  color: #6b7280;
+  transition: transform 0.2s ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+
+
+
 
 /*.navigation ul {
   list-style: none;

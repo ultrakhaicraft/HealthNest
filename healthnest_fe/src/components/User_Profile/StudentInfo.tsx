@@ -1,63 +1,79 @@
 import { useEffect, useState } from 'react';
-import { IconStudent} from '../../components/IconList'; 
+import { IconStudent } from '../../components/IconList';
 import { Link } from 'react-router-dom';
 import styles from '../../CSS/Components/UserProfile.module.css';
+import { StudentDetailModel } from '../../models/AccountSubclassModels/StudentModel';
 
 
-interface StudentInfoProp{
-    studentName: string;
-    studentId: string;
+interface StudentInfoProp {
+    students: StudentDetailModel[]
+    loading: boolean
+    error: string | null
 }
 
-const StudentInfo = ({ studentName, studentId } : StudentInfoProp) => {
-     
+const LINK_STUDENT_PATH = '/parent/link-student-to-parent';
+
+const StudentInfo = ({ students, loading = false, error = null }: StudentInfoProp) => {
+    const renderBody = () => {
+        // Check loading first, otherwise "No student linked" flashes while the fetch is in flight
+        if (loading) return <p className={styles.studentId}>Loading students...</p>;
+        if (error) return <p className={styles.errorText}>{error}</p>;
+
+        if (students.length === 0) {
+            return (
+                <div className={styles.emptyState}>
+                    <p className={styles.studentId}>No student linked to this account.</p>
+                    <Link to={LINK_STUDENT_PATH} className="button button-primary no-link">
+                        Link your student to you here
+                    </Link>
+                </div>
+            );
+        }
+
+        return (
+            <>
+                <ul className={styles.studentList}>
+                    {students.map(student => (
+                        <StudentListItem key={student.id} student={student} />
+                    ))}
+                </ul>
+                <Link to={LINK_STUDENT_PATH} className={styles.linkAnother}>
+                    + Link another student
+                </Link>
+            </>
+        );
+    };
 
     return (
         <div className={styles.infoCard}>
             <div className={styles.infoCardHeader}>
-                <h2 className={styles.infoCardTitle}><IconStudent className="icon" /> Student Information</h2>
+                <h2 className={styles.infoCardTitle}>
+                    <IconStudent className={styles.greenIcon} /> Student Information
+                </h2>
             </div>
-            <div className={styles.studentInfoContent}>
-                <img src='/assets/PRN_Avatar.svg' alt="Student Avatar" className={styles.studentAvatar} />
-                <div className={styles.studentDetails}>
-                    {studentId ? (
-                        <>
-                        <h3>{studentName}</h3>
-                        <p className={styles.studentId}>Student ID: {studentId}</p>
-                        </>
-                    ) : (
-                        <p className={styles.studentId} >No student linked to this account.</p>
-                    )}
-                </div>
-            </div>
-            <div className={styles.infoGrid} style={{marginTop: '1rem'}}>
-                {studentId ? (
-                    <>
-                        <div className={styles.infoItem}>
-                            <label>Class</label>
-                            <p>11-A</p>
-                        </div>
-                        <div className={styles.infoItem}>
-                            <label>Homeroom Teacher</label>
-                            <p>Mikeson</p>
-                        </div>
-                        <div className={styles.infoItem}>
-                            <label>Academic Year</label>
-                            <p>2024-2025</p>
-                        </div>
-                    </>
-                ) : (
-                     <div className={`${styles.infoItem} ${styles.fullWidth}`}>
-                        <Link to="/assignStudentToParent" className="button button-primary no-link " style={{marginTop: '1rem'}}>
-                            Link your student to you here
-                        </Link>
-                    </div>
-                )}
-            </div>
+            {renderBody()}
         </div>
     );
 };
 
-export default StudentInfo
+const StudentListItem = ({ student }: { student: StudentDetailModel }) => (
+    <li className={styles.studentItem}>
+        <img
+            src={student.avatarUrl || '/assets/PRN_Avatar.svg'}
+            alt={student.fullName ?? 'Student'}
+            className={styles.studentAvatar}
+        />
+        <div className={styles.studentItemDetails}>
+            <h3 className={styles.studentName}>{student.fullName ?? 'N/A'}</h3>
+            <p className={styles.studentId}>Student ID: {student.id}</p>
+            <div className={styles.studentMeta}>
+                <span><label>Class</label>{student.class ?? 'N/A'}</span>
+                <span><label>Health Status</label>{student.currentHealthStatus ?? 'N/A'}</span>
+            </div>
+        </div>
+    </li>
+);
+
+export default StudentInfo;
 
 

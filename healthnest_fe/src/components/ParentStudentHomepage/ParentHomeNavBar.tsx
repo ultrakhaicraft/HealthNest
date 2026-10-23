@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import styles from "../../CSS/Parent/ParentHomePageNavBar.module.css"
 import { userouteForLabel } from "../../feature/Hooks/Other/RouterHooks";
 import { UserRole } from "../../feature/Constant";
+import DefaultAvatar from "../../../public/DefaultUserPfp.jpg";
+import { IconChevronDown } from "../IconList";
+
 
 export interface UserHomeNavBarProps {
   activeItem: string;
@@ -41,8 +44,8 @@ export default function ParentHomeNavBar({ activeItem, onSelect }: UserHomeNavBa
   );
 }
 
-interface ProfileDropdown{
-    onSelect: (label: string) => void;
+interface ProfileDropdown {
+  onSelect: (label: string) => void;
 }
 
 export const ProfileDropdown = (onSelect: ProfileDropdown) => {
@@ -61,7 +64,7 @@ export const ProfileDropdown = (onSelect: ProfileDropdown) => {
   }, []);
 
   const handleNavigateProfile = () => {
-    navigate(userouteForLabel('User Profile',UserRole.Parent));
+    navigate(userouteForLabel('User Profile', UserRole.Parent));
   };
 
   const handleLogout = () => {
@@ -71,12 +74,17 @@ export const ProfileDropdown = (onSelect: ProfileDropdown) => {
 
   return (
     <div className={styles.profileDropdownContainer} ref={dropdownRef}>
-      <img
-        className={styles.profileAvatar}
-        src="./assets/PRN_Avatar.svg"
-        alt="User profile"
-        onClick={() => setOpen(prev => !prev)}
-      />
+      <button
+        type="button"
+        className={styles.profileTrigger}
+        onClick={() => setOpen((prev) => !prev)}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label="Account menu"
+      >
+        <img className={styles.profileAvatar} src={DefaultAvatar} alt="" />
+        <IconChevronDown className={`${styles.chevron} ${open ? styles.chevronOpen : ''}`} />
+      </button>
       {open && (
         <div className={styles.dropdownMenu}>
           <button onClick={handleNavigateProfile} className={styles.dropdownItem}>👤 View Profile</button>

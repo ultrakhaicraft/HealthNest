@@ -21,8 +21,8 @@ public interface IAccountService
 	public Task UpdateAccount(string userId, AccountUpdateRequest request);
 	public Task SoftDeleteAccount(string userId);
 	public Task ChangeAccountStatus(string userId, AccountStatus status);
-	public Task<PagingModel<AccountViewModel>> getStudentsByParentId(string parentId, AccountQuery request);
-	public Task<bool> AssignStudentToParent(string parentId, string studentId);
+	public Task<List<StudentDetailModel>> getStudentsByParentId(string parentId);
+	public Task AssignStudentToParent(string parentId, List<string> ListOfStudentId);
 	public Task<List<AccountViewModel>> GetAllStudentAccounts();
 
 }

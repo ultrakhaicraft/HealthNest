@@ -1,11 +1,20 @@
 //The goal is to call CRUD operations on the user API
 import { AccountQuery, AccountViewModel, AccountDetailModel, AccountCreateRequest, AccountUpdateRequest } from '../../models/AccountModel';
+import { AdminDetailModel } from '../../models/AccountSubclassModels/AdminModel';
+import { NurseDetailModel } from '../../models/AccountSubclassModels/NurseModel';
+import { ParentDetailModel } from '../../models/AccountSubclassModels/ParentModel';
+import { StudentDetailModel } from '../../models/AccountSubclassModels/StudentModel';
 import { PaginatedResponse, ApiResponseWrapper } from '../../models/ApiClientModel';
 import apiClient from '../ApiClient';
 
+
+export type AccountDetailBaseModel =
+  | ParentDetailModel
+  | StudentDetailModel
+  | NurseDetailModel
+  | AdminDetailModel;
+
 // --- API Service Object ---
-
-
 export const accountService = {
   /**
    * Fetches a paginated and filtered list of accounts. Can also be used to search for students.
@@ -26,11 +35,11 @@ export const accountService = {
   /**
    * Fetches a single account detail by its ID.
    * @param {string} id - The ID of the account to fetch.
-   * @returns {Promise<AccountDetailModel>} A promise that resolves to the account data.
+   * @returns {Promise<AccountDetailBaseModel>} A promise that resolves to the account data.
    * No Pagination
    */
-  getDetailById: async (userId: string): Promise<AccountDetailModel> => {
-    const response = await apiClient.get<ApiResponseWrapper<AccountDetailModel>>(`/account/${userId}`);
+  getDetailById: async (userId: string): Promise<AccountDetailBaseModel> => {
+    const response = await apiClient.get<ApiResponseWrapper<AccountDetailBaseModel>>(`/account/${userId}`);
     console.log("userId: ",userId);
     console.log("Detail logged: ", response.data.data);
     return response.data.data;
@@ -40,42 +49,9 @@ export const accountService = {
   Fetch all student account that contain Parent Id
   Useful to check what student belong to which parent
   */
-  getStudentFromParentId: async (parentId: string, params: AccountQuery): Promise<PaginatedResponse<AccountViewModel>> => {
-    const response = await apiClient.get<ApiResponseWrapper<PaginatedResponse<AccountViewModel>>>(`/account/${parentId}/student`,
-      {params: params}
-    );
+  getStudentFromParentId: async (parentId: string): Promise<StudentDetailModel[]> => {
+    const response = await apiClient.get<ApiResponseWrapper<StudentDetailModel[]>>(`/account/${parentId}/student`);
     return response.data.data;
-  },
-
-
-  /**
-   * Fetches all student accounts (for dropdowns, etc.)
-   * @returns {Promise<AccountViewModel[]>} A promise that resolves to the list of student accounts.
-   */
-  getAllStudents: async (): Promise<AccountViewModel[]> => {
-    const response = await apiClient.get<ApiResponseWrapper<PaginatedResponse<AccountViewModel>>>('/account', {
-      params: {
-        Role: 'Student',
-        PageNumber: 1,
-        PageSize: 1000,
-      },
-    });
-    return response.data.data.data;
-  },
-
-  /**
-   * Fetches all parent accounts (for dropdowns, etc.)
-   * @returns {Promise<AccountViewModel[]>} A promise that resolves to the list of parent accounts.
-   */
-  getAllParents: async (): Promise<AccountViewModel[]> => {
-    const response = await apiClient.get<ApiResponseWrapper<PaginatedResponse<AccountViewModel>>>('/account', {
-      params: {
-        Role: 'Parent',
-        PageNumber: 1,
-        PageSize: 1000,
-      },
-    });
-    return response.data.data.data;
   },
 
 

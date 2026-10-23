@@ -4,6 +4,7 @@ using HealthNest_DAO.DTOModels.Accounts;
 using HealthNest_DAO.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System.Security.Principal;
 
 namespace HealthNest_API.Controllers;
@@ -35,7 +36,7 @@ public class AccountController : ControllerBase
 	/// Get account details by ID
 	/// </summary>
 	[HttpGet("{id}")]
-	public async Task<IActionResult> GetAccountById(string id)
+	public async Task<IActionResult> GetAccountDetailById(string id)
 	{
 		var account = await _accountService.GetAccountDetailById(id);
 		
@@ -46,10 +47,10 @@ public class AccountController : ControllerBase
 	}
 
 	[HttpGet("{parentId}/student")]
-	public async Task<IActionResult> GetStudentByParentId(string parentId, [FromQuery] AccountQuery request)
+	public async Task<IActionResult> GetStudentListByParentId(string parentId)
 	{
-		var account = await _accountService.getStudentsByParentId(parentId, request);
-		ApiResponseWrapper<PagingModel<AccountViewModel>> response = ApiResponseWrapper<PagingModel<AccountViewModel>>
+		var account = await _accountService.getStudentsByParentId(parentId);
+		ApiResponseWrapper<List<StudentDetailModel>> response = ApiResponseWrapper<List<StudentDetailModel>>
 			.Success(account, "Get Students account successfully with Parent Id: " + parentId);
 
 		return Ok(response);
@@ -131,23 +132,22 @@ public class AccountController : ControllerBase
 	}
 
 	[HttpPatch("assign-student")]
-	public async Task<IActionResult> AssignStudentToParent([FromQuery] string studentId,string parentId)
+	[Authorize(Roles = nameof(AccountRole.Parent))]
+
+	public async Task<IActionResult> AssignStudentToParent([FromBody] List<string> ListOfStudentId)
 	{
-		var result = await _accountService.AssignStudentToParent(parentId, studentId);
-		if (result)
-		{
-			HttpContext.Items["CustomMessage"] = "Link Student to Parent successfully";
-			ApiResponseWrapper<string> response = ApiResponseWrapper<string>
+		var parentId = User.FindFirst("AccountId")?.Value;
+		if (string.IsNullOrEmpty(parentId))
+			return Unauthorized();
+
+		await _accountService.AssignStudentToParent(parentId, ListOfStudentId);
+
+		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
 					.Success(string.Empty, "Link Student to Parent successfully");
 
-			return Ok(response);
-		}
-		else
-		{
-			ApiResponseWrapper<string> response = ApiResponseWrapper<string>
-								.ErrorResponse(400, "Assign Student to Parent failed", "No further detail");	
-			return BadRequest();
-		}
+		return Ok(response);
+
+	
 	}
 
 	

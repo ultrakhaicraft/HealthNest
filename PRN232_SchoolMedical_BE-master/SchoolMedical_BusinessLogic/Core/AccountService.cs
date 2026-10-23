@@ -5,6 +5,7 @@ using HealthNest_DAO.DTOModels.Accounts;
 using HealthNest_DAO.Entities;
 using HealthNest_DAO.Enums;
 using HealthNest_DAO.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
@@ -181,43 +182,49 @@ public class AccountService : IAccountService
 		
 	}
 
-	public async Task<PagingModel<AccountViewModel>> getStudentsByParentId(string parentId, AccountQuery request)
+	/// <summary>
+	/// Get list of student by parentId
+	/// </summary>
+	/// <param name="parentId"></param>
+	/// <param name="request"></param>
+	/// <returns></returns>
+	/// <exception cref="NotFoundException"></exception>
+	public async Task<List<StudentDetailModel>> getStudentsByParentId(string parentId)
 	{
+		var query = await _unitOfWork.GetRepository<Student>().GetQueryableAsync();
 
-		//Get a potential list of student id through parent id
-		var query = await _unitOfWork.GetRepository<Account>().GetQueryableAsync();
+		var students = query
+			.Include(u=>u.Account)
+			.Where(student => student.ParentId == parentId
+			&& student.Account.Role== AccountRole.Student.ToString()
+			&& student.Account.Status != AccountStatus.Inactive.ToString());
 
-
-		var accounts = query.Where(user => user.Student.ParentId == parentId
-		&&user.Role== AccountRole.Student.ToString()
-		&&user.Status != AccountStatus.Inactive.ToString());
-
-		if (accounts == null || !accounts.Any())
+		if (students == null || !students.Any())
 		{
 			throw new NotFoundException("Accounts associated with ParentId are not found or already inactive with Id or not a student");
 		}
 
-		var accountViews = accounts.Select(account => new AccountViewModel
+		var studentViews = students.Select(account => new StudentDetailModel
 		{
 			Id = account.Id,
-			FullName = account.FullName,
-			Email = account.Email,
-			Role = account.Role,
-			Gender = account.Gender,
-			Status = account.Status,
-		});
+			FullName = account.Account.FullName,
+			Email = account.Account.Email,
+			Role = account.Account.Role,
+			Gender = account.Account.Gender,
+			Status = account.Account.Status,
+			Address = account.Account.Address,
+			AvatarUrl = account.Account.AvatarUrl,
+			DateOfBirth = account.Account.DateOfBirth,
+			PhoneNumber = account.Account.PhoneNumber,
+			AccountCreationDateTime= account.Account.AccountCreationDateTime,
+			ParentId = account.ParentId,
+			Class = account.Class,
+			CurrentHealthStatus = account.CurrentHealthStatus,
 
-		var pagingModel = await PagingExtension.ToPagingModel(accountViews, request.PageNumber, request.PageSize); // Default page index and size
+		}).ToList();
 
-		return new PagingModel<AccountViewModel>
-		{
-			PageIndex = pagingModel.PageIndex,
-			PageSize = pagingModel.PageSize,
-			TotalCount = pagingModel.TotalCount,
-			TotalPages = pagingModel.TotalPages,
-			Data = pagingModel.Data
-		};
 
+		return studentViews;
 
 	}
 
@@ -240,49 +247,65 @@ public class AccountService : IAccountService
 
 	
 
-	public async Task<bool> AssignStudentToParent(string parentId, string studentId)
+	public async Task AssignStudentToParent(string parentId, List<string> ListOfStudentId)
 	{
-		
-			//Get student data
-			var student = _unitOfWork.GetRepository<Student>()
-				.Include(a => a.Account)
-				.Where(user => user.Id == studentId && user.Account.Status != AccountStatus.Inactive.ToString())
-				.FirstOrDefault();
+		// 1. Normalize input
+		var ids = (ListOfStudentId ?? new List<string>())
+			.Where(id => !string.IsNullOrWhiteSpace(id))
+			.Distinct()
+			.ToList();
 
+		if (ids.Count == 0)
+			throw new BadRequestException("At least one student id is required.");
 
-			if (student == null)
-			{
-				throw new NotFoundException("Student Account not found or already inactive.");
-			}
+		// 2. Parent must exist, be a parent, and be active
+		var parent = await _unitOfWork.GetRepository<Account>().FindAsync(a => a.Id == parentId);
+		if (parent == null
+			|| parent.Role != "Parent"                                   // use your role constant/enum
+			|| parent.Status == AccountStatus.Inactive.ToString())
+			throw new BadRequestException("Parent account not found or not eligible to link students.");
 
+		// 3. One query for all students
+		var students = await _unitOfWork.GetRepository<Student>()
+			.Include(s => s.Account)
+			.Where(s => ids.Contains(s.Id))
+			.ToListAsync();
 
-			//If student already assigned to parent 
-			if (!string.IsNullOrEmpty(student.ParentId))
-			{
-				throw new BadRequestException("Account already linked");
-			}
+		// 4. Validate everything up front and report every problem
+		var available = students
+			.Where(s => s.Account.Status != AccountStatus.Inactive.ToString())
+			.Select(s => s.Id);
+		var unavailable = ids.Except(available).ToList();
+		if (unavailable.Count > 0)
+			throw new NotFoundException(
+				$"Student account(s) not found or inactive: {string.Join(", ", unavailable)}");
 
-		try
+		var alreadyLinked = students
+			.Where(s => !string.IsNullOrEmpty(s.ParentId))
+			.Select(s => s.Id)
+			.ToList();
+		if (alreadyLinked.Count > 0)
+			throw new BadRequestException(
+				$"Student(s) already linked: {string.Join(", ", alreadyLinked)}");
+
+		// 5. Apply changes
+		foreach (var student in students)
 		{
-			await _unitOfWork.BeginTransactionAsync();
-			// Update data, likes assign ParentId to Student and setting the Status from "NotLinked" to "Active"
 			student.ParentId = parentId;
 			student.Account.Status = AccountStatus.Active.ToString();
-
-			//_unitOfWork.GetRepository<Student>().Update(student);
-			//_unitOfWork.GetRepository<Account>().Update(student.Account);
-
-			await _unitOfWork.SaveAsync();
-			await _unitOfWork.CommitTransactionAsync();
-
-			return true;
 		}
-		catch (Exception)
+
+		// 6. SaveChanges 
+		try
 		{
-			await _unitOfWork.RollBackAsync();
-			throw;
+			await _unitOfWork.SaveAsync();
 		}
-		
+		catch (DbUpdateConcurrencyException)
+		{
+			throw new BadRequestException(
+				"One or more students were linked by someone else while you were submitting. Please refresh and try again.");
+		}
+
 	}
 
 

@@ -1,110 +1,135 @@
 
 import { useState } from 'react';
-import { IconEdit,IconPerson} from '../../components/IconList';
-import { IPersonalInfo } from '../../app/pages/parent_area/ParentUserProfile-Page';
+import { IconBusinessCardPerson, IconEdit, IconPerson } from '../../components/IconList';
 import { AccountDetailModel } from '../../models/AccountModel';
 import styles from '../../CSS/Components/UserProfile.module.css';
+import { ParentDetailModel } from '../../models/AccountSubclassModels/ParentModel';
+
+type EditableField = 'fullName' | 'email' | 'phoneNumber' | 'address' | 'gender' | 'dateOfBirth' | 'incomeLevel' | 'relationshipStatus';
+
+const FIELDS: { name: EditableField; label: string; type: 'text' | 'email' | 'tel' |'date'; fullWidth?: boolean }[] = [
+    { name: 'fullName', label: 'Full Name', type: 'text' },
+    { name: 'email', label: 'Email Address', type: 'email' },
+    { name: 'phoneNumber', label: 'Phone Number', type: 'tel' },
+    { name: 'gender', label: 'Gender', type:'text'},
+    { name: 'address', label: 'Address', type: 'text', fullWidth: true },
+    { name: 'dateOfBirth', label: 'dateOfBirth', type: 'date' },
+    { name: 'incomeLevel', label: 'Address', type: 'text' },
+    { name: 'relationshipStatus', label: 'Gender', type:'text'},
+];
 
 
-interface PersonalInfoProp{
-    account: AccountDetailModel;
-    onUpdate:(PersonalInfo:IPersonalInfo) => void;
-    isEditMode: boolean;
-    setIsEditMode:React.Dispatch<React.SetStateAction<boolean>>;
-    formData: IPersonalInfo;
-    setFormData: React.Dispatch<React.SetStateAction<IPersonalInfo>>;
+interface PersonalInfoProps {
+    account: ParentDetailModel;
+    onUpdate: (info: ParentDetailModel) => Promise<void>;
 }
 
 
-const PersonalInfo = ({ account, onUpdate,isEditMode,setIsEditMode,formData,setFormData} : PersonalInfoProp) => {
+const PersonalInfo = ({ account, onUpdate }: PersonalInfoProps) => {
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [draft, setDraft] = useState<ParentDetailModel>(account);
+    const [isSaving, setIsSaving] = useState(false);
+    const [saveError, setSaveError] = useState<string | null>(null);
 
-    const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+    const startEditing = () => {
+        setDraft(account);          // always start from the latest server data
+        setSaveError(null);
+        setIsEditMode(true);
     };
 
-    const handleSaveChanges = (e: React.FormEvent) => {
-    e.preventDefault(); // prevent default form submission
-    const newData: IPersonalInfo = {
-        fullName: formData.fullName,
-        email: formData.email,
-        phone: formData.phone,
-        address: formData.address,
-    };
-    onUpdate(newData);
-};
-
-   
-    
     const handleCancel = () => {
-        // Reset form to original account data
-        setFormData({
-            fullName: account.fullName,
-            email: account.email,
-            phone: account.phoneNumber,
-            address: account.address,
-        });
+        setDraft(account);
+        setSaveError(null);
         setIsEditMode(false);
     };
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setDraft(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSaveChanges = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSaving(true);
+        setSaveError(null);
+        try {
+            await onUpdate(draft);      // full model: id, role, gender, avatarUrl, dateOfBirth all preserved
+            setIsEditMode(false);
+        } catch (err: any) {
+            setSaveError(err?.response?.data?.message || 'Failed to update profile.');
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const itemClass = (fullWidth?: boolean) =>
+        fullWidth ? `${styles.infoItem} ${styles.fullWidth}` : styles.infoItem;
+
     return (
-        <div className={styles.infoCard} >
-            <div className={styles.infoCardHeader} >
-                <h2 className={styles.infoCardTitle}><IconPerson className="icon" /> Personal Information</h2>
+        <div className={styles.infoCard}>
+            <div className={styles.infoCardHeader}>
+                <h2 className={styles.infoCardTitle}>
+                    <IconBusinessCardPerson className={styles.icon} /> Personal Information
+                </h2>
                 {!isEditMode && (
-                    <button className={styles.editButton} onClick={() => setIsEditMode(true)}>
-                        <IconEdit className="icon" /> Edit
+                    <button type="button" className={styles.editButton} onClick={startEditing}>
+                        <IconEdit className={styles.icon} /> Edit
                     </button>
                 )}
             </div>
-            
+
             {isEditMode ? (
                 <form onSubmit={handleSaveChanges}>
+                    {saveError && <p className={styles.errorText}>{saveError}</p>}
                     <div className={styles.infoGrid}>
-                        <div className= {styles.infoItem}>
-                            <label className={styles.inputLabel} htmlFor="fullName">Full Name</label>
-                            <input type="text" id="fullName" name="fullName" value={formData.fullName} onChange={handleInputChange} className= {styles.inputField}/>
-                        </div>
-                        <div className={styles.infoItem}>
-                            <label className={styles.inputLabel} htmlFor="email">Email Address</label>
-                            <input type="email" id="email" name="email" value={formData.email} onChange={handleInputChange} className={styles.inputField} />
-                        </div>
-                        <div className={styles.infoItem}>
-                            <label className={styles.inputLabel} htmlFor="phone">Phone Number</label>
-                            <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleInputChange} className={styles.inputField} />
-                        </div>              
-                        <div className={`${styles.infoItem} ${styles.fullWidth}`} >
-                            <label className={styles.inputLabel} htmlFor="address">Address</label>
-                            <input type="text" id="address" name="address" value={formData.address} onChange={handleInputChange} className={styles.inputField} />
-                        </div>
+                        {FIELDS.map(({ name, label, type, fullWidth }) => (
+                            <div key={name} className={itemClass(fullWidth)}>
+                                <label className={styles.inputLabel} htmlFor={name}>{label}</label>
+                                <input
+                                    id={name}
+                                    name={name}
+                                    type={type}
+                                    value={type === 'date' ? toDateInputValue(draft[name]) : (draft[name] ?? '')}
+                                    onChange={handleInputChange}
+                                    className={styles.inputField}
+                                    disabled={isSaving}
+                                />
+                            </div>
+                        ))}
                     </div>
                     <div className={styles.formActions}>
-                        <button className="button button-secondary" onClick={handleCancel}>Cancel</button>
-                        <button className="button button-primary" type='submit'>Save Changes</button>
+                        <button type="button" className="button button-secondary" onClick={handleCancel} disabled={isSaving}>
+                            Cancel
+                        </button>
+                        <button type="submit" className="button button-primary" disabled={isSaving}>
+                            {isSaving ? 'Saving...' : 'Save Changes'}
+                        </button>
                     </div>
                 </form>
             ) : (
                 <div className={styles.infoGrid}>
-                    <div className={styles.infoItem}>
-                        <label>Full Name</label>
-                        <p>{account.fullName}</p>
-                    </div>
-                    <div className={styles.infoItem}>
-                        <label>Email Address</label>
-                        <p>{account.email}</p>
-                    </div>
-                    <div className={styles.infoItem}>
-                        <label>Phone Number</label>
-                        <p>{account.phoneNumber}</p>
-                    </div>                     
-                    <div className={`${styles.infoItem} ${styles.fullWidth}`}>
-                        <label>Address</label>
-                        <p>{account.address}</p>
-                    </div>
+                    {FIELDS.map(({ name, label, fullWidth,type }) => (
+                        <div key={name} className={itemClass(fullWidth)}>
+                            <label>{label}</label>
+                            <p>{type === 'date' ? formatDateForDisplay(account[name]) : (account[name] || 'N/A')}</p>
+                        </div>
+                    ))}
                 </div>
             )}
         </div>
     );
+};
+
+// Backend DateTime arrives as "2012-05-14T00:00:00" (optionally with "Z" or an offset).
+// <input type="date"> only accepts "yyyy-MM-dd"; anything else renders as empty.
+const toDateInputValue = (value?: string | null): string =>
+    value ? value.slice(0, 10) : '';
+
+// Read-only view: build the Date from its parts so the day can't shift with timezone
+const formatDateForDisplay = (value?: string | null): string => {
+    if (!value) return 'N/A';
+    const [y, m, d] = value.slice(0, 10).split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString();
 };
 
 export default PersonalInfo
