@@ -131,24 +131,7 @@ public class AccountController : ControllerBase
 		return Ok(response);
 	}
 
-	[HttpPatch("assign-student")]
-	[Authorize(Roles = nameof(AccountRole.Parent))]
-
-	public async Task<IActionResult> AssignStudentToParent([FromBody] List<string> ListOfStudentId)
-	{
-		var parentId = User.FindFirst("AccountId")?.Value;
-		if (string.IsNullOrEmpty(parentId))
-			return Unauthorized();
-
-		await _accountService.AssignStudentToParent(parentId, ListOfStudentId);
-
-		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
-					.Success(string.Empty, "Link Student to Parent successfully");
-
-		return Ok(response);
-
 	
-	}
 
 	
 }

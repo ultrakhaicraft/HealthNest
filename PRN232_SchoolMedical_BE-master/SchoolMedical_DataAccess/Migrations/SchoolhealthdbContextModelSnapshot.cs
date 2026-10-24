@@ -477,6 +477,73 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.ToTable("students", (string)null);
                 });
 
+            modelBuilder.Entity("HealthNest_DAO.Entities.StudentLinkRequest", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("ParentId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("PendingPairKey")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("varchar(73)")
+                        .HasComputedColumnSql("IF(`Status` = 'Pending', CONCAT(`ParentId`, ':', `StudentId`), NULL)", true);
+
+                    b.Property<string>("RejectionReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("RelationshipNote")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("ReviewedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<DateTime?>("ReviewedDateTime")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)");
+
+                    b.Property<string>("StudentId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("Id")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex("PendingPairKey")
+                        .IsUnique()
+                        .HasDatabaseName("uq_linkrequest_pending_pair");
+
+                    b.HasIndex("ReviewedBy");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("ParentId", "CreatedDateTime")
+                        .HasDatabaseName("idx_linkrequest_parent_created");
+
+                    b.HasIndex("Status", "CreatedDateTime")
+                        .HasDatabaseName("idx_linkrequest_status_created");
+
+                    b.ToTable("studentlinkrequests", (string)null);
+                });
+
             modelBuilder.Entity("HealthNest_DAO.Entities.Studenthealthrecord", b =>
                 {
                     b.Property<string>("Id")
@@ -870,6 +937,35 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.Navigation("Account");
 
                     b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("HealthNest_DAO.Entities.StudentLinkRequest", b =>
+                {
+                    b.HasOne("HealthNest_DAO.Entities.Parent", "Parent")
+                        .WithMany()
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_linkrequest_parent");
+
+                    b.HasOne("HealthNest_DAO.Entities.Account", "ReviewedByNavigation")
+                        .WithMany()
+                        .HasForeignKey("ReviewedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_linkrequest_reviewer");
+
+                    b.HasOne("HealthNest_DAO.Entities.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_linkrequest_student");
+
+                    b.Navigation("Parent");
+
+                    b.Navigation("ReviewedByNavigation");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("HealthNest_DAO.Entities.Studenthealthrecord", b =>
