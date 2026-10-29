@@ -9,6 +9,8 @@ export enum UserRole {
 export const MedicineRequestStatuses: string[] = ["Pending", "Approved", "Rejected", "Deleted"];
 export const RecordStatuses: string[] = ['Active', 'Inactive'];
 export type RecordStatus = 'Active' | 'Inactive' | '';
+export type LinkRequestStatus = 'Pending' | 'Approved' | 'Rejected' | 'Cancelled';
+
 
 export const NURSE_NAV_ROUTES: { label: string; path: string }[] = [
   { label: 'Home', path: '/nurse' },
@@ -28,7 +30,7 @@ export const PARENT_NAV_ROUTES: { label: string; path: string }[] = [
   { label: 'Medicine Request', path: '/parent/medicine-request' },
   { label: 'Student Health Record', path: '/parent/student-health-record' },
   { label: 'User Profile', path: '/parent/user-profile' },
-  { label: 'Link Student', path: '/parent/link-student-to-parent' },
+  { label: 'Student', path: '/parent/student' },
 
 ];
 

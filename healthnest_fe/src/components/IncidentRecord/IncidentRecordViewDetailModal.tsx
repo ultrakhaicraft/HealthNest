@@ -1,7 +1,7 @@
 import React from 'react';
-import { IncidentRecordViewDetail } from '../../feature/API/IncidentRecordService';
 import Modal from '../GenericModal';
 import { StatusBadge } from '../StatusBadge';
+import { IncidentRecordViewDetail } from '../../models/IncidentRecordModel';
 
 interface IncidentRecordViewProps {
   incidentRecord: IncidentRecordViewDetail;

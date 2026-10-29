@@ -14,6 +14,7 @@ export interface UserHomeNavBarProps {
 
 const parentNavItems = [
   { label: 'Home' },
+  { label: 'Student'},
   { label: 'Student Health Record' },
   { label: 'Medicine Request' },
 ];

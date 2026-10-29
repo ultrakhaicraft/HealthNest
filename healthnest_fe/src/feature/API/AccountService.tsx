@@ -3,8 +3,9 @@ import { AccountQuery, AccountViewModel, AccountDetailModel, AccountCreateReques
 import { AdminDetailModel } from '../../models/AccountSubclassModels/AdminModel';
 import { NurseDetailModel } from '../../models/AccountSubclassModels/NurseModel';
 import { ParentDetailModel } from '../../models/AccountSubclassModels/ParentModel';
-import { StudentDetailModel } from '../../models/AccountSubclassModels/StudentModel';
+import { StudentDetailModel, StudentViewModel } from '../../models/AccountSubclassModels/StudentModel';
 import { PaginatedResponse, ApiResponseWrapper } from '../../models/ApiClientModel';
+import { StudentLookupQuery } from '../../models/StudentLinkRequestModel';
 import apiClient from '../ApiClient';
 
 
@@ -54,6 +55,17 @@ export const accountService = {
     return response.data.data;
   },
 
+  /**
+   * find one student by exact email + date of birth
+   * @param data - Student Query
+   * @returns 
+   */
+  LookupAllStudents: async (data: StudentLookupQuery): Promise<StudentViewModel> => {
+    const response = await apiClient.get<ApiResponseWrapper<StudentViewModel>>(`/account/students`, {
+      params: data
+    });
+    return response.data.data;
+  },
 
   /**
    * Creates a new account.
@@ -93,12 +105,6 @@ export const accountService = {
     return response.data.data;
   },
 
-  link: async (parentId: string, studentId: string): Promise<string> => {
-    console.log(`Calling API`);
-    const response = await apiClient.patch<ApiResponseWrapper<string>>(
-      `/account/assign-student?studentId=${studentId}&parentId=${parentId}`
-    );
-    return response.data.data;
-  }
+ 
 };
 

@@ -493,11 +493,6 @@ namespace SchoolMedical_DataAccess.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<string>("PendingPairKey")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("varchar(73)")
-                        .HasComputedColumnSql("IF(`Status` = 'Pending', CONCAT(`ParentId`, ':', `StudentId`), NULL)", true);
-
                     b.Property<string>("RejectionReason")
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
@@ -526,10 +521,6 @@ namespace SchoolMedical_DataAccess.Migrations
 
                     b.HasKey("Id")
                         .HasName("PRIMARY");
-
-                    b.HasIndex("PendingPairKey")
-                        .IsUnique()
-                        .HasDatabaseName("uq_linkrequest_pending_pair");
 
                     b.HasIndex("ReviewedBy");
 

@@ -1,9 +1,7 @@
 import { useOutletContext } from "react-router-dom";
-import HealthStatus from "../../../components/ParentStudentHomepage/health-status-box";
 import HealthAnnouncements from "../../../components/ParentStudentHomepage/news-box";
 import WelcomeBox from "../../../components/ParentStudentHomepage/welcome-box";
 import { ParentOutletContext } from "./ParentContainerPage";
-import styles from '../../../CSS/Parent/ParentHomepage.module.css'
 import { useAccountDetailModel } from "../../../feature/Hooks/Account/useAccountDetail";
 import DefaultAvatar from '../../../../public/DefaultUserPfp.jpg';
 import { UserRole } from "../../../feature/Constant";

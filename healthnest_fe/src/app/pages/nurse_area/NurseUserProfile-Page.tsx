@@ -1,16 +1,13 @@
-import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { IconUser } from "../../../components/IconList";
-import PersonalInfo from "../../../components/User_Profile/PersonalInfo";
 import ProfileHeader from "../../../components/User_Profile/ProfileHeader";
 import { accountService } from "../../../feature/API/AccountService";
-import { useUserRole, useUserId } from "../../../feature/Hooks/Account/AccountHooks";
 import { useAccountDetailModel } from "../../../feature/Hooks/Account/useAccountDetail";
-import { AccountUpdateRequest } from "../../../models/AccountModel";
 import { UpdateNurseModel, NurseDetailModel } from "../../../models/AccountSubclassModels/NurseModel";
 import styles from '../../CSS/Components/UserProfile.module.css';
 import { UserRole } from "../../../feature/Constant";
 import DefaultPfp from '../../../../public/DefaultUserPfp.jpg';
+import NursePersonalInfo from "../../../components/User_Profile/NursePersonalInfo";
 
 
 // --- User Profile Page Component ---
@@ -37,7 +34,9 @@ export default function NurseUserProfile() {
         await accountService.update(nurseInfo.id, newPersonalInfo);
         await refetchAccount();
 
-        return (
+    };
+
+     return (
             <div className="container">
                 <Link className={styles.backLink} to="/nurseHomepage">
                     Return
@@ -57,6 +56,5 @@ export default function NurseUserProfile() {
                 </div>
             </div>
         );
-    };
 }
 

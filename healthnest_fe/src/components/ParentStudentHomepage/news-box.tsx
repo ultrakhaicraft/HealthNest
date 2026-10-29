@@ -34,7 +34,7 @@ const tagClassByType: Record<string, string> = {
 
 function HealthAnnouncements() {
   return (
-    <section className={styles.healthAnnouncementsSection}>
+    <section className={styles.section}>
       <div className={styles.announcementsHeader}>
         <span className={styles.announcementsIcon} role="img" aria-label="announcements">📢</span>
         <h2 className={styles.announcementsTitle}>Health Announcements</h2>

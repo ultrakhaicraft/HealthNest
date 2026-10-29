@@ -1,9 +1,11 @@
-﻿using HealthNest_BusinessLogic.Interface;
+﻿using HealthNest_BusinessLogic.Core;
+using HealthNest_BusinessLogic.Interface;
 using HealthNest_DAO.DTOModels;
 using HealthNest_DAO.DTOModels.Accounts;
 using HealthNest_DAO.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System.Security.Principal;
 
@@ -30,6 +32,14 @@ public class AccountController : ControllerBase
 		ApiResponseWrapper<PagingModel<AccountViewModel>> response = ApiResponseWrapper<PagingModel<AccountViewModel>>
 			.Success(accounts, "Get all accounts successful");
 		return Ok(response);
+	}
+
+	[HttpGet("students")]
+	[Authorize(Roles = nameof(AccountRole.Parent))]
+	public async Task<IActionResult> LookupAllStudents([FromQuery] StudentQuery request)
+	{
+		var result = await _accountService.GetStudentAccountsAsync(request);
+		return Ok(ApiResponseWrapper<StudentDetailModel>.Success(result, "Student found"));
 	}
 
 	/// <summary>

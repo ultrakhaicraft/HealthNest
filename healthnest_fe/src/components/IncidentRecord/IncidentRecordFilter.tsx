@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { IncidentRecordQueryParams } from "../../feature/API/IncidentRecordService";
 import filterStyles from '../../CSS/Nurse/NurseCRUDPanel.module.css';
+import { IncidentRecordQueryParams } from "../../models/IncidentRecordModel";
 
 
 interface IncidentRecordFilterProps {

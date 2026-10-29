@@ -1,0 +1,176 @@
+.section {
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.header { margin-bottom: 1rem; }
+
+.title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.counter {
+  padding: 0.15rem 0.7rem;
+  border-radius: 9999px;
+  background-color: #eef2ff;
+  color: #4338ca;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+/* Groups and rows */
+.group { margin-top: 1.25rem; }
+
+.groupTitle {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-left-width: 4px;
+  border-radius: 0.5rem;
+}
+
+.rowPending  { border-left-color: #f59e0b; }
+.rowRejected { border-left-color: #ef4444; align-items: flex-start; }
+
+.rowMain { flex: 1; min-width: 0; }
+
+.rowHeading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.studentName { font-weight: 600; color: #111827; }
+
+.meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.reason {
+  margin-top: 0.6rem;
+  padding: 0.6rem 0.8rem;
+  background-color: #fef2f2;
+  border-radius: 0.4rem;
+  font-size: 0.875rem;
+  color: #7f1d1d;
+}
+
+.reasonLabel {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #b91c1c;
+}
+
+/* History */
+.history { margin-top: 1.25rem; }
+
+.history summary {
+  cursor: pointer;
+  margin-bottom: 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+/* Buttons */
+.cancelButton,
+.retryButton,
+.primaryButton {
+  flex-shrink: 0;
+  padding: 0.4rem 0.9rem;
+  border-radius: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.cancelButton {
+  border: 1px solid #d1d5db;
+  background-color: #ffffff;
+  color: #374151;
+}
+.cancelButton:hover:not(:disabled) { background-color: #f3f4f6; }
+
+.retryButton {
+  border: 1px solid #c7d2fe;
+  background-color: #ffffff;
+  color: #4338ca;
+}
+.retryButton:hover:not(:disabled) { background-color: #eef2ff; }
+
+.primaryButton {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background-color: #4f46e5;
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+.primaryButton:hover { background-color: #4338ca; }
+
+.cancelButton:disabled,
+.retryButton:disabled { opacity: 0.55; cursor: not-allowed; }
+
+/* States */
+.message { margin: 0.5rem 0 0; color: #6b7280; }
+.error { margin: 0; color: #b91c1c; }
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: #f8fafc;
+  border-radius: 0.5rem;
+}
+.empty p { margin: 0; color: #374151; }
+
+@media (max-width: 600px) {
+  .row { flex-direction: column; align-items: stretch; }
+  .cancelButton, .retryButton { align-self: flex-start; }
+}

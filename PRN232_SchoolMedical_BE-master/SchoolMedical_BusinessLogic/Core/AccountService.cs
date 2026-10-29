@@ -137,6 +137,44 @@ public class AccountService : IAccountService
 		
 	}
 
+	public async Task<StudentDetailModel> GetStudentAccountsAsync(StudentQuery request)
+	{
+		var email = request.Email.Trim();
+		var dob = request.DateOfBirth.Date;
+		var inactive = AccountStatus.Inactive.ToString();
+
+		var result = await _unitOfWork.GetRepository<Student>()
+			.Include(s => s.Account)
+			.Where(s => s.Account.Email == email
+					 && s.Account.DateOfBirth.Date == dob    
+					 && s.Account.Status != inactive
+					 && (s.ParentId == null || s.ParentId == ""))
+			.Select(s => new StudentDetailModel
+			{
+				FullName = s.Account.FullName,
+				AvatarUrl = s.Account.AvatarUrl,
+				Email = s.Account.Email,
+				DateOfBirth = s.Account.DateOfBirth,
+				Gender = s.Account.Gender,
+				CurrentHealthStatus = s.CurrentHealthStatus,
+				Role = s.Account.Role,
+				PhoneNumber = s.Account.PhoneNumber,
+				Id = s.Account.Id,
+				AccountCreationDateTime = s.Account.AccountCreationDateTime,
+				Address = s.Account.Address,
+				Status = s.Id,
+				ParentId = s.ParentId,
+				Class = s.Class                                   
+			})
+			.FirstOrDefaultAsync();
+
+		
+		if (result == null)
+			throw new NotFoundException("No eligible student found. Please check the details or contact the school office.");
+
+		return result;
+	}
+
 	public async Task SoftDeleteAccount(string accountId)
 	{
 		
@@ -228,22 +266,7 @@ public class AccountService : IAccountService
 
 	}
 
-	public async Task<List<AccountViewModel>> GetAllStudentAccounts()
-	{
-		var accounts = await _unitOfWork.GetRepository<Account>().GetQueryableAsync();
-		var students = accounts
-			.Where(a => a.Role == AccountRole.Student.ToString() && a.Status != AccountStatus.Inactive.ToString())
-			.Select(a => new AccountViewModel
-			{
-				Id = a.Id,
-				FullName = a.FullName,
-				Email = a.Email,
-				Role = a.Role,
-				Status = a.Status
-			})
-			.ToList();
-		return students;
-	}
+	
 
 	
 

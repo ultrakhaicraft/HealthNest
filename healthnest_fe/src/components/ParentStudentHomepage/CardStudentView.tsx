@@ -1,10 +1,11 @@
 import { StudentDetailModel } from "../../models/AccountSubclassModels/StudentModel";
 import styles from '../../CSS/Parent/StudentCardView.module.css';
+import homeStyles from '../../CSS/Parent/ParentHomepage.module.css';
 import { Link } from "react-router-dom";
 import DefaultAvatar from '../../../public/DefaultUserPfp.jpg';
 
 const MAX_STUDENT_CARDS = 3;
-const LINK_STUDENT_PATH = '/parent/link-student-to-parent';
+const LINK_STUDENT_PATH = '/parent/student';
 
 type HealthTone = 'good' | 'warning' | 'critical' | 'neutral';
 
@@ -76,7 +77,7 @@ export function CardStudentView({ students, loading = false, error = null }: Car
     };
 
     return (
-        <section className={styles.healthAnnouncementsSection}>
+        <section className={homeStyles.section}>
             <div className={styles.announcementsHeader}>
                 <span className={styles.announcementsIcon} role="img" aria-label="students">🎓</span>
                 <h2 className={styles.announcementsTitle}>Students</h2>

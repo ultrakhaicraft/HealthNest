@@ -91,3 +91,11 @@ public class AccountQuery
 	public int PageSize { get; set; } = 5; // Default page size
 }
 
+public class StudentQuery
+{
+	[Required, EmailAddress]
+	public string Email { get; set; } = null!;
+
+	[Required]
+	public DateTime DateOfBirth { get; set; }        
+}

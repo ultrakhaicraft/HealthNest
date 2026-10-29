@@ -35,7 +35,7 @@ public class StudentLinkRequestController : ControllerBase
 
 	[HttpGet("{studentlinkRequestId}")]
 	[Authorize(Roles = nameof(AccountRole.Parent)+","+nameof(AccountRole.SchoolNurse))]
-	public async Task<IActionResult> GetStudentLinkRequestModel([FromRoute] string studentlinkRequestId)
+	public async Task<IActionResult> GetStudentLinkRequestModelById([FromRoute] string studentlinkRequestId)
 	{
 		
 
@@ -63,9 +63,6 @@ public class StudentLinkRequestController : ControllerBase
 	public async Task<IActionResult> SubmitStudentLinkRequest( [FromBody] LinkRequestCreateModel request)
 	{
 		
-
-		
-
 		await _studentLinkRequestService.SubmitAsync(CurrentAccountId, request);
 
 		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
@@ -115,5 +112,19 @@ public class StudentLinkRequestController : ControllerBase
 					.Success(string.Empty, "Student Link Request reject successfully with id: " + studentlinkRequestId);
 
 		return Ok(response);
+	}
+
+	[HttpDelete("unlink/{studentId}")]
+	[Authorize(Roles = nameof(AccountRole.Parent))]
+	public async Task<IActionResult> Unlink([FromRoute] string studentId)
+	{
+		var parentId = User.FindFirst("AccountId")?.Value;
+		if (string.IsNullOrEmpty(parentId))
+			return Unauthorized();
+
+		await _studentLinkRequestService.UnlinkAsync(parentId, studentId);
+
+		return Ok(ApiResponseWrapper<string>
+			.Success(string.Empty, "Student unlinked successfully with id: " + studentId));
 	}
 }

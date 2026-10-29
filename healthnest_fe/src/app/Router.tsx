@@ -22,10 +22,9 @@ const StudentHomepage = React.lazy(() => import('../app/pages/student_area/Stude
 //Parent
 const ParentContainerPage = React.lazy(() => import('./pages/parent_area/ParentContainerPage'));
 const ParentHomepage = React.lazy(() => import('./pages/parent_area/ParentHomePage'));
-const ViewStudentHealthRecordPage = React.lazy(() => import('../app/pages/parent_area/ViewStudentHealthRecord-page'));
 const ParentMedicineRequestCRUDPage = React.lazy(() => import('./pages/parent_area/ParentMedicineRequestCRUD-page'));
 const ParentUserProfile = React.lazy(() => import('./pages/parent_area/ParentUserProfile-Page'));
-const LinkStudentPage = React.lazy(() => import('../app/pages/LinkingStudent-Page'));
+const ManageStudentPage = React.lazy(() => import('./pages/parent_area/StudentManagementPage'));
 
 //Nurse
 const NurseHomepage = React.lazy(() => import('../app/pages/nurse_area/NurseHome-page'));
@@ -96,7 +95,6 @@ export const AppRouter = () => {
           <Route path="student-health-record" element={<StudentHealthRecordCRUDPage />} />
           <Route path="vaccine-record" element={<VaccineRecordCRUDPage />} />
           <Route path="treatment-record" element={<TreatmentRecordCRUDPage />} />
-
         </Route>
 
         <Route path="/parent" element={
@@ -104,8 +102,8 @@ export const AppRouter = () => {
         } >
           <Route index element={<ParentHomepage />} />
           <Route path="user-profile" element={<ParentUserProfile />} />
-          <Route path="link-student-to-parent" element={<LinkStudentPage />} />
           <Route path="medicine-request" element={<ParentMedicineRequestCRUDPage />} />
+          <Route path="student" element={<ManageStudentPage />} />
           <Route path="student-health-record" element={<StudentHealthRecordViewPage />} />
         </Route>
 
@@ -126,7 +124,7 @@ export const AppRouter = () => {
         </Route>
 
 
-       
+
 
 
       </Routes>

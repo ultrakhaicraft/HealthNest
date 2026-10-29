@@ -12,6 +12,9 @@ public class StudentLinkRequestDetailModel
 	public string Id { get; set; } = null!;
 	public string ParentId { get; set; } = null!;
 	public string StudentId { get; set; } = null!;
+	public string StudentName { get; set; } = null!;
+	public string ParentName { get; set; } = null!;
+	public string reviewedByName { get; set; } = null!;
 	public string RelationshipNote { get; set; } = null!;
 	public string Status { get; set; } = null!;
 	public DateTime CreatedDateTime { get; set; }
@@ -42,10 +45,13 @@ public class StudentLinkRequestViewModel
 	public string Id { get; set; } = null!;
 	public string ParentId { get; set; } = null!;
 	public string StudentId { get; set; } = null!;
+	public string StudentName { get; set; } = null!;
 	public string Status { get; set; } = null!;
 	public DateTime CreatedDateTime { get; set; }
 	public string? ReviewedBy { get; set; }
 	public DateTime? ReviewedDateTime { get; set; }
+	public string? RejectionReason { get; set; }
+
 }
 
 public class StudentLinkRequestQuery
@@ -53,6 +59,6 @@ public class StudentLinkRequestQuery
 	public string? StudentName { get; set; }
 	public string? ParentName { get; set; }                 // used by the nurse queue only
 	public string? Status { get; set; }
-	public int PageNumber { get; set; } = 1;
+	public int PageIndex { get; set; } = 1;
 	public int PageSize { get; set; } = 10;
 }

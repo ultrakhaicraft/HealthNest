@@ -18,4 +18,7 @@ public interface IStudentLinkRequestService
 
 	public Task RejectAsync(string nurseId, string requestId, string reason);
 
+	public Task UnlinkAsync(string parentId, string studentId);
+
+
 }

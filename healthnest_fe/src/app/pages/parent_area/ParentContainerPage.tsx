@@ -24,7 +24,7 @@ export default function ParentContainerPage() {
                 activeItem={activeItem}
                 onSelect={handleSelect}
             />
-            <div className="main-content">
+            <div className="main-page-container" id="parent">
                 <Outlet context={{ userType } satisfies ParentOutletContext} />
             </div>
             <Footer />

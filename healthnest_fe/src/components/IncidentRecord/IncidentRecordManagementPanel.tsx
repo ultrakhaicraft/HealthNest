@@ -1,11 +1,11 @@
 // All Sub component of the page
 
-import { IncidentRecordView, IncidentRecordQueryParams } from "../../feature/API/IncidentRecordService";
 import { IconFilter, IconPlus, IconView, IconEdit, IconDelete } from "../IconList";
 import { PaginationControls } from "../PaginationControls";
 import { StatusBadge } from "../StatusBadge";
 import { IncidentRecordFilter } from "./IncidentRecordFilter";
 import styles from '../../CSS/Nurse/NurseCRUDPanel.module.css';
+import { IncidentRecordQueryParams, IncidentRecordView } from "../../models/IncidentRecordModel";
 
 
 

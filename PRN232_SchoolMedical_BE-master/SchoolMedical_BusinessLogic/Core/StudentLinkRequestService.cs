@@ -5,6 +5,7 @@ using HealthNest_DAO.Entities;
 using HealthNest_DAO.Enums;
 using HealthNest_DAO.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System;
@@ -20,11 +21,14 @@ public class StudentLinkRequestService : IStudentLinkRequestService
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private const int MaxPendingPerParent = 5;
+	private readonly ILogger<StudentLinkRequestService> _logger;
 
-	public StudentLinkRequestService(IUnitOfWork unitOfWork)
+	public StudentLinkRequestService(IUnitOfWork unitOfWork, ILogger<StudentLinkRequestService> logger)
 	{
 		_unitOfWork = unitOfWork;
+		_logger = logger;
 	}
+
 
 	/// <summary>
 	/// Create Link request from parent
@@ -102,7 +106,7 @@ public class StudentLinkRequestService : IStudentLinkRequestService
 		}
 
 		var newIds = entities.Select(e => e.Id).ToList();
-		return await _unitOfWork.GetRepository<StudentLinkRequest>().Include(r => r.Student).Where(r => newIds.Contains(r.Id)).Select(ToViewModel).ToListAsync();
+		return await _unitOfWork.GetRepository<StudentLinkRequest>().Include(r => r.Student.Account).Where(r => newIds.Contains(r.Id)).Select(ToViewModel).ToListAsync();
 	}
 
 	public async Task<StudentLinkRequestDetailModel> GetStudentLinkRequestModel(string id, string accountId)
@@ -116,6 +120,9 @@ public class StudentLinkRequestService : IStudentLinkRequestService
 		bool IsNurse = account.Role == AccountRole.SchoolNurse.ToString();
 		var entity = await _unitOfWork.GetRepository<StudentLinkRequest>()
 				.Include(x => x.Student)
+				.Include(x => x.Student.Account)
+				.Include(x => x.Parent.Account)
+				.Include(x => x.ReviewedByNavigation)
 				.Where(x => x.Id == id && (IsNurse || x.ParentId==accountId))
 				.FirstOrDefaultAsync();
 
@@ -128,13 +135,52 @@ public class StudentLinkRequestService : IStudentLinkRequestService
 			ParentId = entity.ParentId,
 			RelationshipNote = entity.RelationshipNote,
 			StudentId = entity.StudentId,
+			ParentName = entity.Parent.Account.FullName,
+			StudentName = entity.Student.Account.FullName,
+			reviewedByName = entity.ReviewedByNavigation?.FullName ?? "N/A",
 			RejectionReason = entity.RejectionReason,
 			ReviewedBy = entity.ReviewedBy,
 			Status = entity.Status,
 			ReviewedDateTime = entity.ReviewedDateTime,
 			CreatedDateTime = entity.CreatedDateTime,
-			
+
 		};
+	}
+
+	public async Task UnlinkAsync(string parentId, string studentId)
+	{
+		var student =await _unitOfWork.GetRepository<Student>()
+			.Include(s=>s.Account)
+			.Where(s=>s.Id==studentId && s.ParentId==parentId)
+			.FirstOrDefaultAsync();
+
+		if (student == null)
+			throw new NotFoundException("Linked student not found.");
+
+		var approvedLinks = await _unitOfWork.GetRepository<StudentLinkRequest>()
+			.Include(r => r.Student)                                // entry point only
+			.Where(r => r.ParentId == parentId && r.StudentId == studentId && r.Status == RequestStatus.Approved.ToString())
+			.ToListAsync();
+
+		student.ParentId = null;
+		if (student.Account.Status != AccountStatus.Inactive.ToString())
+			student.Account.Status = AccountStatus.NotLinked.ToString();
+
+		foreach (var link in approvedLinks)
+			_unitOfWork.GetRepository<StudentLinkRequest>().Delete(link); // your repository's delete method
+
+		try
+		{
+			await _unitOfWork.SaveAsync();                          // one atomic transaction
+		}
+		catch (DbUpdateConcurrencyException)
+		{
+			// ParentId is a concurrency token: someone (e.g. a nurse) changed the link first
+			throw new BadRequestException("This link was just changed by someone else. Please refresh and try again.");
+		}
+
+		_logger.LogInformation("Parent {ParentId} unlinked student {StudentId}", parentId, studentId);
+
 	}
 
 	public async Task CancelAsync(string parentId, string requestId)
@@ -176,19 +222,9 @@ public class StudentLinkRequestService : IStudentLinkRequestService
 			: q.OrderByDescending(r => r.CreatedDateTime);
 
 		int totalCount=ordered.Count();
-		var viewData = await ordered.Select(z => new StudentLinkRequestViewModel
-		{
-			CreatedDateTime = z.CreatedDateTime,
-			Id = z.Id,
-			ParentId = z.ParentId,
-			ReviewedBy = z.ReviewedBy,
-			ReviewedDateTime = z.ReviewedDateTime,
-			Status = z.Status,
-			StudentId = z.StudentId,
+		var viewData = await ordered.Select(ToViewModel).ToListAsync();
 
-		}).ToListAsync();
-
-		var pagedResult = await PagingExtension.ToPagingModel(viewData, totalCount: totalCount, pageIndex: query.PageNumber, query.PageSize);
+		var pagedResult = await PagingExtension.ToPagingModel(viewData, totalCount: totalCount, pageIndex: query.PageIndex, query.PageSize);
 
 		return pagedResult;
 	}
@@ -252,7 +288,9 @@ public class StudentLinkRequestService : IStudentLinkRequestService
 
 	public async Task<PagingModel<StudentLinkRequestViewModel>> GetMyRequestsAsync(string parentId, StudentLinkRequestQuery query)
 	{
-		var q = _unitOfWork.GetRepository<StudentLinkRequest>().GetQueryable().Where(r => r.ParentId == parentId);
+		var q = _unitOfWork.GetRepository<StudentLinkRequest>().GetQueryable()
+			.Include(r => r.Student.Account)
+			.Where(r => r.ParentId == parentId);
 
 		if (!string.IsNullOrWhiteSpace(query.StudentName))
 			q = q.Where(r => r.Student.Account.FullName.Contains(query.StudentName));
@@ -264,21 +302,11 @@ public class StudentLinkRequestService : IStudentLinkRequestService
 
 		var totalCount = q.Count();
 
-		var viewData = await  q.OrderByDescending(r => r.CreatedDateTime).Select(z => new StudentLinkRequestViewModel
-		{
-			CreatedDateTime = z.CreatedDateTime,
-			Id = z.Id,
-			ParentId = z.ParentId,
-			ReviewedBy = z.ReviewedBy,
-			ReviewedDateTime = z.ReviewedDateTime,
-			Status = z.Status,
-			StudentId = z.StudentId,
-
-		}).ToListAsync();
+		var viewData = await  q.OrderByDescending(r => r.CreatedDateTime).Select(ToViewModel).ToListAsync();
 
 
 
-		var pagedResult = await PagingExtension.ToPagingModel(viewData, totalCount: totalCount, pageIndex: query.PageNumber, query.PageSize);
+		var pagedResult = await PagingExtension.ToPagingModel(viewData, totalCount: totalCount, pageIndex: query.PageIndex, query.PageSize);
 
 		return pagedResult;
 	}
@@ -323,7 +351,10 @@ public class StudentLinkRequestService : IStudentLinkRequestService
 		   Status = r.Status,
 		   CreatedDateTime = r.CreatedDateTime,
 		   ReviewedBy = r.ReviewedBy,
+		   StudentName = r.Student.Account.FullName,
 		   ReviewedDateTime = r.ReviewedDateTime,
+		   RejectionReason = r.RejectionReason
+
 	   };
 
 	private static void EnsurePending(StudentLinkRequest request, string action)

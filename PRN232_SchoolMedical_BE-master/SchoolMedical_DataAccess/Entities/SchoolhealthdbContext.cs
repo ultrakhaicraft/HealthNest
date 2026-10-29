@@ -605,17 +605,7 @@ public partial class SchoolhealthdbContext : DbContext
 
 			entity.Property(e => e.ReviewedDateTime).HasColumnType("datetime");
 
-			// Non-null only while Pending. A unique index ignores NULLs, so this allows at most
-			// ONE pending request per parent+student pair. Shadow property: app code can't touch it.
-			entity.Property<string>("PendingPairKey")
-				.HasColumnType("varchar(73)")
-				.HasComputedColumnSql(
-					"IF(`Status` = 'Pending', CONCAT(`ParentId`, ':', `StudentId`), NULL)",
-					stored: true);
-
-			entity.HasIndex("PendingPairKey")
-				.IsUnique()
-				.HasDatabaseName("uq_linkrequest_pending_pair");
+			
 
 			entity.HasIndex(e => new { e.Status, e.CreatedDateTime })
 				.HasDatabaseName("idx_linkrequest_status_created");
@@ -638,6 +628,12 @@ public partial class SchoolhealthdbContext : DbContext
 				.HasForeignKey(e => e.ReviewedBy)
 				.OnDelete(DeleteBehavior.Restrict)
 				.HasConstraintName("fk_linkrequest_reviewer"); //Mainly Nurse
+
+
+			// PendingPairKey (stored generated column) and its unique index exist in the database,
+			// created by the AddLinkRequest migration. They are deliberately NOT mapped here:
+			// EF would try to read the column back after each UPDATE, which this provider emits
+			// as an invalid "UPDATE ... RETURNING".
 
 		});
 
