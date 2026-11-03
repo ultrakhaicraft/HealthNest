@@ -87,5 +87,12 @@ export function useMyLinkRequests(
     [refetch]
   );
 
-  return { data, loading, error, totalPages, totalItems, refetch, submit, cancel };
+  const unlink = useCallback(
+    async (id: string) => {
+      await StudentLinkRequestService.unlink(id);
+    },
+    []
+  );
+
+  return { data, loading, error, totalPages, totalItems, refetch, submit, cancel, unlink };
 }

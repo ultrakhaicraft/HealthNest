@@ -58,6 +58,7 @@ export default function ParentUserProfile() {
                 name={accountDetail?.fullName ?? ""}
                 memberSince='7/2/2025'
                 avatarUrl={DefaultPfp}
+                role={accountDetail?.role ? "Parent" : "N/A"}
             />
 
             <div className={styles.profileContentGrid}>

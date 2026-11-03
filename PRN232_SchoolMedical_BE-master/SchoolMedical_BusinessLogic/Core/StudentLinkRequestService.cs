@@ -209,8 +209,10 @@ public class StudentLinkRequestService : IStudentLinkRequestService
 	public async Task<PagingModel<StudentLinkRequestViewModel>> GetAllStudentLinkRequest(StudentLinkRequestQuery query)
 	{
 		var status = (query.Status ?? RequestStatus.Pending.ToString()).ToString();
-		var q = _unitOfWork.GetRepository<StudentLinkRequest>().Include(r => r.Student).Where(r => r.Status == status);
+		var q = _unitOfWork.GetRepository<StudentLinkRequest>().Include(r => r.Student);
 
+		if(!string.IsNullOrEmpty(query.Status))
+			q= q.Where(r=>r.Status== status);
 		if (!string.IsNullOrWhiteSpace(query.StudentName))
 			q = q.Where(r => r.Student.Account.FullName.Contains(query.StudentName));
 		if (!string.IsNullOrWhiteSpace(query.ParentName))
@@ -325,7 +327,7 @@ public class StudentLinkRequestService : IStudentLinkRequestService
 
 		EnsurePending(request, RequestStatus.Rejected.ToString());
 
-		request.Status = RequestStatus.Pending.ToString();
+		request.Status = RequestStatus.Rejected.ToString();
 		request.ReviewedBy = nurseId;
 		request.ReviewedDateTime = DateTime.Now;
 		request.RejectionReason = reason.Trim();

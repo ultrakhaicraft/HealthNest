@@ -5,10 +5,11 @@ interface ProfileHeaderProps{
     name:string;
     memberSince: string;
     avatarUrl: string;
+    role: string;
 }
 
 
-const ProfileHeader = ({ name, memberSince, avatarUrl }:ProfileHeaderProps) => (
+const ProfileHeader = ({ name, memberSince, avatarUrl, role }:ProfileHeaderProps) => (
     <div className={styles.profileHeaderCard} >
         <img src={avatarUrl} alt="User Avatar" className={styles.profileHeaderAvatar} />
         <div className={styles.profileHeaderInfo}>
@@ -16,7 +17,7 @@ const ProfileHeader = ({ name, memberSince, avatarUrl }:ProfileHeaderProps) => (
             <div className={styles.profileHeaderMeta}>
                 <div className={styles.metaItem}>
                     <IconChild className={styles.icon} />
-                    <span><strong>Parent</strong></span>
+                    <span><strong>{role}</strong></span>
                 </div>
                 <div className={styles.metaItem}>
                     <IconCalendar className={styles.icon} /> 

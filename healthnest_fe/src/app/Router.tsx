@@ -35,6 +35,7 @@ const IncidentRecordCRUDPage = React.lazy(() => import('../app/pages/nurse_area/
 const MedicineRequestCRUDPage = React.lazy(() => import('../app/pages/nurse_area/MedicineRequestCRUD-page'));
 const VaccineRecordCRUDPage = React.lazy(() => import('../app/pages/nurse_area/VaccineRecordCRUD-page'));
 const TreatmentRecordCRUDPage = React.lazy(() => import('../app/pages/nurse_area/TreatmentRecordCRUD-page'));
+const StudentLinkRequestCRUDPage = React.lazy(() => import('../app/pages/nurse_area/StudentLinkRequestCRUD-page'));
 
 
 
@@ -95,6 +96,7 @@ export const AppRouter = () => {
           <Route path="student-health-record" element={<StudentHealthRecordCRUDPage />} />
           <Route path="vaccine-record" element={<VaccineRecordCRUDPage />} />
           <Route path="treatment-record" element={<TreatmentRecordCRUDPage />} />
+          <Route path="student-link-request" element={<StudentLinkRequestCRUDPage />} />
         </Route>
 
         <Route path="/parent" element={

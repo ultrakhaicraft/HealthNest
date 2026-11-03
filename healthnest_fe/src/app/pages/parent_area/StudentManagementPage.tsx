@@ -27,7 +27,7 @@ export default function StudentManagementPage() {
     const parentId = useUserId();
     const { students, loading: studentsLoading, error: studentsError, refetch: refetchStudents }
         = useParentStudents(parentId ?? '');
-    const { data: requests, loading: requestsLoading, error: requestError, submit, cancel, refetch: refetchRequests, }
+    const { data: requests, loading: requestsLoading, error: requestError, submit, cancel, unlink, refetch: refetchRequests, }
         = useMyLinkRequests(MY_REQUESTS_FILTER);
 
     const modal = useStudentLinkRequestModal();
@@ -65,7 +65,7 @@ export default function StudentManagementPage() {
 
         setUnlinkingId(studentToUnlink.id);
         try {
-            await StudentLinkRequestService.unlink(studentToUnlink.id);
+            await unlink(studentToUnlink.id);
             showToast(`${studentToUnlink.fullName ?? 'The student'} has been unlinked.`, 'success');
         } catch (err) {
             showToast(getLinkRequestErrorMessage(err, 'Failed to remove the link.'), 'error');
@@ -175,7 +175,6 @@ export default function StudentManagementPage() {
                 error={studentsError}
                 removingStudentId={unlinkingId}           // page state, set while the DELETE is in flight
                 onRemoveLink={modal.openDelete}         // opens the ConfirmationModal
-                onRequestLink={modal.openCreate}
             />
 
             <LinkRequestSectionView

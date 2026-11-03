@@ -102,7 +102,7 @@ public class StudentLinkRequestController : ControllerBase
 
 	[HttpPatch("reject/{studentlinkRequestId}")]
 	[Authorize(Roles = nameof(AccountRole.SchoolNurse))]
-	public async Task<IActionResult> RejectLink([FromRoute] string studentlinkRequestId, [FromQuery] LinkRequestCancelRequest request)	
+	public async Task<IActionResult> RejectLink([FromRoute] string studentlinkRequestId, [FromBody] LinkRequestRejectModel request)	
 	{
 		
 

@@ -21,7 +21,8 @@ export const NURSE_NAV_ROUTES: { label: string; path: string }[] = [
   { label: 'Medical Supply', path: '/nurse/medical-supplies' },
   { label: 'Student Health Record', path: '/nurse/student-health-record' },
   { label: 'Vaccine Record', path: '/nurse/vaccine-record' },
-  { label: 'Treatment Record', path: '/nurse/treatment-record' }
+  { label: 'Treatment Record', path: '/nurse/treatment-record' },
+  { label: 'Student Link Request', path: '/nurse/student-link-request' },
 
 ];
 
@@ -36,8 +37,13 @@ export const PARENT_NAV_ROUTES: { label: string; path: string }[] = [
 
 export const ADMIN_NAV_ROUTES: { label: string; path: string }[] = [
   { label: 'Home', path: '/admin' },
+  { label: 'User Management', path: '/admin/user-management' },
+  { label: 'Health Checkup', path: '/admin/health-checkup' },
+  { label: 'Vaccine', path: '/admin/vaccine' },
 ];
 
 export const STUDENT_NAV_ROUTES: { label: string; path: string }[] = [
   { label: 'Home', path: '/student' },
+  { label: 'Student Health Record', path: '/student/student-health-record' },
+
 ];

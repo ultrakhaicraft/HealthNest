@@ -33,7 +33,7 @@ public class LinkRequestCreateModel
 
 }
 
-public class LinkRequestCancelRequest
+public class LinkRequestRejectModel
 {
 	[Required]
 	public string RejectionReason { get; set; } = null!;

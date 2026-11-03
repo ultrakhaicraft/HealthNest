@@ -44,8 +44,12 @@ export const StudentLinkRequestService = {
   },
 
   // Nurse
-  reject: async (id: string, data: LinkRequestRejectModel): Promise<void> => {
-    await apiClient.patch<ApiResponseWrapper<string>>(`${BASE_URL}/reject/${id}`, data);
+  reject: async (id: string, rejectReason: string): Promise<void> => {
+    //Create LinkRequestRejectModel data object with rejectionReason and send it to the API
+    const newRejectModel: LinkRequestRejectModel = {
+      rejectionReason: rejectReason
+    };
+    await apiClient.patch<ApiResponseWrapper<string>>(`${BASE_URL}/reject/${id}`, newRejectModel);
   },
 
   // Parent: remove the link to one of their own children
