@@ -32,7 +32,7 @@ public partial class SchoolhealthdbContext : DbContext
     public virtual DbSet<VaccineeventStudent> VaccineeventStudents { get; set; } //Add them as a join table because it has additional info
 	public virtual DbSet<Vaccinerecord> Vaccinerecords { get; set; }
     public virtual DbSet<Meeting> Meetings { get; set; }
-
+	public virtual DbSet<StudentLinkRequest> StudentLinkRequests { get; set; }
 	public virtual DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -582,7 +582,60 @@ public partial class SchoolhealthdbContext : DbContext
 		});
 
 
+		modelBuilder.Entity<StudentLinkRequest>(entity =>
+		{
+			entity.HasKey(e => e.Id).HasName("PRIMARY");
 
+			entity.ToTable("studentlinkrequests");
+
+			entity.Property(e => e.Id).HasMaxLength(50);
+			entity.Property(e => e.ParentId).HasMaxLength(50);
+			entity.Property(e => e.StudentId).HasMaxLength(50);
+			entity.Property(e => e.ReviewedBy).HasMaxLength(50);
+
+			entity.Property(e => e.RelationshipNote).HasMaxLength(500);
+			entity.Property(e => e.RejectionReason).HasMaxLength(500);
+
+			entity.Property(e => e.Status)
+				.HasMaxLength(15);
+
+			entity.Property(e => e.CreatedDateTime)
+				.HasColumnType("datetime")
+				.HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+			entity.Property(e => e.ReviewedDateTime).HasColumnType("datetime");
+
+			
+
+			entity.HasIndex(e => new { e.Status, e.CreatedDateTime })
+				.HasDatabaseName("idx_linkrequest_status_created");
+
+			entity.HasIndex(e => new { e.ParentId, e.CreatedDateTime })
+				.HasDatabaseName("idx_linkrequest_parent_created");
+
+			// Restrict, not cascade: this is audit data, and accounts are deactivated rather than deleted
+			entity.HasOne(e => e.Parent).WithMany()
+				.HasForeignKey(e => e.ParentId)
+				.OnDelete(DeleteBehavior.Restrict)
+				.HasConstraintName("fk_linkrequest_parent");
+
+			entity.HasOne(e => e.Student).WithMany()
+				.HasForeignKey(e => e.StudentId)
+				.OnDelete(DeleteBehavior.Restrict)
+				.HasConstraintName("fk_linkrequest_student");
+
+			entity.HasOne(e => e.ReviewedByNavigation).WithMany()
+				.HasForeignKey(e => e.ReviewedBy)
+				.OnDelete(DeleteBehavior.Restrict)
+				.HasConstraintName("fk_linkrequest_reviewer"); //Mainly Nurse
+
+
+			// PendingPairKey (stored generated column) and its unique index exist in the database,
+			// created by the AddLinkRequest migration. They are deliberately NOT mapped here:
+			// EF would try to read the column back after each UPDATE, which this provider emits
+			// as an invalid "UPDATE ... RETURNING".
+
+		});
 
 		OnModelCreatingPartial(modelBuilder);
     }

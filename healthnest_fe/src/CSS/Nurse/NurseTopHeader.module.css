@@ -73,18 +73,41 @@
 
 /* ---------- Profile ---------- */
 .nurseHeaderProfile {
-  display: flex;
+  position: relative; /* anchor for the dropdown; no display override, no cursor */
+}
+
+.profileTrigger {
+  display: inline-flex;
   align-items: center;
   gap: 0.65rem;
+  padding: 0.25rem 0.5rem 0.25rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  background: none;
+  font: inherit;
+  color: inherit;
   cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.profileTrigger:hover,
+.profileTrigger[aria-expanded='true'] {
+  background-color: #f1f5f9;
+  border-color: #e2e8f0;
+}
+
+.profileTrigger:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
 }
 
 .profileText {
+  display: flex;
+  flex-direction: column;
   text-align: right;
 }
 
 .profileName {
-  margin: 0;
   font-size: 0.88rem;
   font-weight: 600;
   color: #1e293b;
@@ -92,12 +115,65 @@
 }
 
 .profileRole {
-  margin: 0;
-  font-size: 0.88rem;
+  font-size: 0.8rem;
   font-weight: 500;
-  color: #1e293b;
+  color: #64748b;
   line-height: 1.2;
 }
+
+.dropdownChevron {
+  color: #94a3b8;
+  transition: transform 0.2s ease;
+}
+
+.dropdownChevronOpen {
+  transform: rotate(180deg);
+}
+
+/* ---------- Dropdown menu ---------- */
+.dropdownMenu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1000;
+  min-width: 11rem;
+  margin-top: 0.5rem;
+  padding: 0.25rem;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+.dropdownItem {
+  display: block;
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  border: none;
+  border-radius: 0.375rem;
+  background: none;
+  font: inherit;
+  font-size: 0.875rem;
+  text-align: left;
+  color: #1e293b;
+  cursor: pointer;
+}
+
+.dropdownItem:hover,
+.dropdownItem:focus-visible {
+  background-color: #f1f5f9;
+  outline: none; /* the background change is the focus indicator inside a menu */
+}
+
+.dropdownItemLogout {
+  color: #b91c1c;
+}
+
+.dropdownItemLogout:hover,
+.dropdownItemLogout:focus-visible {
+  background-color: #fee2e2;
+}
+
 
 .profileAvatar {
   width: 40px;
@@ -108,16 +184,47 @@
   flex-shrink: 0;
 }
 
-.dropdownChevron {
-  color: #94a3b8;
-}
+
 
 .notificationDot {
-    position: absolute;
-    top: 8px;
-    right: 9px;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: #ef4444;
+  position: absolute;
+  top: 8px;
+  right: 9px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ef4444;
+}
+
+
+
+.dropdownMenu {
+  position: absolute;
+  right: 0;
+  margin-top: 8px;
+  background-color: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  z-index: 1000;
+  min-width: 160px;
+}
+
+.dropdownItem {
+  width: 100%;
+  padding: 10px 16px;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+}
+
+.dropdownItem:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdownItemLogout {
+  color: #d00;
 }

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { IncidentRecordCreate } from '../../feature/API/IncidentRecordService';
 import { IconClose } from '../IconList';
 import { useUserId } from '../../feature/Hooks/Account/AccountHooks';
 import Modal, { ModalForm, ModalField, ModalFooter } from '../GenericModal';
 import inputStyles from '../../CSS/InputField.module.css';
+import { IncidentRecordCreate } from '../../models/IncidentRecordModel';
 
 interface CreateIncidentRecordModalProps {
   isOpen: boolean;

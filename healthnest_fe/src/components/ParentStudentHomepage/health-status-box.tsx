@@ -8,7 +8,8 @@ interface HealthStatusProps {
 
 
 
-
+//Consider now a Parent can own multiple children (Student), the component should be a dashboard of multiple child
+//Health Status can be check via Incident Records available in the current time
 function HealthStatus({lastCheckupDate, userType} : HealthStatusProps) {
   console.log("User role for HealthStatus: ", userType);
     return(
@@ -33,14 +34,8 @@ function HealthStatus({lastCheckupDate, userType} : HealthStatusProps) {
         </p>
       </div>
       <div className={styles.healthStatusActions}>
-        <button className={`button ${styles.buttonViewReport}`}>
-          <span className={styles.iconPlaceholder} role="img" aria-label="report">📄</span>
-          View Health Report
-        </button>
-        <button className={`button ${styles.buttonMessageNurse}`}>
-          <span className={styles.iconPlaceholder} role="img" aria-label="message">💬</span>
-          Message Nurse
-        </button>
+        
+        
       </div>
     </section>
     );

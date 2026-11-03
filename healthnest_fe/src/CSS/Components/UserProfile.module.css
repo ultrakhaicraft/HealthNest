@@ -12,21 +12,52 @@
   margin-bottom: 1.5rem;
   font-size: 1.5rem;
   font-weight: 600;
-  color: #475569;
+  color: #0145a4;
 }
 
+
 .pageHeader .icon {
-  color: #64748b;
+  color: #0145a4;
+  width: 25px;
+  height: 25px;
 }
+
 
 .pageHeader .primaryBtn {
   width: 200px;
 }
 
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  color: #0145a4;
+  text-decoration: none;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.backLink:hover {
+  background-color: #e8effa;
+  transform: translateX(-2px);
+  /* small nudge to the left hints at "go back" */
+}
+
+.backLink:focus-visible {
+  outline: 2px solid #0145a4;
+  outline-offset: 2px;
+}
+
+.backIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
 /* ---------- Profile header card ---------- */
 .profileHeaderCard {
-  background-color: white;
-  border-radius: 0.75rem;
+  background: linear-gradient(90deg, rgba(204, 236, 252, 1) 0%, rgba(230, 242, 255, 1) 8%, rgba(255, 255, 255, 1) 52%, rgba(230, 242, 255, 1) 93%, rgba(204, 236, 252, 1) 100%);
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   padding: 1.5rem;
   display: flex;
@@ -48,7 +79,7 @@
   font-size: 1.75rem;
   font-weight: 700;
   margin: 0;
-  color: #1e293b;
+  color: #16325f;
 }
 
 .profileHeaderMeta {
@@ -67,8 +98,95 @@
 }
 
 .metaItem .icon {
+  color: #146be4;
+  width: 2rem;
+  height: 2rem;
+}
+
+.studentList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.studentItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: linear-gradient(90deg,rgba(204, 252, 228, 1) 0%, rgba(230, 255, 241, 1) 8%, rgba(255, 255, 255, 1) 52%, rgba(230, 255, 243, 1) 93%, rgba(204, 252, 222, 1) 100%);
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.studentItemDetails {
+  flex: 1;
+  min-width: 0;
+}
+
+.studentName {
+  margin: 0;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.studentMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #161a20;
+  font-weight: 600;
+}
+
+.studentMeta label {
+  margin-right: 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
   color: #94a3b8;
 }
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: #f8fafc;
+  border-radius: 0.5rem;
+}
+
+.linkAnother {
+  display: inline-block;
+  padding: 2px;
+  margin-top: 1rem;
+  font-weight: 500;
+  color: #065eb1;
+  text-decoration: none;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.linkAnother:hover {
+
+  border: 3px solid #065eb1;
+  transform: translateX(-2px);
+  /* small nudge to the left hints at "go back" */
+
+}
+
+.linkAnother:focus-visible {
+  outline: 2px solid #0145a4;
+  outline-offset: 2px;
+}
+
+.errorText {
+  color: #b91c1c;
+}
+
 
 /* ---------- Main content grid ---------- */
 .profileContentGrid {
@@ -103,8 +221,10 @@
   color: #1e293b;
 }
 
-.infoCardTitle .icon {
-  color: #6366f1;
+.infoCardHeader .icon {
+  color: #0145a4;
+  width: 25px;
+  height: 25px;
 }
 
 .editButton {
@@ -113,9 +233,10 @@
   gap: 0.5rem;
   background: none;
   border: none;
-  color: #6366f1;
+  color: #0079cf;
   font-weight: 500;
   cursor: pointer;
+  font-weight: bold;
   font-size: 0.875rem;
   padding: 0.25rem 0.5rem;
   border-radius: 0.375rem;
@@ -124,6 +245,13 @@
 .editButton:hover {
   background-color: #eef2ff;
 }
+
+.editButton .icon {
+  color: #0145a4;
+  width: 25px;
+  height: 25px;
+}
+
 
 /* ---------- Personal info display & form ---------- */
 .infoGrid {
@@ -200,15 +328,17 @@
 }
 
 /* ---------- Student info card ---------- */
-.studentInfoCard .infoCardTitle .icon {
+.infoCardTitle .greenIcon {
   color: #10b981;
+  height: 25px;
+  width: 25px;
 }
 
 .studentInfoContent {
   display: flex;
   align-items: center;
   gap: 1rem;
-  background-color: #f0fdf4;
+  background-color: #202f24;
   padding: 1rem;
   border-radius: 0.5rem;
 }
@@ -218,6 +348,8 @@
   height: 50px;
   border-radius: 9999px;
   object-fit: cover;
+  border: 3px solid white;
+  box-shadow: 0 0 0 2px #cbd5e1;
 }
 
 .studentDetails h3 {
@@ -228,7 +360,8 @@
 
 .studentId {
   font-size: 0.875rem;
-  color: #64748b;
+  color: #282f38;
+  font-weight: 600;
 }
 
 .buttonLinkStudent {
@@ -239,6 +372,8 @@
 .buttonLinkStudent:hover {
   background-color: #059669;
 }
+
+
 
 /* ---------- Responsive ---------- */
 @media (min-width: 768px) {

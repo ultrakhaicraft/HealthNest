@@ -1,4 +1,7 @@
+import { useEffect, useRef, useState } from "react";
 import styles from "../CSS/Nurse/NurseTopHeader.module.css"
+import { useNavigate } from "react-router-dom";
+import avatarImage from "../../public/DefaultUserPfp.jpg"; // Import the avatar image
 
 interface NurseHeaderProps {
   username: string;
@@ -8,6 +11,13 @@ interface NurseHeaderProps {
 }
 
 export const NurseHeader = ({ username, role, onSelect }: NurseHeaderProps) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate('/login');
+  };
+
   return (
     <header className={styles.nurseHeader}>
       <div className={styles.nurseHeaderSearch}>
@@ -50,21 +60,76 @@ export const NurseHeader = ({ username, role, onSelect }: NurseHeaderProps) => {
 
         <div className={styles.nurseHeaderDivider} />
 
-        <div className={styles.nurseHeaderProfile}>
-          <div className={styles.profileText}>
-            <p className={styles.profileName}>{username}</p>
-            <p className={styles.profileRole}>{role}</p>
-          </div>
-          <div className={styles.profileAvatar} />
-          <svg className={styles.dropdownChevron} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <polyline points="6 9 12 15 18 9" />
-          </svg>
-
-          <div className={styles.dropdownMenu}>
-          <button onClick={()=> {onSelect('User Profile')}} className={styles.dropdownItem}>👤 View Profile</button>
-        </div>
-        </div>
+        <NurseProfileDropdown handleLogout={handleLogout} onSelect={onSelect} username={username} role={role} />
       </div>
     </header>
   );
+}
+
+interface NurseProfileDropdownProps {
+  handleLogout: () => void;
+  onSelect: (item: string) => void;
+  username: string;
+  role: string;
+}
+
+const NurseProfileDropdown = ({
+  handleLogout,
+  onSelect,
+  username,
+  role,
+}: NurseProfileDropdownProps) => {
+  const [open, setOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+
+  return (
+    <div className={styles.nurseHeaderProfile} ref={dropdownRef}>
+      <button
+        type="button"
+        className={styles.profileTrigger}
+        onClick={() => setOpen((prev) => !prev)}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label={`Account menu for ${username}`}
+      >
+        <span className={styles.profileText}>
+          <span className={styles.profileName}>{username}</span>
+          <span className={styles.profileRole}>{role}</span>
+        </span>
+        <img className={styles.profileAvatar} src={avatarImage} alt={`Profile image for ${username}`} />
+        <svg
+          className={`${styles.dropdownChevron} ${open ? styles.dropdownChevronOpen : ''}`}
+          width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+          aria-hidden="true"
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
+
+      {open && (
+        <div className={styles.dropdownMenu} role="menu">
+          <button type="button" role="menuitem" className={styles.dropdownItem}
+            onClick={() => onSelect('User Profile')}>
+            👤 View Profile
+          </button>
+          <button type="button" role="menuitem"
+            className={`${styles.dropdownItem} ${styles.dropdownItemLogout}`}
+            onClick={handleLogout}>
+            🚪 Logout
+          </button>
+        </div>
+      )}
+    </div>
+  )
 }

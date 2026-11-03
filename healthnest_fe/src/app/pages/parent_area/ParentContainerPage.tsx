@@ -3,6 +3,7 @@ import { UserRole } from '../../../feature/Constant';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { getActiveItemFromPath, userouteForLabel } from '../../../feature/Hooks/Other/RouterHooks';
 import ParentHomeNavBar from '../../../components/ParentStudentHomepage/ParentHomeNavBar';
+import { useAccountDetailModel } from '../../../feature/Hooks/Account/useAccountDetail';
 
 
 // This component represents the parent container page for other components.
@@ -10,6 +11,7 @@ export default function ParentContainerPage() {
     const userType = UserRole.Parent;
     const navigate = useNavigate();
     const location = useLocation();
+    const user = useAccountDetailModel(userType);
 
     // Derive the active nav item from the URL instead of local state
     const activeItem = getActiveItemFromPath(location.pathname, userType);
@@ -23,8 +25,10 @@ export default function ParentContainerPage() {
             <ParentHomeNavBar
                 activeItem={activeItem}
                 onSelect={handleSelect}
+                username={user.AccountDetailModel?.fullName || 'Parent'}
+
             />
-            <div className="main-content">
+            <div className="main-page-container" id="parent">
                 <Outlet context={{ userType } satisfies ParentOutletContext} />
             </div>
             <Footer />

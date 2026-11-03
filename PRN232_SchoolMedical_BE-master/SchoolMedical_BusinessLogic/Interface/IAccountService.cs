@@ -1,6 +1,7 @@
 ﻿using HealthNest_DAO.DTOModels;
 using HealthNest_DAO.DTOModels.Accounts;
 using HealthNest_DAO.Enums;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,8 +22,9 @@ public interface IAccountService
 	public Task UpdateAccount(string userId, AccountUpdateRequest request);
 	public Task SoftDeleteAccount(string userId);
 	public Task ChangeAccountStatus(string userId, AccountStatus status);
-	public Task<PagingModel<AccountViewModel>> getStudentsByParentId(string parentId, AccountQuery request);
-	public Task<bool> AssignStudentToParent(string parentId, string studentId);
-	public Task<List<AccountViewModel>> GetAllStudentAccounts();
+	public Task<List<StudentDetailModel>> getStudentsByParentId(string parentId);
+	public Task AssignStudentToParent(string parentId, List<string> ListOfStudentId);
+	public Task<StudentDetailModel> GetStudentAccountsAsync(StudentQuery request);
+
 
 }

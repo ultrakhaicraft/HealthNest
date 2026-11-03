@@ -23,10 +23,14 @@ export const StatusBadge = ({ status }: StatusBadgeProps) => {
         return `${styles.statusBadgeActive}`;
       case 'Unavailable':
         return `${styles.statusBadgeInactive}`;
+      case 'Approved':
+        return `${styles.statusBadgeActive}`;
+      case 'Rejected':
+        return `${styles.statusBadgeInactive}`;
       default:
         return `${styles.statusBadgeActive}`; // Default to active if status is unknown
     }
   };
-  
+
   return <span className={`${styles.statusBadge} ${getStatusClass(status)}`}>{status}</span>;
 };

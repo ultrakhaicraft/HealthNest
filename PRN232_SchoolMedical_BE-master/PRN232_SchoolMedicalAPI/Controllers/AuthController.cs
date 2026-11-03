@@ -26,17 +26,7 @@ public class AuthController : ControllerBase
 	[AllowAnonymous]
 	public async Task<IActionResult> Login([FromBody] LoginRequest request)
 	{
-		if (!ModelState.IsValid)
-		{
-			var errors = ModelState
-			.Where(kvp => kvp.Value?.Errors.Count > 0)
-			.ToDictionary(
-				kvp => kvp.Key,
-				kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToArray()
-			);
-
-			return BadRequest(ApiResponseWrapper<object>.ValidationError(errors));
-		}
+		
 
 
 		(LoginResponse, TokensDTO) result = await _authService.Login(request);
@@ -73,17 +63,7 @@ public class AuthController : ControllerBase
 	[AllowAnonymous]
 	public async Task<IActionResult> Register([FromBody] RegisterRequest request, bool IsParent)
 	{
-		if (!ModelState.IsValid)
-		{
-			var errors = ModelState
-			.Where(kvp => kvp.Value?.Errors.Count > 0)
-			.ToDictionary(
-				kvp => kvp.Key,
-				kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToArray()
-			);
-
-			return BadRequest(ApiResponseWrapper<object>.ValidationError(errors));
-		}
+		
 		var result = await _authService.RegisterAsync(request, IsParent);
 		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
 					.Created(result, "Register Success");

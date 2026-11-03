@@ -1,67 +1,55 @@
 import { useState, useEffect, useCallback } from 'react';
-import { AccountDetailModel, AccountQuery } from '../../../models/AccountModel';
-import { accountService } from '../../API/AccountService';
+import { AccountDetailBaseModel, accountService } from '../../API/AccountService';
+import { UserRole } from '../../Constant';
 
-export const  useAccountDetailModel =()=> {
-  const [AccountDetailModel, setAccountDetailModel] = useState<AccountDetailModel | null>(null);
-  const [isStudentExist, setIsStudentExist] = useState<boolean>(true);
-  const defaultQuery: AccountQuery = {
-    fullName: '',
-    email: '',
-    role: '',
-    status: '',
-    pageNumber: 1,
-    pageSize: 5
-  };
+export function useAccountDetailModel<R extends UserRole>(expectedRole: R) {
+  type Detail = Extract<AccountDetailBaseModel, { role: R }>;
+  const [AccountDetailModel, setAccountDetailModel] = useState<Detail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  //Simply get Account Detail info based on role and set in local storage, nothing else
   const getAccountDetailModel = useCallback(async () => {
     const userId = localStorage.getItem('userId');
     if (!userId) {
       console.warn('User ID not found in localStorage');
+      setError('User ID not found.');
+      setLoading(false);
       return;
     }
 
-    let result: AccountDetailModel;
-    try {
-      result = await accountService.getDetailById(userId); // assignment, no `const`/`let` here
-    } catch (error) {
-      console.error('Failed to fetch account details:', error);
-      return; // genuine failure — nothing more we can do
-    }
+    setLoading(true);
+    setError(null);
 
-    console.log(result);
-
-    try {
-      console.log(result.id);
-      const studentDetail = await accountService.getStudentFromParentId(result.id, defaultQuery);
-      const firstStudent = studentDetail.data[0];
-      console.log(studentDetail);
-
-      //TODO: Need to find a way to handle multiple child, like a multiple child dashboard thing
-      if (firstStudent) {
-        setIsStudentExist(true);
-        result.studentId = firstStudent.id;
-        result.studentName = firstStudent.fullName;
-      } else {
-        setIsStudentExist(false);
-        result.studentId = "";
-        result.studentName = "";
+     try {
+      const result = await accountService.getDetailById(userId);
+      if (!hasRole(result, expectedRole)) {
+        setError(`Expected a ${expectedRole} account but received ${result.role}.`);
+        return;
       }
+      setAccountDetailModel(result);   // narrowed to Detail by the type guard
     } catch {
-      // 404 (or any failure) fetching linked student → treat as "no student linked"
-      setIsStudentExist(false);
-      result.studentId = "";
-      result.studentName = "";
+      setError('Failed to load account details.');
+    } finally {
+      setLoading(false);
     }
 
-    setAccountDetailModel(result);
-    localStorage.setItem("AccountDetailModel", JSON.stringify(result));
-
-  }, []);
+  }, [expectedRole]);
 
   useEffect(() => {
     getAccountDetailModel();
   }, [getAccountDetailModel]);
 
-  return { AccountDetailModel, isStudentExist, refetch: getAccountDetailModel };
+  
+
+  return { AccountDetailModel, refetch: getAccountDetailModel, loading , error };
 }
+
+// Reusable narrowing helper, no casts needed at call sites
+export function hasRole<R extends UserRole>(
+  account: AccountDetailBaseModel,
+  role: R
+): account is Extract<AccountDetailBaseModel, { role: R }> {
+  return account.role === role;
+}
+

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { IncidentRecordUpdate, IncidentRecordViewDetail } from '../../feature/API/IncidentRecordService';
 import { IconClose } from '../IconList';
 import inputStyles from '../../CSS/InputField.module.css';
 import Modal, { ModalForm, ModalReadOnly, ModalField, ModalFooter } from '../GenericModal';
+import { IncidentRecordViewDetail, IncidentRecordUpdate } from '../../models/IncidentRecordModel';
 
 interface UpdateIncidentRecordModalProps {
   isOpen: boolean;

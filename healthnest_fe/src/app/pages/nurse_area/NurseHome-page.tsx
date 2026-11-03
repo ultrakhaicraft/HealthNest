@@ -30,7 +30,7 @@ export default function NurseHomePage() {
     return (
         <div style={{ display: 'flex', minHeight: '100vh' }}>
             <NurseSideNav activeItem={activeItem} onSelect={handleSelect} />
-            <div style={{ flex: 1, padding: '2rem', backgroundColor: '#e8effa' }}>
+            <div className='main-page-container' style={{ flex: 1, padding: '2rem', backgroundColor: '#e8effa' }}>
                 <NurseHeader username={username} role="Nurse" onSelect={handleSelect}/>
                 <Outlet /> {/* renders whichever nested route matched */}
             </div>

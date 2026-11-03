@@ -1,0 +1,110 @@
+.studentCardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 210px);
+  gap: 20px;
+}
+
+.studentCard {
+  --tone-color: #9ca3af;
+  --tone-bg: #f3f4f6;
+  --tone-text: #4b5563;
+
+  aspect-ratio: 1 / 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  text-align: center;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-top: 5px solid var(--tone-color);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.toneGood     { --tone-color: #10b981; --tone-bg: #d1fae5; --tone-text: #047857; }
+.toneWarning  { --tone-color: #f59e0b; --tone-bg: #fef3c7; --tone-text: #b45309; }
+.toneCritical { --tone-color: #ef4444; --tone-bg: #fee2e2; --tone-text: #b91c1c; }
+.toneNeutral  { --tone-color: #9ca3af; --tone-bg: #f3f4f6; --tone-text: #4b5563; }
+
+.studentCardAvatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.studentCardIdentity {
+  width: 100%;
+  min-width: 0;
+}
+
+.studentCardName {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.studentCardClass {
+  margin: 2px 0 0;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.studentCardStatus {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background-color: var(--tone-bg);
+  color: var(--tone-text);
+}
+
+.studentCardStatusLabel {
+  display: block;
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.studentCardStatusValue {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.statusDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--tone-color);
+}
+
+.studentCardsFooter {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.studentCardsCount { font-size: 0.85rem; color: #6b7280; }
+.studentCardsMessage { color: #6b7280; }
+.studentCardsError { color: #b91c1c; }
+
+.studentCardsEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 16px;
+  background-color: #f8fafc;
+  border-radius: 8px;
+}

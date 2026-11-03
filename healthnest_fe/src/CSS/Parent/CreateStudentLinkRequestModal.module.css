@@ -1,0 +1,101 @@
+.block { margin-bottom: 1.25rem; }
+
+.blockTitle {
+  margin: 0 0 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.help {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* Lookup form: two fields and a button on one row, stacking on small screens */
+.lookupForm {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.field { display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; }
+
+.label { font-size: 0.8rem; font-weight: 500; color: #374151; }
+
+.secondaryButton {
+  padding: 0.55rem 1rem;
+  border: 1px solid #c7d2fe;
+  border-radius: 0.5rem;
+  background-color: #eef2ff;
+  color: #4338ca;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.secondaryButton:hover:not(:disabled) { background-color: #e0e7ff; }
+.secondaryButton:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.messageError,
+.messageSuccess {
+  margin: 0.6rem 0 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.4rem;
+  font-size: 0.85rem;
+}
+.messageError   { background-color: #fef2f2; color: #b91c1c; }
+.messageSuccess { background-color: #f0fdf4; color: #15803d; }
+
+/* Selected students */
+.selectedList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.selectedItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0.9rem;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+}
+
+.selectedName { font-weight: 600; color: #111827; }
+.selectedMeta { font-size: 0.85rem; color: #6b7280; }
+
+.removeLink {
+  border: none;
+  background: none;
+  color: #b91c1c;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.removeLink:hover:not(:disabled) { text-decoration: underline; }
+.removeLink:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.emptySelected { margin: 0; font-size: 0.875rem; color: #6b7280; }
+.quota { margin: 0.6rem 0 0; font-size: 0.8rem; color: #6b7280; }
+.error { margin: 0.4rem 0 0; font-size: 0.85rem; color: #b91c1c; }
+
+.counter {
+  display: block;
+  margin-top: 0.25rem;
+  text-align: right;
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+@media (max-width: 600px) {
+  .lookupForm { grid-template-columns: 1fr; }
+}

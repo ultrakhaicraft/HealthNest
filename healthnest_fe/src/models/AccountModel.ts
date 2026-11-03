@@ -21,6 +21,8 @@ export interface AccountViewModel {
   gender: string;
   role: string;
   status: string;
+  avatarUrl?: string;
+
 }
 
 
@@ -37,12 +39,6 @@ export interface AccountDetailModel {
   avatarUrl?: string;
   dateOfBirth: string; // ISO date string or Date object depending on API parsing
   accountCreationDateTime: string;
-
-  // Frontend properties (kept optional to support existing UI mappings like student/parent links)
-  studentId?: string;
-  studentName?: string;
-  parentId?: string;
-  parentName?: string;
 }
 
 

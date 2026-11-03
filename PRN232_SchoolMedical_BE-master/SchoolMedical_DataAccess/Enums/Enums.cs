@@ -40,6 +40,7 @@ public enum RequestStatus
 	Pending,
 	Approved,
 	Rejected,
+	Cancelled,
 	Deleted, //Soft Delete
 }
 

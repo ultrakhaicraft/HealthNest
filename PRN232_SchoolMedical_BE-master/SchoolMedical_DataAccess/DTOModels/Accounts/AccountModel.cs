@@ -4,11 +4,16 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace HealthNest_DAO.DTOModels.Accounts;
 
 //Account section, Base class for Student, Parent, Nurse and Admin
+[JsonDerivedType(typeof(ParentDetailModel))]
+[JsonDerivedType(typeof(StudentDetailModel))]
+[JsonDerivedType(typeof(NurseDetailModel))]
+[JsonDerivedType(typeof(AdminDetailModel))]
 public class AccountDetailModel
 {
 	public string Id { get; set; } = null!;
@@ -86,3 +91,11 @@ public class AccountQuery
 	public int PageSize { get; set; } = 5; // Default page size
 }
 
+public class StudentQuery
+{
+	[Required, EmailAddress]
+	public string Email { get; set; } = null!;
+
+	[Required]
+	public DateTime DateOfBirth { get; set; }        
+}
