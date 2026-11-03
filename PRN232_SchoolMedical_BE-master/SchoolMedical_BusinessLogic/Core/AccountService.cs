@@ -146,7 +146,7 @@ public class AccountService : IAccountService
 		var result = await _unitOfWork.GetRepository<Student>()
 			.Include(s => s.Account)
 			.Where(s => s.Account.Email == email
-					 && s.Account.DateOfBirth.Date == dob    
+					 && s.Account.DateOfBirth.Date == dob
 					 && s.Account.Status != inactive
 					 && (s.ParentId == null || s.ParentId == ""))
 			.Select(s => new StudentDetailModel
@@ -164,13 +164,13 @@ public class AccountService : IAccountService
 				Address = s.Account.Address,
 				Status = s.Id,
 				ParentId = s.ParentId,
-				Class = s.Class                                   
+				Class = s.Class
 			})
 			.FirstOrDefaultAsync();
 
-		
+
 		if (result == null)
-			throw new NotFoundException("No eligible student found. Please check the details or contact the school office.");
+			throw new NotFoundException("No eligible student found. Please check the details or contact the school office via email for inquiry.");
 
 		return result;
 	}

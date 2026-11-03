@@ -67,7 +67,7 @@
 }
 
 .rowPending  { border-left-color: #f59e0b; }
-.rowRejected { border-left-color: #ef4444; align-items: flex-start; }
+.rowRejected { border-left-color: #ef4444; align-items: flex-start; flex-direction: column; }
 
 .rowMain { flex: 1; min-width: 0; }
 
