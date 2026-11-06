@@ -386,17 +386,46 @@ public class AccountService : IAccountService
 		return query;
 	}
 
-	
-
-	private async Task<(string studentId, string studentName)> FindStudentByParentId(string parentId)
+	public async Task<UserCountStatistic> GetUserStatistic()
 	{
-		var student= await _unitOfWork.GetRepository<Account>().FindAsync(x=>x.Student.ParentId.Equals(parentId));
-		if (student == null) { 
-			Console.WriteLine("No student found for this parent ID.");
-			return (string.Empty, string.Empty); // Return empty values if no student found
-		}
-		return (student.Id, student.FullName);
+		var query = _unitOfWork.GetRepository<Account>().GetQueryable();
+		var todayStart = GetTodayStartWithTimeZone();
+
+		int studentCount = await query.Where(s=>s.Role==AccountRole.Student.ToString()).CountAsync();
+		int parentCount = await query.Where(s => s.Role == AccountRole.Parent.ToString()).CountAsync();
+		int schoolNurse = await query.Where(s => s.Role == AccountRole.SchoolNurse.ToString()).CountAsync();
+
+		//Daily User
+		int dailyActiveUser= await _unitOfWork.GetRepository<RefreshToken>().GetQueryable()
+			.Where(s=>s.CreatedAt >= todayStart)
+			.Select(t=>t.AccountId)
+			.Distinct()
+			.CountAsync();
+
+
+		UserCountStatistic userCountStatistic = new UserCountStatistic
+		{
+			TotalParent= parentCount,
+			TotalSchoolNurse= schoolNurse,
+			TotalStudent= studentCount,
+			TotalDailyUser= dailyActiveUser,
+		};
+
+		return userCountStatistic;
+
 	}
 
-	
+	private DateTime GetTodayStartWithTimeZone()
+	{
+		var timezone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"); //Temporary timezone location based on VietNam
+		var localNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timezone);
+		return TimeZoneInfo.ConvertTimeToUtc(localNow.Date, timezone);
+
+	}
+
+
+
+
+
+
 }

@@ -1,5 +1,7 @@
-﻿using HealthNest_BusinessLogic.Interface;
+﻿using HealthNest_API.Helpers;
+using HealthNest_BusinessLogic.Interface;
 using HealthNest_DAO.DTOModels;
+using HealthNest_DAO.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MySqlX.XDevAPI.Common;
@@ -18,6 +20,7 @@ public class DashboardController : Controller
 	private readonly IMedicineRequestService _medicineRequestService;
 	private readonly IHealthCheckupEventService _healthCheckupEventService;
 	private readonly IVaccineEventService _vaccineEventService;
+	private readonly IAccountService _accountService;
 
 	public DashboardController(IIncidentRecordService incidentRecordService, IMedicineRequestService medicineRequestService, IHealthCheckupEventService healthCheckupEventService, IVaccineEventService vaccineEventService)
 	{
@@ -30,7 +33,30 @@ public class DashboardController : Controller
 	[HttpGet("statistics")]
 	public async Task<IActionResult> GetStatistic()
 	{
-		DashboardStatistic result = new DashboardStatistic();
+		//Get Role from request or cookie
+		//If the role is Admin, get statistic related to user count, otherwise do not get it
+		string userRole = User.Claims.GetUserRoleFromJwtToken();
+
+		UserCountStatistic? userStat = null; //Prevent double new constructor in GetUserStatistic
+
+		if (userRole == AccountRole.Admin.ToString())
+		{
+			userStat = await _accountService.GetUserStatistic();
+		}
+		else
+		{
+			userStat = new UserCountStatistic
+			{
+				TotalParent = 0,
+				TotalStudent = 0,
+				TotalSchoolNurse = 0,
+				TotalDailyUser = 0	
+			};
+		}
+
+
+		DashboardStatistic result = new DashboardStatistic { UserCountStatistic = userStat };
+
 		result.ActiveIncidentRecord = await _incidentRecordService.CountActiveIncidentRecord();
 		result.PendingMedicineRequest = await _medicineRequestService.CountPendingMedicineRequest();
 		result.UpcomingVaccineEvent = await _vaccineEventService.CountUpcomingVaccineEvent();

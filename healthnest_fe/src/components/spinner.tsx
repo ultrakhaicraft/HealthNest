@@ -30,3 +30,17 @@ export const FullPageSpinner = ({ message = 'Loading...' }: FullPageSpinnerProps
     {message && <p className={styles.spinnerMessage}>{message}</p>}
   </div>
 );
+
+
+// A simple component to center the spinner
+/*const FullPageSpinner = () => (
+  <div style={{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+    width: '100vw',
+  }}>
+    <Spinner size="large" />
+  </div>
+);*/

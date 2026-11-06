@@ -1,4 +1,5 @@
-﻿using HealthNest_BusinessLogic.Interface;
+﻿using HealthNest_API.Helpers;
+using HealthNest_BusinessLogic.Interface;
 using HealthNest_DAO.DTOModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -55,7 +56,9 @@ public class VaccineEventController : Controller
 			return BadRequest(ApiResponseWrapper<object>.ValidationError(errors));
 		}
 
-		var result = await _vaccineEventService.CreateVaccineEventAsync(request);
+		string createdById = User.Claims.GetUserIdFromJwtToken();
+
+		var result = await _vaccineEventService.CreateVaccineEventAsync(request, createdById);
 
 		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
 					.Created(result, "VaccineTitle event created successfully");

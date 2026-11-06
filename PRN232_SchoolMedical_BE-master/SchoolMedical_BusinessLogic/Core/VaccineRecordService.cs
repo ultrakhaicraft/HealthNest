@@ -85,7 +85,7 @@ public class VaccineRecordService : IVaccineRecordService
 
 
 
-		var pagedResult = await PagingExtension.ToPagingModel(viewData, totalCount: totalCount, pageIndex: request.PageIndex, request.PageSize);
+		var pagedResult =  PagingExtension.ToPagingModel(viewData, totalCount: totalCount, pageIndex: request.PageIndex, request.PageSize);
 
 		return pagedResult;
 	}

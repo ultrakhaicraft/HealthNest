@@ -10,7 +10,7 @@ namespace HealthNest_BusinessLogic.Interface
 	public interface IVaccineEventService
 	{
 		Task<PagingModel<ViewVaccineEventDTO>> GetAllVaccineEvents(VaccineEventQuery request);
-		Task<string> CreateVaccineEventAsync(VaccineEventCreateDTO dto);
+		Task<string> CreateVaccineEventAsync(VaccineEventCreateDTO dto, string createdBy);
 		Task DeleteVaccineEvent(string vaccineEventId);
 		Task<string> UpdateVaccineEvent(VaccineEventUpdateDTO dto, string vaccineEventId);
 		Task<ViewVaccineEventDetailDTO> GetVaccineEventById(string vaccineEventId);

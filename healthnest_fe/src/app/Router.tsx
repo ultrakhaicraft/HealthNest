@@ -4,7 +4,8 @@ import { Routes, Route } from 'react-router-dom';
 import { ProtectedRoute } from './ProtectedRoute';
 import { UserRole } from '../feature/Constant';
 import { NurseDashboard } from './pages/nurse_area/NurseDashboard-page';
-import { Spinner } from '../components/Spinner';
+import { FullPageSpinner, Spinner } from '../components/Spinner';
+import AdminPageContainer from '../app/pages/admin_area/AdminPageContainer';
 
 
 // Lazy load all the pages/routes
@@ -37,6 +38,9 @@ const VaccineRecordCRUDPage = React.lazy(() => import('../app/pages/nurse_area/V
 const TreatmentRecordCRUDPage = React.lazy(() => import('../app/pages/nurse_area/TreatmentRecordCRUD-page'));
 const StudentLinkRequestCRUDPage = React.lazy(() => import('../app/pages/nurse_area/StudentLinkRequestCRUD-page'));
 
+//Admin
+const AdminHomepage = React.lazy(() => import('../app/pages/admin_area/AdminPageContainer'));
+const AdminDashboardPage = React.lazy(() => import('../app/pages/admin_area/AdminDashboardPage'));
 
 
 //Others
@@ -51,18 +55,7 @@ const StudentHealthRecordCRUDPage = React.lazy(() => import('../app/pages/nurse_
 
 
 
-// A simple component to center the spinner
-const FullPageSpinner = () => (
-  <div style={{
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100vh',
-    width: '100vw',
-  }}>
-    <Spinner size="large" />
-  </div>
-);
+
 
 export const AppRouter = () => {
 
@@ -110,7 +103,15 @@ export const AppRouter = () => {
         </Route>
 
 
-        <Route path="/studentHomepage" element={
+        <Route path="/admin" element={
+          <ProtectedRoute allowedRoles={[UserRole.Admin]}><AdminHomepage /></ProtectedRoute>
+        }>
+          <Route index element={<AdminDashboardPage/>} />
+          {/* <Route path="user-profile" element={<AdminUserProfile />} /> */}
+        </Route>
+
+
+        <Route path="/student" element={
           <ProtectedRoute allowedRoles={[UserRole.Student]}><StudentHomepage /></ProtectedRoute>
         } />
 

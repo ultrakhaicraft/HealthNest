@@ -1,11 +1,12 @@
 import { useAuth } from "../feature/API/LoginService";
-import { IconHealthCheckup, IconHome, IconIncidentReport, IconLogout, IconMedical, IconMedicine, IconStudentRecord, IconVaccine } from "./IconList";
+import { IconHealthCheckup, IconHome, IconIncidentReport, IconLogout, IconMedical, IconMedicine, IconStudentRecord, IconUser, IconVaccine } from "./IconList";
 import styles from '../CSS/Nurse/NurseNavBar.module.css';
 import { Children, ReactNode, useEffect, useRef, useState } from "react";
 
-interface SideNavProps {
+interface StaffSideNavProps {
   activeItem: string;
   onSelect: (label: string) => void;
+  IsAdmin?: boolean; // optional prop to indicate if the user is an admin
 }
 
 interface NavItem {
@@ -15,30 +16,13 @@ interface NavItem {
 }
 
 
-const NurseSideNav = ({ activeItem, onSelect }: SideNavProps) => {
-  const navItems = [
-    { icon: <IconHome className={styles.iconSmall} />, label: 'Home' },
-    { icon: <IconMedical className={styles.iconSmall} />, label: 'Medical Supply' },
-    { icon: <IconMedicine className={styles.iconSmall} />, label: 'Medicine' },
-    { icon: <IconMedical className={styles.iconSmall} />, label: 'Medicine Request' },
-    {
-      icon: <IconStudentRecord className={styles.iconSmall} />, label: 'Student Health Record',
-      children: [
-        { icon: <IconVaccine className={styles.iconSmall} />, label: 'Vaccine Record' },
-        { icon: <IconMedical className={styles.iconSmall} />, label: 'Treatment Record' },
-      ]
-    },
-    { icon: <IconIncidentReport className={styles.iconSmall} />, label: 'Incident Report' },
-    { icon: <IconVaccine className={styles.iconSmall} />, label: 'Vaccine' },
-    { icon: <IconHealthCheckup className={styles.iconSmall} />, label: 'Health Checkup' },
-    { icon: <IconStudentRecord className={styles.iconSmall} />, label: 'Student Link Request' },
 
 
-  ];
-
+const StaffSideNav = ({ activeItem, onSelect, IsAdmin }: StaffSideNavProps) => {
   const { logout } = useAuth();
   const [openSubMenu, setOpenSubMenu] = useState<string | null>(null); // for touch / keyboard
   const navRef = useRef<HTMLElement>(null);
+  const navItems = IsAdmin ? adminNavItems : nurseNavItems; // choose nav items based on user role
 
 
   useEffect(() => {
@@ -57,7 +41,7 @@ const NurseSideNav = ({ activeItem, onSelect }: SideNavProps) => {
   }, []);
 
   const handleSelect = (label: string) => {
-    setOpenSubMenu  (null);
+    setOpenSubMenu(null);
     onSelect(label);
   };
 
@@ -88,7 +72,7 @@ const NurseSideNav = ({ activeItem, onSelect }: SideNavProps) => {
             const isOpen = openSubMenu === item.label;
             return (
               <li key={item.label}
-              className={[
+                className={[
                   hasChildren ? styles.hasSubmenu : '',
                   isOpen ? styles.submenuOpen : '',
                 ].filter(Boolean).join(' ')}>
@@ -136,4 +120,33 @@ const NurseSideNav = ({ activeItem, onSelect }: SideNavProps) => {
   );
 }
 
-export default NurseSideNav
+export default StaffSideNav;
+
+
+
+export const nurseNavItems: NavItem[] = [
+  { icon: <IconHome className={styles.iconSmall} />, label: 'Home' },
+  { icon: <IconMedical className={styles.iconSmall} />, label: 'Medical Supply' },
+  { icon: <IconMedicine className={styles.iconSmall} />, label: 'Medicine' },
+  { icon: <IconMedical className={styles.iconSmall} />, label: 'Medicine Request' },
+  {
+    icon: <IconStudentRecord className={styles.iconSmall} />, label: 'Student Health Record',
+    children: [
+      { icon: <IconVaccine className={styles.iconSmall} />, label: 'Vaccine Record' },
+      { icon: <IconMedical className={styles.iconSmall} />, label: 'Treatment Record' },
+    ]
+  },
+  { icon: <IconIncidentReport className={styles.iconSmall} />, label: 'Incident Report' },
+  { icon: <IconVaccine className={styles.iconSmall} />, label: 'Vaccine' },
+  { icon: <IconHealthCheckup className={styles.iconSmall} />, label: 'Health Checkup' },
+  { icon: <IconStudentRecord className={styles.iconSmall} />, label: 'Student Link Request' },
+
+
+];
+
+export const adminNavItems: NavItem[] = [
+  { icon: <IconHome className={styles.iconSmall} />, label: 'Home' },
+  { icon: <IconUser className={styles.iconSmall} />, label: 'User Management' },
+  { icon: <IconVaccine className={styles.iconSmall} />, label: 'Vaccine' },
+  { icon: <IconHealthCheckup className={styles.iconSmall} />, label: 'Health Checkup' },
+];

@@ -31,19 +31,18 @@ namespace HealthNest_DAO.DTOModels
 
 	public class VaccineEventCreateDTO
 	{
-		public string CreatedBy { get; set; } = null!;
 		public string Title { get; set; } = null!;
 		public string? ShortDescription { get; set; }
 		public string? Content { get; set; }
 		public DateTime DateOccurred { get; set; }
 		public DateTime? DateSignupStart { get; set; }
 		public DateTime? DateSignupEnd { get; set; }
-		public string? Status { get; set; }
 	}
 
 	public class VaccineEventUpdateDTO : VaccineEventCreateDTO
 	{
-
+		public string CreatedBy { get; set; } = null!;
+		public string? Status { get; set; }
 	}
 
 	public class VaccineEventQuery

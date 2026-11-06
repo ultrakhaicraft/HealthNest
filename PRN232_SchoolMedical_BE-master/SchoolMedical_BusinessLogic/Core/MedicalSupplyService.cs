@@ -80,7 +80,7 @@ namespace HealthNest_BusinessLogic.Core
 				AbsoluteExpirationRelativeToNow = CacheDuration
 			});
 
-			var pagedResult = await PagingExtension.ToPagingModel(viewData, request.PageIndex, request.PageSize);
+			var pagedResult = PagingExtension.ToPagingModel(viewData, request.PageIndex, request.PageSize);
 
             return pagedResult;
 		}

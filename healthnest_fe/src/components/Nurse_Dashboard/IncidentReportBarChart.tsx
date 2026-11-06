@@ -1,8 +1,11 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import styles from '../../CSS/Nurse/Dashboard/IncidentReportBarChart.module.css';
+import { MONTHS } from '../../feature/Constant';
+import { IncidentRecordCountPerYear } from '../../feature/API/DashboardService';
 
 interface IncidentReportsChartProps {
-  data: { month: string; count: number }[];
+  //data: { month: string; count: number }[];
+  data: IncidentRecordCountPerYear | null;
 }
 
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -18,11 +21,22 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export const IncidentReportBarChart = ({ data }: IncidentReportsChartProps) => {
+
+  // Transforms the flat per-month object into the array shape the bar chart needs
+  function toChartData(record: IncidentRecordCountPerYear | null) {
+    if (!record) return [];
+    return MONTHS.map(({ key, label }) => ({
+      month: label,
+      count: record[key],
+    }));
+  }
+
+  
   return (
     <section className="incident-report-bar-chart">
       <p className={styles.chartTitle}>Incident Reports per Month in a Year</p>
       <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+        <BarChart data={toChartData(data)} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#eef2f9" vertical={false} />
           <XAxis dataKey="month" tick={{ fill: '#64748b', fontSize: 12 }}
             axisLine={{ stroke: '#e2e8f0' }} tickLine={false} />

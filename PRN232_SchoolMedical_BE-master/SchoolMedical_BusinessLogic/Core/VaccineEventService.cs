@@ -20,36 +20,32 @@ namespace HealthNest_BusinessLogic.Core;
 public class VaccineEventService : IVaccineEventService
 {
 	private readonly IUnitOfWork _unitOfWork;
-	private readonly IDistributedCache _cache;
 	private readonly IHubContext<MyHub> _hubContext;
-	private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(10);
 
-	public VaccineEventService(IUnitOfWork unitOfWork, IDistributedCache cache, IHubContext<MyHub> hubContext)
+	public VaccineEventService(IUnitOfWork unitOfWork, IHubContext<MyHub> hubContext)
 	{
 		_unitOfWork = unitOfWork;
-		_cache = cache;
 		_hubContext = hubContext;
 	}
 
 	public async Task<PagingModel<ViewVaccineEventDTO>> GetAllVaccineEvents(VaccineEventQuery request)
 	{
-		//Get the data from cache if available, otherwise fetch from the database and cache it for future requests
-		const string cacheKey = "all_vaccine_event";
+	
+		var query = _unitOfWork.GetRepository<Vaccineevent>().GetQueryable();
 
-		var cachedData = await _cache.GetStringAsync(cacheKey);
-		if (cachedData != null)
+		if (!string.IsNullOrEmpty(request.Status))
 		{
-			var cachedVaccineEvent = JsonSerializer.Deserialize<List<ViewVaccineEventDTO>>(cachedData)!;
-			var pagedData = await PagingExtension.ToPagingModel(
-				FilterByUpcomingAndSortByLatestOccurredDate(cachedVaccineEvent, request), request.PageIndex, request.PageSize);
-			return pagedData;
+			query = query.Where(s=>s.Status == request.Status);
 		}
 
+		query = request.SortByLatestDateOccurred ? query.OrderByDescending(s => s.DateOccurred) : query.OrderBy(s => s.DateOccurred);
 
-		var repository = _unitOfWork.GetRepository<Vaccineevent>();
-		IQueryable<Vaccineevent> incidents = await repository.GetQueryableAsync();
+		int totalItems = await query.CountAsync();
 
-		List<ViewVaccineEventDTO> viewVaccineEvents = incidents.Select(i => new ViewVaccineEventDTO
+		query = query.Skip((request.PageIndex - 1) * request.PageSize)
+				.Take(request.PageSize);
+
+		List<ViewVaccineEventDTO> viewVaccineEvents = await query.Select(i => new ViewVaccineEventDTO
 		{
 			Id = i.Id,
 			Title = i.Title,
@@ -57,34 +53,17 @@ public class VaccineEventService : IVaccineEventService
 			DateSignupStart = i.DateSignupStart,
 			DateSignupEnd = i.DateSignupEnd,
 			Status = i.Status
-		}).ToList();
 
-		// Cache the data for future requests
-		await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(viewVaccineEvents), new DistributedCacheEntryOptions
-		{
-			AbsoluteExpirationRelativeToNow = CacheDuration
-		});
+		}).ToListAsync();
 
-		var pagedResult = await PagingExtension.ToPagingModel(
-			FilterByUpcomingAndSortByLatestOccurredDate(viewVaccineEvents, request), request.PageIndex, request.PageSize);
+
+
+		var pagedResult =  PagingExtension.ToPagingModel(viewVaccineEvents, totalCount: totalItems, pageIndex: request.PageIndex, request.PageSize);
 
 		return pagedResult;
 	}
 
-	private List<ViewVaccineEventDTO> FilterByUpcomingAndSortByLatestOccurredDate(List<ViewVaccineEventDTO> data, VaccineEventQuery request)
-	{
-		if(request.SortByLatestDateOccurred)
-		{
-			data = data.OrderByDescending(e => e.DateOccurred).ToList();
-		}
-
-		if(request.Status == EventStatus.Upcoming.ToString())
-		{
-			data = data.Where(e => e.Status == EventStatus.Upcoming.ToString()).ToList();
-		}
-
-		return data;
-	}
+	
 
 	public async Task<int> CountUpcomingVaccineEvent()
 	{
@@ -98,14 +77,14 @@ public class VaccineEventService : IVaccineEventService
 
 	}
 
-	public async Task<string> CreateVaccineEventAsync(VaccineEventCreateDTO dto)
+	public async Task<string> CreateVaccineEventAsync(VaccineEventCreateDTO dto, string createdBy)
 	{
 		await Task.Delay(100);
 
-		var createdBy = await _unitOfWork.GetRepository<Account>().GetByIdAsync(dto.CreatedBy);
-		if (createdBy == null)
+		var resultCreatedBy = await _unitOfWork.GetRepository<Account>().GetByIdAsync(createdBy);
+		if (resultCreatedBy == null)
 		{
-			throw new NotFoundException("Unable to find account for creating vaccine with their Id: " + createdBy.Id);
+			throw new NotFoundException("Unable to find account for creating vaccine with their Id: " + createdBy);
 		}
 
 		var vaccineEvent = new Vaccineevent
@@ -118,7 +97,7 @@ public class VaccineEventService : IVaccineEventService
 			DateSignupStart = dto.DateSignupStart,
 			DateSignupEnd = dto.DateSignupEnd,
 			Status = EventStatus.Upcoming.ToString(),
-			CreatedBy = createdBy.Id, // Assuming CreatedBy is a property in the create model
+			CreatedBy = createdBy, // Assuming CreatedBy is a property in the create model
 
 		};
 

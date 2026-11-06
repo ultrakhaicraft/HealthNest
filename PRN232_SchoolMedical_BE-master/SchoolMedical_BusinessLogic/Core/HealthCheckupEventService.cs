@@ -33,17 +33,7 @@ namespace HealthNest_BusinessLogic.Core
 
 		public async Task<PagingModel<ViewHealthCheckupEventDTO>> GetAllHealthCheckupEvent(HealthCheckupEventQuery request)
 		{
-			//Get the data from cache if available, otherwise fetch from the database and cache it for future requests
-			const string cacheKey = "all_health_checkup_event";
-
-			var cachedData = await _cache.GetStringAsync(cacheKey);
-			if (cachedData != null)
-			{
-				var cachedHealthCheckupEvent = JsonSerializer.Deserialize<List<ViewHealthCheckupEventDTO>>(cachedData)!;
-				var pagedData = await PagingExtension.ToPagingModel(
-					FilterByUpcomingAndSortByLatestOccurredDate(cachedHealthCheckupEvent, request), request.PageIndex, request.PageSize);
-				return pagedData;
-			}
+			
 
 
 			var repository = _unitOfWork.GetRepository<Healthcheckupevent>();
@@ -59,13 +49,9 @@ namespace HealthNest_BusinessLogic.Core
 				Status = i.Status
 			}).ToList();
 
-			// Cache the data for future requests
-			await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(viewHealthCheckupEvents), new DistributedCacheEntryOptions
-			{
-				AbsoluteExpirationRelativeToNow = CacheDuration
-			});
+			
 
-			var pagedResult = await PagingExtension.ToPagingModel(
+			var pagedResult =  PagingExtension.ToPagingModel(
 				FilterByUpcomingAndSortByLatestOccurredDate(viewHealthCheckupEvents, request), request.PageIndex, request.PageSize);
 
 			return pagedResult;

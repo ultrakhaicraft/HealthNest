@@ -1,3 +1,8 @@
+import { ReactNode } from "react";
+import { IconHealthCheckup, IconHome, IconIncidentReport, IconLogout, IconMedical, IconMedicine, IconStudentRecord, IconVaccine } from "./IconList";
+import { IncidentRecordCountPerYear } from "./API/DashboardService";
+
+
 //Store Constant Value in Application Level
 export enum UserRole {
   Parent = 'Parent',
@@ -5,6 +10,8 @@ export enum UserRole {
   Nurse = 'SchoolNurse',
   Admin = 'Admin',
 }
+
+
 
 export const MedicineRequestStatuses: string[] = ["Pending", "Approved", "Rejected", "Deleted"];
 export const RecordStatuses: string[] = ['Active', 'Inactive'];
@@ -47,3 +54,21 @@ export const STUDENT_NAV_ROUTES: { label: string; path: string }[] = [
   { label: 'Student Health Record', path: '/student/student-health-record' },
 
 ];
+
+
+export const MONTHS: { key: keyof Omit<IncidentRecordCountPerYear, 'year'>; label: string }[] = [
+  { key: 'january', label: 'Jan' },
+  { key: 'february', label: 'Feb' },
+  { key: 'march', label: 'Mar' },
+  { key: 'april', label: 'Apr' },
+  { key: 'may', label: 'May' },
+  { key: 'june', label: 'Jun' },
+  { key: 'july', label: 'Jul' },
+  { key: 'august', label: 'Aug' },
+  { key: 'september', label: 'Sep' },
+  { key: 'october', label: 'Oct' },
+  { key: 'november', label: 'Nov' },
+  { key: 'december', label: 'Dec' },
+];
+
+

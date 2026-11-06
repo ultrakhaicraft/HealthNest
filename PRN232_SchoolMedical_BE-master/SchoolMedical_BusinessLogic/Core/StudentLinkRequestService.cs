@@ -226,7 +226,7 @@ public class StudentLinkRequestService : IStudentLinkRequestService
 		int totalCount=ordered.Count();
 		var viewData = await ordered.Select(ToViewModel).ToListAsync();
 
-		var pagedResult = await PagingExtension.ToPagingModel(viewData, totalCount: totalCount, pageIndex: query.PageIndex, query.PageSize);
+		var pagedResult =  PagingExtension.ToPagingModel(viewData, totalCount: totalCount, pageIndex: query.PageIndex, query.PageSize);
 
 		return pagedResult;
 	}
@@ -308,7 +308,7 @@ public class StudentLinkRequestService : IStudentLinkRequestService
 
 
 
-		var pagedResult = await PagingExtension.ToPagingModel(viewData, totalCount: totalCount, pageIndex: query.PageIndex, query.PageSize);
+		var pagedResult = PagingExtension.ToPagingModel(viewData, totalCount: totalCount, pageIndex: query.PageIndex, query.PageSize);
 
 		return pagedResult;
 	}
