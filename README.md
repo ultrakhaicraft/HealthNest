@@ -1,4 +1,7 @@
 # HealthNest
+## Project Status for Recruiter
+-Progress: 60% / 100%
+-Under Development Features:  health checkup and vaccination event management, parent registration for these events on behalf of their children, and pages for student user
 
 ## Introduction
 HealthNest is a school medical management system, which allow medical staff to manage list of student emergency and medical equipment. The system also let parent to send the medical prescription to the medical staff, in order for staff take care of their student.
