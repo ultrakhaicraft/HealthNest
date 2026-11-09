@@ -47,8 +47,10 @@ public enum RequestStatus
 //Exclusive for HealthCheckup and VaccineTitle Event
 public enum EventStatus
 {
-	Upcoming,
-	Ongoing,
+	Pending, //Upon creation
+	Signup,   //During Signup Start and Signup End, 
+	Upcoming,  //After Signup period and before actual occurred date where the vaccine checkup happened
+	Ongoing,  //The event is happening
 	Completed,
 	Cancelled,
 	

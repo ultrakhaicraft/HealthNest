@@ -82,6 +82,8 @@ public class AuthService : IAuthService
 				Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
 				Role = IsParent ? AccountRole.Parent.ToString() : AccountRole.Student.ToString(),
 				Address = request.Address,
+				Gender=request.Gender,
+				DateOfBirth=request.DateOfBirth,
 				Status = IsParent ? AccountStatus.Active.ToString() : AccountStatus.NotLinked.ToString(),
 			};
 			

@@ -1,0 +1,60 @@
+/* app/CSS/Nurse/StudentLinkRequestQueue.module.css */
+.tabs { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.95rem;
+  border: 1px solid #d1d5db;
+  border-radius: 9999px;
+  background: #ffffff;
+  color: #374151;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.tab:hover { background: #f3f4f6; }
+.tabActive, .tabActive:hover { background: #2563eb; border-color: #2563eb; color: #ffffff; }
+
+.tabBadge {
+  min-width: 1.25rem;
+  padding: 0 0.4rem;
+  border-radius: 9999px;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 0.7rem;
+  line-height: 1.25rem;
+  text-align: center;
+}
+
+.rowStale { background-color: #fffbeb; }
+
+.age { margin-left: 0.5rem; font-size: 0.8rem; color: #6b7280; }
+.ageStale { margin-left: 0.5rem; font-size: 0.8rem; font-weight: 700; color: #b45309; }
+
+.competingChip {
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 9999px;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 0.7rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.reviewButton {
+  padding: 0.35rem 0.9rem;
+  border: 1px solid #c7d2fe;
+  border-radius: 0.5rem;
+  background: #eef2ff;
+  color: #4338ca;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.reviewButton:hover:not(:disabled) { background: #e0e7ff; }
+.reviewButton:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.tableBusy { opacity: 0.6; transition: opacity 0.15s; }

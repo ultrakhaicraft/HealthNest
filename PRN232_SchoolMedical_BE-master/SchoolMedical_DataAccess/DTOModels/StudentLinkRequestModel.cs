@@ -44,6 +44,7 @@ public class StudentLinkRequestViewModel
 {
 	public string Id { get; set; } = null!;
 	public string ParentId { get; set; } = null!;
+	public string? ParentName { get; set; }
 	public string StudentId { get; set; } = null!;
 	public string StudentName { get; set; } = null!;
 	public string Status { get; set; } = null!;
@@ -51,6 +52,7 @@ public class StudentLinkRequestViewModel
 	public string? ReviewedBy { get; set; }
 	public DateTime? ReviewedDateTime { get; set; }
 	public string? RejectionReason { get; set; }
+	public int OtherPendingCount { get; set; }     // nurse only
 
 }
 

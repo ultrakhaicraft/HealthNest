@@ -1,6 +1,7 @@
 ﻿using HealthNest_API.Helpers;
 using HealthNest_BusinessLogic.Interface;
 using HealthNest_DAO.DTOModels;
+using HealthNest_DAO.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +21,6 @@ public class VaccineEventController : Controller
 	}
 
 	[HttpGet]
-	//[Authorize(Roles = "Admin")]
 	public async Task<IActionResult> GetAllVaccineEvents([FromQuery] VaccineEventQuery request)
 	{
 		var result = await _vaccineEventService.GetAllVaccineEvents(request);
@@ -30,7 +30,6 @@ public class VaccineEventController : Controller
 	}
 
 	[HttpGet("{id}")]
-	//[Authorize(Roles = "Admin")]
 	public async Task<IActionResult> GetVaccineEventById(string id)
 	{
 		var result = await _vaccineEventService.GetVaccineEventById(id);
@@ -41,8 +40,8 @@ public class VaccineEventController : Controller
 	}
 
 	[HttpPost]
-	//[Authorize(Roles = "Admin")]
-	public async Task<IActionResult> CreateHealthCheckup([FromBody] VaccineEventCreateDTO request)
+	[Authorize(Roles = nameof(AccountRole.Admin))]
+	public async Task<IActionResult> CreateVaccineEvent([FromBody] VaccineEventCreateDTO request)
 	{
 		if (!ModelState.IsValid)
 		{
@@ -67,8 +66,8 @@ public class VaccineEventController : Controller
 	}
 
 	[HttpPut("{id}")]
-	//[Authorize(Roles = "Admin")]
-	public async Task<IActionResult> UpdateHealthCheckupById([FromBody] VaccineEventUpdateDTO request, string id)
+	[Authorize(Roles = nameof(AccountRole.Admin))]
+	public async Task<IActionResult> UpdateVaccineEventById([FromBody] VaccineEventUpdateDTO request, string id)
 	{
 		if (!ModelState.IsValid)
 		{
@@ -85,20 +84,34 @@ public class VaccineEventController : Controller
 		var result = await _vaccineEventService.UpdateVaccineEvent(request, id);
 
 		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
-					.Success(result, "VaccineTitle event updated successfully with id: " + id);
+					.Success(result, "Vaccine event updated successfully with id: " + id);
+
+		return Ok(response);
+	}
+
+	[HttpPatch("cancel/{id}")]
+	[Authorize(Roles = nameof(AccountRole.Admin))]
+	public async Task<IActionResult> CancelVaccineEvent(string id)
+	{
+		
+
+		await _vaccineEventService.CancelVaccineEvent(id);
+
+		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
+					.Success(string.Empty, "Vaccine event cancel successfully with id: " + id);
 
 		return Ok(response);
 	}
 
 	[HttpDelete("{id}")]
-	//[Authorize(Roles = "Admin")]
-	public async Task<IActionResult> DeleteHealthCheckup(string id)
+	[Authorize(Roles = nameof(AccountRole.Admin))]
+	public async Task<IActionResult> DeleteVaccineEvent(string id)
 	{
 
 		await _vaccineEventService.DeleteVaccineEvent(id);
 
 		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
-					.Success(string.Empty,"VaccineTitle event deleted successfully");
+					.Success(string.Empty, "Vaccine event deleted successfully");
 
 		return Ok(response);
 	}

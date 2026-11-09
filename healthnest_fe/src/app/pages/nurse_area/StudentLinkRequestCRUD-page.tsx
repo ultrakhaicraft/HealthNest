@@ -1,116 +1,103 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { MedicineCreateModel, MedicineQueryParams, MedicineUpdateModel } from '../../../feature/API/MedicineService';
-import { MedicineViewDetailModal } from '../../../components/Medicine/MedicineViewModal';
-import CreateMedicineModal from '../../../components/Medicine/CreateMedicineModal';
-import { ConfirmationModal } from '../../../components/ConfirmationModal';
 import { Toast } from '../../../components/Notification/Toast';
-import UpdateMedicineModal from '../../../components/Medicine/UpdateMedicineModal';
-import { MedicineCRUDPanel } from '../../../components/Medicine/MedicineManagementPanel';
-import { LinkRequestRejectModel, StudentLinkRequestDetailModel, StudentLinkRequestQuery } from '../../../models/StudentLinkRequestModel';
+import { StudentLinkRequestDetailModel, StudentLinkRequestQuery } from '../../../models/StudentLinkRequestModel';
 import { useStudentLinkRequestModal } from '../../../feature/Hooks/StudentLinkRequest/useStudentLinkRequestModal';
-import { useMyLinkRequests } from '../../../feature/Hooks/StudentLinkRequest/useStudentLinkRequest';
 import { useStudentLinkRequestNurse } from '../../../feature/Hooks/StudentLinkRequest/useStudentLinkRequestNurse';
 import { StudentLinkRequestCRUDPanel } from '../../../components/StudentLinkRequest/StudentLinkRequestCRUDPanel';
 import LinkRequestDetailModal from '../../../components/StudentLinkRequest/StudentLinkRequestDetailModal';
 import { getLinkRequestErrorMessage } from '../../../feature/API/StudentLinkRequestService';
 import { LinkRequestRejectModal } from '../../../components/StudentLinkRequest/StudentLinkRequestRejectModal';
+import axios from 'axios';
+import { LinkRequestStatus } from '../../../feature/Constant';
 
 const DEFAULT_FILTER: StudentLinkRequestQuery = {
-  PageIndex: 1,
-  PageSize: 10,
-  parentName: '',
-  status: '',
-  studentName: '',
+  PageIndex: 1, PageSize: 10, parentName: '', studentName: '', status: 'Pending',
 };
+const PENDING_SUMMARY_FILTER: StudentLinkRequestQuery = { PageIndex: 1, PageSize: 1, status: 'Pending' };
 
-//Page component for managing medicine records
 export default function StudentLinkRequestCRUDPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<StudentLinkRequestQuery>(DEFAULT_FILTER);
   const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' as 'success' | 'error' });
-  const [actionLoading, setActionLoading] = useState(false);
   const [reviewingId, setReviewingId] = useState<string | null>(null);
+  const isReviewing = reviewingId !== null;
 
   const studentLinkRequest = useStudentLinkRequestNurse(filters);
+  const pendingSummary = useStudentLinkRequestNurse(PENDING_SUMMARY_FILTER);   // only feeds the tab badge
   const modal = useStudentLinkRequestModal();
-  const canReject = modal.state.type === 'reject' ? modal.state.studentLinkRequest : null;
+  const requestToView = modal.state.type === 'view' ? modal.state.studentLinkRequest : null;
+  const requestToReject = modal.state.type === 'reject' ? modal.state.studentLinkRequest : null;
 
-
-  const handleShowToast = (message: string, type: 'success' | 'error') => {
+  const handleShowToast = (message: string, type: 'success' | 'error') =>
     setToast({ isVisible: true, message, type });
-  };
+  const handleCloseToast = () => setToast(prev => ({ ...prev, isVisible: false }));
 
-  const handleCloseToast = () => {
-    setToast({ ...toast, isVisible: false });
-  };
+  // The status tab owns `status`; the filter panel owns the names. Neither overwrites the other.
+  const handleStatusChange = (status: LinkRequestStatus | '') =>
+    setFilters(prev => ({ ...prev, status, PageIndex: 1 }));
 
-  const handleApplyFilters = (newFilters: MedicineQueryParams) => {
-    setFilters({ ...newFilters, PageIndex: 1 }); // Reset to first page when filters change
-  }
+  const handleApplyFilters = (applied: StudentLinkRequestQuery) =>
+    setFilters(prev => ({ ...prev, studentName: applied.studentName, parentName: applied.parentName, PageIndex: 1 }));
 
-  const handlePageChange = (page: number) => {
-    setFilters((prev) => ({ ...prev, PageIndex: page }));
-  };
+  const handleClearFilters = () => setFilters(prev => ({ ...DEFAULT_FILTER, status: prev.status }));
 
-  const handleClearFilters = () => {
-    setFilters(DEFAULT_FILTER);
-  };
+  const handlePageChange = (page: number) => setFilters(prev => ({ ...prev, PageIndex: page }));
 
+  // Processing the last row on a page leaves that page empty: step back to the last real page
+  useEffect(() => {
+    const page = filters.PageIndex ?? 1;
+    if (!studentLinkRequest.loading && page > 1 && page > studentLinkRequest.totalPages) {
+      setFilters(prev => ({ ...prev, PageIndex: Math.max(1, studentLinkRequest.totalPages) }));
+    }
+  }, [studentLinkRequest.loading, studentLinkRequest.totalPages, filters.PageIndex]);
 
-
-  // --- View ---
   const handleView = async (id: string) => {
     try {
-      const medicine = await studentLinkRequest.getById(id);
-      modal.openView(medicine);
-    } catch {
-      handleShowToast('Failed to load medicine details.', 'error');
+      const detail = await studentLinkRequest.getById(id);
+      modal.openView(detail);
+    } catch (err) {
+      handleShowToast(getLinkRequestErrorMessage(err, 'Failed to load the link request.'), 'error');
     }
   };
 
-
-  // -- Approve -- (Within View Detail Modal)
   const handleApprove = async (request: StudentLinkRequestDetailModel) => {
     setReviewingId(request.id);
     try {
       await studentLinkRequest.approve(request.id);
-
       handleShowToast(`Linked ${request.studentName ?? 'the student'} to ${request.parentName ?? 'the parent'}.`, 'success');
     } catch (err) {
       handleShowToast(getLinkRequestErrorMessage(err, 'Failed to approve the request.'), 'error');
     } finally {
       setReviewingId(null);
-      modal.close();      // the hook has already refetched; the modal's copy may be stale either way
+      modal.close();                       // the hook already refetched the list
+      void pendingSummary.refetch();       // and this one refreshes the tab badge
     }
   };
-
-  // -- Reject -- (In Reject Modal)
 
   const handleReject = async (request: StudentLinkRequestDetailModel, reason: string) => {
     setReviewingId(request.id);
+    let keepOpen = false;
     try {
       await studentLinkRequest.reject(request.id, reason);
-
-      handleShowToast(`Reject Link request with Id ${request.id} completed'}.`, 'success');
+      handleShowToast(`Rejected the request for ${request.studentName ?? 'the student'}.`, 'success');
     } catch (err) {
       handleShowToast(getLinkRequestErrorMessage(err, 'Failed to reject the request.'), 'error');
+      keepOpen = axios.isAxiosError(err) && !err.response;      // network error: keep what the nurse typed
     } finally {
       setReviewingId(null);
-      modal.close();      // the hook has already refetched; the modal's copy may be stale either way
+      if (!keepOpen) modal.close();
+      void pendingSummary.refetch();
     }
   };
-
-
-
-
-
 
   return (
     <>
       <StudentLinkRequestCRUDPanel
         studentLinkRequestData={studentLinkRequest.data}
         loading={studentLinkRequest.loading}
+        error={studentLinkRequest.error}
+        pendingCount={pendingSummary.totalItems}
         pagination={{
           currentPage: filters.PageIndex || 1,
           totalPages: studentLinkRequest.totalPages,
@@ -120,42 +107,35 @@ export default function StudentLinkRequestCRUDPage() {
         filterState={{
           value: filters,
           show: showFilters,
-          onToggle: () => setShowFilters((s) => !s),
+          onToggle: () => setShowFilters(s => !s),
           onApply: handleApplyFilters,
           onClear: handleClearFilters,
         }}
+        onStatusChange={handleStatusChange}
+        onRefresh={() => { void studentLinkRequest.refetch(); void pendingSummary.refetch(); }}
         onView={handleView}
-
       />
-      {modal.state.type === 'view' && (
+
+      {requestToView && (
         <LinkRequestDetailModal
-          request={modal.state.studentLinkRequest}
+          request={requestToView}
           onClose={modal.close}
           onApprove={handleApprove}
-          onReject={request => modal.openReject(request)}   // the reason dialog is the next component
-          busy={reviewingId !== null}
+          onReject={request => modal.openReject(request)}
+          busy={isReviewing}
         />
       )}
 
-      {canReject && (
+      {requestToReject && (
         <LinkRequestRejectModal
-          request={canReject}
-          busy={reviewingId !== null}
-          onClose={() => modal.openView(canReject)}      // Cancel goes back to the details, not out of the flow. We must use Detail Modal as input instead of string
-          onConfirm={reason => handleReject( canReject,reason)}
+          request={requestToReject}
+          busy={isReviewing}
+          onClose={() => modal.openView(requestToReject)}     // Cancel goes back to the details
+          onConfirm={reason => handleReject(requestToReject, reason)}
         />
       )}
 
-      <Toast
-        message={toast.message}
-        type={toast.type}
-        isVisible={toast.isVisible}
-        onClose={handleCloseToast}
-      />
+      <Toast message={toast.message} type={toast.type} isVisible={toast.isVisible} onClose={handleCloseToast} />
     </>
   );
 }
-
-
-
-

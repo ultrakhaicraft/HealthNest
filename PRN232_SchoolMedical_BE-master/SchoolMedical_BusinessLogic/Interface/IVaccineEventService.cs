@@ -15,9 +15,6 @@ namespace HealthNest_BusinessLogic.Interface
 		Task<string> UpdateVaccineEvent(VaccineEventUpdateDTO dto, string vaccineEventId);
 		Task<ViewVaccineEventDetailDTO> GetVaccineEventById(string vaccineEventId);
 		Task<int> CountUpcomingVaccineEvent();
-
-	
-		
-
+		Task CancelVaccineEvent(string vaccineEventId);
 	}
 }

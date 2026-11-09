@@ -12,6 +12,7 @@ export interface StudentLinkRequestDetailModel extends StudentLinkRequestViewMod
 export interface StudentLinkRequestViewModel {
     id: string;
     parentId: string;
+    parentName?: string | null;              
     studentId: string;
     studentName?: string | null;
     status: LinkRequestStatus;
@@ -19,7 +20,7 @@ export interface StudentLinkRequestViewModel {
     reviewedBy?: string | null;
     reviewedDateTime?: string | null;
     rejectionReason?: string | null;
-
+    otherPendingCount?: number;
 }
 
 // --- Request models ---

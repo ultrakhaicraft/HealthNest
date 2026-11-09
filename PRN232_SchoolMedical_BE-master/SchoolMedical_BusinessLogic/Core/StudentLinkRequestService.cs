@@ -208,9 +208,10 @@ public class StudentLinkRequestService : IStudentLinkRequestService
 
 	public async Task<PagingModel<StudentLinkRequestViewModel>> GetAllStudentLinkRequest(StudentLinkRequestQuery query)
 	{
-		var status = (query.Status ?? RequestStatus.Pending.ToString()).ToString();
-		var q = _unitOfWork.GetRepository<StudentLinkRequest>().Include(r => r.Student);
+		string pending = RequestStatus.Pending.ToString();
+		var q = _unitOfWork.GetRepository<StudentLinkRequest>().GetQueryable();
 
+		var status = query.Status?.Trim();
 		if(!string.IsNullOrEmpty(query.Status))
 			q= q.Where(r=>r.Status== status);
 		if (!string.IsNullOrWhiteSpace(query.StudentName))
@@ -218,17 +219,25 @@ public class StudentLinkRequestService : IStudentLinkRequestService
 		if (!string.IsNullOrWhiteSpace(query.ParentName))
 			q = q.Where(r => r.Parent.Account.FullName.Contains(query.ParentName));
 
-		// Pending: oldest first (work the queue in order). History: newest first.
-		var ordered = status == RequestStatus.Pending.ToString()
-			? q.OrderBy(r => r.CreatedDateTime)
-			: q.OrderByDescending(r => r.CreatedDateTime);
+		// Pending: oldest first (work the queue in order). Everything else: newest first.
+		// ThenBy(Id) gives batch-submitted rows (identical CreatedDateTime) a stable order across pages.
 
-		int totalCount=ordered.Count();
-		var viewData = await ordered.Select(ToViewModel).ToListAsync();
+		var ordered = string.Equals(status, pending, StringComparison.OrdinalIgnoreCase)
+		? q.OrderBy(r => r.CreatedDateTime).ThenBy(r => r.Id)
+		: q.OrderByDescending(r => r.CreatedDateTime).ThenBy(r => r.Id);
 
-		var pagedResult =  PagingExtension.ToPagingModel(viewData, totalCount: totalCount, pageIndex: query.PageIndex, query.PageSize);
+		var (pageIndex, pageSize) = NormalizePaging(query);
 
-		return pagedResult;
+		var totalCount = await ordered.CountAsync();
+		var items = await ordered
+			.Skip((pageIndex - 1) * pageSize)
+			.Take(pageSize)
+			.Select(ToViewModel)
+			.ToListAsync();
+
+		await FillOtherPendingCountsAsync(items, pending);
+
+		return PagingExtension.ToPagingModel(items, totalCount: totalCount, pageIndex: query.PageIndex, query.PageSize); ;
 	}
 
 	public async Task ApproveAsync(string nurseId, string requestId)
@@ -291,7 +300,6 @@ public class StudentLinkRequestService : IStudentLinkRequestService
 	public async Task<PagingModel<StudentLinkRequestViewModel>> GetMyRequestsAsync(string parentId, StudentLinkRequestQuery query)
 	{
 		var q = _unitOfWork.GetRepository<StudentLinkRequest>().GetQueryable()
-			.Include(r => r.Student.Account)
 			.Where(r => r.ParentId == parentId);
 
 		if (!string.IsNullOrWhiteSpace(query.StudentName))
@@ -301,16 +309,15 @@ public class StudentLinkRequestService : IStudentLinkRequestService
 			var status = query.Status.ToString();
 			q = q.Where(r => r.Status == status);
 		}
+		var ordered = q.OrderByDescending(r => r.CreatedDateTime).ThenBy(r => r.Id);
+		var (pageIndex, pageSize) = NormalizePaging(query);
 
-		var totalCount = q.Count();
+		var totalCount = await ordered.CountAsync();
+		var items = await ordered.Skip((pageIndex - 1) * pageSize).Take(pageSize)
+			.Select(ToViewModel).ToListAsync();
 
-		var viewData = await  q.OrderByDescending(r => r.CreatedDateTime).Select(ToViewModel).ToListAsync();
+		return PagingExtension.ToPagingModel(items, totalCount, pageIndex, pageSize);
 
-
-
-		var pagedResult = PagingExtension.ToPagingModel(viewData, totalCount: totalCount, pageIndex: query.PageIndex, query.PageSize);
-
-		return pagedResult;
 	}
 
 
@@ -349,15 +356,18 @@ public class StudentLinkRequestService : IStudentLinkRequestService
 	   {
 		   Id = r.Id,
 		   ParentId = r.ParentId,
+		   ParentName = r.Parent.Account.FullName,
 		   StudentId = r.StudentId,
+		   StudentName = r.Student.Account.FullName,
 		   Status = r.Status,
 		   CreatedDateTime = r.CreatedDateTime,
 		   ReviewedBy = r.ReviewedBy,
-		   StudentName = r.Student.Account.FullName,
 		   ReviewedDateTime = r.ReviewedDateTime,
 		   RejectionReason = r.RejectionReason
-
 	   };
+
+	private static (int pageIndex, int pageSize) NormalizePaging(StudentLinkRequestQuery q) =>
+	(Math.Max(1, q.PageIndex), Math.Clamp(q.PageSize, 1, 100));
 
 	private static void EnsurePending(StudentLinkRequest request, string action)
 	{
@@ -366,5 +376,27 @@ public class StudentLinkRequestService : IStudentLinkRequestService
 	}
 
 	private static bool IsDuplicateKey(DbUpdateException ex) =>
-		ex.InnerException is MySqlConnector.MySqlException { Number: 1062 };  
+		ex.InnerException is MySqlConnector.MySqlException { Number: 1062 };
+
+
+	// One grouped query for the page's students, instead of a correlated subquery per row
+	private async Task FillOtherPendingCountsAsync(List<StudentLinkRequestViewModel> items, string pending)
+	{
+		var pendingRows = items.Where(i => i.Status == pending).ToList();
+		if (pendingRows.Count == 0) return;
+
+		var studentIds = pendingRows.Select(i => i.StudentId).Distinct().ToList();
+
+		var pendingPerStudent = await _unitOfWork.GetRepository<StudentLinkRequest>().GetQueryable()
+			.Where(r => r.Status == pending && studentIds.Contains(r.StudentId))
+			.GroupBy(r => r.StudentId)
+			.Select(g => new { StudentId = g.Key, Count = g.Count() })
+			.ToDictionaryAsync(x => x.StudentId, x => x.Count);
+
+		foreach (var item in pendingRows)
+		{
+			pendingPerStudent.TryGetValue(item.StudentId, out var total);
+			item.OtherPendingCount = Math.Max(0, total - 1);          // minus the row itself
+		}
+	}
 }

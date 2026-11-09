@@ -41,7 +41,6 @@ namespace HealthNest_DAO.DTOModels
 
 	public class VaccineEventUpdateDTO : VaccineEventCreateDTO
 	{
-		public string CreatedBy { get; set; } = null!;
 		public string? Status { get; set; }
 	}
 
