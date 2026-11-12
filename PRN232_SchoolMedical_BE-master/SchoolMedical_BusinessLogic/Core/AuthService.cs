@@ -60,44 +60,78 @@ public class AuthService : IAuthService
 			return (responseModel, tokenDto);
 		
 	}
-	public async Task<string> RegisterAsync(RegisterRequest request, bool IsParent)
+	public async Task<string> RegisterParentAsync(ParentRegisterRequest request)
 	{
-		
-			var existingAccount = _unitOfWork.GetRepository<Account>().Find(user => user.Email == request.Email);
-			if (existingAccount != null)
-				throw new BadRequestException(ErrorMessage.EmailExist);
+		var account = await CreateAccountAsync(request, AccountRole.Parent, AccountStatus.Active);
 
-			if (!IsValid(request.Password ?? string.Empty))
-				throw new BadRequestException(ErrorMessage.ValidatePassword);
+		await _unitOfWork.GetRepository<Parent>().InsertAsync(new Parent
+		{
+			Id = account.Id,
+			IncomeLevel = request.IncomeLevel,
+			RelationshipStatus = request.RelationshipStatus,
+		});
 
-			if(request.Password!= request.ConfirmPassword)
-				throw new BadRequestException(ErrorMessage.ConfirmPasswordNotMatch);
+		await _unitOfWork.SaveAsync();   
+		return account.Id;
+	}
 
-			var account = new Account
-			{
-				Id = Guid.NewGuid().ToString(),
-				FullName = request.FullName ?? "N/A",
-				Email = request.Email ?? "N/A",
-				PhoneNumber = request.PhoneNumber,
-				Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
-				Role = IsParent ? AccountRole.Parent.ToString() : AccountRole.Student.ToString(),
-				Address = request.Address,
-				Gender=request.Gender,
-				DateOfBirth=request.DateOfBirth,
-				Status = IsParent ? AccountStatus.Active.ToString() : AccountStatus.NotLinked.ToString(),
-			};
-			
-			await _unitOfWork.GetRepository<Account>().InsertAsync(account);
-			await _unitOfWork.SaveAsync();
+	public async Task<string> RegisterStudentAsync(StudentRegisterRequest request)
+	{
+		var account = await CreateAccountAsync(request, AccountRole.Student, AccountStatus.NotLinked);
+
+		await _unitOfWork.GetRepository<Student>().InsertAsync(new Student
+		{
+			Id = account.Id,
+			Class = request.Class,
+			CurrentHealthStatus = StudentHealthStatus.Healthy.ToString()
+		});
+
+		await _unitOfWork.SaveAsync();
+		return account.Id;
+	}
+
+	public Task<TokensDTO> RefreshToken(TokensDTO tokens)
+	{
+		var newTokenDtos = _tokenUtils.RefreshToken(tokens);
+
+		return newTokenDtos;
+	}
 
 
+	// Shared core: validates and inserts the Account, but does NOT save.
+	private async Task<Account> CreateAccountAsync(RegisterRequest request, AccountRole role, AccountStatus status)
+	{
+		var existingAccount = _unitOfWork.GetRepository<Account>()
+			.Find(user => user.Email == request.Email);
+		if (existingAccount != null)
+			throw new BadRequestException(ErrorMessage.EmailExist);
 
-			return account.Id;
-		
+		if (!IsValid(request.Password ?? string.Empty))
+			throw new BadRequestException(ErrorMessage.ValidatePassword);
+
+		if (request.Password != request.ConfirmPassword)
+			throw new BadRequestException(ErrorMessage.ConfirmPasswordNotMatch);
+
+		var account = new Account
+		{
+			Id = Guid.NewGuid().ToString(),
+			FullName = request.FullName ?? "N/A",
+			Email = request.Email ?? "N/A",
+			PhoneNumber = request.PhoneNumber,
+			Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
+			Role = role.ToString(),
+			Address = request.Address,
+			Gender = request.Gender,
+			DateOfBirth = request.DateOfBirth,
+			Status = status.ToString(),
+		};
+
+		await _unitOfWork.GetRepository<Account>().InsertAsync(account);
+		return account;
 	}
 
 	//private methods
-	public bool IsValid(string password)
+	private bool IsValid(string password)
 	{
 		if(string.IsNullOrEmpty(password)) return false;
 
@@ -112,11 +146,6 @@ public class AuthService : IAuthService
 		return true;
 	}
 
-	public Task<TokensDTO> RefreshToken(TokensDTO tokens)
-	{
-		var newTokenDtos = _tokenUtils.RefreshToken(tokens);
-
-		return newTokenDtos;
-	}
+	
 }
 

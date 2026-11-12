@@ -1,5 +1,5 @@
 import { UserRole } from "../../feature/Constant";
-import { AccountDetailModel, AccountCreateRequest, AccountUpdateRequest, AccountViewModel } from "../AccountModel";
+import { AccountDetailModel, AccountCreateRequest, AccountUpdateRequest, AccountViewModel, RegisterRequest } from "../AccountModel";
 
 // --- Student Models ---
 export interface StudentDetailModel extends AccountDetailModel {
@@ -9,10 +9,9 @@ export interface StudentDetailModel extends AccountDetailModel {
   currentHealthStatus?: string;
 }
 
-export interface CreateStudentModel extends AccountCreateRequest {
+export interface CreateStudentModel extends RegisterRequest {
   parentId?: string;
   class: string;
-  currentHealthStatus: string;
 }
 
 export interface UpdateStudentModel extends AccountUpdateRequest {

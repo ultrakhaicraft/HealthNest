@@ -4,17 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HealthNest_DAO.Entities
-{
-	public partial class VaccineeventStudent
-	{
-		public string VaccineeventId { get; set; } = null!;
-		public string StudentId { get; set; } = null!;
-		public DateTime SignupDate { get; set; }
-		public string? ResultSummary { get; set; }
-		public string? Status { get; set; } // e.g. "SignedUp", "Attended", "NoShow", "Completed"
+namespace HealthNest_DAO.Entities;
 
-		public virtual Vaccineevent Vaccineevent { get; set; } = null!;
-		public virtual Student Student { get; set; } = null!;
-	}
+public partial class VaccineeventStudent
+{
+	public string VaccineeventId { get; set; } = null!;
+	public string StudentId { get; set; } = null!;
+	public DateTime SignupDate { get; set; }
+	public string? ResultSummary { get; set; }
+	public string? Status { get; set; } // e.g. "SignedUp", "Attended", "NoShow", "Completed"
+
+	public virtual Vaccineevent Vaccineevent { get; set; } = null!;
+	public virtual Student Student { get; set; } = null!;
 }

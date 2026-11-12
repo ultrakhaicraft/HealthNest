@@ -5,7 +5,6 @@ import { ProtectedRoute } from './ProtectedRoute';
 import { UserRole } from '../feature/Constant';
 import { NurseDashboard } from './pages/nurse_area/NurseDashboard-page';
 import { FullPageSpinner, Spinner } from '../components/Spinner';
-import AdminPageContainer from '../app/pages/admin_area/AdminPageContainer';
 
 
 // Lazy load all the pages/routes
@@ -41,6 +40,7 @@ const StudentLinkRequestCRUDPage = React.lazy(() => import('../app/pages/nurse_a
 //Admin
 const AdminHomepage = React.lazy(() => import('../app/pages/admin_area/AdminPageContainer'));
 const AdminDashboardPage = React.lazy(() => import('../app/pages/admin_area/AdminDashboardPage'));
+const VaccineEventCRUDPage = React.lazy(() => import('../app/pages/admin_area/VaccineEventCRUD-page'));
 
 
 //Others
@@ -106,8 +106,10 @@ export const AppRouter = () => {
         <Route path="/admin" element={
           <ProtectedRoute allowedRoles={[UserRole.Admin]}><AdminHomepage /></ProtectedRoute>
         }>
-          <Route index element={<AdminDashboardPage/>} />
+          <Route index element={<AdminDashboardPage />} />
           {/* <Route path="user-profile" element={<AdminUserProfile />} /> */}
+          <Route path="vaccine-event" element={<VaccineEventCRUDPage />} />
+
         </Route>
 
 

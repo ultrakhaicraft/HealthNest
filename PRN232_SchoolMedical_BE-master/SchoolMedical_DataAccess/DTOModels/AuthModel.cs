@@ -23,7 +23,7 @@ public class LoginResponse
 
 }
 
-	public class RegisterRequest
+public record RegisterRequest
 {
 	[Required]
 	public required string FullName { get; set; }
@@ -42,6 +42,20 @@ public class LoginResponse
 	[Required]
 	public DateTime DateOfBirth { get; set; }   //Time should be default to 0 o'clock
 
+}
+
+public record StudentRegisterRequest : RegisterRequest
+{
+	[Required]
+	public required string Class {  get; set; }
+}
+
+public record ParentRegisterRequest : RegisterRequest
+{
+	[Required]
+	public string RelationshipStatus { get; set; } = null!;
+	[Required]
+	public string IncomeLevel { get; set; } = null!;
 }
 
 

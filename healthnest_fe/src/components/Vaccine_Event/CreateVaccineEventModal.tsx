@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import { MedicineCreateModel, MedicineService } from '../../feature/API/MedicineService';
-import { IconClose } from '../IconList';
 import { useUserId } from '../../feature/Hooks/Account/AccountHooks';
-import Modal, { ModalForm, ModalGrid, ModalField, ModalReadOnly, ModalFooter } from '../GenericModal';
+import Modal, { ModalForm, ModalGrid, ModalField, ModalFooter } from '../GenericModal';
 import inputStyles from '../../CSS/InputField.module.css';
 import { VaccineEventCreateDTO } from '../../models/VaccineEventModel';
-import CreateMedicineModal from '../Medicine/CreateMedicineModal';
 
 
 interface CreateVaccineEventModalProps {
@@ -135,7 +132,7 @@ const CreateVaccineEventModal: React.FC<CreateVaccineEventModalProps> = ({ isOpe
 
 
     return (
-        <Modal title="Create Vaccine Event" onClose={onClose} isBusy={isSubmitting} size="lg">
+      <Modal title="Create Vaccine Event" onClose={onClose} isBusy={isSubmitting} size="lg">
       <ModalForm onSubmit={handleSubmit}>
         <ModalField label="Title" htmlFor="vaccine-event-title" error={errors.title}>
           <input
@@ -200,7 +197,7 @@ const CreateVaccineEventModal: React.FC<CreateVaccineEventModalProps> = ({ isOpe
 
         <ModalGrid>
           <ModalField
-            label="Signup Start (optional)"
+            label="Signup Start"
             htmlFor="vaccine-event-signup-start"
             error={errors.dateSignupStart}
           >
@@ -217,7 +214,7 @@ const CreateVaccineEventModal: React.FC<CreateVaccineEventModalProps> = ({ isOpe
           </ModalField>
 
           <ModalField
-            label="Signup End (optional)"
+            label="Signup End"
             htmlFor="vaccine-event-signup-end"
             error={errors.dateSignupEnd}
           >

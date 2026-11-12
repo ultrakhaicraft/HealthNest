@@ -98,9 +98,10 @@ export const VaccineEventManagementPanel = ({
                         {vaccineEventData.map(vaccinEvent => (
                             <tr key={vaccinEvent.id}>
                                 <td>{vaccinEvent.id}</td>
-                                <td>{vaccinEvent.dateOccurred}</td>
-                                <td>{vaccinEvent.dateSignupStart}</td>
-                                 <td>{vaccinEvent.dateSignupEnd}</td>
+                                <td>{vaccinEvent.title}</td>
+                                <td>{new Date(vaccinEvent.dateOccurred).toLocaleString()}</td>
+                                <td>{new Date(vaccinEvent.dateSignupStart ?? "").toLocaleString()}</td>
+                                <td>{new Date(vaccinEvent.dateSignupEnd ?? "").toLocaleString()}</td>
                                 <td><StatusBadge status={vaccinEvent.status} /></td>
                                 <td>
                                     <div className={styles.actionButtons}>

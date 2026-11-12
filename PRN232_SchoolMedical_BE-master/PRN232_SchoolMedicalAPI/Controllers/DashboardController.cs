@@ -22,12 +22,13 @@ public class DashboardController : Controller
 	private readonly IVaccineEventService _vaccineEventService;
 	private readonly IAccountService _accountService;
 
-	public DashboardController(IIncidentRecordService incidentRecordService, IMedicineRequestService medicineRequestService, IHealthCheckupEventService healthCheckupEventService, IVaccineEventService vaccineEventService)
+	public DashboardController(IIncidentRecordService incidentRecordService, IMedicineRequestService medicineRequestService, IHealthCheckupEventService healthCheckupEventService, IVaccineEventService vaccineEventService, IAccountService accountService)
 	{
 		_incidentRecordService = incidentRecordService;
 		_medicineRequestService = medicineRequestService;
 		_healthCheckupEventService = healthCheckupEventService;
 		_vaccineEventService = vaccineEventService;
+		_accountService = accountService;
 	}
 
 	[HttpGet("statistics")]

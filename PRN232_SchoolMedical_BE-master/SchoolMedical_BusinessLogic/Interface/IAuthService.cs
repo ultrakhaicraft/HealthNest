@@ -15,7 +15,8 @@ namespace HealthNest_BusinessLogic.Interface;
 public interface IAuthService
 {
 	Task<(LoginResponse, TokensDTO)> Login(LoginRequest request);
-	Task<string> RegisterAsync(RegisterRequest request, bool IsParent);
+	Task<string> RegisterParentAsync(ParentRegisterRequest request);
+	Task<string> RegisterStudentAsync(StudentRegisterRequest request);
 	Task<TokensDTO> RefreshToken(TokensDTO tokens);
 
 }

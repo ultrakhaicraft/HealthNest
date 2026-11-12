@@ -60,7 +60,8 @@ public enum StudentHealthStatus
 {
 	Healthy,
 	Minor,
-	Critical
+	Critical,
+	Recovering
 }
 
 //Exclusive for IncidentRecord

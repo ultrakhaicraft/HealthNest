@@ -1,8 +1,8 @@
 /* ---------- Split-screen layout ---------- */
-.authPage { 
-    display: flex;
-    width: 100%;
-    min-height: 100vh;
+.authPage {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
 }
 
 .leftSide {
@@ -37,9 +37,21 @@
   padding: 20px;
 }
 
-.fullWidthBtn{
+.fullWidthBtn {
   width: 100%;
 }
+
+.registerLink a,
+a:hover,
+a:visited,
+a:link,
+a:active {
+  color: #080808;
+  font-weight: bold;
+
+}
+
+
 
 /* ---------- Shared form card ---------- */
 .loginForm,
@@ -49,7 +61,7 @@
   border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 400px;
+  max-width: 600px;
 }
 
 .loginForm h1,
@@ -71,8 +83,10 @@
 }
 
 /* ---------- Register: user type selection ---------- */
-.userTypeSelection .selectionButtons button {
-  margin-top: 20px;
+.userTypeSelection .selectionButtons {
+  gap: 2rem;
+  margin-top: 2rem;
+  display: flex;
 }
 
 .userTypeSelection .textGroup p {
@@ -85,6 +99,13 @@
 
 .backBtn {
   width: 30% !important;
+}
+
+/* ---------- Register: form grid layout ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 }
 
 

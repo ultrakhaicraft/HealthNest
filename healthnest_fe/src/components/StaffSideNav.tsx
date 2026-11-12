@@ -147,6 +147,6 @@ export const nurseNavItems: NavItem[] = [
 export const adminNavItems: NavItem[] = [
   { icon: <IconHome className={styles.iconSmall} />, label: 'Home' },
   { icon: <IconUser className={styles.iconSmall} />, label: 'User Management' },
-  { icon: <IconVaccine className={styles.iconSmall} />, label: 'Vaccine' },
+  { icon: <IconVaccine className={styles.iconSmall} />, label: 'Vaccine Event' },
   { icon: <IconHealthCheckup className={styles.iconSmall} />, label: 'Health Checkup' },
 ];

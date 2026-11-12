@@ -99,7 +99,13 @@ public class MedicineService : IMedicineService
 
     public async Task<MedicineDetailResponseDto> CreateMedicineAsync(MedicineCreateDto request, string createdBy)
     {
-            var medicine = new Medicine
+		    var resultCreatedBy = await _unitOfWork.GetRepository<Account>().GetByIdAsync(createdBy);
+		    if (resultCreatedBy == null)
+		    {
+			    throw new NotFoundException("Unable to find account for creating medicine with their Id: " + createdBy);
+		    }
+
+		var medicine = new Medicine
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = request.Name,

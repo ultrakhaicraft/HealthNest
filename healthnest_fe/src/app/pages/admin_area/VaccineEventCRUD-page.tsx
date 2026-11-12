@@ -10,6 +10,8 @@ import { useVaccineEvent } from '../../../feature/Hooks/VaccineEvent/useVaccineE
 import { useVaccineEventModals } from '../../../feature/Hooks/VaccineEvent/useVaccineEventModal';
 import { VaccineEventManagementPanel } from '../../../components/Vaccine_Event/VaccineEventManagementPanel';
 import { VaccineEventViewDetail } from '../../../components/Vaccine_Event/VaccinEventDetail';
+import CreateVaccineEventModal from '../../../components/Vaccine_Event/CreateVaccineEventModal';
+import UpdateVaccineEventModal from '../../../components/Vaccine_Event/UpdateVaccineEventModal';
 
 const DEFAULT_FILTER: VaccineEventQueryParams = {
   pageIndex: 1,
@@ -144,24 +146,24 @@ export default function VaccineEventCRUDPage() {
         />
       )}
       {modal.state.type === 'create' && (
-        <CreateMedicineModal
+        <CreateVaccineEventModal
           isOpen={true}
           onClose={modal.close}
           onSubmit={handleCreateSubmit}
           onError={(msg)=> handleShowToast(msg, 'error')}
         />
       )}
-      {/*}
+      
       {modal.state.type === 'edit' &&  (
-        <UpdateMedicineModal
+        <UpdateVaccineEventModal
           isOpen={true}
-          medicine={modal.state.medicine}
+          vaccineEvent={modal.state.vaccineEvent}
           onClose={modal.close}
           onSubmit={handleUpdateSubmit}
           onError={(msg)=> handleShowToast(msg, 'error')}
         />
       )}
-        */}
+        
       {modal.state.type === 'delete' && (
       <ConfirmationModal
         isOpen={true}

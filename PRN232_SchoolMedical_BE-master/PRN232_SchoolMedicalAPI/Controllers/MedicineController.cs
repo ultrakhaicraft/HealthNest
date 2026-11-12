@@ -1,6 +1,7 @@
 ﻿using HealthNest_API.Helpers;
 using HealthNest_BusinessLogic.Interface;
 using HealthNest_DAO.DTOModels;
+using HealthNest_DAO.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MySqlX.XDevAPI.Common;
@@ -24,8 +25,8 @@ public class MedicineController : ControllerBase
     /// Get paginated list of medicines with filtering and sorting
     /// </summary>
     [HttpGet]
-    //[Authorize(Roles ="SchoolNurse, Admin, Manager")]
-    public async Task<IActionResult> GetMedicines([FromQuery] MedicineQueryDto request)
+	[Authorize(Roles = nameof(AccountRole.SchoolNurse))]
+	public async Task<IActionResult> GetMedicines([FromQuery] MedicineQueryDto request)
     {
         var result = await _medicineService.GetAllMedicinesAsync(request);
 		ApiResponseWrapper<PagingModel<MedicineDetailResponseDto>> response = ApiResponseWrapper<PagingModel<MedicineDetailResponseDto>>
@@ -37,8 +38,8 @@ public class MedicineController : ControllerBase
     /// Get medicine details by ID
     /// </summary>
     [HttpGet("{id}")]
-    //[Authorize(Roles = "SchoolNurse, Admin, Manager")]
-    public async Task<IActionResult> GetMedicineById(string id)
+	[Authorize(Roles = nameof(AccountRole.SchoolNurse))]
+	public async Task<IActionResult> GetMedicineById(string id)
     {
         var result = await _medicineService.GetMedicineDetailByIdAsync(id);
 
@@ -52,7 +53,7 @@ public class MedicineController : ControllerBase
     /// Create new medicine
     /// </summary>
     [HttpPost]
-    //[Authorize(Roles ="SchoolNurse, Admin, Manager")]
+    [Authorize(Roles = nameof(AccountRole.SchoolNurse))]
     public async Task<IActionResult> CreateMedicine([FromBody] MedicineCreateDto request)
     {
         if (!ModelState.IsValid)
@@ -73,8 +74,8 @@ public class MedicineController : ControllerBase
     /// Update existing medicine
     /// </summary>
     [HttpPut("{id}")]
-    //[Authorize(Roles ="SchoolNurse, Admin, Manager")]
-    public async Task<IActionResult> UpdateMedicine(string id, [FromBody] UpdateMedicineDto request)
+	[Authorize(Roles = nameof(AccountRole.SchoolNurse))]
+	public async Task<IActionResult> UpdateMedicine(string id, [FromBody] UpdateMedicineDto request)
     {
         if (!ModelState.IsValid)
         {
@@ -93,8 +94,8 @@ public class MedicineController : ControllerBase
     /// Soft delete medicine
     /// </summary>
     [HttpDelete("{id}")]
-    //[Authorize(Roles ="SchoolNurse, Admin, Manager")]
-    public async Task<IActionResult> DeleteMedicine(string id)
+	[Authorize(Roles = nameof(AccountRole.SchoolNurse))]
+	public async Task<IActionResult> DeleteMedicine(string id)
     {
         await _medicineService.SoftDeleteMedicineAsync(id);
 		ApiResponseWrapper<string> response = ApiResponseWrapper<string>

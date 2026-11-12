@@ -1,5 +1,3 @@
-import { ReactNode } from "react";
-import { IconHealthCheckup, IconHome, IconIncidentReport, IconLogout, IconMedical, IconMedicine, IconStudentRecord, IconVaccine } from "./IconList";
 import { IncidentRecordCountPerYear } from "./API/DashboardService";
 
 
@@ -46,7 +44,7 @@ export const ADMIN_NAV_ROUTES: { label: string; path: string }[] = [
   { label: 'Home', path: '/admin' },
   { label: 'User Management', path: '/admin/user-management' },
   { label: 'Health Checkup', path: '/admin/health-checkup' },
-  { label: 'Vaccine', path: '/admin/vaccine' },
+  { label: 'Vaccine Event', path: '/admin/vaccine-event' },
 ];
 
 export const STUDENT_NAV_ROUTES: { label: string; path: string }[] = [
@@ -70,5 +68,10 @@ export const MONTHS: { key: keyof Omit<IncidentRecordCountPerYear, 'year'>; labe
   { key: 'november', label: 'Nov' },
   { key: 'december', label: 'Dec' },
 ];
+
+export const RELATIONSHIP_STATUS_OPTIONS = ['Single', 'Married', 'Divorced', 'Widowed'];
+export const INCOME_LEVEL_OPTIONS = ['Low', 'Middle', 'High'];
+export const STUDENT_HEALTH_STATUS_OPTIONS = ['Healthy', 'Minor', 'Critical', 'Recovering']; // must match StudentHealthStatus enum
+export type Gender = 'Male' | 'Female' | 'Other';
 
 

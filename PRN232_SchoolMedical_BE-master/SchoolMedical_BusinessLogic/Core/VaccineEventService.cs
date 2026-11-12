@@ -81,7 +81,7 @@ public class VaccineEventService : IVaccineEventService
 		var resultCreatedBy = await _unitOfWork.GetRepository<Account>().GetByIdAsync(createdBy);
 		if (resultCreatedBy == null)
 		{
-			throw new NotFoundException("Unable to find account for creating vaccine with their Id: " + createdBy);
+			throw new NotFoundException("Unable to find account for creating vaccine event with their Id: " + createdBy);
 		}
 
 		var vaccineEvent = new Vaccineevent
@@ -162,13 +162,20 @@ public class VaccineEventService : IVaccineEventService
 
 	public async Task<string> UpdateVaccineEvent(VaccineEventUpdateDTO dto, string vaccineEventId)
 	{
-		await Task.Delay(100);
 
 		var vaccineEvent = _vaccineRepository.GetById(vaccineEventId);
 		if (vaccineEvent == null)
 		{
 			throw new NotFoundException("VaccineTitle Event", vaccineEventId);
 		}
+
+		
+		// Validate if the status value is suitable for update
+		var newStatus = ValidateEventStatus.ParseStatus(dto.Status);
+		ValidateEventStatus.ValidateEventStatusTransition(vaccineEvent, newStatus, DateTime.Today);
+
+
+
 
 		vaccineEvent.Title = dto.Title;
 		vaccineEvent.ShortDescription = dto.ShortDescription;
@@ -184,25 +191,27 @@ public class VaccineEventService : IVaccineEventService
 
 	public async Task<ViewVaccineEventDetailDTO> GetVaccineEventById(string vaccineEventId)
 	{
-		var healthcheckupevent = await _vaccineRepository
+		var vaccineEvent = await _vaccineRepository
 			.GetQueryable()
-			.Include(i => i.CreatedBy)
+			.Include(i => i.CreatedByNavigation)
 			.FirstOrDefaultAsync(i => i.Id == vaccineEventId);
 
-		if (healthcheckupevent == null)
+		if (vaccineEvent == null)
 		{
 			throw new NotFoundException("VaccineTitle Event", vaccineEventId);
 		}
 
 		return new ViewVaccineEventDetailDTO
 		{
-			Id = healthcheckupevent.Id,
-			Title = healthcheckupevent.Title,
-			DateSignupEnd = healthcheckupevent.DateSignupEnd,
-			DateSignupStart = healthcheckupevent.DateSignupStart,
-			CreatedBy = healthcheckupevent.CreatedBy,
-			DateOccurred = healthcheckupevent.DateOccurred,
-			Status = healthcheckupevent.Status
+			Id = vaccineEvent.Id,
+			Title = vaccineEvent.Title,
+			DateSignupEnd = vaccineEvent.DateSignupEnd,
+			DateSignupStart = vaccineEvent.DateSignupStart,
+			CreatedBy = vaccineEvent.CreatedBy,
+			DateOccurred = vaccineEvent.DateOccurred,
+			Status = vaccineEvent.Status,
+			Content = vaccineEvent.Content,
+			ShortDescription = vaccineEvent.ShortDescription,
 		};
 	}
 
@@ -219,4 +228,6 @@ public class VaccineEventService : IVaccineEventService
 			default: return false;
 		}
 	}
+
+	
 }

@@ -41,6 +41,16 @@ export interface AccountDetailModel {
   accountCreationDateTime: string;
 }
 
+export interface RegisterRequest {
+  fullName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  phoneNumber: string;
+  address: string;
+  gender: string;      
+  dateOfBirth: string;      
+}
 
 
 export interface AccountCreateRequest {
