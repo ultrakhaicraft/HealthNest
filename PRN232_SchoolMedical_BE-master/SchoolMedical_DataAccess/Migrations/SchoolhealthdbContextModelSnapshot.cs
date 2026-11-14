@@ -692,6 +692,16 @@ namespace SchoolMedical_DataAccess.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
+                    b.Property<string>("CheckedBy")
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("RegisteredByParent")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
+
                     b.Property<string>("ResultSummary")
                         .HasColumnType("text");
 
@@ -702,7 +712,14 @@ namespace SchoolMedical_DataAccess.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("varchar(15)");
 
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
                     b.HasKey("VaccineeventId", "StudentId");
+
+                    b.HasIndex("CheckedBy");
+
+                    b.HasIndex("RegisteredByParent");
 
                     b.HasIndex("StudentId");
 
@@ -1006,6 +1023,19 @@ namespace SchoolMedical_DataAccess.Migrations
 
             modelBuilder.Entity("HealthNest_DAO.Entities.VaccineeventStudent", b =>
                 {
+                    b.HasOne("HealthNest_DAO.Entities.Nurse", "Nurse")
+                        .WithMany("VaccineEventStudentChecked")
+                        .HasForeignKey("CheckedBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("FK_VaccineeventStudent_Nurse");
+
+                    b.HasOne("HealthNest_DAO.Entities.Parent", "Parent")
+                        .WithMany("VaccineEventSignUp")
+                        .HasForeignKey("RegisteredByParent")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_VaccineeventStudent_Parent");
+
                     b.HasOne("HealthNest_DAO.Entities.Student", "Student")
                         .WithMany("VaccineeventStudents")
                         .HasForeignKey("StudentId")
@@ -1019,6 +1049,10 @@ namespace SchoolMedical_DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_VaccineeventStudent_Event");
+
+                    b.Navigation("Nurse");
+
+                    b.Navigation("Parent");
 
                     b.Navigation("Student");
 
@@ -1073,6 +1107,8 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.Navigation("MeetingHandleByNavigations");
 
                     b.Navigation("StudenthealthrecordCreatedByNavigations");
+
+                    b.Navigation("VaccineEventStudentChecked");
                 });
 
             modelBuilder.Entity("HealthNest_DAO.Entities.Parent", b =>
@@ -1080,6 +1116,8 @@ namespace SchoolMedical_DataAccess.Migrations
                     b.Navigation("Children");
 
                     b.Navigation("MedicinerequestRequestByNavigations");
+
+                    b.Navigation("VaccineEventSignUp");
                 });
 
             modelBuilder.Entity("HealthNest_DAO.Entities.Student", b =>

@@ -427,6 +427,18 @@ public partial class SchoolhealthdbContext : DbContext
 				  .HasForeignKey(e => e.StudentId)
 				  .OnDelete(DeleteBehavior.Cascade)
 				  .HasConstraintName("FK_VaccineeventStudent_Student");
+
+			entity.HasOne(e => e.Parent)
+				  .WithMany(a => a.VaccineEventSignUp)
+				  .HasForeignKey(e => e.RegisteredByParent)
+				  .OnDelete(DeleteBehavior.Cascade)
+				  .HasConstraintName("FK_VaccineeventStudent_Parent");
+
+			entity.HasOne(e => e.Nurse)
+				  .WithMany(a => a.VaccineEventStudentChecked)
+				  .HasForeignKey(e => e.CheckedBy)
+				  .OnDelete(DeleteBehavior.Cascade)
+				  .HasConstraintName("FK_VaccineeventStudent_Nurse");
 		});
 
 

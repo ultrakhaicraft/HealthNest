@@ -72,6 +72,51 @@ public static class ValidateEventStatus
 					$"Sign-up is still open until {current.DateSignupEnd.Value:g}. The event cannot move to Upcoming before then.");
 		}
 
-		Console.WriteLine("Validation PASSED");
+	}
+}
+
+
+public static class ValidateAttendantStatus
+{
+	private static IReadOnlyDictionary<AttentdanceStatus, AttentdanceStatus[]> AllowedTransitions =
+	new Dictionary<AttentdanceStatus, AttentdanceStatus[]>
+	{
+		[AttentdanceStatus.Pending] = new[] { AttentdanceStatus.Approved,AttentdanceStatus.Rejected,AttentdanceStatus.Cancelled},
+		[AttentdanceStatus.Approved] = new[] { AttentdanceStatus.Completed },
+		[AttentdanceStatus.Completed] = Array.Empty<AttentdanceStatus>(),
+		[AttentdanceStatus.Rejected] = Array.Empty<AttentdanceStatus>(),
+		[AttentdanceStatus.Cancelled] = Array.Empty<AttentdanceStatus>(),
+	};
+
+	public static AttentdanceStatus ParseStatus(string? value)
+	{
+		if (!Enum.TryParse<AttentdanceStatus>(value, ignoreCase: true, out var status)
+			|| !Enum.IsDefined(status))
+			throw new BadRequestException($"Invalid status '{value}'.");
+		return status;
+	}
+
+	private static string Fmt(DateTime? d) =>
+	d.HasValue ? $"{d.Value:O} (Kind={d.Value.Kind})" : "NULL";
+	public static void ValidateEventStatusTransition(VaccineeventStudent current, AttentdanceStatus newStatus)
+	{
+
+
+		if (!Enum.TryParse<AttentdanceStatus>(current.Status, ignoreCase: true, out var currentStatus))
+			throw new InvalidOperationException(
+				$"Vaccine event participant with event Id: {current.VaccineeventId} and Student Id: {current.StudentId} has an invalid status '{current.Status}'.");
+
+		//Return early if same Status
+		if (currentStatus == newStatus)
+		{
+			return;
+		}
+
+		//Check if we can change the status by order
+		var allowed = AllowedTransitions[currentStatus].Contains(newStatus);
+		if (!allowed)
+			throw new BadRequestException($"Cannot change status from {currentStatus} to {newStatus}.");
+
+		
 	}
 }

@@ -134,6 +134,8 @@ export default function MedicalSupplyCRUDPage() {
         onEdit={(medicalSupply) => handleEdit(medicalSupply.id)}
         onDelete={(medicalSupplyId) => modal.openDelete(medicalSupplyId)}
         onCreate={modal.openCreate}
+        onRefresh={() => { void medicalSupplies.refetch();}}
+
       />
       {modal.state.type === 'view' && (
         <MedicalSupplyViewDetailModal

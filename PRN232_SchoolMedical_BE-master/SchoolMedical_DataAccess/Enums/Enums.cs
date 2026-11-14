@@ -21,11 +21,7 @@ public enum AccountStatus
 	Inactive, //Soft Delete
 }
 
-public enum IsAvailable
-{
-	Yes=1,
-	No=0
-}
+
 
 //Used for RecordStatus
 public enum RecordStatus
@@ -54,6 +50,15 @@ public enum EventStatus
 	Completed,
 	Cancelled,
 	
+}
+
+public enum AttentdanceStatus
+{
+	Pending,
+	Approved,
+	Completed,
+	Cancelled,
+	Rejected,
 }
 
 public enum StudentHealthStatus

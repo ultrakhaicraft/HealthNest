@@ -14,7 +14,7 @@ export const VaccineEventViewDetail: React.FC<VaccineEventViewProps> = ({ vaccin
 
 
     return (
-        <Modal title="Medicine Detail" onClose={onClose} isBusy={false}>
+        <Modal title="Vaccine Event Detail" onClose={onClose} isBusy={false}>
 
             <div className="modal-group modal-row full-width">
                 <p><strong>Name:</strong> {vaccineEvent.title}</p>
