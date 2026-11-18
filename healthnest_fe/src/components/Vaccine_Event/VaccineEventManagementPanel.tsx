@@ -117,7 +117,10 @@ export const VaccineEventManagementPanel = ({
                                             <IconView />
                                         </button>
                                         {!IsAdmin && (<>
-                                            <button className={styles.actionButton} onClick={() => handleRedirectToSignUp(vaccinEvent.id)} disabled={loading}>
+                                            <button className='button button-secondary button-small' 
+                                                    onClick={() => handleRedirectToSignUp(vaccinEvent.id)} 
+                                                    disabled={loading}
+                                                    >
                                                 View Signups
                                             </button>
                                         </>

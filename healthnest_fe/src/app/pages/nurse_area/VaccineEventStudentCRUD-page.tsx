@@ -6,6 +6,7 @@ import { VaccineEventStudentManagementPanel } from "../../../components/VaccineE
 import { ViewVaccineEventStudentDetail } from "../../../components/VaccineEventStudent/VaccineEventStudentDetailModal";
 import { Toast } from "../../../components/Notification/Toast";
 import { useState } from "react";
+import styles from "../../../CSS/MainPage.module.css";
 
 const DEFAULT_FILTER: VaccineEventStudentQuery = {
     pageIndex: 1,
@@ -62,7 +63,8 @@ export default function VaccineEventStudentManagementPage() {
     return (
         <>
 
-            <VaccineEventStudentManagementPanel
+            <div className={styles.eventPageContainer}>
+                 <VaccineEventStudentManagementPanel
                 vaccineEventStudentData={vaccineEventStudent.data}
                 loading={vaccineEventStudent.loading}
                 pagination={{
@@ -85,6 +87,7 @@ export default function VaccineEventStudentManagementPage() {
                 onRefresh={() => { void vaccineEventStudent.refetch(); }}
 
             />
+            </div>
             {modal.state.type === 'view' && (
                 <ViewVaccineEventStudentDetail
                     vaccineEventParticipant={modal.state.vaccineEventStudent}
