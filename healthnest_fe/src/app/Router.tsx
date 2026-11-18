@@ -125,10 +125,12 @@ export const AppRouter = () => {
         } />
 
         {/*Different page but still protect based on role*/}
-        <Route path="vaccine-event/:eventId/signups">
-          <ProtectedRoute allowedRoles={[UserRole.Nurse]}>
+        <Route path="vaccine-event/:eventId/signups"
+        element={
+           <ProtectedRoute allowedRoles={[UserRole.Nurse]}>
             <VaccineEventStudentManagementPage />
           </ProtectedRoute>
+        }>
         </Route>
 
 
