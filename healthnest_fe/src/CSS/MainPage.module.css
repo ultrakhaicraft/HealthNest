@@ -1,0 +1,4 @@
+.mainPageContainer {
+  min-height: 100vh;
+  flex: 1; /* Move flex-grow here instead of the inline style */
+}

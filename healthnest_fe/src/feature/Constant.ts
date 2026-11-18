@@ -28,6 +28,7 @@ export const NURSE_NAV_ROUTES: { label: string; path: string }[] = [
   { label: 'Vaccine Record', path: '/nurse/vaccine-record' },
   { label: 'Treatment Record', path: '/nurse/treatment-record' },
   { label: 'Student Link Request', path: '/nurse/student-link-request' },
+  { label: 'Vaccine Event', path: '/nurse/vaccine-event' },
 
 ];
 

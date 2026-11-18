@@ -9,6 +9,7 @@ import { PaginationControls } from "../PaginationControls";
 import { StatusBadge } from "../StatusBadge";
 import { StudentHealthRecordFilter } from "./StudentHealthRecordFilter";
 import { UserRole } from "../../feature/Constant";
+import { RefreshButton } from "../RefreshButton";
 
 export interface PaginationState {
   currentPage: number;
@@ -35,11 +36,12 @@ export interface StudentHealthRecordCRUDPanelProps {
   userRole: string;
   onCreate: () => void;
   onDelete: (studentHealthRecordId: string) => void;
+  onRefresh: () => void;
 }
 
-const StudentHealthRecordViewPanel = ({ 
-    studentHealthRecordData = [], loading, pagination, filterState, userRole,
-    onView, onEdit, onCreate, onDelete
+const StudentHealthRecordViewPanel = ({
+  studentHealthRecordData = [], loading, pagination, filterState, userRole,
+  onView, onEdit, onCreate, onDelete, onRefresh
 }: StudentHealthRecordCRUDPanelProps) => {
   console.log(studentHealthRecordData);
 
@@ -52,16 +54,14 @@ const StudentHealthRecordViewPanel = ({
         </div>
         {/* .crudActions is display:flex + gap:0.5rem, same as the old inline style */}
         <div className={styles.crudActions}>
-
-          
-
+          <RefreshButton onRefresh={onRefresh} loading={loading} />
           {/* button classes are not in the module, so they stay global */}
           <button className="button button-secondary button-large" onClick={filterState.onToggle}>
             <IconFilter />
             {filterState.show ? 'Hide Filters' : 'Show Filters'}
           </button>
 
-          {userRole==UserRole.Nurse && (
+          {userRole == UserRole.Nurse && (
             <button className="button button-primary button-large" onClick={onCreate}>
               <IconPlus />
               Create Medicine
@@ -69,16 +69,16 @@ const StudentHealthRecordViewPanel = ({
           )}
         </div>
       </div>
-      
+
       {filterState.show && (
-        <StudentHealthRecordFilter 
+        <StudentHealthRecordFilter
           userRole={userRole}
           filters={filterState.value}
           onApplyFilters={filterState.onApply}
           onClearFilters={filterState.onClear}
         />
       )}
-      
+
       <div className={styles.crudTableWrapper}>
         <div className={styles.crudTableInfo}>
           <span>Total: {pagination.totalItems} items</span>
@@ -122,18 +122,18 @@ const StudentHealthRecordViewPanel = ({
                     <button className={styles.actionButton} onClick={() => onView(request.id)} disabled={loading}>
                       <IconView />
                     </button>
-                    {userRole== UserRole.Nurse &&(
+                    {userRole == UserRole.Nurse && (
                       <>
-                      <button className={styles.actionButton} onClick={() => onEdit(request)} disabled={loading}>
-                      <IconEdit />
-                    </button>
-                    <button
-                      className={`${styles.actionButton} ${styles.actionDelete}`}
-                      onClick={() => onDelete(request.id)}
-                      disabled={loading}
-                    >
-                      <IconDelete />
-                    </button></>
+                        <button className={styles.actionButton} onClick={() => onEdit(request)} disabled={loading}>
+                          <IconEdit />
+                        </button>
+                        <button
+                          className={`${styles.actionButton} ${styles.actionDelete}`}
+                          onClick={() => onDelete(request.id)}
+                          disabled={loading}
+                        >
+                          <IconDelete />
+                        </button></>
                     )}
                   </div>
                 </td>
@@ -141,11 +141,11 @@ const StudentHealthRecordViewPanel = ({
             ))}
           </tbody>
         </table>
-        
-        <PaginationControls 
+
+        <PaginationControls
           currentPage={pagination.currentPage}
-            totalPages={pagination.totalPages}
-            onPageChange={pagination.onPageChange}
+          totalPages={pagination.totalPages}
+          onPageChange={pagination.onPageChange}
         />
       </div>
     </div>

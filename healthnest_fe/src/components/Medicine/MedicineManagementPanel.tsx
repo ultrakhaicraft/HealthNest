@@ -4,6 +4,7 @@ import { PaginationControls } from "../PaginationControls";
 import { StatusBadge } from "../StatusBadge";
 import { MedicineFilter } from "./MedicineFilter";
 import styles from "../../CSS/Nurse/NurseCRUDPanel.module.css"
+import { RefreshButton } from "../RefreshButton";
 
 interface PaginationState {
   currentPage: number;
@@ -29,11 +30,12 @@ interface MedicineCRUDPanelProps {
   onEdit: (medicine: MedicineViewModel) => void;
   onDelete: (medicineId: string) => void;
   onCreate: () => void;
+  onRefresh: () => void;
 }
 // Main CRUD component for medicines
-export const MedicineCRUDPanel = ({ 
+export const MedicineCRUDPanel = ({
   medicineData = [], loading, pagination, filterState,
-  onView, onEdit, onDelete, onCreate }: 
+  onView, onEdit, onDelete, onCreate, onRefresh }:
   MedicineCRUDPanelProps) => {
   return (
     <div className={styles.crudContainer}>
@@ -43,6 +45,8 @@ export const MedicineCRUDPanel = ({
           <p className={styles.crudSubtitle}>Manage medicine inventory and records</p>
         </div>
         <div className={styles.crudActions}>
+          <RefreshButton onRefresh={onRefresh} loading={loading} />
+
           <button className="button button-secondary button-large" onClick={filterState.onToggle}>
             <IconFilter />
             {filterState.show ? 'Hide Filters' : 'Show Filters'}
@@ -132,4 +136,4 @@ export const MedicineCRUDPanel = ({
   );
 }
 
-  
+

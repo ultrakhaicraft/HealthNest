@@ -4,6 +4,7 @@ import { PaginationControls } from "../../PaginationControls";
 import { StatusBadge } from "../../StatusBadge";
 import { MedicineRequestFilter } from "./MedicineRequestFilter";
 import styles from "../../../CSS/Nurse/NurseCRUDPanel.module.css"
+import { RefreshButton } from "../../RefreshButton";
 
 export interface PaginationState {
   currentPage: number;
@@ -30,12 +31,13 @@ export interface MedicineRequestCRUDPanelProps {
   userRole: string;
   onCreate?: () => void;
   onDelete: (medicineRequestId: string) => void;
+  onRefresh: () => void;
 }
 
 
-export default function MedicineRequestCRUDPanel({ 
-    medicineRequestData = [], loading, pagination, filterState, userRole,
-    onView, onEdit
+export default function MedicineRequestCRUDPanel({
+  medicineRequestData = [], loading, pagination, filterState, userRole,
+  onView, onEdit, onRefresh
 }: MedicineRequestCRUDPanelProps) {
   return (
     <div className={styles.crudContainer}>
@@ -46,6 +48,8 @@ export default function MedicineRequestCRUDPanel({
         </div>
         {/* .crudActions is display:flex + gap:0.5rem, same as the old inline style */}
         <div className={styles.crudActions}>
+          <RefreshButton onRefresh={onRefresh} loading={loading} />
+
           {/* button classes are not in the module, so they stay global */}
           <button className="button button-secondary button-large" onClick={filterState.onToggle}>
             <IconFilter />
@@ -53,16 +57,16 @@ export default function MedicineRequestCRUDPanel({
           </button>
         </div>
       </div>
-      
+
       {filterState.show && (
-        <MedicineRequestFilter 
+        <MedicineRequestFilter
           userRole={userRole}
           filters={filterState.value}
           onApplyFilters={filterState.onApply}
           onClearFilters={filterState.onClear}
         />
       )}
-      
+
       <div className={styles.crudTableWrapper}>
         <div className={styles.crudTableInfo}>
           <span>Total: {pagination.totalItems} items</span>
@@ -115,11 +119,11 @@ export default function MedicineRequestCRUDPanel({
             ))}
           </tbody>
         </table>
-        
-        <PaginationControls 
+
+        <PaginationControls
           currentPage={pagination.currentPage}
-            totalPages={pagination.totalPages}
-            onPageChange={pagination.onPageChange}
+          totalPages={pagination.totalPages}
+          onPageChange={pagination.onPageChange}
         />
       </div>
     </div>

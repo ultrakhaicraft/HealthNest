@@ -6,10 +6,12 @@
   width: 240px;
   background-color: white;
   padding: 1.5rem 1rem;
-  height: 100vh;
   position: sticky;
   top: 0; /* Stick below header */
   border-right: 1px solid #e5e7eb;
+  align-self: flex-start;
+  height: 100vh;
+  overflow-y: visible;
 }
 
 

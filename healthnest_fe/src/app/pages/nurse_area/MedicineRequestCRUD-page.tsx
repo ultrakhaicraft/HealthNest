@@ -109,6 +109,7 @@ export default function MedicineRequestCRUDPage() {
         onEdit={(medicine) => handleEdit(medicine.id)}
         userRole={userRole}
         onDelete={()=>{}}
+        onRefresh={() => { void medicineRequests.refetch(); }}
       />
       {modal.state.type==='view' && (
         <MedicineRequestViewDetail 

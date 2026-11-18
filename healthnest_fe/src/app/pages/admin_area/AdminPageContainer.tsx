@@ -2,6 +2,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import StaffSideNav from "../../../components/StaffSideNav";
 import { UserRole } from "../../../feature/Constant";
 import { getActiveItemFromPath, userouteForLabel } from "../../../feature/Hooks/Other/RouterHooks";
+import styles from '../../../CSS/MainPage.module.css';
 
 
 export default function AdminPageContainer() {
@@ -19,9 +20,9 @@ export default function AdminPageContainer() {
 
 
     return (
-        <div style={{ display: 'flex', minHeight: '100vh' }}>
+        <div style={{ display: 'flex', minHeight: '100vh'}}>
             <StaffSideNav activeItem={activeItem} onSelect={handleSelect} IsAdmin={userRole === UserRole.Admin} />
-            <div className='main-page-container' style={{ flex: 1, padding: '2rem', backgroundColor: '#e8effa' }}>
+            <div className={styles.mainPageContainer} style={{padding: '2rem', backgroundColor: '#e8effa' }}>
                 <Outlet /> {/* renders whichever nested route matched */}
             </div>
 

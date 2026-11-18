@@ -6,6 +6,7 @@ import { StudentLinkRequestQuery, StudentLinkRequestViewModel } from "../../mode
 import { StudentLinkRequestFilter } from "./StudentLinkRequestFilter";
 import { LinkRequestStatus } from "../../feature/Constant";
 import queueStyles from '../../CSS/Nurse/NurseLinkRequestStyle.module.css';
+import { RefreshButton } from "../RefreshButton";
 
 
 interface PaginationState {
@@ -48,7 +49,7 @@ export const StudentLinkRequestCRUDPanel = ({
   const firstLoad = loading && studentLinkRequestData.length === 0;
   const refreshing = loading && studentLinkRequestData.length > 0;
   return (
-     <div className={styles.crudContainer}>
+    <div className={styles.crudContainer}>
       <div className={styles.crudHeader}>
         <div>
           <h2 className={styles.crudTitle}>Student Link Requests</h2>
@@ -57,9 +58,7 @@ export const StudentLinkRequestCRUDPanel = ({
           </p>
         </div>
         <div className={styles.crudActions}>
-          <button className="button button-secondary button-large" onClick={onRefresh} disabled={loading}>
-            <IconRetry /> Refresh
-          </button>
+          <RefreshButton onRefresh={onRefresh} loading={loading} />
           <button className="button button-secondary button-large" onClick={filterState.onToggle}>
             <IconFilter />
             {filterState.show ? 'Hide Filters' : 'Search by name'}

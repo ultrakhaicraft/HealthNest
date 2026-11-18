@@ -137,7 +137,7 @@ export const nurseNavItems: NavItem[] = [
     ]
   },
   { icon: <IconIncidentReport className={styles.iconSmall} />, label: 'Incident Report' },
-  { icon: <IconVaccine className={styles.iconSmall} />, label: 'Vaccine' },
+  { icon: <IconVaccine className={styles.iconSmall} />, label: 'Vaccine Event' },
   { icon: <IconHealthCheckup className={styles.iconSmall} />, label: 'Health Checkup' },
   { icon: <IconStudentRecord className={styles.iconSmall} />, label: 'Student Link Request' },
 

@@ -6,6 +6,7 @@ import { StatusBadge } from "../StatusBadge";
 import { IncidentRecordFilter } from "./IncidentRecordFilter";
 import styles from '../../CSS/Nurse/NurseCRUDPanel.module.css';
 import { IncidentRecordQueryParams, IncidentRecordView } from "../../models/IncidentRecordModel";
+import { RefreshButton } from "../RefreshButton";
 
 
 
@@ -33,12 +34,13 @@ interface IncidentRecordCRUDPanelProps {
   onEdit: (incident: IncidentRecordView) => void;
   onDelete: (incidentId: string) => void;
   onCreate: () => void;
+  onRefresh: () => void;
 }
 
 // Main CRUD component for incident records
 export const IncidentRecordCRUDPanel = ({ 
   incidentData = [], loading, pagination, filterState,
-  onView, onEdit, onDelete, onCreate }: IncidentRecordCRUDPanelProps) => {
+  onView, onEdit, onDelete, onCreate, onRefresh }: IncidentRecordCRUDPanelProps) => {
   return (
     <div className={styles.crudContainer}>
       <div className={styles.crudHeader}>
@@ -47,6 +49,7 @@ export const IncidentRecordCRUDPanel = ({
           <p className={styles.crudSubtitle}>Manage student incident records and reports such as create, update, and delete</p>
         </div>
         <div className={styles.crudActions}>
+          <RefreshButton onRefresh={onRefresh} loading={loading} />
           <button className="button button-secondary button-large" onClick={filterState.onToggle}>
                       <IconFilter />
                       {filterState.show ? 'Hide Filters' : 'Show Filters'}

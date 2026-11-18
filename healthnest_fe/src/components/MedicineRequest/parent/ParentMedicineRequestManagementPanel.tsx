@@ -4,11 +4,12 @@ import { StatusBadge } from "../../StatusBadge";
 import { MedicineRequestFilter } from "../nurse/MedicineRequestFilter";
 import { MedicineRequestCRUDPanelProps } from "../nurse/MedicineRequestManagementPanel";
 import styles from "../../../CSS/Nurse/NurseCRUDPanel.module.css"
+import { RefreshButton } from "../../RefreshButton";
 
 
 export const ParentMedicineRequestManagementPanel = ({
   medicineRequestData = [], loading, pagination, filterState, userRole,
-  onView, onEdit, onCreate, onDelete
+  onView, onEdit, onCreate, onDelete, onRefresh
 }: MedicineRequestCRUDPanelProps) => {
   return (
     <div className={styles.crudContainer}>
@@ -18,6 +19,8 @@ export const ParentMedicineRequestManagementPanel = ({
           <p className={styles.crudSubtitle}>Manage your own medicine request to your children such as View, Create, Update and Delete</p>
         </div>
         <div style={{ display: 'flex', gap: '8px' }}>
+          <RefreshButton onRefresh={onRefresh} loading={loading} />
+    
           <button className="button button-secondary button-small" onClick={filterState.onToggle}>
             <IconFilter />
             {filterState.show ? 'Hide Filters' : 'Show Filters'}

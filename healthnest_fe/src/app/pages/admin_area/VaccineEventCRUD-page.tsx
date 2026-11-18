@@ -17,7 +17,7 @@ const DEFAULT_FILTER: VaccineEventQueryParams = {
   pageIndex: 1,
   pageSize: 10,
   sortByLatestDateOccured: true,
-  Status:'',
+  Status: '',
 };
 
 //Page component for managing vaccine event information, including viewing, creating, updating, and deleting events. It also provides filtering and pagination functionalities.
@@ -39,20 +39,20 @@ export default function VaccineEventCRUDPage() {
   };
 
   const handleApplyFilters = (newFilters: VaccineEventQueryParams) => {
-    setFilters({...newFilters,pageIndex: 1}); // Reset to first page when filters change
+    setFilters({ ...newFilters, pageIndex: 1 }); // Reset to first page when filters change
   }
 
   const handlePageChange = (page: number) => {
     setFilters((prev) => ({ ...prev, pageIndex: page }));
   };
-  
+
   const handleClearFilters = () => {
-      setFilters(DEFAULT_FILTER);
+    setFilters(DEFAULT_FILTER);
   };
 
-  
-  
-   // --- View ---
+
+
+  // --- View ---
   const handleView = async (id: string) => {
     try {
       const result = await vaccineEvent.getById(id);
@@ -113,11 +113,10 @@ export default function VaccineEventCRUDPage() {
     }
   };
 
-  
 
   return (
     <>
-      <VaccineEventManagementPanel 
+      <VaccineEventManagementPanel
         vaccineEventData={vaccineEvent.data}
         loading={vaccineEvent.loading}
         pagination={{
@@ -137,12 +136,15 @@ export default function VaccineEventCRUDPage() {
         onEdit={(vaccineEvent) => handleEdit(vaccineEvent.id)}
         onDelete={(vaccineEventId) => modal.openDelete(vaccineEventId)}
         onCreate={modal.openCreate}
+        onRefresh={()=> {void vaccineEvent.refetch();}}
+        handleRedirectToSignUp={() => { }}
+        IsAdmin={true}
       />
       {modal.state.type === 'view' && (
-        <VaccineEventViewDetail 
-          vaccineEvent={modal.state.vaccineEvent} 
+        <VaccineEventViewDetail
+          vaccineEvent={modal.state.vaccineEvent}
           isOpen={true}
-          onClose={modal.close} 
+          onClose={modal.close}
         />
       )}
       {modal.state.type === 'create' && (
@@ -150,32 +152,32 @@ export default function VaccineEventCRUDPage() {
           isOpen={true}
           onClose={modal.close}
           onSubmit={handleCreateSubmit}
-          onError={(msg)=> handleShowToast(msg, 'error')}
+          onError={(msg) => handleShowToast(msg, 'error')}
         />
       )}
-      
-      {modal.state.type === 'edit' &&  (
+
+      {modal.state.type === 'edit' && (
         <UpdateVaccineEventModal
           isOpen={true}
           vaccineEvent={modal.state.vaccineEvent}
           onClose={modal.close}
           onSubmit={handleUpdateSubmit}
-          onError={(msg)=> handleShowToast(msg, 'error')}
+          onError={(msg) => handleShowToast(msg, 'error')}
         />
       )}
-        
+
       {modal.state.type === 'delete' && (
-      <ConfirmationModal
-        isOpen={true}
-        onClose={modal.close}
-        onConfirm={() => handleDeleteConfirm(modal.state.type === 'delete' ? modal.state.vaccineEventId : '')}
-        title="Delete Vaccine Event"
-        message={`Are you sure you want to delete this vaccine event ? This action cannot be undone.`}
-        confirmText="Delete"
-        cancelText="Cancel"
-        isLoading={actionLoading}
-        type="danger"
-      />
+        <ConfirmationModal
+          isOpen={true}
+          onClose={modal.close}
+          onConfirm={() => handleDeleteConfirm(modal.state.type === 'delete' ? modal.state.vaccineEventId : '')}
+          title="Delete Vaccine Event"
+          message={`Are you sure you want to delete this vaccine event ? This action cannot be undone.`}
+          confirmText="Delete"
+          cancelText="Cancel"
+          isLoading={actionLoading}
+          type="danger"
+        />
       )}
 
       <Toast

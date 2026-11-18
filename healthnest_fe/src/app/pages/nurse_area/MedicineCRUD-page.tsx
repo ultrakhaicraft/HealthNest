@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import {  MedicineCreateModel, MedicineQueryParams, MedicineUpdateModel } from '../../../feature/API/MedicineService';
+import { MedicineCreateModel, MedicineQueryParams, MedicineUpdateModel } from '../../../feature/API/MedicineService';
 import { MedicineViewDetailModal } from '../../../components/Medicine/MedicineViewModal';
 import CreateMedicineModal from '../../../components/Medicine/CreateMedicineModal';
 import { ConfirmationModal } from '../../../components/ConfirmationModal';
@@ -37,20 +37,20 @@ export default function MedicineCRUDPage() {
   };
 
   const handleApplyFilters = (newFilters: MedicineQueryParams) => {
-    setFilters({...newFilters,PageIndex: 1}); // Reset to first page when filters change
+    setFilters({ ...newFilters, PageIndex: 1 }); // Reset to first page when filters change
   }
 
   const handlePageChange = (page: number) => {
     setFilters((prev) => ({ ...prev, PageIndex: page }));
   };
-  
+
   const handleClearFilters = () => {
-      setFilters(DEFAULT_FILTER);
+    setFilters(DEFAULT_FILTER);
   };
 
-  
-  
-   // --- View ---
+
+
+  // --- View ---
   const handleView = async (id: string) => {
     try {
       const medicine = await medicines.getById(id);
@@ -111,11 +111,11 @@ export default function MedicineCRUDPage() {
     }
   };
 
-  
+
 
   return (
     <>
-      <MedicineCRUDPanel 
+      <MedicineCRUDPanel
         medicineData={medicines.data}
         loading={medicines.loading}
         pagination={{
@@ -130,17 +130,20 @@ export default function MedicineCRUDPage() {
           onToggle: () => setShowFilters((s) => !s),
           onApply: handleApplyFilters,
           onClear: handleClearFilters,
+
         }}
         onView={handleView}
         onEdit={(medicine) => handleEdit(medicine.id)}
         onDelete={(medicineId) => modal.openDelete(medicineId)}
         onCreate={modal.openCreate}
+        onRefresh={() => { void medicines.refetch(); }}
+
       />
       {modal.state.type === 'view' && (
-        <MedicineViewDetailModal 
-          medicine={modal.state.medicine} 
+        <MedicineViewDetailModal
+          medicine={modal.state.medicine}
           isOpen={true}
-          onClose={modal.close} 
+          onClose={modal.close}
         />
       )}
       {modal.state.type === 'create' && (
@@ -148,30 +151,30 @@ export default function MedicineCRUDPage() {
           isOpen={true}
           onClose={modal.close}
           onSubmit={handleCreateSubmit}
-          onError={(msg)=> handleShowToast(msg, 'error')}
+          onError={(msg) => handleShowToast(msg, 'error')}
         />
       )}
-      {modal.state.type === 'edit' &&  (
+      {modal.state.type === 'edit' && (
         <UpdateMedicineModal
           isOpen={true}
           medicine={modal.state.medicine}
           onClose={modal.close}
           onSubmit={handleUpdateSubmit}
-          onError={(msg)=> handleShowToast(msg, 'error')}
+          onError={(msg) => handleShowToast(msg, 'error')}
         />
       )}
       {modal.state.type === 'delete' && (
-      <ConfirmationModal
-        isOpen={true}
-        onClose={modal.close}
-        onConfirm={() => handleDeleteConfirm(modal.state.type === 'delete' ? modal.state.medicineId : '')}
-        title="Delete Medicine"
-        message={`Are you sure you want to delete this medicine ? This action cannot be undone.`}
-        confirmText="Delete"
-        cancelText="Cancel"
-        isLoading={actionLoading}
-        type="danger"
-      />
+        <ConfirmationModal
+          isOpen={true}
+          onClose={modal.close}
+          onConfirm={() => handleDeleteConfirm(modal.state.type === 'delete' ? modal.state.medicineId : '')}
+          title="Delete Medicine"
+          message={`Are you sure you want to delete this medicine ? This action cannot be undone.`}
+          confirmText="Delete"
+          cancelText="Cancel"
+          isLoading={actionLoading}
+          type="danger"
+        />
       )}
 
       <Toast

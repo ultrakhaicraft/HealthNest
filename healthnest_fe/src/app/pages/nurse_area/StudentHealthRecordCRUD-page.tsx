@@ -135,6 +135,8 @@ export default function StudentHealthRecordCRUDPage() {
                 onEdit={(studentHealthRecord: StudentHealthRecordViewModel) => handleEdit(studentHealthRecord.id)}
                 onDelete={(studentHealthRecordId) => modal.openDelete(studentHealthRecordId)}
                 userRole={userRole}
+                onRefresh={() => { void studentHealthRecord.refetch(); }}
+
             />
             {modal.state.type === 'create' && (
                 <StudentHealthRecordCreateModal
@@ -150,7 +152,7 @@ export default function StudentHealthRecordCRUDPage() {
                     studentHealthRecord={modal.state.studentHealthRecord}
                     onClose={modal.close}
                     onSubmit={handleUpdateSubmit}
-                    onError={(msg)=>handleShowToast(msg,'error')}
+                    onError={(msg) => handleShowToast(msg, 'error')}
                 />
             )}
 

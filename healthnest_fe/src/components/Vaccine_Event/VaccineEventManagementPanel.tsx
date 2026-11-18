@@ -4,6 +4,7 @@ import { IconDelete, IconEdit, IconFilter, IconPlus, IconView } from "../IconLis
 import { PaginationControls } from "../PaginationControls";
 import { StatusBadge } from "../StatusBadge";
 import { VaccineEventFilter } from "./VaccineEventFilter";
+import { RefreshButton } from "../RefreshButton";
 
 
 interface PaginationState {
@@ -30,11 +31,14 @@ interface VaccineEventManagementPanelProps {
     onEdit: (vaccineEvent: ViewVaccineEventDTO) => void;
     onDelete: (vaccineEventId: string) => void;
     onCreate: () => void;
+    onRefresh: () => void;
+    handleRedirectToSignUp:(eventId: string) => void;
+    IsAdmin: boolean;
 }
 // Main CRUD component for vaccines
 export const VaccineEventManagementPanel = ({
     vaccineEventData = [], loading, pagination, filterState,
-    onView, onEdit, onDelete, onCreate }:
+    onView, onEdit, onDelete, onCreate, onRefresh, IsAdmin,handleRedirectToSignUp }:
     VaccineEventManagementPanelProps) => {
     return (
         <div className={styles.crudContainer}>
@@ -44,14 +48,18 @@ export const VaccineEventManagementPanel = ({
                     <p className={styles.crudSubtitle}>Manage vaccine event information</p>
                 </div>
                 <div className={styles.crudActions}>
+                    <RefreshButton onRefresh={onRefresh} loading={loading} />
+
                     <button className="button button-secondary button-large" onClick={filterState.onToggle}>
                         <IconFilter />
                         {filterState.show ? 'Hide Filters' : 'Show Filters'}
                     </button>
-                    <button className="button button-primary button-large" onClick={onCreate}>
-                        <IconPlus />
-                        Create Vaccine Event
-                    </button>
+                    {IsAdmin && (
+                        <button className="button button-primary button-large" onClick={onCreate}>
+                            <IconPlus />
+                            Create Vaccine Event
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -108,16 +116,24 @@ export const VaccineEventManagementPanel = ({
                                         <button className={styles.actionButton} onClick={() => onView(vaccinEvent.id)} disabled={loading}>
                                             <IconView />
                                         </button>
-                                        <button className={styles.actionButton} onClick={() => onEdit(vaccinEvent)} disabled={loading}>
-                                            <IconEdit />
-                                        </button>
-                                        <button
-                                            className={`${styles.actionButton} ${styles.actionDelete}`}
-                                            onClick={() => onDelete(vaccinEvent.id)}
-                                            disabled={loading}
-                                        >
-                                            <IconDelete />
-                                        </button>
+                                        {!IsAdmin && (<>
+                                            <button className={styles.actionButton} onClick={() => handleRedirectToSignUp(vaccinEvent.id)} disabled={loading}>
+                                                View Signups
+                                            </button>
+                                        </>
+                                        )}
+                                        {IsAdmin && (<>
+                                            <button className={styles.actionButton} onClick={() => onEdit(vaccinEvent)} disabled={loading}>
+                                                <IconEdit />
+                                            </button>
+                                            <button
+                                                className={`${styles.actionButton} ${styles.actionDelete}`}
+                                                onClick={() => onDelete(vaccinEvent.id)}
+                                                disabled={loading}
+                                            >
+                                                <IconDelete />
+                                            </button></>
+                                        )}
                                     </div>
                                 </td>
                             </tr>
