@@ -126,17 +126,17 @@ export const VaccineEventStudentManagementPanel = ({
                                             <IconView />
                                         </button>
                                         {participant.status == 'Pending' && (<>
-                                            <button className={styles.actionButton} onClick={() => onApprove(participant.vaccineeventId, participant.studentId)} disabled={loading}>
+                                            <button className={`${styles.actionButton} ${styles.actionBtnApprove}`} onClick={() => onApprove(participant.vaccineeventId, participant.studentId)} disabled={loading}>
                                                 Approve
                                             </button>
-                                            <button className={styles.actionButton} onClick={() => onReject(participant.vaccineeventId, participant.studentId)} disabled={loading}>
+                                            <button className={`${styles.actionButton} ${styles.actionBtnDelete}`} onClick={() => onReject(participant.vaccineeventId, participant.studentId)} disabled={loading}>
                                                 Reject
                                             </button>
                                         </>)}
 
                                         {participant.status == 'Approved' && (<>
-                                            <button className={styles.actionButton} onClick={() => onComplete(participant.vaccineeventId, participant.studentId)} disabled={loading}>
-                                                Completed
+                                            <button className={`${styles.actionButton} ${styles.actionBtnApprove}`} onClick={() => onComplete(participant.vaccineeventId, participant.studentId)} disabled={loading}>
+                                                Mark this as Complete
                                             </button>
 
                                         </>)}

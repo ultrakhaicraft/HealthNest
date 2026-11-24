@@ -33,8 +33,7 @@ public record RegisterRequest
 	public required string Password { get; set; }
 	[Required]
 	public required string ConfirmPassword { get; set; }
-	[Required]
-	public required string PhoneNumber { get; set; } 
+	
 	[Required]
 	public required string Address { get; set; }
 	[Required]
@@ -46,12 +45,15 @@ public record RegisterRequest
 
 public record StudentRegisterRequest : RegisterRequest
 {
+	public string PhoneNumber { get; set; } = "N/A"; //Optional, if empty, fill with 'N/A'
 	[Required]
 	public required string Class {  get; set; }
 }
 
 public record ParentRegisterRequest : RegisterRequest
 {
+	[Required]
+	public required string PhoneNumber { get; set; }
 	[Required]
 	public string RelationshipStatus { get; set; } = null!;
 	[Required]

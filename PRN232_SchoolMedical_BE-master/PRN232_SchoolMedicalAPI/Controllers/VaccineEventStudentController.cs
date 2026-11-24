@@ -12,7 +12,7 @@ namespace HealthNest_API.Controllers;
 
 
 [ApiController]
-[Route("vaccine-event-participant")]
+[Route("api/vaccine-event-participant")]
 public class VaccineEventStudentController : Controller
 {
 	private readonly IVaccineEventStudentService _vaccineEventStudentService;
@@ -24,7 +24,7 @@ public class VaccineEventStudentController : Controller
 
 	// ---------- Parent ----------
 
-	[HttpPost("{eventId}/signups")]
+	[HttpPost("signups")]
 	[Authorize(Roles = nameof(AccountRole.Parent))]
 	public async Task<IActionResult> SignUpStudent([FromBody] CreateVaccineEventStudentModel request)
 	{
@@ -162,7 +162,7 @@ public class VaccineEventStudentController : Controller
 	}
 
 	[HttpPatch("{eventId}/students/{studentId}/note")]
-	[Authorize(Roles = nameof(AccountRole.SchoolNurse))]
+	[Authorize(Roles = nameof(AccountRole.Parent))]
 	public async Task<IActionResult> UpdateNote(string eventId, string studentId,
 		[FromBody] UpdateNoteRequest request)
 	{

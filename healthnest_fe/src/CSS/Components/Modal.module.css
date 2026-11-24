@@ -21,8 +21,8 @@
 .dialog {
   box-sizing: border-box;
   width: 100%;
-  max-width: 32rem;
-  max-height: 100%;
+  max-width: 60%;
+  max-height: 90%;
   overflow-y: auto;
   padding: 1.5rem;
   border-radius: 1rem;

@@ -43,7 +43,6 @@
 
 .registerLink a,
 a:hover,
-a:visited,
 a:link,
 a:active {
   color: #080808;

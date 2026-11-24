@@ -1,5 +1,9 @@
 import { IncidentRecordCountPerYear } from "./API/DashboardService";
 
+import avatarImage from '../../public/DefaultUserPfp.jpg';
+
+export const FALLBACK_AVATAR = avatarImage;
+
 
 //Store Constant Value in Application Level
 export enum UserRole {
@@ -38,6 +42,8 @@ export const PARENT_NAV_ROUTES: { label: string; path: string }[] = [
   { label: 'Student Health Record', path: '/parent/student-health-record' },
   { label: 'User Profile', path: '/parent/user-profile' },
   { label: 'Student', path: '/parent/student' },
+  { label: 'Health Checkup Event', path: '/parent/user-profile' },
+  { label: 'Vaccine Event', path: '/parent/vaccine-event-sign-up' },
 
 ];
 

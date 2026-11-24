@@ -1,10 +1,9 @@
 import { StudentDetailModel } from "../../../models/AccountSubclassModels/StudentModel";
 import styles from '../../../CSS/Parent/LinkedStudentTableWrapper.module.css';
 import { getHealthTone, HealthTone } from "../../../feature/StudentHealthStatus";
-import avatarImage from '../../../../public/DefaultUserPfp.jpg';
+import { FALLBACK_AVATAR } from "../../../feature/Constant";
 
-const FALLBACK_AVATAR = avatarImage;
-const TONE_CLASS: Record<HealthTone, string> = {
+export const TONE_CLASS: Record<HealthTone, string> = {
     good: styles.toneGood,
     warning: styles.toneWarning,
     critical: styles.toneCritical,

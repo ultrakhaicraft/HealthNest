@@ -48,7 +48,7 @@ export const accountService = {
 
   /* 
   Fetch all student account that contain Parent Id
-  Useful to check what student belong to which parent
+  Useful to check what student belong to which parent or use for a component that only list their student
   */
   getStudentFromParentId: async (parentId: string): Promise<StudentDetailModel[]> => {
     const response = await apiClient.get<ApiResponseWrapper<StudentDetailModel[]>>(`/account/${parentId}/student`);

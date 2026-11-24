@@ -10,7 +10,6 @@ export function useVaccineEventStudent(
     const [totalItems, setTotalItems] = useState(0);
     const [error, setError] = useState<string | null>(null);
 
-    //TODO: Implement strategy pattern for fetching data based on EventId, ParentId or StudentId.
     const refetch = useCallback(() => {
         setLoading(true);
         setError(null);
@@ -105,5 +104,5 @@ export function useVaccineEventStudent(
 
 
 
-    return { data, loading, error, totalPages, totalItems, refetch, getById, signUpStudentToEvent, rejectStudentFromEvent, approveStudentForEvent, cancelSignup, CompleteStudentVaccineEvent, UpdateNote, CompleteStudentVaccineEvent, UpdateNote };
+    return { data, loading, error, totalPages, totalItems, refetch, getById, signUpStudentToEvent, rejectStudentFromEvent, approveStudentForEvent, cancelSignup, CompleteStudentVaccineEvent, UpdateNote };
 }

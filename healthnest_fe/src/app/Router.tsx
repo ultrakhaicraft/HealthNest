@@ -25,6 +25,7 @@ const ParentHomepage = React.lazy(() => import('./pages/parent_area/ParentHomePa
 const ParentMedicineRequestCRUDPage = React.lazy(() => import('./pages/parent_area/ParentMedicineRequestCRUD-page'));
 const ParentUserProfile = React.lazy(() => import('./pages/parent_area/ParentUserProfile-Page'));
 const ManageStudentPage = React.lazy(() => import('./pages/parent_area/StudentManagementPage'));
+const VaccineEventSignUpPage = React.lazy(() => import('./pages/parent_area/VaccineEventSignUpPage'));
 
 //Nurse
 const NurseHomepage = React.lazy(() => import('../app/pages/nurse_area/NurseHome-page'));
@@ -36,8 +37,8 @@ const MedicineRequestCRUDPage = React.lazy(() => import('../app/pages/nurse_area
 const VaccineRecordCRUDPage = React.lazy(() => import('../app/pages/nurse_area/VaccineRecordCRUD-page'));
 const TreatmentRecordCRUDPage = React.lazy(() => import('../app/pages/nurse_area/TreatmentRecordCRUD-page'));
 const StudentLinkRequestCRUDPage = React.lazy(() => import('../app/pages/nurse_area/StudentLinkRequestCRUD-page'));
-const VaccineEventsViewPage = React.lazy(()=> import ('../app/pages/nurse_area/VaccineEventManagement-page'));
-const VaccineEventStudentManagementPage = React.lazy(()=> import ('../app/pages/nurse_area/VaccineEventStudentCRUD-page'));
+const VaccineEventsViewPage = React.lazy(() => import('../app/pages/nurse_area/VaccineEventManagement-page'));
+const VaccineEventStudentManagementPage = React.lazy(() => import('../app/pages/nurse_area/VaccineEventStudentCRUD-page'));
 
 
 
@@ -94,9 +95,9 @@ export const AppRouter = () => {
           <Route path="vaccine-record" element={<VaccineRecordCRUDPage />} />
           <Route path="treatment-record" element={<TreatmentRecordCRUDPage />} />
           <Route path="student-link-request" element={<StudentLinkRequestCRUDPage />} />
-          <Route path="vaccine-event" element={<VaccineEventsViewPage />}/>
+          <Route path="vaccine-event" element={<VaccineEventsViewPage />} />
 
-       
+
         </Route>
 
         <Route path="/parent" element={
@@ -107,6 +108,7 @@ export const AppRouter = () => {
           <Route path="medicine-request" element={<ParentMedicineRequestCRUDPage />} />
           <Route path="student" element={<ManageStudentPage />} />
           <Route path="student-health-record" element={<StudentHealthRecordViewPage />} />
+          <Route path="vaccine-event-sign-up" element={<VaccineEventSignUpPage />} />
         </Route>
 
 
@@ -126,11 +128,11 @@ export const AppRouter = () => {
 
         {/*Different page but still protect based on role*/}
         <Route path="nurse/vaccine-event/:eventId/signups"
-        element={
-           <ProtectedRoute allowedRoles={[UserRole.Nurse]}>
-            <VaccineEventStudentManagementPage />
-          </ProtectedRoute>
-        }>
+          element={
+            <ProtectedRoute allowedRoles={[UserRole.Nurse]}>
+              <VaccineEventStudentManagementPage />
+            </ProtectedRoute>
+          }>
         </Route>
 
 

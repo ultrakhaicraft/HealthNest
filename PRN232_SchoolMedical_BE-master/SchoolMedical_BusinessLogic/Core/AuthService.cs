@@ -63,6 +63,7 @@ public class AuthService : IAuthService
 	public async Task<string> RegisterParentAsync(ParentRegisterRequest request)
 	{
 		var account = await CreateAccountAsync(request, AccountRole.Parent, AccountStatus.Active);
+		account.PhoneNumber = request.PhoneNumber;
 
 		await _unitOfWork.GetRepository<Parent>().InsertAsync(new Parent
 		{
@@ -71,13 +72,17 @@ public class AuthService : IAuthService
 			RelationshipStatus = request.RelationshipStatus,
 		});
 
-		await _unitOfWork.SaveAsync();   
+		await _unitOfWork.GetRepository<Account>().InsertAsync(account);
+
+		await _unitOfWork.SaveAsync();
+
 		return account.Id;
 	}
 
 	public async Task<string> RegisterStudentAsync(StudentRegisterRequest request)
 	{
 		var account = await CreateAccountAsync(request, AccountRole.Student, AccountStatus.NotLinked);
+		account.PhoneNumber = request.PhoneNumber;
 
 		await _unitOfWork.GetRepository<Student>().InsertAsync(new Student
 		{
@@ -85,6 +90,8 @@ public class AuthService : IAuthService
 			Class = request.Class,
 			CurrentHealthStatus = StudentHealthStatus.Healthy.ToString()
 		});
+
+		await _unitOfWork.GetRepository<Account>().InsertAsync(account);
 
 		await _unitOfWork.SaveAsync();
 		return account.Id;
@@ -117,7 +124,7 @@ public class AuthService : IAuthService
 			Id = Guid.NewGuid().ToString(),
 			FullName = request.FullName ?? "N/A",
 			Email = request.Email ?? "N/A",
-			PhoneNumber = request.PhoneNumber,
+			PhoneNumber = "",
 			Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
 			Role = role.ToString(),
 			Address = request.Address,
@@ -126,7 +133,6 @@ public class AuthService : IAuthService
 			Status = status.ToString(),
 		};
 
-		await _unitOfWork.GetRepository<Account>().InsertAsync(account);
 		return account;
 	}
 

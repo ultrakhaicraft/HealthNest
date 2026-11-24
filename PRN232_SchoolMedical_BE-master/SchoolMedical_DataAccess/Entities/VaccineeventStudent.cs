@@ -8,6 +8,7 @@ namespace HealthNest_DAO.Entities;
 
 public partial class VaccineeventStudent
 {
+	public string SignUpId { get; set; } = null!;
 	public string VaccineeventId { get; set; } = null!;
 	public string StudentId { get; set; } = null!;
 	public string RegisteredByParent { get; set; } = null!;   //ParentId

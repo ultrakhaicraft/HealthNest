@@ -183,11 +183,17 @@ public class VaccineEventStudentService : IVaccineEventStudentService
 			throw new BadRequestException("You can only sign up your own child.");
 
 
-		//Check for duplicate
-		var exisitingSignUp = _vaccineEventStudentRepository.Find(s => s.StudentId == request.StudentId);
+		//Check for duplicate, the only exception is the status must be cancelled or rejected before
+		var exisitingSignUp = _vaccineEventStudentRepository.Find
+			(s => s.StudentId == request.StudentId && s.VaccineeventId == request.VaccineEventId
+			&& (s.Status!=AttentdanceStatus.Rejected.ToString() && s.Status!=AttentdanceStatus.Cancelled.ToString()));
 		if (exisitingSignUp != null)
 		{
 			throw new BadRequestException($"There is a duplicate vaccine participant data with student Id: {request.StudentId} and vaccine event id: {request.VaccineEventId}");
+		}
+
+		if((!Enum.TryParse<EventStatus>(ev.Status, true, out var pendingEvent) || pendingEvent == EventStatus.Pending)){
+			throw new BadRequestException("Sign-up has not yet opened. Please wait for sign up date");
 		}
 
 		//Check for Signup Period
@@ -298,11 +304,21 @@ public class VaccineEventStudentService : IVaccineEventStudentService
 	{
 		var eventParticipant = await _vaccineEventStudentRepository.GetQueryable()
 									.Where(s => s.VaccineeventId == eventId && s.StudentId == studentId)
+									.Include(s=>s.Vaccineevent)
 									.FirstOrDefaultAsync();
+
+		
 
 		if (eventParticipant == null)
 		{
 			throw new NotFoundException($"Can't found this vaccine participant data with student Id: {studentId} and vaccine event id: {eventId}");
+		}
+
+		//On update on the date of event and later on
+		var isDateSuitable = eventParticipant.Vaccineevent.DateOccurred.CompareTo(DateTime.Today);
+		if (isDateSuitable < 0)
+		{
+			throw new BadRequestException("Cannot change the participant status to complete if the vaccine event day haven't occurred");
 		}
 
 		// Validate if the status value is suitable for update
@@ -310,7 +326,7 @@ public class VaccineEventStudentService : IVaccineEventStudentService
 		ValidateAttendantStatus.ValidateEventStatusTransition(eventParticipant, newStatus);
 
 		//Note: Vaccine Event and Student Id are excluded from update
-		eventParticipant.Status = AttentdanceStatus.Approved.ToString();
+		eventParticipant.Status = AttentdanceStatus.Completed.ToString();
 		eventParticipant.CheckedBy = checkById;
 		eventParticipant.UpdatedAt = DateTime.Now;
 		eventParticipant.ResultSummary = ResultSummary;

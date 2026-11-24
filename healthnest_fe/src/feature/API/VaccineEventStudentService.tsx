@@ -58,7 +58,7 @@ export const VaccineEventStudentService = {
 
     CompleteStudentVaccination: async (eventId: string, studentId: string, data: CompleteVaccinationRequest): Promise<String> => {
         const response = await apiClient.patch<ApiResponseWrapper<String>>
-            (`${baseUrl}/${eventId}/students/${studentId}/completed`, data);
+            (`${baseUrl}/${eventId}/students/${studentId}/complete`, data);
         return response.data.data;
     },
 

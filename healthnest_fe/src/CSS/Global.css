@@ -112,6 +112,9 @@ body {
   flex: 1; /* Move flex-grow here instead of the inline style */
 }
 
+.no-link{
+  text-decoration: none;
+}
 
 
 

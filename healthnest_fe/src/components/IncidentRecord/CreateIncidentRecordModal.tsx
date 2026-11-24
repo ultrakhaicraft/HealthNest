@@ -21,7 +21,7 @@ const initialForm = {
   status: '',
 };
 
-const CreateIncidentRecordModal: React.FC<CreateIncidentRecordModalProps> = ({ isOpen, onClose, onSubmit }) => {
+const CreateIncidentRecordModal = ({ isOpen, onClose, onSubmit }: CreateIncidentRecordModalProps) => {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);

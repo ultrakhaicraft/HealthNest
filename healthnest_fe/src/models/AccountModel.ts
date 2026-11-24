@@ -9,6 +9,7 @@ export interface AccountQuery {
   fullName?: string;
   role?: string;
   status?: string;
+  parentId?: string;
   pageNumber: number;
   pageSize: number;
 }
