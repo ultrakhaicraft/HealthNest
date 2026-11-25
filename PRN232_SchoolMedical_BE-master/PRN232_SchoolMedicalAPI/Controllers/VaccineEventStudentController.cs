@@ -187,7 +187,7 @@ public class VaccineEventStudentController : Controller
 		string requesterId = User.Claims.GetUserIdFromJwtToken();
 
 		var result = await _vaccineEventStudentService.ViewVaccineEventStudentDetail(
-			eventId, studentId);
+			studentId, eventId);
 
 		ApiResponseWrapper<ViewVaccineEventStudentDetailModel> response =
 			ApiResponseWrapper<ViewVaccineEventStudentDetailModel>

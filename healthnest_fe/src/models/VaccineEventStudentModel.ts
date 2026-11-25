@@ -1,4 +1,5 @@
 export interface ViewVaccineEventStudentModel {
+  signUpId: string;
   vaccineeventId: string;
   studentId: string;
   signupDate: string; // ISO date string from API

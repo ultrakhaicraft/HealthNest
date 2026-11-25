@@ -48,6 +48,7 @@ public class VaccineEventStudentService : IVaccineEventStudentService
 
 		List<ViewVaccineEventStudentModel> viewData = await query.Select(i => new ViewVaccineEventStudentModel
 		{
+			SignUpId = i.SignUpId,
 			VaccineeventId = i.VaccineeventId,
 			StudentId = i.StudentId,
 			SignupDate = i.SignupDate,
@@ -80,6 +81,8 @@ public class VaccineEventStudentService : IVaccineEventStudentService
 
 		List<ViewVaccineEventStudentModel> viewData = await query.Select(i => new ViewVaccineEventStudentModel
 		{
+			SignUpId = i.SignUpId,
+
 			VaccineeventId = i.VaccineeventId,
 			StudentId = i.StudentId,
 			SignupDate = i.SignupDate,
@@ -112,6 +115,7 @@ public class VaccineEventStudentService : IVaccineEventStudentService
 
 		List<ViewVaccineEventStudentModel> viewData = await query.Select(i => new ViewVaccineEventStudentModel
 		{
+			SignUpId = i.SignUpId,
 			VaccineeventId = i.VaccineeventId,
 			StudentId = i.StudentId,
 			SignupDate = i.SignupDate,
@@ -128,31 +132,28 @@ public class VaccineEventStudentService : IVaccineEventStudentService
 
 	public async Task<ViewVaccineEventStudentDetailModel> ViewVaccineEventStudentDetail(string studentId, string vaccineEventId)
 	{
-		var query = await _vaccineEventStudentRepository.GetQueryable()
-			.Include(x => x.Nurse.Account)
-			.Include(x => x.Parent.Account)
-			.Include(x => x.Student.Account)
-			.Where(x => x.StudentId == studentId && x.VaccineeventId == vaccineEventId).FirstOrDefaultAsync();
-		if (query == null)
-		{
-			throw new NotFoundException($"Can't found this vaccine participant data with student Id: {studentId} and vaccine event id: {vaccineEventId}");
-		}
+		var detail = await _vaccineEventStudentRepository.GetQueryable()
+	   .Where(x => x.VaccineeventId == vaccineEventId && x.StudentId == studentId)
+	   .Select(x => new ViewVaccineEventStudentDetailModel
+	   {
+		   SignUpId = x.SignUpId,
+		   VaccineeventId = x.VaccineeventId,
+		   StudentId = x.StudentId,
+		   StudentName = x.Student.Account.FullName,
+		   CheckedBy = x.CheckedBy,
+		   CheckedByName = x.Nurse.Account.FullName ?? "N/A",
+		   RegisteredByParent = x.RegisteredByParent,
+		   Note = x.Note,
+		   Status = x.Status,
+		   ResultSummary = x.ResultSummary,
+		   SignupDate = x.SignupDate,
+		   UpdatedAt = x.UpdatedAt
+	   })
+	   .FirstOrDefaultAsync();
 
-		ViewVaccineEventStudentDetailModel detail = new ViewVaccineEventStudentDetailModel
-		{
-			VaccineeventId = vaccineEventId,
-			StudentId = studentId,
-			CheckedBy = query.CheckedBy,
-			CheckedByName = query.Nurse.Account.FullName,
-			Note = query.Note,
-			Status = query.Status,
-			ResultSummary = query.ResultSummary,
-			SignupDate = query.SignupDate,
-			UpdatedAt = query.UpdatedAt,
-			RegisteredByParent = query.RegisteredByParent,
-			StudentName = query.Student.Account.FullName,
-
-		};
+		if (detail == null)
+			throw new NotFoundException(
+				$"Can't find vaccine participant data with student Id: {studentId} and vaccine event id: {vaccineEventId}");
 
 		return detail;
 	}
@@ -172,6 +173,7 @@ public class VaccineEventStudentService : IVaccineEventStudentService
 
 	public async Task SignUpStudentAsync(CreateVaccineEventStudentModel request, string parentId)
 	{
+		var query = _vaccineEventStudentRepository.GetQueryable();
 		//Check for event
 		Vaccineevent ev = _vaccineEventRepository.GetById(request.VaccineEventId)
 		?? throw new NotFoundException("Vaccine Event", request.VaccineEventId);
@@ -182,17 +184,9 @@ public class VaccineEventStudentService : IVaccineEventStudentService
 		if (student.ParentId != parentId)
 			throw new BadRequestException("You can only sign up your own child.");
 
-
-		//Check for duplicate, the only exception is the status must be cancelled or rejected before
-		var exisitingSignUp = _vaccineEventStudentRepository.Find
-			(s => s.StudentId == request.StudentId && s.VaccineeventId == request.VaccineEventId
-			&& (s.Status!=AttentdanceStatus.Rejected.ToString() && s.Status!=AttentdanceStatus.Cancelled.ToString()));
-		if (exisitingSignUp != null)
+		//Check for sign up period
+		if ((!Enum.TryParse<EventStatus>(ev.Status, true, out var pendingEvent) || pendingEvent == EventStatus.Pending))
 		{
-			throw new BadRequestException($"There is a duplicate vaccine participant data with student Id: {request.StudentId} and vaccine event id: {request.VaccineEventId}");
-		}
-
-		if((!Enum.TryParse<EventStatus>(ev.Status, true, out var pendingEvent) || pendingEvent == EventStatus.Pending)){
 			throw new BadRequestException("Sign-up has not yet opened. Please wait for sign up date");
 		}
 
@@ -201,18 +195,47 @@ public class VaccineEventStudentService : IVaccineEventStudentService
 	   || ev.DateSignupEnd is not { } end || DateTime.Now > end)
 			throw new BadRequestException("Sign-up has closed. Please contact the school nurse to cancel.");
 
-		VaccineeventStudent vaccineeventStudent = new VaccineeventStudent
-		{
-			StudentId = request.StudentId,
-			VaccineeventId = request.VaccineEventId,
-			Note = request.Note,
-			RegisteredByParent = parentId,
-			SignupDate = DateTime.Now,
-			UpdatedAt = DateTime.Now,
-			Status = AttentdanceStatus.Pending.ToString(),
-		};
 
-		await _vaccineEventStudentRepository.InsertAsync(vaccineeventStudent);
+		//Check for duplicate, If there is exist one Approve  or Complete Status, there is a duplicate
+		//Parent can only re sign up if the status is cancel, this action will update the status back to Pending and note but keep
+		//signUpId, studentId and vaccine event Id (Basically update the entity, not creating new one due to unique key rule)
+		var exisitingSignUp = await query.Where(s => s.StudentId == request.StudentId && s.VaccineeventId == request.VaccineEventId)
+			.FirstOrDefaultAsync();
+
+
+
+
+		if (exisitingSignUp!=null)
+		{
+			if (exisitingSignUp.Status != AttentdanceStatus.Cancelled.ToString())
+			{
+				throw new BadRequestException($"There is a duplicate vaccine participant data with student Id: {request.StudentId} and vaccine event id: {request.VaccineEventId}. Re sign up is" +
+				$"only allowed if the sign up status of the participant is cancelled");
+			}
+
+			exisitingSignUp.Note = request.Note;
+			exisitingSignUp.SignupDate = DateTime.Now;
+			exisitingSignUp.UpdatedAt = DateTime.Now;
+			exisitingSignUp.Status = AttentdanceStatus.Pending.ToString();
+		}
+		else
+		{
+			VaccineeventStudent vaccineeventStudent = new VaccineeventStudent
+			{
+				SignUpId = new Guid().ToString(),
+				StudentId = request.StudentId,
+				VaccineeventId = request.VaccineEventId,
+				Note = request.Note,
+				RegisteredByParent = parentId,
+				SignupDate = DateTime.Now,
+				UpdatedAt = DateTime.Now,
+				Status = AttentdanceStatus.Pending.ToString(),
+			};
+
+			await _vaccineEventStudentRepository.InsertAsync(vaccineeventStudent);
+		}
+
+
 		await _unitOfWork.SaveAsync();
 	}
 
@@ -233,6 +256,7 @@ public class VaccineEventStudentService : IVaccineEventStudentService
 
 
 		eventParticipant.Status = AttentdanceStatus.Rejected.ToString();
+		eventParticipant.CheckedBy = checkedById;
 		eventParticipant.UpdatedAt = DateTime.Now;
 
 

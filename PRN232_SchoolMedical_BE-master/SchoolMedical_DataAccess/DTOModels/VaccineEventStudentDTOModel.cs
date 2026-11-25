@@ -9,6 +9,7 @@ namespace HealthNest_DAO.DTOModels;
 
 public class ViewVaccineEventStudentModel
 {
+	public string SignUpId { get; set; } = null!;
 	public string VaccineeventId { get; set; } = null!;
 	public string StudentId { get; set; } = null!;
 	public DateTime SignupDate { get; set; } // Can also acted as CreatedBy

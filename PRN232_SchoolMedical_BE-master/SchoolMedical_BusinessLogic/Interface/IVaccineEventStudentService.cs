@@ -18,7 +18,7 @@ public interface IVaccineEventStudentService
 
 
 
-	public Task<ViewVaccineEventStudentDetailModel> ViewVaccineEventStudentDetail(string eventId, string studentId);
+	public Task<ViewVaccineEventStudentDetailModel> ViewVaccineEventStudentDetail(string studentId, string eventId);
 	public Task<PagingModel<ViewVaccineEventStudentModel>> FindVaccineEventStudentByEventId(string eventId,VaccineEventStudentQuery query);
 	public Task<PagingModel<ViewVaccineEventStudentModel>> FindVaccineEventStudentByParentId(string parentId, VaccineEventStudentQuery query);
 	public Task<PagingModel<ViewVaccineEventStudentModel>> FindVaccineEventStudentByStudentId(string studentId, VaccineEventStudentQuery request);

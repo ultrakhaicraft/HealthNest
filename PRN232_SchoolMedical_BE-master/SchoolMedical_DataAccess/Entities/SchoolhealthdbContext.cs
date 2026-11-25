@@ -432,7 +432,7 @@ public partial class SchoolhealthdbContext : DbContext
 			entity.HasOne(e => e.Parent)
 				  .WithMany(a => a.VaccineEventSignUp)
 				  .HasForeignKey(e => e.RegisteredByParent)
-				  .OnDelete(DeleteBehavior.SetNull)
+				  .OnDelete(DeleteBehavior.Restrict)
 				  .HasConstraintName("FK_VaccineeventStudent_Parent");
 
 			entity.HasOne(e => e.Nurse)

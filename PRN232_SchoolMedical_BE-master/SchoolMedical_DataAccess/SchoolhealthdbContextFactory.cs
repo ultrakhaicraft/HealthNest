@@ -15,8 +15,8 @@ namespace HealthNest_DAO
 		{
 			var optionsBuilder = new DbContextOptionsBuilder<SchoolhealthdbContext>();
 
-			// Replace with your actual connection string / MySQL server version
-			optionsBuilder.UseMySQL("server=127.0.0.1;port=3306;user=FPPTAdmin;password=AF3dmPPTn2!;database=schoolhealthdb;");
+			//TODO: Replace with your actual connection string / MySQL server version
+			optionsBuilder.UseMySQL("Server=localhost;Database=schoolhealthdb;Uid=root;Pwd=roots!22;Allow User Variables=True;");
 
 			return new SchoolhealthdbContext(optionsBuilder.Options);
 		}
