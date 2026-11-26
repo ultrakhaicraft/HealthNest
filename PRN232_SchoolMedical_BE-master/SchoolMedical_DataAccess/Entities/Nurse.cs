@@ -17,5 +17,7 @@ public partial class Nurse
 	public virtual ICollection<Meeting> MeetingHandleByNavigations { get; set; } = new List<Meeting>(); //Nurse create and handle the meeting
 	public virtual ICollection<Medicalsupply> Medicalsupplies { get; set; } = new List<Medicalsupply>(); 
 	public virtual ICollection<Medicine> Medicines { get; set; } = new List<Medicine>();
+	public virtual ICollection<VaccineeventStudent> VaccineEventStudentChecked { get; set; } = new List<VaccineeventStudent>();
+
 
 }

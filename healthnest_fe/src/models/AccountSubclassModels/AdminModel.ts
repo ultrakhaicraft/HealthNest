@@ -1,5 +1,5 @@
 import { UserRole } from "../../feature/Constant";
-import { AccountDetailModel, AccountCreateRequest, AccountUpdateRequest } from "../AccountModel";
+import { AccountDetailModel, AccountCreateRequest, AccountUpdateRequest, RegisterRequest } from "../AccountModel";
 
 // --- Admin Models ---
 export interface AdminDetailModel extends AccountDetailModel {
@@ -7,7 +7,7 @@ export interface AdminDetailModel extends AccountDetailModel {
   description?: string;
 }
 
-export interface CreateAdminModel extends AccountCreateRequest {
+export interface CreateAdminModel extends RegisterRequest {
   description: string;
 }
 

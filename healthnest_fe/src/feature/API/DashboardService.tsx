@@ -3,26 +3,30 @@ import apiClient from "../ApiClient";
 
 
 export interface DashboardStatistic {
-    activeIncidentRecord: number;
-    pendingMedicineRequest: number;
-    upcomingVaccineEvent:number;
-    upcomingHealthCheckup:number;
+  activeIncidentRecord: number;
+  pendingMedicineRequest: number;
+  upcomingVaccineEvent: number;
+  upcomingHealthCheckup: number;
+  totalDailyUsers: number;
+  totalStudents: number;
+  totalParents: number;
+  totalSchoolNurse: number;
 }
 
-export interface IncidentRecordCountPerYear{
-    year: number;
-    january: number;
-    february: number;
-    march: number;
-    april: number;
-    may: number;
-    june: number;
-    july: number;
-    august: number;
-    september: number;
-    october: number;
-    november: number;
-    december: number;
+export interface IncidentRecordCountPerYear {
+  year: number;
+  january: number;
+  february: number;
+  march: number;
+  april: number;
+  may: number;
+  june: number;
+  july: number;
+  august: number;
+  september: number;
+  october: number;
+  november: number;
+  december: number;
 }
 
 export const DashboardService = {
@@ -38,5 +42,5 @@ export const DashboardService = {
     return response.data.data;
   },
 
- 
+
 };

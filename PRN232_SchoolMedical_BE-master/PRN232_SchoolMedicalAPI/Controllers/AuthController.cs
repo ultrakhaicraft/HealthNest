@@ -56,19 +56,25 @@ public class AuthController : ControllerBase
 		return Ok(response);
 	}
 
-	
 
-	
-	[HttpPost("register")]
+
+
+	[HttpPost("register/parent")]
 	[AllowAnonymous]
-	public async Task<IActionResult> Register([FromBody] RegisterRequest request, bool IsParent)
+	public async Task<IActionResult> RegisterParent([FromBody] ParentRegisterRequest request)
 	{
-		
-		var result = await _authService.RegisterAsync(request, IsParent);
-		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
-					.Created(result, "Register Success");
-		return StatusCode(StatusCodes.Status201Created, response);
+		var result = await _authService.RegisterParentAsync(request);
+		return StatusCode(StatusCodes.Status201Created,
+			ApiResponseWrapper<string>.Created(result, "Register Success"));
+	}
 
+	[HttpPost("register/student")]
+	[AllowAnonymous]
+	public async Task<IActionResult> RegisterStudent([FromBody] StudentRegisterRequest request)
+	{
+		var result = await _authService.RegisterStudentAsync(request);
+		return StatusCode(StatusCodes.Status201Created,
+			ApiResponseWrapper<string>.Created(result, "Register Success"));
 	}
 
 	[HttpPost("logout")]

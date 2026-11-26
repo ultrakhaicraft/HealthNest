@@ -6,10 +6,15 @@
   width: 240px;
   background-color: white;
   padding: 1.5rem 1rem;
-  height: 100vh;
   position: sticky;
-  top: 0; /* Stick below header */
+  z-index: 1;
+  top: 0;
+  /* Stick below header */
   border-right: 1px solid #e5e7eb;
+  align-self: flex-start;
+  height: 100vh;
+  overflow-y: auto;
+  scrollbar-width: none;
 }
 
 
@@ -19,7 +24,9 @@
   margin: 0;
 }
 
-.navItem, .navItem:focus, .navItem:active {
+.navItem,
+.navItem:focus,
+.navItem:active {
   display: flex;
   align-items: center;
   padding: 0.75rem 1rem;
@@ -32,7 +39,8 @@
   font-size: large;
 }
 
-.navItem:hover, .navItem:focus {
+.navItem:hover,
+.navItem:focus {
   background-color: var(--color-accent-dark);
   color: var(--color-text-light);
 }
@@ -47,32 +55,32 @@
   margin-right: 0.75rem;
 }
 
-.navItemButton{
-    background: none;
-    border: none;
-    width: 100%; 
-    text-align: left; 
-    /*padding: 0 */
+.navItemButton {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  /*padding: 0 */
 }
 
-.iconSmall{
+.iconSmall {
   width: 20px;
 }
 
-.menuIcon{
+.menuIcon {
   width: 24px;
-  font-size:24px;
+  font-size: 24px;
   margin-right: 14px;
   color: var(--color-accent-dark);
 }
 
-.logoTitle{
+.logoTitle {
   font-size: 22px;
   font-weight: 500;
   color: var(--color-accent-dark);
 }
 
-.logoContainer{
+.logoContainer {
   display: flex;
   align-items: center;
   margin: 0 25px 24px;
@@ -80,35 +88,42 @@
 
 /* ---------- Secondary menu (flyout to the right) ---------- */
 .hasSubmenu {
-  position: relative; /* flyout is positioned against this <li> */
+  position: relative;
+  /* flyout is positioned against this <li> */
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+
 }
 
 .submenuArrow {
   width: 1rem;
   height: 1rem;
-  margin-left: auto; /* pushes the arrow to the far right of the button */
+  margin-left: auto;
+  /* pushes the arrow to the far right of the button */
   color: #9ca3af;
 }
 
 .submenu {
-  position: absolute;
-  top: 0;
-  left: calc(100% + 0.5rem);
+  position: static;
+  display: block;
   z-index: 20;
+  max-height: 0;
   min-width: 10rem;
   margin: 0;
   padding: 0.5rem;
   list-style: none;
   background-color: #ffffff;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #636567;
   border-radius: 0.5rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
 
   /* hidden by default; visibility:hidden also removes it from the tab order */
   opacity: 0;
-  visibility: hidden;
-  transform: translateX(-4px);
-  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+  overflow: hidden;
+  visibility: visible;
+  transition:
+    max-height 0.5s ease,
+    opacity 0.5s ease,
+    visibility 0s linear 0.5s;
 }
 
 /* Bridges the 0.5rem gap so the pointer never leaves the hover area */
@@ -119,18 +134,27 @@
   bottom: 0;
   left: -0.75rem;
   width: 0.75rem;
+
 }
 
-.hasSubmenu:hover > .submenu,
-.hasSubmenu:focus-within > .submenu,
-.submenuOpen > .submenu {
+.hasSubmenu:hover>.submenu,
+.hasSubmenu:focus-within>.submenu,
+.submenuOpen>.submenu {
+  max-height: 12rem;
+  /* Set higher than the submenu's full height */
   opacity: 1;
   visibility: visible;
-  transform: none;
+  transition:
+    max-height 0.5s ease,
+    opacity 0.5s ease;
+
+
 }
 
 .submenu .navItem {
-  margin-bottom: 0.25rem; /* your main .navItem margin (2rem) is too tall inside a flyout */
+  margin-bottom: 0.25rem;
+  /* your main .navItem margin (2rem) is too tall inside a flyout */
+
 }
 
 /* Narrow screens: no room on the right, so expand inline instead */
@@ -146,11 +170,12 @@
     transform: none;
   }
 
-  .submenuOpen > .submenu {
+  .submenuOpen>.submenu {
     display: block;
   }
 
-  .hasSubmenu:hover > .submenu:not(:where(.submenuOpen > *)) {
-    display: none; /* hover is unreliable on touch, rely on the click toggle */
+  .hasSubmenu:hover>.submenu:not(:where(.submenuOpen > *)) {
+    display: none;
+    /* hover is unreliable on touch, rely on the click toggle */
   }
 }

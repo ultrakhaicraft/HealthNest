@@ -13,20 +13,6 @@ interface NurseDashboardProps {
   username: string;
 }
 
-const MONTHS: { key: keyof Omit<IncidentRecordCountPerYear, 'year'>; label: string }[] = [
-  { key: 'january', label: 'Jan' },
-  { key: 'february', label: 'Feb' },
-  { key: 'march', label: 'Mar' },
-  { key: 'april', label: 'Apr' },
-  { key: 'may', label: 'May' },
-  { key: 'june', label: 'Jun' },
-  { key: 'july', label: 'Jul' },
-  { key: 'august', label: 'Aug' },
-  { key: 'september', label: 'Sep' },
-  { key: 'october', label: 'Oct' },
-  { key: 'november', label: 'Nov' },
-  { key: 'december', label: 'Dec' },
-];
 
 
 
@@ -81,14 +67,7 @@ export const NurseDashboard = ({ username }: NurseDashboardProps) => {
     };
   }, []);
 
-  // Transforms the flat per-month object into the array shape the bar chart needs
-  function toChartData(record: IncidentRecordCountPerYear | null) {
-    if (!record) return [];
-    return MONTHS.map(({ key, label }) => ({
-      month: label,
-      count: record[key],
-    }));
-  }
+  
 
 
 
@@ -117,7 +96,7 @@ export const NurseDashboard = ({ username }: NurseDashboardProps) => {
           <p className={style.cardValue}>{stat?.upcomingHealthCheckup ?? 0}</p>
         </div>
       </section>
-      <IncidentReportBarChart data={toChartData(incidentData)} />
+      <IncidentReportBarChart data={incidentData} />
       <DashboardTables healthCheckupEvents={healthCheckupEvents} vaccineCheckupEvents={vaccineCheckupEvents} />
 
     </main>

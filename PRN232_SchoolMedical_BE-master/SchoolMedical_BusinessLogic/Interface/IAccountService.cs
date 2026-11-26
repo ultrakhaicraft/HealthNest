@@ -25,6 +25,7 @@ public interface IAccountService
 	public Task<List<StudentDetailModel>> getStudentsByParentId(string parentId);
 	public Task AssignStudentToParent(string parentId, List<string> ListOfStudentId);
 	public Task<StudentDetailModel> GetStudentAccountsAsync(StudentQuery request);
+	public Task<UserCountStatistic> GetUserStatistic();
 
 
 }

@@ -1,5 +1,5 @@
 import { UserRole } from "../../feature/Constant";
-import { AccountDetailModel, AccountCreateRequest, AccountUpdateRequest } from "../AccountModel";
+import { AccountDetailModel, AccountCreateRequest, AccountUpdateRequest, RegisterRequest } from "../AccountModel";
 
 // --- Parent Models ---
 export interface ParentDetailModel extends AccountDetailModel {
@@ -8,7 +8,7 @@ export interface ParentDetailModel extends AccountDetailModel {
   incomeLevel?: string;
 }
 
-export interface CreateParentModel extends AccountCreateRequest {
+export interface CreateParentModel extends RegisterRequest {
   relationshipStatus: string;
   incomeLevel: string;
 }

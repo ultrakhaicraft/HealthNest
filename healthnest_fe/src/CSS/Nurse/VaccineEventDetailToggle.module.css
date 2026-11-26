@@ -1,0 +1,85 @@
+.toggleBtn {
+    width: 100%;
+    min-height: 2.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.65rem 1rem;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    color: #4683e5;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.toggleBtn:hover {
+    background-color: #f5f8ff;
+    border-color: #9bb9e8;
+    box-shadow: 0 2px 6px rgba(29, 40, 114, 0.12);
+}
+
+.toggleBtn:focus-visible {
+    outline: 3px solid rgba(70, 131, 229, 0.4);
+    outline-offset: 2px;
+}
+
+.detailWrapper {
+    width: 80%;
+    margin: 3rem 11rem;
+}
+
+.detailCollapse {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+        grid-template-rows 0.3s ease,
+        opacity 0.2s ease,
+        visibility 0s linear 0.3s;
+}
+
+.detailCollapseOpen {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    visibility: visible;
+    transition:
+        grid-template-rows 0.3s ease,
+        opacity 0.2s ease;
+}
+
+.detailCollapseInner {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.detailGroup {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    padding: 2rem;
+    margin:10px;
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+}
+
+
+.arrow {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+
+}
+
+
+
+.fullWidth {
+    grid-column: 1 / span 2;
+}

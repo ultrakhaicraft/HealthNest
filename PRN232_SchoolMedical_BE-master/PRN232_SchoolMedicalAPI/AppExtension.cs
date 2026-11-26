@@ -120,10 +120,17 @@ public static class AppExtension
 				{
 					OnMessageReceived = context =>
 					{
-						if (context.Request.Cookies.ContainsKey("access_token"))
+						if (string.IsNullOrEmpty(context.Token)
+							&& !context.Request.Headers.ContainsKey("Authorization")
+							&& context.Request.Cookies.TryGetValue("access_token", out var token))
 						{
-							context.Token = context.Request.Cookies["access_token"];
+							context.Token = token;
 						}
+						return Task.CompletedTask;
+					},
+					OnAuthenticationFailed = context =>
+					{
+						Console.WriteLine($"JWT validation failed: {context.Exception.Message}");
 						return Task.CompletedTask;
 					}
 				};

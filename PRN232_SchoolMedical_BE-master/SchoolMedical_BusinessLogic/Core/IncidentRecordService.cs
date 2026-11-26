@@ -61,7 +61,7 @@ public class IncidentRecordService : IIncidentRecordService
 		.ToListAsync();
 
 
-		var pagedResult = await PagingExtension.ToPagingModel(pageData, totalCount, request.PageIndex, request.PageSize);
+		var pagedResult = PagingExtension.ToPagingModel(pageData, totalCount, request.PageIndex, request.PageSize);
 
 		return pagedResult;
 	}

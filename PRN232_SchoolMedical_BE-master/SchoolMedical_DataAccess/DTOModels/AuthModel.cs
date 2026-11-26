@@ -23,21 +23,41 @@ public class LoginResponse
 
 }
 
-	public class RegisterRequest
+public record RegisterRequest
 {
 	[Required]
-	public string? FullName { get; set; }
+	public required string FullName { get; set; }
 	[Required]
-	public string? Email { get; set; }
+	public required string Email { get; set; }
 	[Required]
-	public string? Password { get; set; }
+	public required string Password { get; set; }
 	[Required]
-	public string? ConfirmPassword { get; set; }
+	public required string ConfirmPassword { get; set; }
+	
 	[Required]
-	public string? PhoneNumber { get; set; } 
+	public required string Address { get; set; }
 	[Required]
-	public string? Address { get; set; }
+	public required string Gender { get; set; }  //Male or Female
+	[Required]
+	public DateTime DateOfBirth { get; set; }   //Time should be default to 0 o'clock
 
+}
+
+public record StudentRegisterRequest : RegisterRequest
+{
+	public string PhoneNumber { get; set; } = "N/A"; //Optional, if empty, fill with 'N/A'
+	[Required]
+	public required string Class {  get; set; }
+}
+
+public record ParentRegisterRequest : RegisterRequest
+{
+	[Required]
+	public required string PhoneNumber { get; set; }
+	[Required]
+	public string RelationshipStatus { get; set; } = null!;
+	[Required]
+	public string IncomeLevel { get; set; } = null!;
 }
 
 

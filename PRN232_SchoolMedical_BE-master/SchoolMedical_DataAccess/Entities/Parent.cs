@@ -14,6 +14,6 @@ public partial class Parent
 	public virtual Account Account { get; set; } = null!;
 	public virtual ICollection<Student> Children { get; set; } = new List<Student>(); //List of children from this Parent
 	public virtual ICollection<Medicinerequest> MedicinerequestRequestByNavigations { get; set; } = new List<Medicinerequest>(); //Parent class
-
+	public virtual ICollection<VaccineeventStudent> VaccineEventSignUp { get; set; } = new List<VaccineeventStudent>(); 
 
 }

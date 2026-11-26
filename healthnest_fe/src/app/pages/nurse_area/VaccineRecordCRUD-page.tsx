@@ -136,6 +136,7 @@ export default function VaccineRecordCRUDPage() {
         onEdit={(vaccineRecord) => handleEdit(vaccineRecord.id)}
         onDelete={(vaccineRecordId) => modal.openDelete(vaccineRecordId)}
         onCreate={modal.openCreate}
+        onRefresh={() => { void vaccineRecord.refetch(); }}
       />
       {modal.state.type === 'view' && (
         <VaccineRecordViewDetailModal

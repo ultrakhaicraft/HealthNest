@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { MedicineQueryParams } from "../../feature/API/MedicineService";
 import filterStyles from '../../CSS/Nurse/NurseCRUDPanel.module.css';
 import { StudentLinkRequestQuery } from "../../models/StudentLinkRequestModel";
 
 interface StudentLinkRequestFilterProps {
     filters: StudentLinkRequestQuery;
-    onApplyFilters: (filters: MedicineQueryParams) => void;
+    onApplyFilters: (filters: StudentLinkRequestQuery) => void;
     onClearFilters: () => void;
 }
 

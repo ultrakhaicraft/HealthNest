@@ -21,11 +21,7 @@ public enum AccountStatus
 	Inactive, //Soft Delete
 }
 
-public enum IsAvailable
-{
-	Yes=1,
-	No=0
-}
+
 
 //Used for RecordStatus
 public enum RecordStatus
@@ -47,18 +43,30 @@ public enum RequestStatus
 //Exclusive for HealthCheckup and VaccineTitle Event
 public enum EventStatus
 {
-	Upcoming,
-	Ongoing,
+	Pending, //Upon creation
+	Signup,   //During Signup Start and Signup End, 
+	Upcoming,  //After Signup period and before actual occurred date where the vaccine checkup happened
+	Ongoing,  //The event is happening
 	Completed,
 	Cancelled,
 	
+}
+
+public enum AttentdanceStatus
+{
+	Pending,
+	Approved,
+	Completed,
+	Cancelled,
+	Rejected,
 }
 
 public enum StudentHealthStatus
 {
 	Healthy,
 	Minor,
-	Critical
+	Critical,
+	Recovering
 }
 
 //Exclusive for IncidentRecord

@@ -5,6 +5,7 @@ import { NurseHeader } from '../../../components/NurseHeader';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { getActiveItemFromPath, userouteForLabel } from '../../../feature/Hooks/Other/RouterHooks';
 import { UserRole } from '../../../feature/Constant';
+import StaffSideNav from '../../../components/StaffSideNav';
 
 
 
@@ -29,7 +30,7 @@ export default function NurseHomePage() {
 
     return (
         <div style={{ display: 'flex', minHeight: '100vh' }}>
-            <NurseSideNav activeItem={activeItem} onSelect={handleSelect} />
+            <StaffSideNav activeItem={activeItem} onSelect={handleSelect} />
             <div className='main-page-container' style={{ flex: 1, padding: '2rem', backgroundColor: '#e8effa' }}>
                 <NurseHeader username={username} role="Nurse" onSelect={handleSelect}/>
                 <Outlet /> {/* renders whichever nested route matched */}

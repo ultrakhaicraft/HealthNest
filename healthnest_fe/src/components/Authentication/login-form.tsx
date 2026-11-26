@@ -46,7 +46,7 @@ export const LoginForm = ({ handleInputChange, handleSubmit, isLoading, error }:
           {isLoading ? 'Logging in...' : 'Login'}
         </button>
       </form>
-      <div className='register-link'>
+      <div className={loginStyles.registerLink}>
         <p>Don't have an account? <a href="/register">Register here</a></p>
       </div>
     </div>

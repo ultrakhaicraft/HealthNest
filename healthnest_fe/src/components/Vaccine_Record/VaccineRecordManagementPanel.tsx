@@ -6,6 +6,7 @@ import { StatusBadge } from "../StatusBadge";
 import styles from '../../CSS/Nurse/NurseCRUDPanel.module.css';
 import { VaccineRecordQuery, VaccineRecordViewModel } from "../../models/VaccineRecordModel";
 import { VaccineRecordFilter } from "./VaccineRecordFilter";
+import { RefreshButton } from "../RefreshButton";
 
 
 
@@ -33,11 +34,12 @@ interface VaccineRecordManagementPanelProps {
   onEdit: (incident: VaccineRecordViewModel) => void;
   onDelete: (incidentId: string) => void;
   onCreate: () => void;
+  onRefresh: () => void;
 }
 
-export const VaccineRecordManagementPanel = ({ 
+export const VaccineRecordManagementPanel = ({
   vaccineRecordData = [], loading, pagination, filterState,
-  onView, onEdit, onDelete, onCreate }: VaccineRecordManagementPanelProps) => {
+  onView, onEdit, onDelete, onCreate, onRefresh }: VaccineRecordManagementPanelProps) => {
   return (
     <div className={styles.crudContainer}>
       <div className={styles.crudHeader}>
@@ -46,9 +48,11 @@ export const VaccineRecordManagementPanel = ({
           <p className={styles.crudSubtitle}>Manage student vaccine records uch as create, update, and delete</p>
         </div>
         <div className={styles.crudActions}>
+          <RefreshButton onRefresh={onRefresh} loading={loading} />
+
           <button className="button button-secondary button-large" onClick={filterState.onToggle}>
-                      <IconFilter />
-                      {filterState.show ? 'Hide Filters' : 'Show Filters'}
+            <IconFilter />
+            {filterState.show ? 'Hide Filters' : 'Show Filters'}
           </button>
           <button className="button button-primary button-large" onClick={onCreate}>
             <IconPlus />
@@ -58,13 +62,13 @@ export const VaccineRecordManagementPanel = ({
       </div>
 
       {filterState.show && (
-              <VaccineRecordFilter 
-              filters={filterState.value}
-              onClearFilters={filterState.onClear} 
-              onApplyFilters={filterState.onApply} 
-              />
+        <VaccineRecordFilter
+          filters={filterState.value}
+          onClearFilters={filterState.onClear}
+          onApplyFilters={filterState.onApply}
+        />
       )}
-      
+
       <div className={styles.crudTableWrapper}>
         <div className={styles.crudTableInfo}>
           <span>Total: {pagination.totalItems} items</span>
@@ -111,7 +115,7 @@ export const VaccineRecordManagementPanel = ({
                     <button className={styles.actionButton} onClick={() => onEdit(vaccineRecord)} disabled={loading}>
                       <IconEdit />
                     </button>
-                    <button className={`${styles.actionButton} ${styles.actionDelete}`} 
+                    <button className={`${styles.actionButton} ${styles.actionDelete}`}
                       onClick={() => onDelete(vaccineRecord.id)} disabled={loading}>
                       <IconDelete />
                     </button>
@@ -122,10 +126,10 @@ export const VaccineRecordManagementPanel = ({
           </tbody>
         </table>
 
-        <PaginationControls 
-                  currentPage={pagination.currentPage}
-                  totalPages={pagination.totalPages}
-                  onPageChange={pagination.onPageChange}
+        <PaginationControls
+          currentPage={pagination.currentPage}
+          totalPages={pagination.totalPages}
+          onPageChange={pagination.onPageChange}
         />
       </div>
     </div>

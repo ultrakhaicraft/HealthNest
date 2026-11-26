@@ -7,7 +7,7 @@ const studentNavItems = [
   { label: 'My Health Record' },
 ];
 
-export default function StudentHomeNavBar({ activeItem, onSelect }: UserHomeNavBarProps) {
+export default function StudentHomeNavBar({ activeItem, onSelect, username }: UserHomeNavBarProps) {
   return (
     <header className={styles.header}>
       <div className={styles.headerContainer}>
@@ -27,7 +27,7 @@ export default function StudentHomeNavBar({ activeItem, onSelect }: UserHomeNavB
             ))}
           </ul>
         </nav>
-        <ProfileDropdown onSelect={onSelect} />
+        <ProfileDropdown username={username} />
       </div>
     </header>
   );

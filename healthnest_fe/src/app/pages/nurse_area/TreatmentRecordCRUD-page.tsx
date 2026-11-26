@@ -137,6 +137,7 @@ export default function TreatmentRecordCRUDPage() {
                 onEdit={(treatmentRecords) => handleEdit(treatmentRecords.id)}
                 onDelete={(treatmentRecordsId) => modal.openDelete(treatmentRecordsId)}
                 onCreate={modal.openCreate}
+                onRefresh={() => { void treatmentRecords.refetch(); }}
             />
             {modal.state.type === 'view' && (
                 <TreatmentRecordViewDetailModal

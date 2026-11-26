@@ -74,6 +74,7 @@ export default function ViewStudentHealthRecordPage() {
         onDelete={()=>{}}
         onCreate={()=>{}}
         userRole={userRole ?? UserRole.Parent}
+        onRefresh={()=>{ void studentHealthRecords.refetch()}}
       />
 
       <Toast

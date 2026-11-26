@@ -2,6 +2,7 @@ import styles from '../../CSS/Nurse/NurseCRUDPanel.module.css';
 import { TreatmentRecordQuery, TreatmentRecordViewModel } from '../../models/TreatmentRecordModel';
 import { IconFilter, IconPlus, IconView, IconEdit, IconDelete } from '../IconList';
 import { PaginationControls } from '../PaginationControls';
+import { RefreshButton } from '../RefreshButton';
 import { StatusBadge } from '../StatusBadge';
 import { VaccineRecordFilter } from '../Vaccine_Record/VaccineRecordFilter';
 import { TreatmentRecordFilter } from './TreatmentRecordFilter';
@@ -31,11 +32,12 @@ interface TreatmentRecordManagementPanelProps {
   onEdit: (incident: TreatmentRecordViewModel) => void;
   onDelete: (incidentId: string) => void;
   onCreate: () => void;
+  onRefresh: () => void;
 }
 
-export const TreatmentRecordManagementPanel = ({ 
+export const TreatmentRecordManagementPanel = ({
   treatmentRecordData = [], loading, pagination, filterState,
-  onView, onEdit, onDelete, onCreate }: TreatmentRecordManagementPanelProps) => {
+  onView, onEdit, onDelete, onCreate, onRefresh }: TreatmentRecordManagementPanelProps) => {
   return (
     <div className={styles.crudContainer}>
       <div className={styles.crudHeader}>
@@ -44,9 +46,11 @@ export const TreatmentRecordManagementPanel = ({
           <p className={styles.crudSubtitle}>Manage student treatment records uch as create, update, and delete</p>
         </div>
         <div className={styles.crudActions}>
+          <RefreshButton onRefresh={onRefresh} loading={loading} />
+
           <button className="button button-secondary button-large" onClick={filterState.onToggle}>
-                      <IconFilter />
-                      {filterState.show ? 'Hide Filters' : 'Show Filters'}
+            <IconFilter />
+            {filterState.show ? 'Hide Filters' : 'Show Filters'}
           </button>
           <button className="button button-primary button-large" onClick={onCreate}>
             <IconPlus />
@@ -56,13 +60,13 @@ export const TreatmentRecordManagementPanel = ({
       </div>
 
       {filterState.show && (
-              <TreatmentRecordFilter 
-              filters={filterState.value}
-              onClearFilters={filterState.onClear} 
-              onApplyFilters={filterState.onApply} 
-              />
+        <TreatmentRecordFilter
+          filters={filterState.value}
+          onClearFilters={filterState.onClear}
+          onApplyFilters={filterState.onApply}
+        />
       )}
-      
+
       <div className={styles.crudTableWrapper}>
         <div className={styles.crudTableInfo}>
           <span>Total: {pagination.totalItems} items</span>
@@ -109,7 +113,7 @@ export const TreatmentRecordManagementPanel = ({
                     <button className={styles.actionButton} onClick={() => onEdit(treatment)} disabled={loading}>
                       <IconEdit />
                     </button>
-                    <button className={`${styles.actionButton} ${styles.actionDelete}`} 
+                    <button className={`${styles.actionButton} ${styles.actionDelete}`}
                       onClick={() => onDelete(treatment.id)} disabled={loading}>
                       <IconDelete />
                     </button>
@@ -120,10 +124,10 @@ export const TreatmentRecordManagementPanel = ({
           </tbody>
         </table>
 
-        <PaginationControls 
-                  currentPage={pagination.currentPage}
-                  totalPages={pagination.totalPages}
-                  onPageChange={pagination.onPageChange}
+        <PaginationControls
+          currentPage={pagination.currentPage}
+          totalPages={pagination.totalPages}
+          onPageChange={pagination.onPageChange}
         />
       </div>
     </div>

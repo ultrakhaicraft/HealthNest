@@ -83,6 +83,25 @@
   background-color: #f9fafb;
   padding: 1rem;
   border-radius: 0.5rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #777;
+  padding: 0.25rem 0.25rem;
+  font-size: 0.875rem;  
 }
 
+
+.inputGroup select{
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1em;
+  
+}
+
+.inputGroup select:after{
+  content: "";
+  width: 0.8em;
+  height: 0.5em;
+  background-color: var(--select-arrow);
+  clip-path: polygon(100% 0%, 0 0%, 50% 100%);
+}

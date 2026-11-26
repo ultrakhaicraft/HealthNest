@@ -4,7 +4,7 @@ import { Routes, Route } from 'react-router-dom';
 import { ProtectedRoute } from './ProtectedRoute';
 import { UserRole } from '../feature/Constant';
 import { NurseDashboard } from './pages/nurse_area/NurseDashboard-page';
-import { Spinner } from '../components/Spinner';
+import { FullPageSpinner, Spinner } from '../components/Spinner';
 
 
 // Lazy load all the pages/routes
@@ -25,6 +25,7 @@ const ParentHomepage = React.lazy(() => import('./pages/parent_area/ParentHomePa
 const ParentMedicineRequestCRUDPage = React.lazy(() => import('./pages/parent_area/ParentMedicineRequestCRUD-page'));
 const ParentUserProfile = React.lazy(() => import('./pages/parent_area/ParentUserProfile-Page'));
 const ManageStudentPage = React.lazy(() => import('./pages/parent_area/StudentManagementPage'));
+const VaccineEventSignUpPage = React.lazy(() => import('./pages/parent_area/VaccineEventSignUpPage'));
 
 //Nurse
 const NurseHomepage = React.lazy(() => import('../app/pages/nurse_area/NurseHome-page'));
@@ -36,7 +37,15 @@ const MedicineRequestCRUDPage = React.lazy(() => import('../app/pages/nurse_area
 const VaccineRecordCRUDPage = React.lazy(() => import('../app/pages/nurse_area/VaccineRecordCRUD-page'));
 const TreatmentRecordCRUDPage = React.lazy(() => import('../app/pages/nurse_area/TreatmentRecordCRUD-page'));
 const StudentLinkRequestCRUDPage = React.lazy(() => import('../app/pages/nurse_area/StudentLinkRequestCRUD-page'));
+const VaccineEventsViewPage = React.lazy(() => import('../app/pages/nurse_area/VaccineEventManagement-page'));
+const VaccineEventStudentManagementPage = React.lazy(() => import('../app/pages/nurse_area/VaccineEventStudentCRUD-page'));
 
+
+
+//Admin
+const AdminHomepage = React.lazy(() => import('../app/pages/admin_area/AdminPageContainer'));
+const AdminDashboardPage = React.lazy(() => import('../app/pages/admin_area/AdminDashboardPage'));
+const VaccineEventCRUDPage = React.lazy(() => import('../app/pages/admin_area/VaccineEventCRUD-page'));
 
 
 //Others
@@ -51,18 +60,7 @@ const StudentHealthRecordCRUDPage = React.lazy(() => import('../app/pages/nurse_
 
 
 
-// A simple component to center the spinner
-const FullPageSpinner = () => (
-  <div style={{
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100vh',
-    width: '100vw',
-  }}>
-    <Spinner size="large" />
-  </div>
-);
+
 
 export const AppRouter = () => {
 
@@ -97,6 +95,9 @@ export const AppRouter = () => {
           <Route path="vaccine-record" element={<VaccineRecordCRUDPage />} />
           <Route path="treatment-record" element={<TreatmentRecordCRUDPage />} />
           <Route path="student-link-request" element={<StudentLinkRequestCRUDPage />} />
+          <Route path="vaccine-event" element={<VaccineEventsViewPage />} />
+
+
         </Route>
 
         <Route path="/parent" element={
@@ -107,12 +108,32 @@ export const AppRouter = () => {
           <Route path="medicine-request" element={<ParentMedicineRequestCRUDPage />} />
           <Route path="student" element={<ManageStudentPage />} />
           <Route path="student-health-record" element={<StudentHealthRecordViewPage />} />
+          <Route path="vaccine-event-sign-up" element={<VaccineEventSignUpPage />} />
         </Route>
 
 
-        <Route path="/studentHomepage" element={
+        <Route path="/admin" element={
+          <ProtectedRoute allowedRoles={[UserRole.Admin]}><AdminHomepage /></ProtectedRoute>
+        }>
+          <Route index element={<AdminDashboardPage />} />
+          {/* <Route path="user-profile" element={<AdminUserProfile />} /> */}
+          <Route path="vaccine-event" element={<VaccineEventCRUDPage />} />
+
+        </Route>
+
+
+        <Route path="/student" element={
           <ProtectedRoute allowedRoles={[UserRole.Student]}><StudentHomepage /></ProtectedRoute>
         } />
+
+        {/*Different page but still protect based on role*/}
+        <Route path="nurse/vaccine-event/:eventId/signups"
+          element={
+            <ProtectedRoute allowedRoles={[UserRole.Nurse]}>
+              <VaccineEventStudentManagementPage />
+            </ProtectedRoute>
+          }>
+        </Route>
 
 
         <Route path="/student-records/:id" element={
@@ -124,10 +145,6 @@ export const AppRouter = () => {
           <Route path="vaccines" element={<VaccineTabView />} />
           <Route path="treatments" element={<TreatmentTabView />} />
         </Route>
-
-
-
-
 
       </Routes>
     </Suspense>

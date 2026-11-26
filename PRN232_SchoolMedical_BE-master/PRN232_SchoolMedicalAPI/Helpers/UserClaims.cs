@@ -20,7 +20,9 @@ namespace HealthNest_API.Helpers
 			{
 				Console.WriteLine("Claims is empty, might due to Token not found or transfer here failed");
 			}
-			var userId = claims.FirstOrDefault(claims => claims.Type == "id")?.Value;
+			var userId = claims.FirstOrDefault(claims => claims.Type == "AccountId")?.Value;
+			if (string.IsNullOrEmpty(userId))
+				throw new UnauthorizedAccessException("User id claim not found in token.");
 			return userId ?? "";
 		}
 

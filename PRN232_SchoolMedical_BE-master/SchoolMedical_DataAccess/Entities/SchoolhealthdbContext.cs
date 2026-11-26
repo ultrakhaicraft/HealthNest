@@ -408,8 +408,9 @@ public partial class SchoolhealthdbContext : DbContext
 		{
 			entity.ToTable("vaccineevent_student");
 
-			entity.HasKey(e => new { e.VaccineeventId, e.StudentId });
+			entity.HasKey(e => e.SignUpId).HasName("PRIMARY"); 
 
+			entity.Property(e => e.SignUpId).HasMaxLength(50);
 			entity.Property(e => e.VaccineeventId).HasMaxLength(50);
 			entity.Property(e => e.StudentId).HasMaxLength(50);
 			entity.Property(e => e.SignupDate).HasColumnType("datetime");
@@ -427,6 +428,22 @@ public partial class SchoolhealthdbContext : DbContext
 				  .HasForeignKey(e => e.StudentId)
 				  .OnDelete(DeleteBehavior.Cascade)
 				  .HasConstraintName("FK_VaccineeventStudent_Student");
+
+			entity.HasOne(e => e.Parent)
+				  .WithMany(a => a.VaccineEventSignUp)
+				  .HasForeignKey(e => e.RegisteredByParent)
+				  .OnDelete(DeleteBehavior.Restrict)
+				  .HasConstraintName("FK_VaccineeventStudent_Parent");
+
+			entity.HasOne(e => e.Nurse)
+				  .WithMany(a => a.VaccineEventStudentChecked)
+				  .HasForeignKey(e => e.CheckedBy)
+				  .OnDelete(DeleteBehavior.SetNull)
+				  .HasConstraintName("FK_VaccineeventStudent_Nurse");
+
+			entity.HasIndex(e => new { e.VaccineeventId, e.StudentId })
+					.IsUnique()
+					.HasDatabaseName("UX_VaccineeventStudent_Event_Student");
 		});
 
 

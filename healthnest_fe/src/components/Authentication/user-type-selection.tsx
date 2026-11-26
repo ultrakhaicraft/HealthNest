@@ -1,5 +1,4 @@
 import registerStyles from '../../CSS/Guest/AuthLayout.module.css';
-import inputStyles from '../../CSS/InputField.module.css';
 
 interface UserTypeSelectionProps {
     onSelectUserType: (userType: string) => void;

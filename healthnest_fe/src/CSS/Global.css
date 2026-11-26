@@ -24,7 +24,7 @@ html{
 html,
 body {
   max-width: 100vw;
-  overflow-x: hidden;
+  overflow-x:clip;
 }
 
 body {
@@ -109,8 +109,12 @@ body {
 
 .main-page-container {
   min-height: 100vh;
+  flex: 1; /* Move flex-grow here instead of the inline style */
 }
 
+.no-link{
+  text-decoration: none;
+}
 
 
 

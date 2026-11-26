@@ -1,0 +1,9 @@
+.mainPageContainer {
+  min-height: 100vh;
+  flex: 1; /* Move flex-grow here instead of the inline style */
+}
+
+.eventPageContainer{
+  min-height: 100vh;
+  padding: 2rem;
+}
