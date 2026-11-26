@@ -32,7 +32,7 @@ interface VaccineEventManagementPanelProps {
     onDelete: (vaccineEventId: string) => void;
     onCreate: () => void;
     onRefresh: () => void;
-    handleRedirectToSignUp:(eventId: string) => void;
+    handleRedirectToSignUp:(eventId: string, eventInfo: ViewVaccineEventDTO) => void;
     IsAdmin: boolean;
 }
 // Main CRUD component for vaccines
@@ -118,7 +118,7 @@ export const VaccineEventManagementPanel = ({
                                         </button>
                                         {!IsAdmin && (<>
                                             <button className='button button-secondary button-small' 
-                                                    onClick={() => handleRedirectToSignUp(vaccinEvent.id)} 
+                                                    onClick={() => handleRedirectToSignUp(vaccinEvent.id, vaccinEvent)} 
                                                     disabled={loading}
                                                     >
                                                 View Signups

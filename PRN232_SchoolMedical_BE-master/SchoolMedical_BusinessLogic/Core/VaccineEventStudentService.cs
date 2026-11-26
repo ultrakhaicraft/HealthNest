@@ -171,7 +171,7 @@ public class VaccineEventStudentService : IVaccineEventStudentService
 	/// <exception cref="NotFoundException"></exception>
 	/// <exception cref="BadRequestException"></exception>
 
-	public async Task SignUpStudentAsync(CreateVaccineEventStudentModel request, string parentId)
+	public async Task SignUpStudentAsync(CreateVaccineEventStudentModel request, string parentId, bool IsSignUpAgain)
 	{
 		var query = _vaccineEventStudentRepository.GetQueryable();
 		//Check for event
@@ -207,16 +207,27 @@ public class VaccineEventStudentService : IVaccineEventStudentService
 
 		if (exisitingSignUp!=null)
 		{
-			if (exisitingSignUp.Status != AttentdanceStatus.Cancelled.ToString())
+			if (IsSignUpAgain)
 			{
-				throw new BadRequestException($"There is a duplicate vaccine participant data with student Id: {request.StudentId} and vaccine event id: {request.VaccineEventId}. Re sign up is" +
-				$"only allowed if the sign up status of the participant is cancelled");
-			}
+				if (exisitingSignUp.Status != AttentdanceStatus.Cancelled.ToString())
+				{
+					throw new BadRequestException($"There is a duplicate vaccine participant data with same student Id and vaccine event id Re sign up is" +
+					$" only allowed if the sign up status of the participant is cancelled");
+				}
 
-			exisitingSignUp.Note = request.Note;
-			exisitingSignUp.SignupDate = DateTime.Now;
-			exisitingSignUp.UpdatedAt = DateTime.Now;
-			exisitingSignUp.Status = AttentdanceStatus.Pending.ToString();
+				exisitingSignUp.Note = request.Note;
+				exisitingSignUp.SignupDate = DateTime.Now;
+				exisitingSignUp.UpdatedAt = DateTime.Now;
+				exisitingSignUp.Status = AttentdanceStatus.Pending.ToString();
+
+			}else
+			{
+				if (exisitingSignUp != null)
+				{
+					throw new BadRequestException($"There is a duplicate vaccine participant data with student Id and vaccine event id. Re sign up is" +
+					$"only allowed if the sign up status of the participant is cancelled through sign up buttons");
+				}
+			}
 		}
 		else
 		{
@@ -339,10 +350,11 @@ public class VaccineEventStudentService : IVaccineEventStudentService
 		}
 
 		//On update on the date of event and later on
-		var isDateSuitable = eventParticipant.Vaccineevent.DateOccurred.CompareTo(DateTime.Today);
-		if (isDateSuitable < 0)
+		var eventDate = eventParticipant.Vaccineevent.DateOccurred.Date;
+
+		if (DateTime.Today < eventDate)
 		{
-			throw new BadRequestException("Cannot change the participant status to complete if the vaccine event day haven't occurred");
+			throw new BadRequestException("Cannot change the participant status to complete if the vaccine event day hasn't occurred yet.");
 		}
 
 		// Validate if the status value is suitable for update

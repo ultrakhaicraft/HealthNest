@@ -30,6 +30,7 @@ interface VaccineEventStudentManagementPanelProps {
     filterState: FilterState;
     onView: (eventId: string, studentId: string) => void;
     onSignUp: () => void;
+    onSignUpAgain: (eventId: string, studentId: string) => void;
     onRefresh: () => void;
     onEdit: (eventId: string, studentId: string) => void;
     onCancel: (eventId: string, studentId: string) => void;
@@ -38,7 +39,7 @@ interface VaccineEventStudentManagementPanelProps {
 
 export const VaccineEventStudentViewPanel = ({
     vaccineEventStudentData = [], loading, pagination, filterState,
-    onView, onSignUp, onRefresh, onEdit, onCancel }:
+    onView, onSignUp, onRefresh, onEdit, onCancel, onSignUpAgain }:
     VaccineEventStudentManagementPanelProps) => {
 
     const convertToRowKey = (studentId: string, eventId: string): string => {
@@ -126,6 +127,12 @@ export const VaccineEventStudentViewPanel = ({
                                             </button>
                                             <button className="button button-secondary button-small" onClick={() => onCancel(participant.vaccineeventId, participant.studentId)} disabled={loading}>
                                                 Cancel
+                                            </button>
+                                        </>)}
+
+                                        {participant.status=='Cancelled' &&(<>                                 
+                                            <button className="button button-secondary button-small" onClick={() => onSignUpAgain(participant.vaccineeventId, participant.studentId)} disabled={loading}>
+                                                Sign Up Again
                                             </button>
                                         </>)}
                                     </div>

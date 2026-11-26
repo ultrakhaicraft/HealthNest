@@ -9,8 +9,6 @@
 import { useState } from "react";
 import { useVaccineEvent } from "../../../feature/Hooks/VaccineEvent/useVaccineEvent";
 import { VaccineEventQueryParams } from "../../../models/VaccineEventModel";
-import { VaccineEventViewDetail } from "../../../components/Vaccine_Event/VaccinEventDetail";
-import { useVaccineEventModals } from "../../../feature/Hooks/VaccineEvent/useVaccineEventModal";
 import { VaccineEventManagementPanel } from "../../../components/Vaccine_Event/VaccineEventManagementPanel";
 import { Toast } from "../../../components/Notification/Toast";
 import { useNavigate } from "react-router-dom";
@@ -28,15 +26,10 @@ export default function VaccineEventManagementPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<VaccineEventQueryParams>(DEFAULT_FILTER);
   const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' as 'success' | 'error' });
-  const [actionLoading, setActionLoading] = useState(false);
 
   const vaccineEvents = useVaccineEvent(filters);
-  const modal = useVaccineEventModals();
   const navigate = useNavigate();
 
-  const handleShowToast = (message: string, type: 'success' | 'error') => {
-    setToast({ isVisible: true, message, type });
-  };
 
   const handleCloseToast = () => {
     setToast({ ...toast, isVisible: false });
@@ -56,17 +49,10 @@ export default function VaccineEventManagementPage() {
 
 
 
-  // --- View ---
-  const handleView = async (id: string) => {
-    try {
-      const data = await vaccineEvents.getById(id);
-      modal.openView(data);
-    } catch {
-      handleShowToast('Failed to load vaccine Event details.', 'error');
-    }
-  };
+  
 
   const handleRedirectToSignUp = (eventId: string) => {
+    //Pass some data info
     navigate(`/nurse/vaccine-event/${eventId}/signups`)
   }
 
@@ -91,21 +77,15 @@ export default function VaccineEventManagementPage() {
           onApply: handleApplyFilters,
           onClear: handleClearFilters,
         }}
-        onView={handleView}
-        onEdit={() => { }}
-        onDelete={() => { }}
-        onCreate={() => { }}
+        onView={() => {}}
+        onEdit={() => {}}
+        onDelete={() => {}}
+        onCreate={() => {}}
         onRefresh={() => { void vaccineEvents.refetch(); }}
         handleRedirectToSignUp={handleRedirectToSignUp}
         IsAdmin={false}
       />
-      {modal.state.type === 'view' && (
-        <VaccineEventViewDetail
-          vaccineEvent={modal.state.vaccineEvent}
-          isOpen={true}
-          onClose={modal.close}
-        />
-      )}
+      
 
 
       <Toast

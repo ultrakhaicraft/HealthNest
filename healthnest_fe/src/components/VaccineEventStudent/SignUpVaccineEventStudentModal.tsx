@@ -18,7 +18,10 @@ import { FALLBACK_AVATAR } from '../../feature/Constant';
 interface SignUpVaccineEventModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (payload: CreateVaccineEventStudentModel) => void;
+  onSubmit: (payload: CreateVaccineEventStudentModel, IsSignUpAgain: boolean) => void;
+  passedEventId?: string;
+  passedStudentId?: string;
+  IsSignUpAgain: boolean;
 }
 
 
@@ -39,7 +42,7 @@ const eventCustomQuery: VaccineEventQueryParams = {
 
 
 
-const SignUpVaccineEventModal = ({ isOpen, onClose, onSubmit }: SignUpVaccineEventModalProps) => {
+const SignUpVaccineEventModal = ({ isOpen, onClose, onSubmit, passedEventId, passedStudentId, IsSignUpAgain }: SignUpVaccineEventModalProps) => {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -57,10 +60,10 @@ const SignUpVaccineEventModal = ({ isOpen, onClose, onSubmit }: SignUpVaccineEve
 
   const validate = () => {
     const errs: { [key: string]: string } = {};
-    if (!form.studentId.trim()) {
+    if (!form.studentId.trim() && !IsSignUpAgain) {
       errs.studentId = 'Student ID is required.';
     }
-    if (!form.eventId.trim()) {
+    if (!form.eventId.trim() && !IsSignUpAgain) {
       errs.eventId = 'Event Id is required.';
     }
     if (!form.note.trim()) {
@@ -95,12 +98,21 @@ const SignUpVaccineEventModal = ({ isOpen, onClose, onSubmit }: SignUpVaccineEve
     if (Object.keys(errs).length > 0) return;
     setIsSubmitting(true);
 
+    //Set the IDs based on if the user sign up again or not
+
+    const studentId = IsSignUpAgain? passedStudentId?.trim() ?? "": form.studentId.trim();
+    const eventId = IsSignUpAgain? passedEventId?.trim() ?? "": form.eventId.trim();
+    console.log("Test submit")
+    console.log(studentId);
+    console.log(eventId);
+    console.log(IsSignUpAgain);
     try {
       onSubmit({
-        studentId: form.studentId.trim(),
-        vaccineEventId: form.eventId.trim(),
+        studentId: studentId,
+        vaccineEventId: eventId,
         note: form.note.trim(),
-      });
+      },
+    IsSignUpAgain);
 
     } finally {
       setIsSubmitting(false);
@@ -115,43 +127,62 @@ const SignUpVaccineEventModal = ({ isOpen, onClose, onSubmit }: SignUpVaccineEve
       <ModalForm onSubmit={handleSubmit}>
 
 
-        <ModalField label="1. Select your child" htmlFor="student-table" error={errors.studentId}>
-          <StudentTable
-            loading={students.loading}
-            data={students.students}
-            selectedId={form.studentId}
-            onSelect={(id: string) => handleSelect('studentId', id)}
-          />
-        </ModalField>
+        {IsSignUpAgain ? (
+          <>
+            <h2>When Sign up again, you are unable to select the student and vaccine again</h2>
+            <h2>Submit Info</h2>
+            <ModalReadOnly label="Student (Only one per submission)" fullWidth>
+              <p>Id: {passedStudentId}</p>
+            </ModalReadOnly>
+            <ModalReadOnly label="Event (Only one per submission)" fullWidth>
+              <p>Id: {passedEventId}</p>
+            </ModalReadOnly>
+          </>
+        ) : (
+          <>
+            <ModalField label="1. Select your child" htmlFor="student-table" error={errors.studentId}>
+              <StudentTable
+                loading={students.loading}
+                data={students.students}
+                selectedId={form.studentId}
+                onSelect={(id: string) => handleSelect('studentId', id)}
+              />
+            </ModalField>
 
-        <ModalField label="2. Select a vaccine event" htmlFor="event-table" error={errors.eventId}>
-          <EventTable
-            loading={vaccineEvents.loading}
-            data={openEvents}
-            selectedId={form.eventId}
-            onSelect={(id: string) => handleSelect('eventId', id)}
-          />
-        </ModalField>
+            <ModalField label="2. Select a vaccine event" htmlFor="event-table" error={errors.eventId}>
+              <EventTable
+                loading={vaccineEvents.loading}
+                data={openEvents}
+                selectedId={form.eventId}
+                onSelect={(id: string) => handleSelect('eventId', id)}
+              />
+            </ModalField>
+            <h2>Submit Info</h2>
+            <ModalReadOnly label="Student (Only one per submission)" fullWidth>
+              {selectedStudent ? <>
+                <p>Name: {selectedStudent?.fullName}</p>
+                <p>Class: {selectedStudent?.class}</p>
+              </> : <>
+                <p className={crudStyles.erroMessageBox}>Student not selected, please select an student to sign up</p>
+              </>}
+            </ModalReadOnly>
+            <ModalReadOnly label="Event (Only one per submission)" fullWidth>
+              {selectedEvent ? <>
+                <p><strong></strong>Id: {selectedEvent?.id}</p>
+                <p>Title: {selectedEvent?.title}</p>
+                <p>Date Occur: {selectedEvent?.dateOccurred}</p></> :
+                <>
+                  <p className={crudStyles.erroMessageBox}>Event not selected, please select an event to sign up</p>
+                </>}
+            </ModalReadOnly>
+          </>
+        )}
 
 
-        <h2>Submit Info</h2>
-        <ModalReadOnly label="Student (Only one per submission)" fullWidth>
-          {selectedStudent ? <>
-            <p>Name: {selectedStudent?.fullName}</p>
-            <p>Class: {selectedStudent?.class}</p>
-          </> : <>
-            <p className={crudStyles.erroMessageBox}>Student not selected, please select an student to sign up</p>
-          </>}
-        </ModalReadOnly>
-        <ModalReadOnly label="Event (Only one per submission)" fullWidth>
-          {selectedEvent ? <>
-            <p><strong></strong>Id: {selectedEvent?.id}</p>
-            <p>Title: {selectedEvent?.title}</p>
-            <p>Date Occur: {selectedEvent?.dateOccurred}</p></> :
-            <>
-              <p className={crudStyles.erroMessageBox}>Event not selected, please select an event to sign up</p>
-            </>}
-        </ModalReadOnly>
+
+
+
+
 
         <ModalField label="Sign Up Note" htmlFor="note" error={errors.description}>
           <textarea

@@ -24,7 +24,7 @@ export const VaccineEventViewDetail: React.FC<VaccineEventViewProps> = ({ vaccin
                 <div className="detail-value detail-description">{vaccineEvent.content}</div>
                 <p><strong>Description:</strong></p>
                 <div className="detail-value detail-description">{vaccineEvent.shortDescription}</div>
-                <p><strong>Date Occurred of the event:</strong> {new Date(vaccineEvent.dateOccurred).toLocaleString()}</p>
+                <p><strong>Event Date Occur:</strong> {new Date(vaccineEvent.dateOccurred).toLocaleString()}</p>
                 <p><strong>Sign up Period:</strong> {new Date(vaccineEvent.dateSignupStart ?? "").toLocaleString()} to {new Date(vaccineEvent.dateSignupEnd ?? "").toLocaleString()}</p>
                 <p><strong>Status:</strong>
                     <StatusBadge status={vaccineEvent.status}></StatusBadge>

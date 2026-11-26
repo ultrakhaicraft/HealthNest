@@ -55,8 +55,8 @@ export function useVaccineEventStudent(
     }, []);
 
     const signUpStudentToEvent = useCallback(
-        async (payload: CreateVaccineEventStudentModel) => {
-            await VaccineEventStudentService.SignUpStudent(payload);
+        async (payload: CreateVaccineEventStudentModel, IsSignUpAgain: boolean) => {
+            await VaccineEventStudentService.SignUpStudent(payload,IsSignUpAgain);
             await refetch();
         },
         [refetch]

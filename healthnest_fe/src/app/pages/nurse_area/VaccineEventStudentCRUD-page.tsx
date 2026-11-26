@@ -5,10 +5,13 @@ import { useVaccineEventStudentModals } from "../../../feature/Hooks/VaccineEven
 import { VaccineEventStudentManagementPanel } from "../../../components/VaccineEventStudent/VaccineEventStudentManagementPanel";
 import { ViewVaccineEventStudentDetail } from "../../../components/VaccineEventStudent/VaccineEventStudentDetailModal";
 import { Toast } from "../../../components/Notification/Toast";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styles from "../../../CSS/MainPage.module.css";
 import { ConfirmationModal } from "../../../components/ConfirmationModal";
 import { CompleteVaccineEventStudentModal } from "../../../components/VaccineEventStudent/CompleteVaccineEventStudentModal";
+import { useVaccineEvent } from "../../../feature/Hooks/VaccineEvent/useVaccineEvent";
+import { VaccineCheckupEventService } from "../../../feature/API/VaccineCheckupEventService";
+import { VaccineEventDetailDTO } from "../../../models/VaccineEventModel";
 
 const DEFAULT_FILTER: VaccineEventStudentQuery = {
     pageIndex: 1,
@@ -26,6 +29,7 @@ export default function VaccineEventStudentManagementPage() {
     const [filters, setFilters] = useState<VaccineEventStudentQuery>(DEFAULT_FILTER);
     const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' as 'success' | 'error' });
     const [actionLoading, setActionLoading] = useState(false);
+    const [vaccineEventInfo, setVaccineEventInfo] = useState<VaccineEventDetailDTO>();
 
     const vaccineEventStudent = useVaccineEventStudent(filters, searchMode, undefined, eventId);
     const modal = useVaccineEventStudentModals();
@@ -50,15 +54,45 @@ export default function VaccineEventStudentManagementPage() {
         setFilters(DEFAULT_FILTER);
     };
 
+    const getById = useCallback(async (id: string): Promise<VaccineEventDetailDTO> => {
+        const vaccineEvent = await VaccineCheckupEventService.getById(id);
+        return vaccineEvent;
+    }, []);
 
+    useEffect(() => {
+        if (!eventId) return;
+
+        let isCurrent = true;
+
+        const loadEvent = async () => {
+            try {
+                const event = await getById(eventId);
+                if (isCurrent) setVaccineEventInfo(event);
+            } catch {
+                if (isCurrent) {
+                    setToast({
+                        isVisible: true,
+                        message: "Failed to load vaccine event details.",
+                        type: "error",
+                    });
+                }
+            }
+        };
+
+        void loadEvent();
+
+        return () => {
+            isCurrent = false;
+        };
+    }, [eventId, getById]);
 
     // --- View ---
     const handleView = async (eventId: string, studentId: string) => {
         try {
             const data = await vaccineEventStudent.getById(eventId, studentId);
             modal.openView(data);
-        } catch {
-            handleShowToast('Failed to load vaccine Event participant details.', 'error');
+        } catch (err: any) {
+            handleShowToast(err?.response?.data?.message || 'Failed to load vaccine Event participant details.', 'error');
         }
     };
 
@@ -69,8 +103,8 @@ export default function VaccineEventStudentManagementPage() {
             await vaccineEventStudent.approveStudentForEvent(eventId, studentId);
             handleShowToast('Approve sign up successfully!', 'success');
             modal.close();
-        } catch {
-            handleShowToast('Failed to approve vaccine event sign up.', 'error');
+        } catch (err: any) {
+            handleShowToast(err?.response?.data?.message || 'Failed to approve vaccine event sign up.', 'error');
         } finally {
             setActionLoading(false);
         }
@@ -83,8 +117,8 @@ export default function VaccineEventStudentManagementPage() {
             await vaccineEventStudent.rejectStudentFromEvent(eventId, studentId);
             handleShowToast('Reject sign up successfully!', 'success');
             modal.close();
-        } catch {
-            handleShowToast('Failed to reject vaccine event sign up.', 'error');
+        } catch (err: any) {
+            handleShowToast(err?.response?.data?.message || 'Failed to reject vaccine event sign up.', 'error');
         } finally {
             setActionLoading(false);
         }
@@ -96,8 +130,8 @@ export default function VaccineEventStudentManagementPage() {
             await vaccineEventStudent.CompleteStudentVaccineEvent(eventId, studentId, payload);
             handleShowToast('Check Complete for this attendant successfully!', 'success');
             modal.close();
-        } catch {
-            handleShowToast('Failed to Check Complete for this attendant.', 'error');
+        } catch (err: any) {
+            handleShowToast(err?.response?.data?.message || 'Failed to Check Complete for this attendant.', 'error');
         } finally {
             setActionLoading(false);
         }
@@ -107,9 +141,10 @@ export default function VaccineEventStudentManagementPage() {
     return (
         <>
 
-            <div className={styles.eventPageContainer}>
+            {vaccineEventInfo && (<div className={styles.eventPageContainer}>
                 <VaccineEventStudentManagementPanel
                     vaccineEventStudentData={vaccineEventStudent.data}
+                    vaccineEventDetail={vaccineEventInfo}
                     loading={vaccineEventStudent.loading}
                     pagination={{
                         currentPage: filters.pageIndex || 1,
@@ -126,12 +161,14 @@ export default function VaccineEventStudentManagementPage() {
                     }}
                     onView={handleView}
                     onApprove={(eventId: string, studentId: string) => modal.openApproveStudent(eventId, studentId)}
-                    onComplete={(eventId: string, studentId: string) => modal.openCompleteStudent(eventId,studentId)}
+                    onComplete={(eventId: string, studentId: string) => modal.openCompleteStudent(eventId, studentId)}
                     onReject={(eventId: string, studentId: string) => { modal.openRejectStudent(eventId, studentId) }}
                     onRefresh={() => { void vaccineEventStudent.refetch(); }}
 
                 />
             </div>
+            )}
+            
             {modal.state.type === 'view' && (
                 <ViewVaccineEventStudentDetail
                     vaccineEventParticipant={modal.state.vaccineEventStudent}
@@ -175,12 +212,12 @@ export default function VaccineEventStudentManagementPage() {
             })()}
 
             {modal.state.type === 'complete-student' && (() => {
-                const currentModal=modal.state;
+                const currentModal = modal.state;
                 return (
                     <CompleteVaccineEventStudentModal
                         isOpen={true}
                         onClose={modal.close}
-                        onSubmit={(payload: CompleteVaccinationRequest) => handleComplete(currentModal.studentId, currentModal.eventId,payload)}
+                        onSubmit={(payload: CompleteVaccinationRequest) => handleComplete(currentModal.studentId, currentModal.eventId, payload)}
                         onError={(msg) => handleShowToast(msg, 'error')}
                     />
                 )

@@ -1,7 +1,6 @@
 
 import { useState } from 'react';
-import { IconBusinessCardPerson, IconEdit, IconPerson } from '../../components/IconList';
-import { AccountDetailModel } from '../../models/AccountModel';
+import { IconBusinessCardPerson, IconEdit } from '../../components/IconList';
 import styles from '../../CSS/Components/UserProfile.module.css';
 import { ParentDetailModel } from '../../models/AccountSubclassModels/ParentModel';
 

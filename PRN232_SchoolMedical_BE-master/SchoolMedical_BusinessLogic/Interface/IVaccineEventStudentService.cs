@@ -9,7 +9,7 @@ namespace HealthNest_BusinessLogic.Interface;
 
 public interface IVaccineEventStudentService
 {
-	public Task SignUpStudentAsync(CreateVaccineEventStudentModel request, string parentId);
+	public Task SignUpStudentAsync(CreateVaccineEventStudentModel request, string parentId, bool IsSignUpAgain);
 	public Task CompleteStudentVaccineEventAsync(string eventId,string studentId, string checkedById, string ResultSummary);
 	public Task ApproveStudentToVaccineEventAsync(string eventId, string studentId, string checkedById);
 	public Task RejectStudentFromVaccineEventAsync(string eventId, string studentId, string checkedById);

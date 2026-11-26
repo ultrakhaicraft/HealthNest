@@ -9,9 +9,11 @@ const baseUrl = '/vaccine-event-participant';
 export const VaccineEventStudentService = {
 
 
-    SignUpStudent: async (request: CreateVaccineEventStudentModel): Promise<String> => {
+    SignUpStudent: async (request: CreateVaccineEventStudentModel, IsSignUpAgain: boolean): Promise<String> => {
 
-        const response = await apiClient.post<ApiResponseWrapper<String>>(`${baseUrl}/signups`, request);
+        const response = await apiClient.post<ApiResponseWrapper<String>>(`${baseUrl}/signups`, request, {
+            params: { IsSignUpAgain },
+        });
         return response.data.data;
     },
 

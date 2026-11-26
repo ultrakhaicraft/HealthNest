@@ -63,10 +63,10 @@ export default function VaccineEventSignUpPage() {
         }
     };
 
-    const handleCreateSubmit = async (payload: CreateVaccineEventStudentModel) => {
+    const handleCreateSubmit = async (payload: CreateVaccineEventStudentModel, IsSignUpAgain: boolean) => {
         setActionLoading(true);
         try {
-            await vaccineEventStudent.signUpStudentToEvent(payload);
+            await vaccineEventStudent.signUpStudentToEvent(payload,IsSignUpAgain);
             handleShowToast('Sign up vaccine event successfully!', 'success');
             modal.close();
         } catch (err: any) {
@@ -76,7 +76,9 @@ export default function VaccineEventSignUpPage() {
         }
     };
 
-    const handleEditNote = async (studentId: string, eventId: string, payload: UpdateNoteRequest) => {
+    
+
+    const handleEditNote = async (eventId: string, studentId: string, payload: UpdateNoteRequest) => {
         setActionLoading(true);
         try {
             await vaccineEventStudent.UpdateNote(eventId, studentId, payload);
@@ -126,6 +128,7 @@ export default function VaccineEventSignUpPage() {
                 onCancel={(eventId: string, studentId: string) => modal.openCancelSignUp(eventId, studentId)}
                 onEdit={(eventId: string, studentId: string) => modal.openUpdateNote(eventId, studentId)}
                 onSignUp={modal.openSignup}
+                onSignUpAgain={modal.openReSignup}
                 onRefresh={() => { void vaccineEventStudent.refetch(); }}
 
             />
@@ -161,7 +164,21 @@ export default function VaccineEventSignUpPage() {
                     isOpen={true}
                     onClose={modal.close}
                     onSubmit={handleCreateSubmit}
+                    IsSignUpAgain={false}
+                />
+            )
+        })()}
 
+        {modal.state.type === 're-sign-up' && (() => {
+            const currentModal = modal.state;
+            return (
+                <SignUpVaccineEventModal
+                    isOpen={true}
+                    onClose={modal.close}
+                    onSubmit={handleCreateSubmit}
+                    passedEventId={currentModal.eventId}
+                    passedStudentId={currentModal.studentId}
+                    IsSignUpAgain={true}
                 />
             )
         })()}

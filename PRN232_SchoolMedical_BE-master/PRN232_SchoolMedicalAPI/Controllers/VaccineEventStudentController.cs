@@ -26,14 +26,14 @@ public class VaccineEventStudentController : Controller
 
 	[HttpPost("signups")]
 	[Authorize(Roles = nameof(AccountRole.Parent))]
-	public async Task<IActionResult> SignUpStudent([FromBody] CreateVaccineEventStudentModel request)
+	public async Task<IActionResult> SignUpStudent([FromBody] CreateVaccineEventStudentModel request, [FromQuery] bool IsSignUpAgain)
 	{
 		if (!ModelState.IsValid)
 			return ValidationErrorResponse();
 
 		string parentId = User.Claims.GetUserIdFromJwtToken();
 
-		await _vaccineEventStudentService.SignUpStudentAsync(request, parentId);
+		await _vaccineEventStudentService.SignUpStudentAsync(request, parentId, IsSignUpAgain);
 
 		ApiResponseWrapper<string> response = ApiResponseWrapper<string>
 			.Created(string.Empty, "Student with id: "+request.StudentId+" signed up successfully for vaccine event with id: " +request.VaccineEventId );
